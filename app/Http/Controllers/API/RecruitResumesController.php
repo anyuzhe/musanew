@@ -58,8 +58,9 @@ class RecruitResumesController extends ApiBaseCommonController
         $data->thirdParty;
         $this->recruitResumesRepository->addFieldText($data);
         $data->resume = app()->build(ResumesRepository::class)->getData($data->resume);
-        $data->logs;
         $data->logs->load('creatorInfo');
+        $data = $data->toArray();
+        $data['logs'] = array_reverse($data['logs']);
     }
 
     public function resumeFlow()
