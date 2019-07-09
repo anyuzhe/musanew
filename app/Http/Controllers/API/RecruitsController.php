@@ -18,6 +18,25 @@ class RecruitsController extends ApiBaseCommonController
 
     public $model_name = Recruit::class;
 
+
+
+    public function storeValidate()
+    {
+        return [
+            [
+                'need_num' => 'numeric|required|min:1|max:9999',
+                'job_id' => 'numeric|required|min:1',
+            ],
+            [
+                'job_id.required'=>'必须选择职位',
+                'job_id.numeric'=>'必须选择职位',
+                'job_id.min'=>'必须选择职位',
+                'need_num.min'=>'招聘人数必须大于0',
+                'need_num.max'=>'招聘人数必须小于99999',
+            ]
+        ];
+    }
+
     public function authLimit(&$model)
     {
         $user = $this->getUser();

@@ -32,6 +32,23 @@ class EntrustResumesController extends ApiBaseCommonController
     }
 
 
+    public function storeValidate()
+    {
+        return [
+            [
+                'hope_salary_min' => 'numeric|required|min:1|max:99999|lt:hope_salary_max',
+                'hope_salary_max' => 'numeric|required|min:1|max:99999',
+            ],
+            [
+                'hope_salary_min.lt'=>'期望薪资最少必须小于最大值',
+                'hope_salary_min.min'=>'期望薪资最少必须大于0',
+                'hope_salary_min.max'=>'期望薪资最少必须小于99999',
+                'hope_salary_max.min'=>'期望薪资最大必须大于0',
+                'hope_salary_max.max'=>'期望薪资最大必须小于99999',
+            ]
+        ];
+    }
+
     public function authLimit(&$model)
     {
         $in_job = $this->request->get('in_job');

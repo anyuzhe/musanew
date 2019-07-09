@@ -58,7 +58,8 @@ class ApiBaseCommonController extends CommonController
         $model = $this->getModel();
         //判断是否有表单验证 并且验证
         if(method_exists($this,'storeValidate')){
-            $validator = \Validator::make($request->all(),$this->storeValidate());
+            $validatorArr = $this->storeValidate();
+            $validator = app('validator')->make($request->all(),$validatorArr[0],$validatorArr[1]);
 
             if($validator->fails()){
                 $errors = $validator->errors();
@@ -198,7 +199,8 @@ class ApiBaseCommonController extends CommonController
         $model = $this->getModel();
         //判断是否有表单验证 并且验证
         if(method_exists($this,'updateValidate')){
-            $validator = \Validator::make($request->all(),$this->storeValidate());
+            $validatorArr = $this->storeValidate();
+            $validator = app('validator')->make($request->all(),$validatorArr[0],$validatorArr[1]);
 
             if($validator->fails()){
                 $errors = $validator->errors();

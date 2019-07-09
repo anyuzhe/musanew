@@ -72,7 +72,7 @@ class LoginController extends CommonController
             global $CFG;
             require_once($CFG->dirroot . '/user/editlib.php');
             require_once($CFG->libdir . '/authlib.php');
-            require_once('./../login/lib.php');
+            require_once($this->getMoodleRoot().'/login/lib.php');
 
             $user = $this->request->all();
             $user = json_decode(json_encode($user));
@@ -130,7 +130,7 @@ class LoginController extends CommonController
         if (!$userauth->user_update_password($user, $password)) {
             return $this->apiReturnJson('9999');
         }else{
-            require_once('./../user/lib.php');
+            require_once($this->getMoodleRoot().'/user/lib.php');
             global $CFG;
             $CFG->passwordreuselimit = 10;
             user_add_password_history($user->id, $password);
@@ -151,8 +151,8 @@ class LoginController extends CommonController
 
     protected function userSignup(&$user, $notify=true, $confirmationurl = null) {
         global $CFG, $DB, $SESSION;
-        require_once($CFG->dirroot.'/user/profile/lib.php');
-        require_once($CFG->dirroot.'/user/lib.php');
+        require_once($this->getMoodleRoot().'/user/profile/lib.php');
+        require_once($this->getMoodleRoot().'/user/lib.php');
 
         $plainpassword = $user->password;
         $user->password = hash_internal_user_password($user->password);

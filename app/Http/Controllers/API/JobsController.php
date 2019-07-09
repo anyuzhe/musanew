@@ -180,7 +180,7 @@ class JobsController extends ApiBaseCommonController
 
     public function destroy($id)
     {
-        $model = $this->getModel();
+        $model = $this->getModel()->find($id);
         $has = $model->recruits()->whereIn('status', [1,2,3])->count();
         if($has==0){
             $model->status = -1;

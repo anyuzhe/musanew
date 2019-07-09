@@ -24,7 +24,7 @@ class User extends Model
 
     public function companies()
     {
-        return $this->belongsToMany('App\Models\Company', 'company_user','user_id','company_id');
+        return $this->belongsToMany('App\Models\Company', 'company_user','user_id','company_id')->withPivot('company_role_id');
     }
 
     public function company()

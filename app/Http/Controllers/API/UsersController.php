@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\CompanyRole;
+use App\Models\UserBasicInfo;
 use DB;
 use Illuminate\Support\Facades\Log;
 
@@ -11,16 +13,21 @@ class UsersController extends CommonController
     { 
         $user = $this->getUser();
         $info = $user->info;
+
+        if(!$info)
+            $info = UserBasicInfo::create(['user_id'=>$user->id]);
         $info->companies = $user->companies;
         $info->current_company = $user->company->first();
         $this->requireMoodleConfig();
         foreach ($info->companies as &$company) {
             $company->logo_url = getMoodlePICURL($company->logo);
+            $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
         }
 
         unset($company);
         if($info->current_company){
             $info->current_company->logo_url = getMoodlePICURL($info->current_company->logo);
+            $info->current_company->role_name = CompanyRole::find($info->current_company->pivot->company_role_id)->name;
         }
 
         return $this->apiReturnJson(0, $info);
