@@ -99,9 +99,9 @@ class RecruitResumesRepository
             $log->text =  '面试没来';
         }elseif($status==-3){
             $log->text =  '面试不通过';
-        }elseif($status==-3){
+        }elseif($status==-4){
             $log->text =  '面试通过但不合适';
-        }elseif($status==-3){
+        }elseif($status==-5){
             $log->text =  '录用之后未到岗';
         }
         $recruitResume->logs()->save($log);
