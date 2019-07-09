@@ -135,7 +135,7 @@ class LoginController extends CommonController
             $CFG->passwordreuselimit = 10;
             user_add_password_history($user->id, $password);
             PasswordFindCode::where('id', $codeHas->id)->update(['status'=>1]);
-            return $this->apiReturnJson('0');
+            return $this->apiReturnJson('0',null,'密码修改成功');
         }
     }
 
