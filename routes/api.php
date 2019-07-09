@@ -125,12 +125,12 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/recruit/resumes', 'API\RecruitResumesController@index');
 
     //招聘下的-简历详情
+    $router->get('/company/recruit/resumes/{id}', 'API\RecruitResumesController@show');
 
     //招聘下的-简历流程
     $router->post('/company/recruits/resumeFlow', 'API\RecruitResumesController@resumeFlow');
 
 });
-$router->get('/company/recruit/resumes/{id}', 'API\RecruitResumesController@show');
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
 $router->get('/area/tree', 'API\AreasController@getTree');

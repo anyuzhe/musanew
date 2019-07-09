@@ -116,7 +116,7 @@ class RecruitsController extends ApiBaseCommonController
     public function restart()
     {
         $id = $this->request->get('id');
-        $this->getModel()->where('id', $id)->update(['status'=>1]);
+        $this->getModel()->where('id', $id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
         return $this->apiReturnJson(0);
     }
 }
