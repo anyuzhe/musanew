@@ -15,7 +15,7 @@ class RecruitResumesRepository
             return '简历不是初始状态,不能邀请面试';
         }elseif($status==3 && !in_array($recruitResume->status,[2,3,5])){
             return '简历不是邀请或再次邀请面试状态,不能修改时间';
-        }elseif($status==4 && !in_array($recruitResume->status,[2,3,4])){
+        }elseif($status==4 && !in_array($recruitResume->status,[2,3,5])){
             return '简历不是邀请或再次邀请面试状态,不能面试完成';
         }elseif($status==5 && !in_array($recruitResume->status,[4])){
             return '简历不是邀请面试状态或者完成状态,不能再次邀请面试';
