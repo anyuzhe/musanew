@@ -122,7 +122,9 @@ class RecruitResumesRepository
         $resume = $recruitResume->resume;
         $recruit->done_num++;
         if($recruit->done_num==$recruit->new_num){
-            $recruit->satus = 4;
+            //如果是委托 就不改成结束状态
+            if(!$entrust)
+                $recruit->satus = 4;
         }
         $recruit->save();
         if($entrust){

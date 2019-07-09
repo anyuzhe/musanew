@@ -12,10 +12,12 @@ class EntrustsRepository
         $model = new Entrust();
         if($type==2){
             //外包出去的
-            $model = $model->whereIn('status', [1,0])->where('company_id', $company->id);
+            $model = $model->where('company_id', $company->id);
+//            $model = $model->whereIn('status', [1,0])->where('company_id', $company->id);
         }elseif ($type==3){
             //作为外包公司
-            $model = $model->whereIn('status', [1])->where('third_party_id', $company->id);
+//            $model = $model->whereIn('status', [1])->where('third_party_id', $company->id);
+            $model = $model->where('third_party_id', $company->id);
         }elseif ($type==4){
             //委托申请
             $model = $model->whereIn('status', [0])->where('third_party_id', $company->id);
@@ -33,6 +35,12 @@ class EntrustsRepository
             $_status = 2;
         }elseif($_status==1){
             $_status = 3;
+        }elseif($_status==2){
+            $_status = 4;
+        }elseif($_status==-1){
+            $_status = 4;
+        }elseif($_status==-2){
+            $_status = 4;
         }else{
             $_status = $recruit_status;
         }
