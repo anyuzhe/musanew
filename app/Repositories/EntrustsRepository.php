@@ -16,8 +16,8 @@ class EntrustsRepository
 //            $model = $model->whereIn('status', [1,0])->where('company_id', $company->id);
         }elseif ($type==3){
             //作为外包公司
-//            $model = $model->whereIn('status', [1])->where('third_party_id', $company->id);
-            $model = $model->where('third_party_id', $company->id);
+            $model = $model->whereIn('status', [1])->where('third_party_id', $company->id);
+//            $model = $model->where('third_party_id', $company->id);
         }elseif ($type==4){
             //委托申请
             $model = $model->whereIn('status', [0])->where('third_party_id', $company->id);
