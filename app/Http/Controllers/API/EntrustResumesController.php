@@ -51,6 +51,8 @@ class EntrustResumesController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
+        $recruit_id = $this->request->get('recruit_id');
+        $entrust_id = $this->request->get('entrust_id');
         $in_job = $this->request->get('in_job');
         $model = $model->where('status','!=',-1);
         $company = $this->getCurrentCompany();
@@ -59,6 +61,11 @@ class EntrustResumesController extends ApiBaseCommonController
         }
         if($in_job || is_numeric($in_job)){
             $model = $model->where('in_job', $in_job);
+        }
+        if($entrust_id){
+            $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray());
+        }elseif ($recruit_id){
+            $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_id', $entrust_id)->pluck('resume_id')->toArray());
         }
         return null;
     }
