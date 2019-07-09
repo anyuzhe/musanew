@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Company;
+use App\Models\CompanyResume;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
+use App\Models\RecruitResume;
 use App\Repositories\AreaRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
@@ -53,8 +55,12 @@ class CompaniesController extends ApiBaseCommonController
 //该第三方企业正在为本企业招聘的职位数量
 
         foreach ($list as &$v) {
-            $v->recruitFinishingRate = 90;
-            $v->recruitSuccessRate = 85;
+            $_ids1 = Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->pluck('id')->toArray();
+            $_finish_count = RecruitResume::where('company_job_recruit_entrust_id', $_ids1)->whereNotIn('status',[1,-1])->count();
+            $_success_count = RecruitResume::where('company_job_recruit_entrust_id', $_ids1)->whereNotIn('status',[6])->count();
+            $_all_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->pluck('company_job_recruit_id')->toArray())->sum('need_num');
+            $v->recruitFinishingRate = floor($_finish_count/$_all_count*100, 2);
+            $v->recruitSuccessRate = floor($_success_count/$_all_count*100, 2);
             $v->allJobCount = Entrust::where('third_party_id',$v->id)->count();
             $v->ourJobCount = Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->count();
             $v->currentRecruitCount = Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereIn('status', [1])->count();
