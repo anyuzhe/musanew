@@ -9,7 +9,7 @@ use App\Models\Resume;
 
 class RecruitResumesRepository
 {
-    public function checkFlow($recruitResume,$status)
+    public function checkFlow($recruitResume,$status,$data)
     {
         if($status==2 && !in_array($recruitResume->status,[1])){
             return '简历不是初始状态,不能邀请面试';
@@ -35,6 +35,12 @@ class RecruitResumesRepository
             return '简历不是面试完成状态,不能面试通过但不合适';
         }elseif($status==-5 && !in_array($recruitResume->status,[6])){
             return '简历不是录用状态,不能录用之后未到岗';
+        }
+        if(($status==2||$status==3) && !$data){
+            return '邀请时间必须填写';
+        }
+        if(($status==4) && !$data){
+            return '面试反馈必须填写';
         }
         return null;
     }
