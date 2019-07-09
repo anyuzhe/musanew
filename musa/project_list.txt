@@ -1,0 +1,104 @@
+一. 基本信息
+	1. 网站地址
+	线上环境：http://platform.musaconsult.com
+	测试环境：http://39.100.105.180 (admin/!QAZ2wsx)
+
+	2.测试服务器(39.100.105.180)
+		账号信息
+			dev/Musa.m@odle
+			root/Musa.m@odle$
+		根目录 /data/wwwroot/default/trunk/MOODLE_36_STABLE/
+
+二. 基于moodle拓展功能（非api形式）
+	1. 简历相关
+		查看个人简历 	/user/resume.php?id={userid}
+		编辑个人简历 	/my/resume.php
+
+	2. 企业相关
+		企业列表 	/company/
+		编辑企业信息 /company/edit.php?id={companyid}
+		企业人才库 	/company/applicant.php?id={companyid}
+		企业管理员设置 /company/roles/admins.php?id={companyid}
+		企业新增简历（猎头） /company/resume.php
+
+	3.职位相关
+		职位列表		/my/career.php 
+		添加职位		/my/jobs.php
+		编辑职位		/my/jobs.php?id={jobid	}&action=edit
+
+	4.人才评估报告 /my/report/estimate_pdf.php?id={userid}
+
+	5. 招聘
+		职位筛选列表 /zhaopin/zhaopin.php
+		应聘职位 /zhaopin/company.php?companyid={companyid}&jobid={jobid}
+
+	6. 其他
+		设置技能类别 /jobs/skill_category?pid=0&level=0
+
+	7. moodle拓展以及注意事项
+	    1. moodle formapi
+            文档链接：https://docs.moodle.org/dev/Form_API
+            存在的问题：表单提交的时候无法获取初始值之外的选项（如通过js添加的元素）
+        2. moodle 文件上传
+            文档链接：https://docs.moodle.org/dev/Using_the_File_API_in_Moodle_forms#filemanager
+            注意的问题：file_save_draft_area_files()：保存文件    file_prepare_draft_area()：获取文件
+
+        3. moodle 添加自定义service api
+            文档： 无
+            相关表：mdl_external_functions、mdl_external_services_functions
+            注意的问题：须同时向两个表中添加自定时接口名称 否则会引起数据不一致的报错
+
+        4. moodle 去除车测验中的header、footer
+            修改/mod/quiz/renderer.php中的header
+
+        5. 用户加入自主选课（添加测验）方法
+            /webservice/rest/server.php?wsfunction=enrol_self_enrol_user&wstoken={token}&courseid={courseid}&moodlewsrestformat=json
+            http://39.100.105.180/login/token.php?username=messi@999&password=Sunjw!1991&service=moodle_mobile_app
+            流程：
+                1. 添加职位时设置测验课程
+                2. 用户测验时 先加入课程 然后跳转至课程
+
+            注意事项：
+                课程须编辑为自主选课，否则用户无法自主加入
+
+            moodle文档参考：https://docs.moodle.org/dev/Web_service_API_functions#Web_service_protocols
+
+
+
+
+三. 基于moodle拓展功能（api形式）
+ 	参见 http://yapi.ruiztech.cn/project/36/interface/api
+
+四. 实验楼对接相关
+	1. 实验楼api文档地址
+		https://www.shiyanlou.com/saas/api-doc/#tag/%E8%AE%A4%E8%AF%81
+
+	//获取企业所有课程
+    /api/shiyanlou/course
+    //获取实验课程列表
+    /api//shiyanlou/labs
+    //实验楼登陆
+    /api/shiyanlou/login
+    //获取企业课程下的学生信息
+    /api/shiyanlou/student
+    //获取所有用户
+    /api/shiyanlou/user
+    //实验楼 事件推送
+    /api/shiyanlou/webhook
+
+
+郑龙补充
+&moodlewsrestformat=json
+https://docs.moodle.org/dev/Creating_a_web_service_client moodle本身提供rest服务
+sample
+1、通过用户名密码获得token http://39.100.105.180/login/token.php?username=admin&password=!QAZ2wsx&service=moodle_mobile_app
+2、通过token和函数名（接口方法）获取相应数据 http://39.100.105.180/webservice/rest/server.php?wstoken=7a2f037c8b7de40af21ebb7379b52d3c&wsfunction=core_course_get_courses&moodlewsrestformat=json （core_course_get_courses表示获取课程信息）
+
+具体函数名列表登录系统可查看 http://xxxxxxxx/admin/webservice/service_functions.php?id=1
+
+首页设置地方  外观 主题风格 主题设置
+
+moodle对数据库表数据的缓存
+moodledata\cache\cachestore_file\default_application\core_databasemeta
+
+/my/report/estimate.php 评估报告

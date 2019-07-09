@@ -1,0 +1,27 @@
+<td>
+                            <ul title="{{#str}}edit{{/str}}" class="user-competency-actions">
+                                <li>
+                                    <a href="#">{{#str}}edit{{/str}}</a><b class="caret"></b>
+                                    <ul class="dropdown dropdown-menu">
+                                        {{#usercompetency.isrequestreviewallowed}}
+                                            <li class="dropdown-item">
+                                                <a href="#" data-action="request-review">{{#pix}}t/edit, core{{/pix}} {{#str}}requestreview, tool_lp{{/str}}</a>
+                                            </li>
+                                        {{/usercompetency.isrequestreviewallowed}}
+                                        {{#usercompetency.iscancelreviewrequestallowed}}
+                                            <li class="dropdown-item">
+                                                <a href="#" data-action="cancel-review-request">{{#pix}}t/edit, core{{/pix}} {{#str}}cancelreviewrequest, tool_lp{{/str}}</a>
+                                            </li>
+                                        {{/usercompetency.iscancelreviewrequestallowed}}
+                                        {{#plan.canbeedited}}
+                                            <li class="dropdown-item">
+                                                <a href="#" data-action="delete-competency-link" data-id="{{competency.id}}">{{#pix}}t/delete, core{{/pix}} {{#str}}delete{{/str}}</a>
+                                            </li>
+                                        {{/plan.canbeedited}}
+                                        <li class="dropdown-item">
+                                            <a href="#" data-action="find-courses-link" data-id="{{competency.id}}">{{#pix}}t/preview, core{{/pix}} {{#str}}findcourses, tool_lp{{/str}}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </td>

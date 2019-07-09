@@ -1,0 +1,211 @@
+/**第一页**/
+#has_bg {
+    background: url(../image/bg.jpeg) no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.i_logo {
+    margin: 20px 0 0 30px;
+}
+
+.title {
+    font-family: 'FZYaoti', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+    color: #f5ad23;
+    font-size: 40px;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 110px;
+}
+
+.info_table {
+    width: 46%;
+    margin: 160px auto;
+}
+
+.info_table td {
+    padding: 4px 0;
+
+}
+
+.text_left {
+    text-align: left;
+}
+
+.text_right {
+    text-align: right;
+}
+
+.light_text {
+    font-weight: normal;
+}
+
+/****/
+.page_box {
+    width: 90%; /***设置宽度**/
+    /* height: 100%;  可设置固定高度* */
+    border: 1px solid rgb(126, 126, 126);
+    margin: 10px auto;
+    padding: 6PX;
+}
+
+.head {
+    height: 90px;
+    margin: 20px 20px 10px;
+    border-bottom: 2px solid #f5ad23;
+}
+
+.c_logo {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.t_title {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.t_title, .h_text {
+    line-height: 100px;
+}
+
+.fr {
+    float: right;
+}
+
+.fl {
+    float: left;
+}
+
+.section_title {
+    padding: 16px 20px;
+    font-size: 16px;
+}
+
+.section_title span {
+    margin-left: 10px;
+}
+
+.icon {
+    width: 29px;
+    height: 20px;
+    display: inline-block;
+    background: url(../image/bar.jpeg) no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding-left: 8px;
+}
+
+.point {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background: #000;
+    vertical-align: middle;
+}
+
+.content {
+    margin: 0 auto;
+    padding: 10px 40px;
+}
+
+.yellow_box {
+    margin: 10px auto;
+    background: #fdf9ed;
+    width: 98%;
+    padding: 10px;
+    /* display: flex;
+    flex-direction: row;
+    flex: auto; */
+}
+
+.line_table {
+    border: 1px solid #000;
+    margin: 40px auto;
+    width: 94%;
+}
+
+.line_table th {
+    border: 1px solid #000;
+    width: 15%;
+    text-align: center;
+    background: #f9ecc7;
+    font-size: 10px;
+}
+
+.line_table td {
+    border: 1px solid #000;
+    padding: 2px 0;
+    /* width: 9%; */
+    text-align: center;
+    background: #eee;
+    font-size: 10px;
+}
+
+.y_text {
+    background: #f9ecc7;
+}
+
+.tip {
+    font-size: 12px;
+    color: #333;
+}
+
+.paragraph {
+    padding: 10px;
+}
+
+.paragraph li {
+    list-style: none;
+}
+
+.p_title {
+    color: red;
+}
+
+.text_red {
+    color: red;
+    padding-left: 2em;
+}
+
+.class_list {
+    padding: 0 14px;
+}
+
+.bottom_line {
+    width: 90%;
+    margin: 10px auto 30px;
+    height: 4px;
+    background: #eee;
+}
+
+
+#radar {
+    width: 400px;
+    height: 280px;
+    margin: 0 auto;
+}
+
+.text_strong {
+    font-size: 16px;
+    color: red;
+    padding-left: 30px;
+}
+
+#pie {
+    width: 100%;
+    height: 240px;
+}
+
+#bar {
+    width: 100%;
+    height: 240px;
+}
+
+.line_bar {
+    width: 100%;
+    height: 240px;
+}

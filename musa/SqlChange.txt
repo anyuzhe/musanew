@@ -1,0 +1,62 @@
+//sql  变动信息
+-------------表-------------------------备注
+mdl_data_map						选项表
+mdl_data_map_option				存放选项配置表
+
+mdl_resume 							简历-基本信息
+mdl_resume_company					公司经历
+mdl_resume_education				教育经历
+mdl_resume_language					语言掌握
+mdl_resume_project					项目经历
+mdl_resume_skill					技能掌握
+mdl_resume_training					培训经历
+mdl_resume_company					培训经历
+
+
+mdl_jobs							职位列表
+mdl_job_skill						职位所需技能
+mdl_job_occupations					职位类型（可废弃）
+
+mdl_company 						公司
+mdl_company_accept 					应聘公司职位
+mdl_company_role 					公司管理员
+mdl_company_role_capalities			管理员对应权限(未使用)
+mdl_company_capalities				权限列表(未使用)
+mdl_company_user					企业员工对应表
+
+mdl_skills							技能
+mdl_skills_category					技能上级类别
+
+mdl_area							地区表
+
+修改
+mdl_external_services_functions 增加数据：
+    core_get_user_resume
+    core_get_area
+    core_user_info
+    core_user_info_add
+
+-------------郑龙修改记录---------start------------
+mdl_user_password_find_code       找回密码验证码
+mdl_company_relationship         企业关系表
+mdl_company_relationship_log       修改记录
+mdl_company_job_recruit          职位招聘表
+mdl_company_job_recruit_entrust  职位招聘委托表
+mdl_company_job_recruit_resume   职位招聘简历关系表
+mdl_company_job_recruit_resume_log   职位招聘简历关系记录表
+
+简历
+education修改为tinyint类型 对应数据字典
+增加个人信息字段 手机 性别 婚姻状态  出生年月日
+
+简历-学历
+mdl_resume_education
+degree修改为tinyint类型 对应数据字典 大专以下、大专、本科、硕士、博士及以上
+
+简历-公司经历
+industry修改为tinyint类型 对应数据字典
+jobtype修改为tinyint类型 对应数据字典
+
+简历-技能
+level修改为tinyint类型 对应数据字典
+-------------郑龙修改记录---------end-------------

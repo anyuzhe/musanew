@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ExternalToken extends Model
+{
+    public $fillable = [
+        'token',
+        'privatetoken',
+        'tokentype',
+        'userid',
+        'externalserviceid',
+        'sid',
+        'contextid',
+        'creatorid',
+        'iprestriction',
+        'validuntil',
+        'timecreated',
+        'lastaccess',
+    ];
+
+    public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User','userid');
+    }
+
+    public function userBasicInfo()
+    {
+        return $this->belongsTo('App\Models\UserBasicInfo','userid');
+    }
+}
