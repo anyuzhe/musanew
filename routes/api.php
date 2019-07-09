@@ -82,7 +82,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //职位相关
     $router->post('/company/jobs', 'API\JobsController@store');
     $router->post('/company/jobs/{id}', 'API\JobsController@update');
-    $router->post('/company/jobs/delete/{id}', 'API\JobsController@destroy');
+    $router->any('/company/jobs/delete/{id}', 'API\JobsController@destroy');
+    $router->any('/company/jobs/checkDelete/{id}', 'API\JobsController@checkDelete');
 
     //人员招聘
     //添加招聘职位

@@ -181,13 +181,37 @@ class JobsController extends ApiBaseCommonController
     public function destroy($id)
     {
         $model = $this->getModel()->find($id);
-        $has = $model->recruits()->whereIn('status', [1,2,3])->count();
-        if($has==0){
+        $has = $this->checkDestroy($model);
+        if(!$has){
             $model->status = -1;
             $model->save();
             return responseZK(0);
         }else{
-            return responseZK(9999, null,'还在招聘中,无法删除');
+            return responseZK(9999, null,$has);
         }
+    }
+
+    public function checkDelete($id)
+    {
+        $model = $this->getModel()->find($id);
+        $has = $this->checkDestroy($model);
+        if(!$has){
+            return responseZK(0);
+        }else{
+            return responseZK(9999, null,$has);
+        }
+    }
+
+    public function checkDestroy($model)
+    {
+        $has = $model->recruits()->whereIn('status', [1])->count();
+        if($has){
+            return '该职位处于招聘状态无法删除，请结束招聘状态！';
+        }
+        $has = $model->recruits()->whereIn('status', [2,3])->count();
+        if($has){
+            return '该职位处于招聘状态无法删除，请结束招聘状态！';
+        }
+        return false;
     }
 }

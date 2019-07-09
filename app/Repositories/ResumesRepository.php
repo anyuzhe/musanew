@@ -51,7 +51,10 @@ class ResumesRepository
             getOptionsText($v);
             foreach ($v->skills as &$skill) {
                 getOptionsText($skill);
-                $skill->skill_name = $skills[$skill->skill_id]['name'];
+                if(isset($skills[$skill->skill_id]))
+                    $skill->skill_name = $skills[$skill->skill_id]['name'];
+                else
+                    $skill->skill_name = '未知技能';
             }
             foreach ($v->companies as &$company) {
                 getOptionsText($company);
