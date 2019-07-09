@@ -49,12 +49,13 @@ class ResumesRepository
             $v->residence_city_text = isset($areas[$v->residence_city_id])?$areas[$v->residence_city_id]['cname']:'';
             $v->residence_district_text = isset($areas[$v->residence_district_id])?$areas[$v->residence_district_id]['cname']:'';
             getOptionsText($v);
-            foreach ($v->skills as &$skill) {
+            foreach ($v->skills as $ks=>&$skill) {
                 getOptionsText($skill);
-                if(isset($skills[$skill->skill_id]))
-                    $skill->skill_name = $skills[$skill->skill_id]['name'];
-                else
-                    $skill->skill_name = '未知技能';
+                if(!$skills[$skill->skill_id]){
+                    unset($v->skills[$ks]);
+                    continue;
+                }
+                $skill->skill_name = $skills[$skill->skill_id]['name'];
             }
             foreach ($v->companies as &$company) {
                 getOptionsText($company);
