@@ -80,8 +80,12 @@ class ResumesRepository
         $data->companies;
         getOptionsText($data);
         $skills = Skill::all()->keyBy('id')->toArray();
-        foreach ($data->skills as &$skill) {
+        foreach ($data->skills as $k=>&$skill) {
             getOptionsText($skill);
+            if(!$skills[$skill->skill_id]){
+                unset($data->skills[$k]);
+                continue;
+            }
             $skill->skill_name = $skills[$skill->skill_id]['name'];
         }
         foreach ($data->educations as &$education) {

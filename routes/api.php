@@ -19,20 +19,21 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('/test1', function () use ($router) {
-
-    $skills = \App\Models\Skill::all()->keyBy('id')->toArray();
-    dd($skills);
-    dd(\App\Models\DataMap::first()->options);
-    $str = "概念级别、实践级别、指导级别、专家级别";
-    $strs = explode('、', $str);
-    $i=1;
+dd(1);
+    $strs = [
+        '系统开发生命周期',
+'需求分析',
+'用户体验',
+'数据分析',
+'竞品分析',
+'运营思维'
+    ];
     foreach ($strs as $s) {
-        \App\Models\DataMapOption::create([
-            'mapid'=>10,
-            'key'=>$i,
-            'value'=>$s
+        \App\Models\Skill::create([
+            'name'=>$s,
+            'category_l1_id'=>1,
+            'category_l2_id'=>14
         ]);
-        $i++;
 
     }
     dd($strs);
