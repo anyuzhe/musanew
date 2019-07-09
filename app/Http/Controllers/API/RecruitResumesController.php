@@ -72,7 +72,7 @@ class RecruitResumesController extends ApiBaseCommonController
         $recruitResume = RecruitResume::find($id);
         $checkMsg = $this->recruitResumesRepository->checkFlow($recruitResume,$status,$feedback?$feedback:$date);
         if($checkMsg)
-            return $this->apiReturnJson(0, null, $checkMsg);
+            return $this->apiReturnJson(9999, null, $checkMsg);
         $this->recruitResumesRepository->generateLog($recruitResume,$status,null, $feedback?$feedback:$date,1);
         return $this->apiReturnJson(0);
     }
