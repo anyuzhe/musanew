@@ -125,6 +125,10 @@ class RecruitResumesRepository
             //如果是委托 就不改成结束状态
             if(!$entrust)
                 $recruit->satus = 4;
+            foreach ($recruit->entrusts as $_entrust) {
+                $entrust->status = 2;
+                $entrust->save();
+            }
         }
         $recruit->save();
         if($entrust){

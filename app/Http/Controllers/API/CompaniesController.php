@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Company;
+use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
 use App\Repositories\AreaRepository;
@@ -34,12 +35,29 @@ class CompaniesController extends ApiBaseCommonController
         ## 累计负责岗位数量 allJobCount
         ## 负责本企业岗位数量 ourJobCount
         ## 当前进行招聘岗位数量 currentRecruitCount
+
+//        招聘完成率
+//文本
+//增加职位简历资料并转转交还需求方的职位数量/总职位数量
+//招聘成功率
+//文本
+//需求方采纳第三方公司提交的简历/总职位数量
+//累计负责职位数量
+//文本
+//该第三方企业同意接受的所有职位数量
+//负责本企业职位数量
+//文本
+//该第三方企业同意接受的本企业所有职位数量
+//当前进行招聘职位数量
+//文本
+//该第三方企业正在为本企业招聘的职位数量
+
         foreach ($list as &$v) {
             $v->recruitFinishingRate = 90;
             $v->recruitSuccessRate = 85;
-            $v->allJobCount = 321;
-            $v->ourJobCount = 1231;
-            $v->currentRecruitCount = 4312421;
+            $v->allJobCount = Entrust::where('third_party_id',$v->id)->count();
+            $v->ourJobCount = Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->count();
+            $v->currentRecruitCount = Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereIn('status', [1])->count();
 
             $v->logo_url = getMoodlePICURL($v->logo);
         }
