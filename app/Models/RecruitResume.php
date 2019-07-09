@@ -57,4 +57,9 @@ class RecruitResume extends Model
     {
         return $this->belongsTo('App\Models\Company', 'third_party_id');
     }
+
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company', 'company_id');
+    }
 }

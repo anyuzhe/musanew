@@ -46,6 +46,7 @@ class RecruitResumesController extends ApiBaseCommonController
     {
         $data->load('resume');
         $data->load('thirdParty');
+        $data->load('company');
         foreach ($data as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
             $this->recruitResumesRepository->addFieldText($v);
@@ -56,6 +57,7 @@ class RecruitResumesController extends ApiBaseCommonController
     public function _after_find(&$data)
     {
         $data->thirdParty;
+        $data->company;
         $this->recruitResumesRepository->addFieldText($data);
         $data->resume = app()->build(ResumesRepository::class)->getData($data->resume);
         $data->logs->load('creatorInfo');
