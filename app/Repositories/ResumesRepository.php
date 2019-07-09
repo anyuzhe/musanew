@@ -51,7 +51,7 @@ class ResumesRepository
             getOptionsText($v);
             foreach ($v->skills as $ks=>&$skill) {
                 getOptionsText($skill);
-                if(!$skills[$skill->skill_id]){
+                if(!isset($skills[$skill->skill_id])){
                     unset($v->skills[$ks]);
                     continue;
                 }
@@ -83,7 +83,7 @@ class ResumesRepository
         $skills = Skill::all()->keyBy('id')->toArray();
         foreach ($data->skills as $k=>&$skill) {
             getOptionsText($skill);
-            if(!$skills[$skill->skill_id]){
+            if(!isset($skills[$skill->skill_id])){
                 unset($data->skills[$k]);
                 continue;
             }
