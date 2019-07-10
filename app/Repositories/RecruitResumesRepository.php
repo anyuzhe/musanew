@@ -198,10 +198,10 @@ class RecruitResumesRepository
         }
         switch ($data->resume_source){
             case 1:
-                $data->resume_source_str = '个人投递';
+                $data->resume_source_str = '第三方推送';
                 break;
             case 2:
-                $data->resume_source_str = '第三方推送';
+                $data->resume_source_str = '个人投递';
                 break;
             default:
                 $data->resume_source_str = '来源未知';
