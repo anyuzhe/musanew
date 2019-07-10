@@ -121,7 +121,7 @@ class RecruitResumesRepository
         $entrust = $recruitResume->entrust;
         $resume = $recruitResume->resume;
         $recruit->done_num++;
-        if($recruit->done_num==$recruit->new_num){
+        if($recruit->done_num==$recruit->need_num){
             //如果是委托 就不改成结束状态
             if(!$entrust)
                 $recruit->satus = 4;
@@ -133,7 +133,7 @@ class RecruitResumesRepository
         $recruit->save();
         if($entrust){
             $entrust->done_num++;
-            if($recruit->done_num==$recruit->new_num){
+            if($recruit->done_num==$recruit->need_num){
                 $entrust->status = 2;
             }
             $entrust->save();
