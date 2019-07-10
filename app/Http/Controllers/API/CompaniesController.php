@@ -58,7 +58,7 @@ class CompaniesController extends ApiBaseCommonController
             $_ids1 = Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->pluck('id')->toArray();
             $_finish_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $_ids1)->whereNotIn('status',[1,-1])->count();
             $_success_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $_ids1)->whereNotIn('status',[6])->count();
-            $_all_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->pluck('company_job_recruit_id')->toArray())->sum('need_num');
+            $_all_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->sum('need_num');
             $v->recruitFinishingRate = round($_finish_count/$_all_count*100, 2);
             $v->recruitSuccessRate = round($_success_count/$_all_count*100, 2);
             $v->allJobCount = Entrust::where('third_party_id',$v->id)->count();
