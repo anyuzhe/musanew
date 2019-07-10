@@ -112,14 +112,25 @@ class RecruitsController extends ApiBaseCommonController
     public function finish()
     {
         $id = $this->request->get('id');
-        $this->getModel()->where('id', $id)->update(['status'=>4]);
+        $entrust_id = $this->request->get('entrust_id');
+        if($entrust_id){
+            Entrust::where('id', $entrust_id)->update(['status'=>2]);
+        }else{
+            $this->getModel()->where('id', $id)->update(['status'=>4]);
+        }
+        
         return $this->apiReturnJson(0);
     }
 
     public function restart()
     {
         $id = $this->request->get('id');
-        $this->getModel()->where('id', $id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
+        $entrust_id = $this->request->get('entrust_id');
+        if($entrust_id){
+            Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);;
+        }else{
+            $this->getModel()->where('id', $id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
+        }
         return $this->apiReturnJson(0);
     }
 }

@@ -58,6 +58,8 @@ class EntrustResumesController extends ApiBaseCommonController
         $company = $this->getCurrentCompany();
         if ($company) {
             $model = $model->whereIn('id', $company->resumes()->pluck('resume_id')->toArray());
+        }else{
+            $model = $model->where('id', 0);
         }
         if($in_job || is_numeric($in_job)){
             $model = $model->where('in_job', $in_job);
@@ -69,6 +71,14 @@ class EntrustResumesController extends ApiBaseCommonController
         }
         return null;
     }
+
+    //列表排序
+    protected function modelGetSort(&$model)
+    {
+        $model = $model->orderByRaw("FIELD(status, ?)", [1,0,2,-1,-2])->order('created_at', 'desc');
+        return $model;
+    }
+
 
     public function afterStore($obj, $data)
     {

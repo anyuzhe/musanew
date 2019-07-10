@@ -45,6 +45,8 @@ class JobsController extends ApiBaseCommonController
             $company = $this->getCurrentCompany();
             if ($company) {
                 $model = $model->where('company_id', $company->id);
+            }else{
+                $model = $model->where('id', 0);
             }
         }
         return null;
