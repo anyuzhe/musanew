@@ -35,6 +35,14 @@ class EntrustsController extends ApiBaseCommonController
         return null;
     }
 
+    //列表排序
+    protected function modelGetSort(&$model)
+    {
+        $model = $model->orderByRaw("FIELD(status, 1, 0, 2, -1, -2)")->orderBy('created_at', 'desc');
+//        $model = $model->orderByRaw("FIELD(status, ?)", [1,0,2,-1,-2])->orderBy('created_at', 'desc');
+        return $model;
+    }
+
     public function _after_get(&$entrusts)
     {
         $entrusts->load('job');

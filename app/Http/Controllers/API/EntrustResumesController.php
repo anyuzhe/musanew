@@ -72,14 +72,6 @@ class EntrustResumesController extends ApiBaseCommonController
         return null;
     }
 
-    //列表排序
-    protected function modelGetSort(&$model)
-    {
-        $model = $model->orderByRaw("FIELD(status, ?)", [1,0,2,-1,-2])->order('created_at', 'desc');
-        return $model;
-    }
-
-
     public function afterStore($obj, $data)
     {
         $id = $obj->id;
