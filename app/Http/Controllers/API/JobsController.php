@@ -9,6 +9,7 @@ use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use App\Models\Job;
+use Illuminate\Validation\Rule;
 
 class JobsController extends ApiBaseCommonController
 {
@@ -20,6 +21,34 @@ class JobsController extends ApiBaseCommonController
     {
         $data = Course::where('category', 6)->get();
         return $this->apiReturnJson(0, $data);
+    }
+
+    public function storeValidate()
+    {
+        return [
+            [
+                'code' => 'required|unique:jobs',
+            ],
+            [
+                'code.required'=>'编号编号必须填写',
+                'code.unique'=>'编号必须唯一',
+            ]
+        ];
+    }
+    public function updateValidate($id)
+    {
+        return [
+            [
+                'code' => [
+                    'required',
+                    Rule::unique('jobs')->ignore($id),
+                ],
+            ],
+            [
+                'code.required'=>'编号编号必须填写',
+                'code.unique'=>'编号必须唯一',
+            ]
+        ];
     }
 
     public function allListIdName()

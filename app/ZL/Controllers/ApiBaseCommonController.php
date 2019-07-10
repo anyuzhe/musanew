@@ -199,7 +199,7 @@ class ApiBaseCommonController extends CommonController
         $model = $this->getModel();
         //判断是否有表单验证 并且验证
         if(method_exists($this,'updateValidate')){
-            $validatorArr = $this->storeValidate();
+            $validatorArr = $this->storeValidate($id);
             $validator = app('validator')->make($request->all(),$validatorArr[0],$validatorArr[1]);
 
             if($validator->fails()){
