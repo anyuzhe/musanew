@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Area;
+use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
