@@ -22,6 +22,21 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('/test1', function () use ($router) {
+    $validator = \Illuminate\Support\Facades\Validator::make(['code'=>'0019'], [
+        'code' => [
+            'required',
+            \Illuminate\Validation\Rule::unique('jobs')->ignore(10)->where(function ($query) {
+                return $query->where('status', '!=',-1);
+            }),
+        ],
+    ],[
+        'code.required'=>'编号编号必须填写',
+        'code.unique'=>'编号必须唯一',
+    ]);
+    if($validator->fails()){
+        $errors = $validator->errors();
+        dd($errors);
+    }
 dd(1);
     $strs = [
         '系统开发生命周期',
