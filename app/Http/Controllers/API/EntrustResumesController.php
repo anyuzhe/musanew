@@ -169,6 +169,12 @@ class EntrustResumesController extends ApiBaseCommonController
 
     public function _after_find(&$data)
     {
+        $recruit_resume_id = $this->request->get('recruit_resume_id');
+        if($recruit_resume_id){
+            $recruitResume = RecruitResume::find($recruit_resume_id);
+            if($recruitResume)
+                $this->recruitResumesRepository->haveLook($recruitResume);
+        }
         $data = app()->build(ResumesRepository::class)->getData($data);
     }
 
