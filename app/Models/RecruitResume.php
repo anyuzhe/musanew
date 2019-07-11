@@ -39,6 +39,11 @@ class RecruitResume extends Model
         return $this->hasMany('App\Models\RecruitResumeLog', 'company_job_recruit_resume_id');
     }
 
+    public function looks()
+    {
+        return $this->hasMany('App\Models\RecruitResumeLook', 'company_job_recruit_resume_id');
+    }
+
     public function resume()
     {
         return $this->belongsTo('App\Models\Resume', 'resume_id');
@@ -62,4 +67,5 @@ class RecruitResume extends Model
     {
         return $this->belongsTo('App\Models\Company', 'company_id');
     }
+
 }

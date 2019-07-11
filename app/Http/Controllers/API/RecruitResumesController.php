@@ -47,9 +47,16 @@ class RecruitResumesController extends ApiBaseCommonController
         $data->load('resume');
         $data->load('thirdParty');
         $data->load('company');
+
+        $has_loos_ids = $this->getCurrentCompany()->looks()->pluck('company_job_recruit_resume_id')->toArray();
         foreach ($data as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
             $this->recruitResumesRepository->addFieldText($v);
+            if(in_array($v->id, $has_loos_ids)){
+                $v->have_look = 1;
+            }else{
+                $v->have_look = 0;
+            }
         }
         return $data;
     }

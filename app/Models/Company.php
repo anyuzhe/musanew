@@ -21,6 +21,11 @@ class Company extends Model
         return $this->belongsToMany('App\Models\Resume','company_resume','company_id','resume_id')->wherePivotIn('type', [1]);
     }
 
+    public function looks()
+    {
+        return $this->hasMany('App\Models\RecruitResumeLook', 'company_id');
+    }
+
     public function entrusts()
     {
         return $this->hasMany('App\Models\Entrust', 'company_id');
