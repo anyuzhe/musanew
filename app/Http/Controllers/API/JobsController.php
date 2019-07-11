@@ -35,13 +35,16 @@ class JobsController extends ApiBaseCommonController
             ]
         ];
     }
+
     public function updateValidate($id)
     {
         return [
             [
                 'code' => [
                     'required',
-                    Rule::unique('jobs')->ignore($id),
+                    Rule::unique('jobs')->ignore($id)->where(function ($query) {
+                        return $query->where('status', '!=',-1);
+                    }),
                 ],
             ],
             [
