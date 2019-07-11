@@ -18,8 +18,7 @@ class CheckUserLogin
      */
     public function handle($request, Closure $next)
     {
-        $token = TokenRepository::getToken();
-        $tokenModel = TokenRepository::getTokenModel($token);
+        $tokenModel = TokenRepository::getTokenModel();
         if(!$tokenModel){
             return ResponseLayout::apply(999);
         }

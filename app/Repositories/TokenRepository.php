@@ -24,7 +24,7 @@ class TokenRepository
     {
         global $LOGIN_USER;
         if(!$LOGIN_USER){
-            $token = TokenRepository::getToken();
+            $token = TokenRepository::getTokenModel();
             if(!$token)
                 return null;
             $LOGIN_USER = $token->user;
@@ -46,8 +46,10 @@ class TokenRepository
         return $LOGIN_USER_CURRENT_COMPANY;
     }
 
-    public static function getTokenModel($token)
+    public static function getTokenModel($token = false)
     {
+        if(!$token)
+            $token = self::getToken();
         global $LOGIN_TOKEN;
         if($LOGIN_TOKEN)
             return $LOGIN_TOKEN;
