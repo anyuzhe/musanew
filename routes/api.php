@@ -48,7 +48,7 @@ $router->post('/user/register', 'API\LoginController@register');
 //邮箱找回密码发送验证码
 $router->post('/user/findpassword/sendcode', 'API\LoginController@sendCode');
 //找回密码--修改密码
-$router->post('/user/findpassword/edit', 'API\LoginController@editPassword');
+$router->any('/user/findpassword/edit', 'API\LoginController@editPassword');
 
 $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
 

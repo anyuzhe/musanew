@@ -26,7 +26,7 @@ class CommonController extends Controller
 
     public function getMoodleRoot()
     {
-        return './../../musa';
+        return './../musa';
     }
 
     /*
