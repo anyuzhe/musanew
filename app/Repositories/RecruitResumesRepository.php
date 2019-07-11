@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
+use App\Models\RecruitResumeLook;
 use App\Models\Resume;
 
 class RecruitResumesRepository
@@ -114,6 +115,20 @@ class RecruitResumesRepository
         $recruitResume->logs()->save($log);
         $recruitResume->status = $status;
         $recruitResume->save();
+    }
+
+    public function haveLook(RecruitResume $recruitResume)
+    {
+        $has = RecruitResumeLook::where('company_job_recruit_resume_id',$recruitResume->id)->where('company_id',TokenRepository::getCurrentCompany()->id)->first();
+        if(!$has){
+            RecruitResumeLook::create([
+                'company_job_recruit_resume_id'=>$recruitResume->id,
+                'status'=>1,
+                'resume_id'=>$recruitResume->resume_id,
+                'company_id'=>TokenRepository::getCurrentCompany()->id,
+                'user_id'=>TokenRepository::getUser()->id,
+            ]);
+        }
     }
 
     public function hiredEntryHandle(RecruitResume $recruitResume)

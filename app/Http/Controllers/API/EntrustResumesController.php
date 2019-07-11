@@ -142,6 +142,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 'resume_source'=>$resume->type,
                 'creator_id'=>$this->getUser()->id,
             ]);
+            $this->recruitResumesRepository->haveLook($recruitResume);
             if($entrust_id && $entrust){
                 $this->recruitResumesRepository->generateLog($recruitResume,1,$entrust->thirdParty, null,1);
                 $recruit->resume_num++;

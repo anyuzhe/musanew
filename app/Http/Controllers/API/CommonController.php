@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Repositories\TokenRepository;
 use DB;
 use App\Models\ExternalToken;
 use App\ZL\ResponseLayout;
@@ -55,29 +56,12 @@ class CommonController extends Controller
 
     public function getUser()
     {
-        global $LOGIN_USER;
-        if(!$LOGIN_USER){
-            $token = $this->getToken();
-            if(!$token)
-                return null;
-            $user = $token->user;
-            $LOGIN_USER = $user;
-            return $user;
-        }else{
-            return $LOGIN_USER;
-        }
+        return TokenRepository::getUser();
     }
 
     public function getCurrentCompany()
     {
-        $user = $this->getUser();
-        if($user)
-            $company = $user->company->first();
-        else
-//            $company = Company::first();
-            $company = null;
-//        $company = Company::find(7);
-        return $company;
+        return TokenRepository::getCurrentCompany();
     }
 
     /**

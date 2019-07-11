@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 
 
 $router->get('/', function () use ($router) {
+
+    $request = app('request');
+    dd($request->all());
     return 'test';
 });
 

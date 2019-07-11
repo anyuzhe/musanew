@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\ExternalToken;
+use App\Repositories\TokenRepository;
 use App\ZL\ResponseLayout;
 use Closure;
 
@@ -17,16 +18,9 @@ class CheckUserLogin
      */
     public function handle($request, Closure $next)
     {
-        $token = $request->get('token');
-        if(!$token)
-            $token = $request->header('token');
-        if(!$token)
-            $token = $request->header('Token');
-        $tokenModel = ExternalToken::where('token', $token)->first();
-        if($tokenModel){
-            global $LOGIN_USER;
-            $LOGIN_USER = $tokenModel->user;
-        }else{
+        $token = TokenRepository::getToken();
+        $tokenModel = TokenRepository::getTokenModel($token);
+        if(!$tokenModel){
             return ResponseLayout::apply(999);
         }
         return $next($request);
