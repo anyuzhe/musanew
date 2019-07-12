@@ -10,6 +10,8 @@ class User extends Model
 
     public $fillable = [
         'confirmed',
+        'firstname',
+        'lastname',
     ];
 
 

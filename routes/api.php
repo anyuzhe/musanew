@@ -62,7 +62,7 @@ dd(1);
 $router->any('/user/login', 'API\LoginController@login');
 $router->get('/user/login/test', 'API\LoginController@test');
 //注册
-$router->post('/user/register', 'API\LoginController@register');
+$router->any('/user/register', 'API\LoginController@register');
 //邮箱找回密码发送验证码
 $router->post('/user/findpassword/sendcode', 'API\LoginController@sendCode');
 //找回密码--修改密码

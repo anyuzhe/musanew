@@ -85,7 +85,15 @@ class LoginController extends CommonController
             $user = signup_setup_new_user($user);
             $this->userSignup($user, true);
 
-            User::where('id', $user->id)->update(['confirmed'=>1]);
+            if(isset($user->realname))
+                $realname = $user->realname;
+            else
+                $realname = '';
+            User::where('id', $user->id)->update([
+                'confirmed'=>1,
+                'firstname'=>$realname?substr_text($realname,0,1):'',
+                'lastname'=>$realname?substr_text($realname,1):'',
+            ]);
             UserBasicInfo::create(['user_id'=>$user->id]);
             $user = User::find($user->id);
             $token = TokenHelper::getTokenForUser($user);

@@ -3406,6 +3406,7 @@ function user_not_fully_set_up($user, $strict = true)
  */
 function over_bounce_threshold($user)
 {
+    return false;//ZLDO
     global $CFG, $DB;
 
     if (empty($CFG->handlebounces)) {
