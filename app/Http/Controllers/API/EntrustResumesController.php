@@ -13,6 +13,7 @@ use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class EntrustResumesController extends ApiBaseCommonController
@@ -176,6 +177,10 @@ class EntrustResumesController extends ApiBaseCommonController
                 $this->recruitResumesRepository->haveLook($recruitResume);
         }
         $data = app()->build(ResumesRepository::class)->getData($data);
+        $data = $data->toArray();
+        $data['educations'] = (new Collection($data['educations']))->sortByDesc('start_date');
+        $data['projects'] = (new Collection($data['projects']))->sortByDesc('project_start');
+        $data['companies'] = (new Collection($data['companies']))->sortByDesc('job_start');
     }
 
     public function destroy($id)

@@ -83,6 +83,11 @@ class RecruitsController extends ApiBaseCommonController
                 $data->created_at = $entrust->created_at;
             }
         }
+        if($data->company_id==$this->getCurrentCompany()->id){
+            $data->is_party = 1;
+        }else{
+            $data->is_party = 0;
+        }
         $data->job = app()->build(JobsRepository::class)->getData($data->job);
 
     }

@@ -60,6 +60,9 @@ dd(1);
 
 //登陆
 $router->any('/user/login', 'API\LoginController@login');
+
+$router->any('/skip/course', 'API\LoginController@skipCourse');
+
 $router->get('/user/login/test', 'API\LoginController@test');
 //注册
 $router->any('/user/register', 'API\LoginController@register');
@@ -91,6 +94,7 @@ $router->post('/company/jobs/checkCode', 'API\JobsController@checkCode');
 
 
 
+$router->get('/company/resumes/{id}', 'API\EntrustResumesController@show');
 
 $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //个人信息
@@ -127,7 +131,6 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //列表
     $router->get('/company/resumes', 'API\EntrustResumesController@index');
     //详情
-    $router->get('/company/resumes/{id}', 'API\EntrustResumesController@show');
     //删除
     $router->post('/company/resumes/delete/{id}', 'API\EntrustResumesController@destroy');
 

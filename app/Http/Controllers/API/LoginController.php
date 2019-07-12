@@ -17,6 +17,17 @@ class LoginController extends CommonController
         dump($CFG->tokenduration);
         dump(date('Y-m-d H:i;s'));
     }
+
+    public function skipCourse()
+    {
+        $course_id = $this->request->get('course_id');
+        $user = $this->getUser();
+        $token = $this->getToken();
+        $httpUrl = "http://39.100.105.180";
+        $url = $httpUrl."/webservice/rest/server.php?wsfunction=enrol_self_enrol_user&wstoken={$token}&courseid={$course_id}&moodlewsrestformat=json";
+        $res = postCurl($url);
+    }
+
     public function login()
     {
         $email = $this->request->get('email');
