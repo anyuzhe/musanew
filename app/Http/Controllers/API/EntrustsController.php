@@ -69,7 +69,7 @@ class EntrustsController extends ApiBaseCommonController
     public function _after_find(&$data)
     {
         $data->need_num = $data->recruit->need_num;
-        $data->need_num = app()->build(EntrustsRepository::class)->getStatusByEntrustAndRecruit($data->status, $data->recruit->status);
+        $data->status = app()->build(EntrustsRepository::class)->getStatusByEntrustAndRecruit($data->status, $data->recruit->status);
         $data->company;
         $data->thirdParty;
         $data->job = app()->build(JobsRepository::class)->getData($data->job);

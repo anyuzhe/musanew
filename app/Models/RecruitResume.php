@@ -55,7 +55,7 @@ class RecruitResume extends Model
 
     public function entrust()
     {
-        return $this->belongsTo('App\Models\Recruit', 'company_job_recruit_entrust_id');
+        return $this->belongsTo('App\Models\Entrust', 'company_job_recruit_entrust_id');
     }
 
     public function thirdParty()
