@@ -128,7 +128,7 @@ class EntrustsController extends ApiBaseCommonController
         $id = $this->request->get('id');
         $entrust = Entrust::find($id);
         $recruit = $entrust->recruit;
-        if($recruit->status==2){
+        if($entrust->status==0){
             $recruit->status = 3;
             $recruit->save();
 
@@ -145,12 +145,12 @@ class EntrustsController extends ApiBaseCommonController
         $id = $this->request->get('id');
         $entrust = Entrust::find($id);
         $recruit = $entrust->recruit;
-        if($recruit->status==2){
-            //假如委托没有进行中的了 才会变成1
-//            if(!Entrust::where('company_job_recruit_id', $recruit->id)->whereIn('status',[0,1])->first()){
-//                $recruit->status = 1;
-//                $recruit->save();
-//            }
+        if($entrust->status==0){
+            //假如委托没有进行中的了 直接变成结束
+            if(!Entrust::where('company_job_recruit_id', $recruit->id)->whereIn('status',[0,1])->first()){
+                $recruit->status = 4;
+                $recruit->save();
+            }
 
             $entrust->status = -2;
             $entrust->save();

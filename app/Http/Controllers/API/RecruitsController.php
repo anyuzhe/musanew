@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Recruit;
+use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
@@ -76,6 +77,7 @@ class RecruitsController extends ApiBaseCommonController
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
             if($entrust){
+                $data->status = app()->build(EntrustsRepository::class)->getStatusByEntrustAndRecruit($entrust->status, $data->status);
                 $data->resume_num = $entrust->resume_num;
                 $data->new_resume_num = $entrust->new_resume_num;
                 $data->created_at = $entrust->created_at;
