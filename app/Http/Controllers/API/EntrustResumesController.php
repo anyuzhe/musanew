@@ -178,9 +178,9 @@ class EntrustResumesController extends ApiBaseCommonController
         }
         $data = app()->build(ResumesRepository::class)->getData($data);
         $data = $data->toArray();
-        $data['educations'] = (new Collection($data['educations']))->sortByDesc('start_date');
-        $data['projects'] = (new Collection($data['projects']))->sortByDesc('project_start');
-        $data['companies'] = (new Collection($data['companies']))->sortByDesc('job_start');
+        $data['educations'] = (new Collection($data['educations']))->sortByDesc('start_date')->values()->toArray();
+        $data['projects'] = (new Collection($data['projects']))->sortByDesc('project_start')->values()->toArray();
+        $data['companies'] = (new Collection($data['companies']))->sortByDesc('job_start')->values()->toArray();
     }
 
     public function destroy($id)
