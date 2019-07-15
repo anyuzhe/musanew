@@ -65,7 +65,7 @@ class EntrustsRepository
                 $status_text = '外包中';
                 break;
             case 4:
-                $status_text = '结束';
+                $status_text = '已结束';
                 break;
             default:
                 $status_text = '未知状态';
