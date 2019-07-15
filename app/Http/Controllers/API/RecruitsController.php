@@ -59,6 +59,8 @@ class RecruitsController extends ApiBaseCommonController
     {
         $recruits->load('job');
 
+        $entrustRes = app()->build(EntrustsRepository::class);
+
         $job_ids = [];
         $recruits = $recruits->toArray();
         foreach ($recruits as $recruit) {
@@ -67,6 +69,8 @@ class RecruitsController extends ApiBaseCommonController
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
         foreach ($recruits as &$recruit) {
             $recruit['job'] = $jobs[$recruit['job']['id']];
+
+            $recruit['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($recruit);
         }
         return $recruits;
     }
@@ -89,6 +93,9 @@ class RecruitsController extends ApiBaseCommonController
             $data->is_party = 0;
         }
         $data->job = app()->build(JobsRepository::class)->getData($data->job);
+
+        $entrustRes = app()->build(EntrustsRepository::class);
+        $data['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($data);
 
     }
 

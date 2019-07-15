@@ -8,6 +8,7 @@ use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
+use App\Models\RecruitResumeLook;
 use App\Models\Resume;
 use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
@@ -54,6 +55,7 @@ class ClearData extends Command
         Recruit::truncate();
         RecruitResume::truncate();
         RecruitResumeLog::truncate();
+        RecruitResumeLook::truncate();
         Resume::truncate();
         ResumeCompany::truncate();
         ResumeEducation::truncate();
