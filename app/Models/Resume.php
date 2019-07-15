@@ -36,6 +36,7 @@ class Resume extends Model
         'residence_address',//现居地详细地址
         'third_party_evaluation',//第三方评价
         'type',//1:外包方录入的简历。 2个人简历
+        'self_evaluation',//自我评价
     ];
 
     public function skills()
