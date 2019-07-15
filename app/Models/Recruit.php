@@ -8,6 +8,7 @@ class Recruit extends Model
 {
     //status 1招聘中 2等待外包公司审核 3外包中 4结束 5已完成
     protected $table = 'company_job_recruit';
+    protected $connection = 'musa';
     public $fillable = [
         'job_id',
         'need_num',

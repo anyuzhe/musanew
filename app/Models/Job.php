@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Job extends Model
 {
     use SoftDeletes;
+    protected $connection = 'musa';
 
     protected $table = 'jobs';
 

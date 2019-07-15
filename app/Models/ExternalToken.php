@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExternalToken extends Model
 {
+    protected $connection = 'moodle';
+
     public $fillable = [
         'token',
         'privatetoken',

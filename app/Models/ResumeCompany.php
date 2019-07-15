@@ -7,6 +7,7 @@ class ResumeCompany extends Model
 {
     protected $table = 'resume_company';
 
+    protected $connection = 'musa';
     public $timestamps = false;
     public $fillable = [
         'resume_id',

@@ -7,6 +7,7 @@ class RecruitResume extends Model
 {
     protected $table = 'company_job_recruit_resume';
 
+    protected $connection = 'musa';
     public $fillable = [
         'third_party_id',
         'company_id',

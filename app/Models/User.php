@@ -7,6 +7,7 @@ class User extends Model
 {
     protected $table = 'user';
     public $timestamps = false;
+    protected $connection = 'moodle';
 
     public $fillable = [
         'confirmed',

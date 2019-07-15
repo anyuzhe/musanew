@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class ResumeProject extends Model
 {
     protected $table = 'resume_project';
+    protected $connection = 'musa';
     public $timestamps = false;
     public $fillable = [
         'resume_id',

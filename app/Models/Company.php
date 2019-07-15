@@ -8,6 +8,7 @@ class Company extends Model
 {
     protected $table = 'company';
 
+    protected $connection = 'musa';
     public $fillable = [
     ];
 

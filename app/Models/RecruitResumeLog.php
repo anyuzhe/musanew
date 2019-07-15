@@ -7,6 +7,7 @@ class RecruitResumeLog extends Model
 {
     protected $table = 'company_job_recruit_resume_log';
 
+    protected $connection = 'musa';
     public $fillable = [
         'company_job_recruit_resume_id',
         'text',

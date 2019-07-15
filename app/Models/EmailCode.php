@@ -8,6 +8,8 @@ class EmailCode extends Model
 {
     protected $table = 'emailCode';
 
+    protected $connection = 'musa';
+
     public $fillable = [
     ];
 }

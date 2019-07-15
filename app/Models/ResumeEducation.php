@@ -7,6 +7,7 @@ class ResumeEducation extends Model
 {
     protected $table = 'resume_education';
 
+    protected $connection = 'musa';
     public $timestamps = false;
     public $fillable = [
         'resume_id',

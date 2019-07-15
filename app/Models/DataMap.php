@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class DataMap extends Model
 {
     protected $table = 'data_map';
+    protected $connection = 'musa';
 
     public $fillable = [
     ];

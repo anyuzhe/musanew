@@ -13,7 +13,6 @@ class UsersController extends CommonController
     { 
         $user = $this->getUser();
         $info = $user->info;
-
         if(!$info)
             $info = UserBasicInfo::create(['user_id'=>$user->id]);
         $info->companies = $user->companies;

@@ -7,6 +7,7 @@ class Resume extends Model
 {
     protected $table = 'resume';
 
+    protected $connection = 'musa';
     public $fillable = [
         'user_id',//
         'workplace',//期望工作地点
