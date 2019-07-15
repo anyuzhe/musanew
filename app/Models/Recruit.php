@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recruit extends Model
 {
-    //status 1招聘中 2等待外包公司审核 3外包中 4结束
+    //status 1招聘中 2等待外包公司审核 3外包中 4结束 5已完成
     protected $table = 'company_job_recruit';
     public $fillable = [
         'job_id',

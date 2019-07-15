@@ -36,7 +36,7 @@ class EntrustsRepository
         }elseif($_status==1){
             $_status = 3;
         }elseif($_status==2){
-            $_status = 4;
+            $_status = 5;
         }elseif($_status==-1){
             $_status = 4;
         }elseif($_status==-2){
@@ -65,7 +65,10 @@ class EntrustsRepository
                 $status_text = '外包中';
                 break;
             case 4:
-                $status_text = '已结束';
+                $status_text = '招聘取消';
+                break;
+            case 5:
+                $status_text = '招聘完成';
                 break;
             default:
                 $status_text = '未知状态';
@@ -79,7 +82,7 @@ class EntrustsRepository
                 $status_text = $entrust['third_party']['company_alias'].' 拒绝委托招聘';
                 break;
             case -1:
-                $status_text = '已结束';
+                $status_text = '招聘取消';
                 break;
             case 0:
                 $status_text = '等待外包公司审核';
@@ -88,7 +91,7 @@ class EntrustsRepository
                 $status_text = '外包中';
                 break;
             case 2:
-                $status_text = '已完成';
+                $status_text = '招聘完成';
                 break;
             default:
                 $status_text = '未知状态';
