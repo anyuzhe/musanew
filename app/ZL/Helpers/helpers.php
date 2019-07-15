@@ -521,7 +521,7 @@ function getTrueName($name)
 function getMoodlePICURL($logo){
     global $CFG;
     require_once($CFG->dirroot . '/lib/weblib.php');
-    $file = app('db')->table('files')->where('filesize','>',0)->where('itemid', $logo)->first();
+    $file = app('db')->connection('moodle')->table('files')->where('filesize','>',0)->where('itemid', $logo)->first();
     $url = \moodle_url::make_pluginfile_url($file->contextid, $file->component, $file->filearea, $file->itemid,
         $file->filepath, $file->filename, false);
     $host = $url->get_host();
