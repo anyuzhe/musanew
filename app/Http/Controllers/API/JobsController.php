@@ -25,14 +25,14 @@ class JobsController extends ApiBaseCommonController
 
     public function checkUpdate($id,$data)
     {
-        if(Job::where('code',$data->get('code'))->where('id','!=', $id)->first())
+        if(Job::where('code',$data->get('code'))->where('company_id',$this->getCurrentCompany()->id)->where('id','!=', $id)->first())
             return '职位代码必须唯一';
         else
             return null;
     }
     public function checkStore($data)
     {
-        if(Job::where('code',$data->get('code'))->first())
+        if(Job::where('code',$data->get('code'))->where('company_id',$this->getCurrentCompany()->id)->first())
             return '职位代码必须唯一';
         else
             return null;
@@ -187,11 +187,11 @@ class JobsController extends ApiBaseCommonController
         $id = $this->request->get('id');
         $code = $this->request->get('code');
         if(!$code)
-            return $this->apiReturnJson(0, ['check'=>0]);
+            return $this->apiReturnJson(9999, ['check'=>0]);
         if($id){
-            $has = Job::where('code', $code)->where('id', '!=', $id)->first();
+            $has = Job::where('code', $code)->where('company_id',$this->getCurrentCompany()->id)->where('id', '!=', $id)->first();
         }else{
-            $has = Job::where('code', $code)->first();
+            $has = Job::where('code', $code)->where('company_id',$this->getCurrentCompany()->id)->first();
         }
         return $this->apiReturnJson($has?9999:1, ['check'=>$has?0:1]);
     }
