@@ -193,7 +193,7 @@ class JobsController extends ApiBaseCommonController
         }else{
             $has = Job::where('code', $code)->first();
         }
-        return $this->apiReturnJson(0, ['check'=>$has?0:1]);
+        return $this->apiReturnJson($has?9999:1, ['check'=>$has?0:1]);
     }
 
     public function destroy($id)
