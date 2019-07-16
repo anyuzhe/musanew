@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\CompanyRole;
+use App\Models\CompanyUser;
 use App\Models\UserBasicInfo;
 use DB;
 use Illuminate\Support\Facades\Log;
@@ -56,8 +57,8 @@ class UsersController extends CommonController
     	$company_id = $this->request->get('company_id');
         $user = $this->getUser();
     	if($company_id){
-            app('db')->table('company_user')->where('user_id',$user->id)->update(['is_current'=>0]);
-            app('db')->table('company_user')->where('user_id',$user->id)->where('company_id',$company_id)->update(['is_current'=>1]);
+            CompanyUser::where('user_id',$user->id)->update(['is_current'=>0]);
+            CompanyUser::where('user_id',$user->id)->where('company_id',$company_id)->update(['is_current'=>1]);
         }else{
 
         }
