@@ -25,14 +25,14 @@ class JobsController extends ApiBaseCommonController
 
     public function checkUpdate($id,$data)
     {
-        if(Job::where('code',$data['code'])->whereNotIn('id', $id)->first())
+        if(Job::where('code',$data->get('code'))->whereNotIn('id', $id)->first())
             return '编号必须唯一';
         else
             return null;
     }
     public function checkStore($data)
     {
-        if(Job::where('code',$data['code'])->first())
+        if(Job::where('code',$data->get('code'))->first())
             return '编号必须唯一';
         else
             return null;
