@@ -217,7 +217,7 @@ class ApiBaseCommonController extends CommonController
         if(method_exists($this,'checkUpdate')){
             $_ok = $this->checkUpdate($id,$request);
             if($_ok)
-                return responseZK(0,null,$_ok);
+                return responseZK(ErrorCode::$fieldError['code'],null,$_ok);
         }
 
         //添加数据
