@@ -10,6 +10,7 @@ use TCG\Voyager\Database\Types\Type;
 abstract class SchemaManager
 {
     // todo: trim parameters
+    public static $connection = null;
 
     public static function __callStatic($method, $args)
     {
@@ -18,7 +19,7 @@ abstract class SchemaManager
 
     public static function manager()
     {
-        return DB::connection()->getDoctrineSchemaManager();
+        return DB::connection(self::$connection)->getDoctrineSchemaManager();
     }
 
     public static function getDatabaseConnection()

@@ -93,12 +93,12 @@ class DataType extends Model
                     $requestData[$field] = 0;
                 }
             }
+            $fields = $this->fields((strlen($this->model_name) != 0)
+                ? app($this->model_name)->getTable()
+                : Arr::get($requestData, 'name')
+            );
 
             if ($this->fill($requestData)->save()) {
-                $fields = $this->fields((strlen($this->model_name) != 0)
-                    ? app($this->model_name)->getTable()
-                    : Arr::get($requestData, 'name')
-                );
 
                 $requestData = $this->getRelationships($requestData, $fields);
 
@@ -124,7 +124,7 @@ class DataType extends Model
                 // Clean data_rows that don't have an associated field
                 // TODO: need a way to identify deleted and renamed fields.
                 //   maybe warn the user and let him decide to either rename or delete?
-                $this->rows()->whereNotIn('field', $fields)->delete();
+                Voyager::modelClass('DataRow')->where('data_type_id',$this->id)->whereNotIn('field', $fields)->delete();
 
                 // It seems everything was fine. Let's check if we need to generate permissions
                 if ($this->generate_permissions) {

@@ -486,6 +486,7 @@ class ComposerStaticInitc61d286e97c9702768207a264e66e1f1
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\ClearData' => __DIR__ . '/../..' . '/app/Console/Commands/ClearData.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\API\\AreasController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/AreasController.php',
@@ -526,6 +527,7 @@ class ComposerStaticInitc61d286e97c9702768207a264e66e1f1
         'App\\Models\\Area' => __DIR__ . '/../..' . '/app/Models/Area.php',
         'App\\Models\\Company' => __DIR__ . '/../..' . '/app/Models/Company.php',
         'App\\Models\\CompanyResume' => __DIR__ . '/../..' . '/app/Models/CompanyResume.php',
+        'App\\Models\\CompanyRole' => __DIR__ . '/../..' . '/app/Models/CompanyRole.php',
         'App\\Models\\Course' => __DIR__ . '/../..' . '/app/Models/Course.php',
         'App\\Models\\DataMap' => __DIR__ . '/../..' . '/app/Models/DataMap.php',
         'App\\Models\\DataMapOption' => __DIR__ . '/../..' . '/app/Models/DataMapOption.php',
@@ -537,6 +539,7 @@ class ComposerStaticInitc61d286e97c9702768207a264e66e1f1
         'App\\Models\\Recruit' => __DIR__ . '/../..' . '/app/Models/Recruit.php',
         'App\\Models\\RecruitResume' => __DIR__ . '/../..' . '/app/Models/RecruitResume.php',
         'App\\Models\\RecruitResumeLog' => __DIR__ . '/../..' . '/app/Models/RecruitResumeLog.php',
+        'App\\Models\\RecruitResumeLook' => __DIR__ . '/../..' . '/app/Models/RecruitResumeLook.php',
         'App\\Models\\Resume' => __DIR__ . '/../..' . '/app/Models/Resume.php',
         'App\\Models\\ResumeCompany' => __DIR__ . '/../..' . '/app/Models/ResumeCompany.php',
         'App\\Models\\ResumeEducation' => __DIR__ . '/../..' . '/app/Models/ResumeEducation.php',
@@ -558,6 +561,7 @@ class ComposerStaticInitc61d286e97c9702768207a264e66e1f1
         'App\\Repositories\\RecruitResumesRepository' => __DIR__ . '/../..' . '/app/Repositories/RecruitResumesRepository.php',
         'App\\Repositories\\ResumesRepository' => __DIR__ . '/../..' . '/app/Repositories/ResumesRepository.php',
         'App\\Repositories\\SkillsRepository' => __DIR__ . '/../..' . '/app/Repositories/SkillsRepository.php',
+        'App\\Repositories\\TokenRepository' => __DIR__ . '/../..' . '/app/Repositories/TokenRepository.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'App\\ZL\\App\\TestNotify' => __DIR__ . '/../..' . '/app/ZL/App/TestNotify.php',
         'App\\ZL\\Controllers\\ApiBaseCommonController' => __DIR__ . '/../..' . '/app/ZL/Controllers/ApiBaseCommonController.php',

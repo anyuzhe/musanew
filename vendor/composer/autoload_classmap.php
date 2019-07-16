@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\ClearData' => $baseDir . '/app/Console/Commands/ClearData.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\API\\AreasController' => $baseDir . '/app/Http/Controllers/API/AreasController.php',
@@ -46,6 +47,7 @@ return array(
     'App\\Models\\Area' => $baseDir . '/app/Models/Area.php',
     'App\\Models\\Company' => $baseDir . '/app/Models/Company.php',
     'App\\Models\\CompanyResume' => $baseDir . '/app/Models/CompanyResume.php',
+    'App\\Models\\CompanyRole' => $baseDir . '/app/Models/CompanyRole.php',
     'App\\Models\\Course' => $baseDir . '/app/Models/Course.php',
     'App\\Models\\DataMap' => $baseDir . '/app/Models/DataMap.php',
     'App\\Models\\DataMapOption' => $baseDir . '/app/Models/DataMapOption.php',
@@ -57,6 +59,7 @@ return array(
     'App\\Models\\Recruit' => $baseDir . '/app/Models/Recruit.php',
     'App\\Models\\RecruitResume' => $baseDir . '/app/Models/RecruitResume.php',
     'App\\Models\\RecruitResumeLog' => $baseDir . '/app/Models/RecruitResumeLog.php',
+    'App\\Models\\RecruitResumeLook' => $baseDir . '/app/Models/RecruitResumeLook.php',
     'App\\Models\\Resume' => $baseDir . '/app/Models/Resume.php',
     'App\\Models\\ResumeCompany' => $baseDir . '/app/Models/ResumeCompany.php',
     'App\\Models\\ResumeEducation' => $baseDir . '/app/Models/ResumeEducation.php',
@@ -78,6 +81,7 @@ return array(
     'App\\Repositories\\RecruitResumesRepository' => $baseDir . '/app/Repositories/RecruitResumesRepository.php',
     'App\\Repositories\\ResumesRepository' => $baseDir . '/app/Repositories/ResumesRepository.php',
     'App\\Repositories\\SkillsRepository' => $baseDir . '/app/Repositories/SkillsRepository.php',
+    'App\\Repositories\\TokenRepository' => $baseDir . '/app/Repositories/TokenRepository.php',
     'App\\User' => $baseDir . '/app/User.php',
     'App\\ZL\\App\\TestNotify' => $baseDir . '/app/ZL/App/TestNotify.php',
     'App\\ZL\\Controllers\\ApiBaseCommonController' => $baseDir . '/app/ZL/Controllers/ApiBaseCommonController.php',

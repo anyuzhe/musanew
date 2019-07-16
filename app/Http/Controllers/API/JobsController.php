@@ -23,35 +23,19 @@ class JobsController extends ApiBaseCommonController
         return $this->apiReturnJson(0, $data);
     }
 
-    public function storeValidate()
+    public function checkUpdate($id,$data)
     {
-        return [
-            [
-                'code' => 'required|unique:jobs',
-            ],
-            [
-                'code.required'=>'编号编号必须填写',
-                'code.unique'=>'编号必须唯一',
-            ]
-        ];
+        if(Job::where('code',$data['code'])->whereNotIn('id', $id)->first())
+            return '编号必须唯一';
+        else
+            return null;
     }
-
-    public function updateValidate($id)
+    public function checkStore($data)
     {
-        return [
-            [
-                'code' => [
-                    'required',
-                    Rule::unique('jobs')->ignore($id)->where(function ($query) {
-                        return $query->where('status', '!=',-1);
-                    }),
-                ],
-            ],
-            [
-                'code.required'=>'编号编号必须填写',
-                'code.unique'=>'编号必须唯一',
-            ]
-        ];
+        if(Job::where('code',$data['code'])->first())
+            return '编号必须唯一';
+        else
+            return null;
     }
 
     public function allListIdName()

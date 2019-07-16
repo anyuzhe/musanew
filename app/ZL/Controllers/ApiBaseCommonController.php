@@ -66,6 +66,12 @@ class ApiBaseCommonController extends CommonController
                 return responseZK(ErrorCode::$fieldError['code'],[],implode(',',$errors->all()));
             }
         }
+        if(method_exists($this,'checkStore')){
+            $_ok = $this->checkStore($request);
+            if($_ok)
+                return responseZK(ErrorCode::$fieldError['code'],null,$_ok);
+        }
+
         app('db')->beginTransaction();
         //添加数据
         if(!env('APP_DEBUG')){
@@ -207,6 +213,13 @@ class ApiBaseCommonController extends CommonController
                 return responseZK(ErrorCode::$fieldError['code'],[],implode(',',$errors->all()));
             }
         }
+
+        if(method_exists($this,'checkUpdate')){
+            $_ok = $this->checkUpdate($id,$request);
+            if($_ok)
+                return responseZK(0,null,$_ok);
+        }
+
         //添加数据
         $only = isset($this->updateField)?$this->updateField:$model->fillable;
 
