@@ -613,3 +613,13 @@ function getCurl($url,$array=[],$returnjson=true){//get https的内容
         $result= json_decode($result,true);
     return $result;
 }
+
+function requireMoodleConfig()
+{
+    require_once(app()->basePath().'/musa/config.php');
+}
+
+function getMoodleRoot()
+{
+    return app()->basePath().'/musa';
+}

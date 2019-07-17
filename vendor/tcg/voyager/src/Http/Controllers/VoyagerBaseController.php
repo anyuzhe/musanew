@@ -121,10 +121,10 @@ class VoyagerBaseController extends Controller
         // Check if a default search key is set
         $defaultSearchKey = $dataType->default_search_key ?? null;
 
-        $view = 'voyager::bread.browse';
+        $view = 'voyager.bread.browse';
 
-        if (view()->exists("voyager::$slug.browse")) {
-            $view = "voyager::$slug.browse";
+        if (view()->exists("voyager.$slug.browse")) {
+            $view = "voyager.$slug.browse";
         }
 
         return Voyager::view($view, compact(
@@ -194,10 +194,10 @@ class VoyagerBaseController extends Controller
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
-        $view = 'voyager::bread.read';
+        $view = 'voyager.bread.read';
 
-        if (view()->exists("voyager::$slug.read")) {
-            $view = "voyager::$slug.read";
+        if (view()->exists("voyager.$slug.read")) {
+            $view = "voyager.$slug.read";
         }
 
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted'));
@@ -250,10 +250,10 @@ class VoyagerBaseController extends Controller
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
-        $view = 'voyager::bread.edit-add';
+        $view = 'voyager.bread.edit-add';
 
-        if (view()->exists("voyager::$slug.edit-add")) {
-            $view = "voyager::$slug.edit-add";
+        if (view()->exists("voyager.$slug.edit-add")) {
+            $view = "voyager.$slug.edit-add";
         }
 
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
@@ -332,10 +332,10 @@ class VoyagerBaseController extends Controller
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
-        $view = 'voyager::bread.edit-add';
+        $view = 'voyager.bread.edit-add';
 
-        if (view()->exists("voyager::$slug.edit-add")) {
-            $view = "voyager::$slug.edit-add";
+        if (view()->exists("voyager.$slug.edit-add")) {
+            $view = "voyager.$slug.edit-add";
         }
 
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
@@ -582,11 +582,11 @@ class VoyagerBaseController extends Controller
 
         $view = 'voyager::bread.order';
 
-        if (view()->exists("voyager::$slug.order")) {
-            $view = "voyager::$slug.order";
+        if (view()->exists("voyager.$slug.order")) {
+            $view = "voyager.$slug.order";
         }
 
-        return Voyager::view($view, compact(
+        return Voyager.view($view, compact(
             'dataType',
             'display_column',
             'dataRow',

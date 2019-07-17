@@ -48,6 +48,7 @@
                     <option value="{{ $tablename }}" @if(isset($relationshipDetails->table) && $relationshipDetails->table == $tablename){{ 'selected="selected"' }}@endif>{{ ucfirst($tablename) }}</option>
                 @endforeach
             </select>
+
             <span><input type="text" class="form-control" name="relationship_model_{{ $relationship['field'] }}" placeholder="{{ __('voyager::database.relationship.namespace') }}" value="{{ $relationshipDetails->model ?? '' }}"></span>
         </div>
             <div class="relationshipField">
@@ -66,21 +67,47 @@
                     </select>
                 </div>
             </div>
-        <div class="relationship_details_content margin_top relationshipPivot @if($relationshipDetails->type == 'belongsToMany'){{ 'visible' }}@endif">
+        {{--<div class="relationship_details_content margin_top relationshipPivot @if($relationshipDetails->type == 'belongsToMany'){{ 'visible' }}@endif">--}}
+            {{--<label>{{ __('voyager::database.relationship.pivot_table') }}:</label>--}}
+            {{--<select name="relationship_pivot_table_{{ $relationship['field'] }}" class="select2">--}}
+                {{--@foreach($tables as $tbl)--}}
+                    {{--<option value="{{ $tbl }}" @if(isset($relationshipDetails->pivot_table) && $relationshipDetails->pivot_table == $tbl){{ 'selected="selected"' }}@endif>{{ \Illuminate\Support\Str::singular(ucfirst($tbl)) }}</option>--}}
+                {{--@endforeach--}}
+            {{--</select>--}}
+        {{--</div>--}}
+        <div class="@if($relationshipDetails->type == 'belongsToMany'){{ 'visible' }}@endif">
             <label>{{ __('voyager::database.relationship.pivot_table') }}:</label>
-            <select name="relationship_pivot_table_{{ $relationship['field'] }}" class="select2">
-                @foreach($tables as $tbl)
-                    <option value="{{ $tbl }}" @if(isset($relationshipDetails->pivot_table) && $relationshipDetails->pivot_table == $tbl){{ 'selected="selected"' }}@endif>{{ \Illuminate\Support\Str::singular(ucfirst($tbl)) }}</option>
-                @endforeach
-            </select>
+            <span><input type="text" class="form-control" name="relationship_pivot_table_{{ $relationship['field'] }}" placeholder="关联中间表" value="{{ $relationshipDetails->pivot_table }}"></span>
         </div>
+
+        {{--<div class="relationship_details_content margin_top relationshipPivot @if($relationshipDetails->type == 'belongsToMany'){{ 'visible' }}@endif">--}}
+            {{--<label>{{ __('voyager::database.relationship.pivot_table') }}:</label>--}}
+            {{--<select name="relationship_pivot_table_{{ $relationship['field'] }}" class="select2">--}}
+                {{--@foreach($tables as $tbl)--}}
+                    {{--<option value="{{ $tbl }}" @if(isset($relationshipDetails->pivot_table) && $relationshipDetails->pivot_table == $tbl){{ 'selected="selected"' }}@endif>{{ \Illuminate\Support\Str::singular(ucfirst($tbl)) }}</option>--}}
+                {{--@endforeach--}}
+            {{--</select>--}}
+        {{--</div>--}}
+
         <div class="relationship_details_content margin_top">
+            @php
+            if(!isset($relationshipDetails->model_key_name)){
+                $relationshipDetails->model_key_name = '';
+            }
+            if(!isset($relationshipDetails->relationship_key_name)){
+                $relationshipDetails->relationship_key_name = '';
+            }
+            @endphp
             <label>{{ __('voyager::database.relationship.display_the') }} <span class="label_table_name"></span></label>
             <select name="relationship_label_{{ $relationship['field'] }}" class="rowDrop select2" data-table="{{ $relationshipDetails->table ?? '' }}" data-selected="{{ $relationshipDetails->label ?? ''}}">
             </select>
             <label class="relationship_key" style="@if($relationshipDetails->type == 'belongsTo' || $relationshipDetails->type == 'belongsToMany'){{ 'display:block' }}@endif">{{ __('voyager::database.relationship.store_the') }} <span class="label_table_name"></span></label>
             <select name="relationship_key_{{ $relationship['field'] }}" class="rowDrop select2 relationship_key" style="@if($relationshipDetails->type == 'belongsTo' || $relationshipDetails->type == 'belongsToMany'){{ 'display:block' }}@endif" data-table="@if(isset($relationshipDetails->table)){{ $relationshipDetails->table }}@endif" data-selected="@if(isset($relationshipDetails->key)){{ $relationshipDetails->key }}@endif">
             </select>
+            <label class="relationship_key" style="@if($relationshipDetails->type == 'belongsTo' || $relationshipDetails->type == 'belongsToMany'){{ 'display:block' }}@endif">此关联的模型在连接表里的外键名 <span class="label_table_name"></span></label>
+            <span><input type="text" class="form-control" name="relationship_model_key_name_{{ $relationship['field'] }}" placeholder="此关联的模型在连接表里的外键名" value="{{ $relationshipDetails->model_key_name }}"></span>
+            <label class="relationship_key" style="@if($relationshipDetails->type == 'belongsTo' || $relationshipDetails->type == 'belongsToMany'){{ 'display:block' }}@endif">另一个模型在连接表里的外键名 <span class="label_table_name"></span></label>
+            <span><input type="text" class="form-control" name="relationship_relationship_key_name_{{ $relationship['field'] }}" placeholder="另一个模型在连接表里的外键名" value="{{ $relationshipDetails->relationship_key_name }}"></span>
             <br>
             @isset($relationshipDetails->taggable)
                 <label class="relationship_taggable" style="@if($relationshipDetails->type == 'belongsToMany'){{ 'display:block' }}@endif">
@@ -90,6 +117,7 @@
                     <input type="checkbox" name="relationship_taggable_{{ $relationship['field'] }}" class="toggleswitch" data-on="{{ __('voyager::generic.yes') }}" data-off="{{ __('voyager::generic.no') }}" {{$relationshipDetails->taggable == 'on' ? 'checked' : ''}}>
                 </span>
             @endisset
+
         </div>
     </div>
     <input type="hidden" value="0" name="field_required_{{ $relationship['field'] }}" checked="checked">

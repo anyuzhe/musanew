@@ -1,6 +1,6 @@
 <?php
 
-namespace TCG\Voyager\Http\Controllers;
+namespace App\Http\Controllers\Voyager;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
@@ -12,6 +12,7 @@ use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Http\Controllers\Controller;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
 
 class VoyagerBaseController extends Controller
@@ -121,10 +122,10 @@ class VoyagerBaseController extends Controller
         // Check if a default search key is set
         $defaultSearchKey = $dataType->default_search_key ?? null;
 
-        $view = 'voyager::bread.browse';
+        $view = 'voyager.bread.browse';
 
-        if (view()->exists("voyager::$slug.browse")) {
-            $view = "voyager::$slug.browse";
+        if (view()->exists("voyager.$slug.browse")) {
+            $view = "voyager.$slug.browse";
         }
 
         return Voyager::view($view, compact(
@@ -194,10 +195,10 @@ class VoyagerBaseController extends Controller
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
-        $view = 'voyager::bread.read';
+        $view = 'voyager.bread.read';
 
         if (view()->exists("voyager::$slug.read")) {
-            $view = "voyager::$slug.read";
+            $view = "voyager.$slug.read";
         }
 
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted'));
@@ -250,12 +251,11 @@ class VoyagerBaseController extends Controller
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
-        $view = 'voyager::bread.edit-add';
+        $view = 'voyager.bread.edit-add';
 
         if (view()->exists("voyager::$slug.edit-add")) {
-            $view = "voyager::$slug.edit-add";
+            $view = "voyager.$slug.edit-add";
         }
-
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
@@ -332,10 +332,10 @@ class VoyagerBaseController extends Controller
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
-        $view = 'voyager::bread.edit-add';
+        $view = 'voyager.bread.edit-add';
 
         if (view()->exists("voyager::$slug.edit-add")) {
-            $view = "voyager::$slug.edit-add";
+            $view = "voyager.$slug.edit-add";
         }
 
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));

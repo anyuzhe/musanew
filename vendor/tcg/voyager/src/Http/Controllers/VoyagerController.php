@@ -13,7 +13,7 @@ class VoyagerController extends Controller
 {
     public function index()
     {
-        return Voyager::view('voyager::index');
+        return Voyager::view('voyager.index');
     }
 
     public function logout()

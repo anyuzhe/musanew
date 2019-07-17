@@ -108,7 +108,17 @@ abstract class Controller extends BaseController
 
             if ($row->type == 'relationship' && $row->details->type == 'belongsToMany') {
                 // Only if select_multiple is working with a relationship
-                $multi_select[] = ['model' => $row->details->model, 'content' => $content, 'table' => $row->details->pivot_table];
+                //ZLDO
+                if(!isset($row->details->model_key_name))
+                    $multi_select[] = ['model' => $row->details->model, 'content' => $content, 'table' => $row->details->pivot_table];
+                else
+                    $multi_select[] = [
+                        'model' => $row->details->model,
+                        'content' => $content,
+                        'table' => $row->details->pivot_table,
+                        'model_key_name' => $row->details->model_key_name,
+                        'relationship_key_name' => $row->details->relationship_key_name
+                    ];
             } else {
                 $data->{$row->field} = $content;
             }
@@ -128,9 +138,11 @@ abstract class Controller extends BaseController
         if (count($translations) > 0) {
             $data->saveTranslations($translations);
         }
-
         foreach ($multi_select as $sync_data) {
-            $data->belongsToMany($sync_data['model'], $sync_data['table'])->sync($sync_data['content']);
+            if(isset($sync_data['model_key_name']))
+                $data->belongsToMany($sync_data['model'], $sync_data['table'], $sync_data['model_key_name'], $sync_data['relationship_key_name'])->sync($sync_data['content']);
+            else
+                $data->belongsToMany($sync_data['model'], $sync_data['table'])->sync($sync_data['content']);
         }
 
         // Rename folders for newly created data through media-picker

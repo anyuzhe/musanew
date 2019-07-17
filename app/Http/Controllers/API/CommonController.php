@@ -22,12 +22,12 @@ class CommonController extends Controller
 
     public function requireMoodleConfig()
     {
-        require_once('./../musa/config.php');
+        requireMoodleConfig();
     }
 
     public function getMoodleRoot()
     {
-        return './../musa';
+        getMoodleRoot();
     }
 
     /*

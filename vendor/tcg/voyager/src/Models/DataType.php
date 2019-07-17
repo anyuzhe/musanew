@@ -107,7 +107,6 @@ class DataType extends Model
             if ($this->fill($requestData)->save()) {
 
                 $requestData = $this->getRelationships($requestData, $fields);
-
                 foreach ($fields as $field) {
                     $dataRow = $this->rows()->firstOrNew(['field' => $field]);
 
@@ -195,6 +194,12 @@ class DataType extends Model
                         'pivot'       => ($requestData['relationship_type_'.$relationship] == 'belongsToMany') ? '1' : '0',
                         'taggable'    => $requestData['relationship_taggable_'.$relationship] ?? '0',
                     ];
+                    if(isset($requestData['relationship_model_key_name_'.$relationship])){
+                        $relationshipDetails['model_key_name'] = $requestData['relationship_model_key_name_'.$relationship];
+                    }
+                    if(isset($requestData['relationship_relationship_key_name_'.$relationship])){
+                        $relationshipDetails['relationship_key_name'] = $requestData['relationship_relationship_key_name_'.$relationship];
+                    }
 
                     $requestData['field_details_'.$relationship] = json_encode($relationshipDetails);
                 }
