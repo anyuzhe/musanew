@@ -334,7 +334,7 @@ class VoyagerBaseController extends Controller
 
         $view = 'voyager.bread.edit-add';
 
-        if (view()->exists("voyager::$slug.edit-add")) {
+        if (view()->exists("voyager.$slug.edit-add")) {
             $view = "voyager.$slug.edit-add";
         }
 
@@ -643,12 +643,13 @@ class VoyagerBaseController extends Controller
         $search = $request->input('search', false);
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
-        $rows = $request->input('method', 'add') == 'add' ? $dataType->addRows : $dataType->editRows;
+//        $rows = $request->input('method', 'add') == 'add' ? $dataType->addRows : $dataType->editRows;
+//        dd($dataType->addRows);
+        $rows = $dataType->addRows;
         foreach ($rows as $key => $row) {
             if ($row->field === $request->input('type')) {
                 $options = $row->details;
                 $skip = $on_page * ($page - 1);
-
                 // If search query, use LIKE to filter results depending on field label
                 if ($search) {
                     $total_count = app($options->model)->where($options->label, 'LIKE', '%'.$search.'%')->count();

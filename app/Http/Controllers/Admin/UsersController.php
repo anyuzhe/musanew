@@ -20,7 +20,6 @@ class UsersController extends VoyagerBaseController
 
     public function index(Request $request)
     {
-        dd(menu('admin','_json'));
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 

@@ -1,4 +1,4 @@
-<?php $selected_value = (isset($dataTypeContent->{$row->field}) && !empty(old(
+    <?php $selected_value = (isset($dataTypeContent->{$row->field}) || !empty(old(
     $row->field,
                 $dataTypeContent->{$row->field}
 ))) ? old(
