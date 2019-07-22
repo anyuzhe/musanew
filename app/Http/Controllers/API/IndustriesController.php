@@ -16,7 +16,7 @@ class IndustriesController extends CommonController
                 $data[] = $v;
             }
         }
-        return $this->apiReturnJson(0, $all);
+        return $this->apiReturnJson(0, $data);
     }
 
     protected function getChild(&$v, $all)
