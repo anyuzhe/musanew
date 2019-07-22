@@ -153,6 +153,11 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //招聘下的-简历流程
     $router->post('/company/recruits/resumeFlow', 'API\RecruitResumesController@resumeFlow');
 
+    //企业信息修改
+    $router->get('/company/currentInfo', 'API\CompaniesController@getCurrentInfo');
+    $router->post('/company/currentInfo', 'API\CompaniesController@updateCurrentInfo');
+
+
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表

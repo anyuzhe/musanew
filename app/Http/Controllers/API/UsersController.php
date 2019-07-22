@@ -20,13 +20,13 @@ class UsersController extends CommonController
         $info->current_company = $user->company->first();
         $this->requireMoodleConfig();
         foreach ($info->companies as &$company) {
-            $company->logo_url = getMoodlePICURL($company->logo);
+            $company->logo_url = getPicFullUrl($company->logo);
             $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
         }
 
         unset($company);
         if($info->current_company){
-            $info->current_company->logo_url = getMoodlePICURL($info->current_company->logo);
+            $info->current_company->logo_url = getPicFullUrl($info->current_company->logo);
             $info->current_company->role_name = CompanyRole::find($info->current_company->pivot->company_role_id)->name;
         }
 

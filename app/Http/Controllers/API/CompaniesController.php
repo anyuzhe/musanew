@@ -9,6 +9,7 @@ use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Repositories\AreaRepository;
+use App\Repositories\CompaniesRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -67,7 +68,7 @@ class CompaniesController extends ApiBaseCommonController
             $v->ourJobCount = $_all_count;
             $v->currentRecruitCount = $_current_need_count?$_current_need_count:0;
 
-            $v->logo_url = getMoodlePICURL($v->logo);
+            $v->logo_url = getPicFullUrl($v->logo);
         }
         unset($v);
 
@@ -137,7 +138,7 @@ class CompaniesController extends ApiBaseCommonController
                 continue;
             }
 
-            $v->logo_url = getMoodlePICURL($v->logo);
+            $v->logo_url = getPicFullUrl($v->logo);
 
             $entrusts->load('job');
             $entrusts->load('recruit');
@@ -178,5 +179,14 @@ class CompaniesController extends ApiBaseCommonController
         $pagination = app('request')->get('pagination',1);
         $pagination = $pagination>0?$pagination:1;
         return $this->apiReturnJson(0, $newList,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
+    }
+
+    public function getCurrentInfo()
+    {
+        $company = $this->getCurrentCompany();
+        $company->addresses;
+        $company->logo = getPicFullUrl($company->logo);
+        $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
+        return $this->apiReturnJson(0,$company);
     }
 }

@@ -520,6 +520,8 @@ function getTrueName($name)
 
 function getMoodlePICURL($logo){
     global $CFG;
+    if(!$CFG)
+        requireMoodleConfig();
     require_once($CFG->dirroot . '/lib/weblib.php');
     $file = app('db')->connection('moodle')->table('files')->where('filesize','>',0)->where('itemid', $logo)->first();
     $url = \moodle_url::make_pluginfile_url($file->contextid, $file->component, $file->filearea, $file->itemid,
@@ -528,6 +530,14 @@ function getMoodlePICURL($logo){
     $port = $url->get_port()?$url->get_port():'80';
     $slashargument = $url->get_slashargument();
     return $url->get_scheme().'://'."$host:$port/draftfile.php$slashargument";
+}
+
+function getPicFullUrl($url){
+    if(is_numeric($url)){
+        return getMoodlePICURL($url);
+    }else{
+        return env('APP_URL').'/storege/'.$url;
+    }
 }
 
 function getOptionsText(&$model){

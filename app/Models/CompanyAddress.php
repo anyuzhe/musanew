@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyAddress extends Model
 {
-    protected $table = 'company_address';
+    protected $table = 'company_addresses';
 
     protected $connection = 'musa';
     public $fillable = [
