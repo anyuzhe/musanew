@@ -24,7 +24,7 @@ class IndustriesController extends CommonController
         $v['children'] = [];
         foreach ($all as $item) {
             if($item['pid']==$v['id']){
-                self::getChild($item, $all);
+                $this->getChild($item, $all);
                 $v['children'][] = $item;
             }
         }
