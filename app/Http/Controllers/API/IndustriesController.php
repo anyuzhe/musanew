@@ -6,20 +6,20 @@ use App\Models\Industry;
 
 class IndustriesController extends CommonController
 {
-    public static function getTree()
+    public function getTree()
     {
         $all = Industry::all()->toArray();
         $data = [];
         foreach ($all as $v) {
             if($v['pid']==0){
-                self::getChild($v, $all);
+                $this->getChild($v, $all);
                 $data[] = $v;
             }
         }
-        return self::apiReturnJson(0, $all);
+        return $this->apiReturnJson(0, $all);
     }
 
-    protected static  function getChild(&$v, $all)
+    protected function getChild(&$v, $all)
     {
         $v['children'] = [];
         foreach ($all as $item) {
