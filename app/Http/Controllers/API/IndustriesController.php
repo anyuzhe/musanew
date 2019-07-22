@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Industry;
 
-class AreasController extends CommonController
+class IndustriesController extends CommonController
 {
     public static function getTree()
     {
