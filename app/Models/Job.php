@@ -32,6 +32,8 @@ class Job extends Model
         'description',
         'working_years',
         'educational_requirements',
+        'address_id',
+        'department_id',
     ];
 
     public function tests()
@@ -47,5 +49,15 @@ class Job extends Model
     public function recruits()
     {
         return $this->hasMany('App\Models\Recruit', 'job_id');
+    }
+
+    public function address()
+    {
+        return $this->belongsTo('App\Models\CompanyAddress', 'address_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo('App\Models\CompanyDepartment', 'department_id');
     }
 }

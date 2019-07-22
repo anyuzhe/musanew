@@ -77,6 +77,8 @@ $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
 $router->get('/company/jobs', 'API\JobsController@index');
 $router->get('/company/jobs/{id}', 'API\JobsController@show');
 
+$router->post('/upload', 'Voyager\VoyagerController@uploadNew');
+
 //招聘列表
 $router->get('/company/recruits/type/1', 'API\RecruitsController@index');
 $router->get('/company/recruits/type/4', 'API\CompaniesController@entrustsList');
@@ -155,6 +157,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
 $router->get('/area/tree', 'API\AreasController@getTree');
+//获取行业列表
+$router->get('/industry/tree', 'API\IndustriesController@getTree');
 //获取技能树列表
 $router->get('/skills/tree', 'API\SkillsController@getTree');
 

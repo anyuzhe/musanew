@@ -40,4 +40,9 @@ class Company extends Model
     {
         return $this->hasMany('App\Models\Entrust', 'third_party_id');
     }
+
+    public function industry()
+    {
+        return $this->belongsTo('App\Models\Industry');
+    }
 }
