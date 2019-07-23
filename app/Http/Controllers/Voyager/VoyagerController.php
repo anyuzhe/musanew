@@ -1,6 +1,6 @@
 <?php
 
-namespace TCG\Voyager\Http\Controllers;
+namespace App\Http\Controllers\Voyager;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Constraint;
 use Intervention\Image\Facades\Image;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Http\Controllers\Controller;
 
 class VoyagerController extends Controller
 {
@@ -75,9 +76,9 @@ class VoyagerController extends Controller
     public function uploadNew(Request $request)
     {
         $fullFilename = null;
-        $resizeWidth = 1800;
-        $resizeHeight = null;
         $slug = $request->input('slug','default');
+        $resizeWidth = $request->input('resize_width',1800);
+        $resizeHeight = $request->input('resize_height',null);
         $file = $request->file('file');
 
         $path = $slug.'/'.date('F').date('Y').'/';

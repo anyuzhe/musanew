@@ -18,6 +18,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    return view('test');
+//    DB::getDoctrineColumn('users', 'id')->getType()->getName();
     DB::getDoctrineColumn('users', 'id')->getType()->getName();
 });
 
