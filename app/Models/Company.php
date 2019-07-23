@@ -14,6 +14,13 @@ class Company extends Model
     public $connection = 'musa';
 
     public $fillable = [
+        'company_alias',
+        'company_name',
+        'tax_no',
+        'company_scale',
+        'contact_name',
+        'contact_phone',
+        'industry_id',
     ];
 
     public function thirdParty()

@@ -77,8 +77,8 @@ class VoyagerController extends Controller
         $fullFilename = null;
         $resizeWidth = 1800;
         $resizeHeight = null;
-        $slug = $request->input('type_slug','default');
-        $file = $request->file('image');
+        $slug = $request->input('slug','default');
+        $file = $request->file('file');
 
         $path = $slug.'/'.date('F').date('Y').'/';
 
@@ -115,9 +115,13 @@ class VoyagerController extends Controller
         } else {
             $status = __('voyager::media.uploading_wrong_type');
         }
-
+        $res = [
+          'path'=>$fullFilename,
+          'full_path'=>Voyager::image($fullFilename),
+        ];
+        return responseZK(0,$res);
         // echo out script that TinyMCE can handle and update the image in the editor
-        return "<script> parent.helpers.setImageValue('".Voyager::image($fullFilename)."'); </script>";
+//        return "<script> parent.helpers.setImageValue('".Voyager::image($fullFilename)."'); </script>";
     }
 
     public function assets(Request $request)
