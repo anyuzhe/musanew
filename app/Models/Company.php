@@ -21,6 +21,7 @@ class Company extends Model
         'contact_name',
         'contact_phone',
         'industry_id',
+        'logo',
     ];
 
     public function thirdParty()
