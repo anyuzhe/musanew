@@ -185,6 +185,9 @@ class CompaniesController extends ApiBaseCommonController
     {
         $company = $this->getCurrentCompany();
         $company->addresses;
+        foreach ($company->addresses as &$v) {
+            $v->area = [$v->province_id,$v->city_id,$v->district_id];
+        }
         $company->logo = getPicFullUrl($company->logo);
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         return $this->apiReturnJson(0,$company);

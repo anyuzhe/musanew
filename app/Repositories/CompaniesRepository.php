@@ -42,7 +42,19 @@ class CompaniesRepository
                 $address['company_id'] = $company_id;
                 if(isset($address['id']) && $address['id']){
                     $addresses_ids[] = $address['id'];
-                    CompanyAddress::where('id', $address['id'])->update($address);
+                    $_address = CompanyAddress::find($address['id']);
+                    $_address->fill($address);
+
+                    if(isset($address['area']) && is_array($address['area'])){
+                        if(isset($address['area'][0]))
+                            $_address->province_id = $address['area'][0];
+                        if(isset($address['area'][1]))
+                            $_address->city_id = $address['area'][1];
+                        if(isset($address['area'][2]))
+                            $_address->district_id = $address['area'][2];
+                    }
+
+                    $_address->save();
                 }else{
                     $obj = CompanyAddress::create($address);
                     $addresses_ids[] = $obj->id;
@@ -56,7 +68,9 @@ class CompaniesRepository
                 $department['company_id'] = $company_id;
                 if(isset($department['id']) && $department['id']){
                     $departments_ids[] = $department['id'];
-                    CompanyDepartment::where('id', $department['id'])->update($department);
+                    $_department = CompanyDepartment::find($address['id']);
+                    $_department->fill($department);
+                    $_department->save();
                 }else{
                     $obj = CompanyDepartment::create($department);
                     $departments_ids[] = $obj->id;

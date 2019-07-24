@@ -145,8 +145,6 @@ class JobsController extends ApiBaseCommonController
                 $job->city_id = $data['area'][1];
             if(isset($data['area'][2]))
                 $job->district_id = $data['area'][2];
-
-
         }
         $job->modifier_id = $this->getUser()->id;
         $job->save();
