@@ -8,10 +8,12 @@ use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
+use App\Models\RecruitResumeLog;
 use App\Repositories\AreaRepository;
 use App\Repositories\CompaniesRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
+use App\Repositories\RecruitResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Support\Facades\Log;
@@ -200,5 +202,141 @@ class CompaniesController extends ApiBaseCommonController
         app()->build(CompaniesRepository::class)->saveAddressesAndDepartments($this->request->get('addresses'),
             $this->request->get('departments'),$company->id);
         return $this->apiReturnJson(0);
+    }
+
+    public function getBacklog()
+    {
+        //委托申请
+        $company = $this->getCurrentCompany();
+        $user = $this->getUser();
+        $entrustApplyData = Entrust::where('company_id',$company->id)->where('status',0)->get();
+        $entrustApplyData->load('job');
+        $entrustApplyData->load('recruit');
+        $entrustApplyData->load('thirdParty');
+        $entrustApply = [];
+        foreach ($entrustApplyData as $v) {
+            $entrustApply[] = [
+              'entrust_id'=>$v->id,
+              'job_name'=>$v->job->name,
+              'need_num'=>$v->recruit->need_num,
+              'third_party_name'=>$v->thirdParty->company_alias,
+              'created_at'=>$v->created_at->toDateTimeString(),
+            ];
+        }
+        //审核委托
+        $checkEntrustData = Entrust::where('third_party_id',$company->id)->where('status',0)->get();
+        $checkEntrustData->load('job');
+        $checkEntrustData->load('recruit');
+        $checkEntrustData->load('company');
+        $checkEntrust = [];
+        foreach ($checkEntrustData as $v) {
+            $checkEntrust[] = [
+                'entrust_id'=>$v->id,
+                'job_name'=>$v->job->name,
+                'need_num'=>$v->recruit->need_num,
+                'company_name'=>$v->company->company_alias,
+                'created_at'=>$v->created_at->toDateTimeString(),
+            ];
+        }
+
+        $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
+
+        //待处理
+        $waitHandleData = RecruitResume::where(function ($query)use ($company){
+            $query->where('third_party_id',$company->id)->orWhere('company_id',$company->id);
+        })->whereIn('status',[1,2,3,4,5,6])->get();
+        $waitHandleData->load('job');
+        $waitHandleData->load('resume');
+        $waitHandleData->load('recruit');
+        $waitHandleData->load('company');
+        $waitHandleData->load('thirdParty');
+        $waitHandle = [];
+        foreach ($waitHandleData as $v) {
+
+            $recruitResumesRepository->addFieldText($v);
+            $waitHandle[] = [
+                'recruit_id'=>$v->company_job_recruit_id,
+                'entrust_id'=>$v->company_job_recruit_entrust_id,
+                'resume_id'=>$v->resume_id,
+                'company_name'=>$v->company->company_alias,
+                'third_party_name'=>$v->thirdParty->company_alias,
+                'recruit_resume_id'=>$v->id,
+                'job_name'=>$v->job->name,
+                'resume_name'=>$v->resume->name,
+                'status'=>$v->status,
+                'status_str'=>$v->status_str,
+                'created_at'=>$v->created_at->toDateTimeString(),
+                'updated_at'=>$v->updated_at->toDateTimeString(),
+            ];
+        }
+
+        //待面试
+        $waitInterviewData = RecruitResume::where(function ($query)use($user){
+            $query->where('status',2)
+                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
+        })->orWhere(function ($query)use($user){
+            $query->where('status',3)
+                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
+        })->orWhere(function ($query)use($user){
+            $query->where('status',5)
+                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
+        })->where('status',2)->get();
+        $waitInterviewData->load('job');
+        $waitInterviewData->load('resume');
+        $waitInterviewData->load('recruit');
+        $waitInterviewData->load('company');
+        $waitInterviewData->load('thirdParty');
+        $waitInterview = [];
+        foreach ($waitInterviewData as $v) {
+
+            $recruitResumesRepository->addFieldText($v);
+            $waitEntry[] = [
+                'recruit_id'=>$v->company_job_recruit_id,
+                'entrust_id'=>$v->company_job_recruit_entrust_id,
+                'resume_id'=>$v->resume_id,
+                'company_name'=>$v->company->company_alias,
+                'third_party_name'=>$v->thirdParty->company_alias,
+                'recruit_resume_id'=>$v->id,
+                'job_name'=>$v->job->name,
+                'resume_name'=>$v->resume->name,
+                'status'=>$v->status,
+                'status_str'=>$v->status_str,
+                'interview_at'=>$v->interview_at,
+                'created_at'=>$v->created_at->toDateTimeString(),
+                'updated_at'=>$v->updated_at->toDateTimeString(),
+            ];
+        }
+
+        //待入职
+        $waitEntryData = RecruitResume::where(function ($query)use ($company){
+            $query->where('third_party_id',$company->id)->orWhere('company_id',$company->id);
+        })->whereIn('status',[6])->get();
+        $waitEntryData->load('job');
+        $waitEntryData->load('resume');
+        $waitEntryData->load('recruit');
+        $waitEntryData->load('company');
+        $waitEntryData->load('thirdParty');
+        $waitEntry = [];
+        foreach ($waitEntryData as $v) {
+
+            $recruitResumesRepository->addFieldText($v);
+            $waitEntry[] = [
+                'recruit_id'=>$v->company_job_recruit_id,
+                'entrust_id'=>$v->company_job_recruit_entrust_id,
+                'resume_id'=>$v->resume_id,
+                'company_name'=>$v->company->company_alias,
+                'third_party_name'=>$v->thirdParty->company_alias,
+                'recruit_resume_id'=>$v->id,
+                'job_name'=>$v->job->name,
+                'resume_name'=>$v->resume->name,
+                'status'=>$v->status,
+                'status_str'=>$v->status_str,
+                'created_at'=>$v->created_at->toDateTimeString(),
+                'updated_at'=>$v->updated_at->toDateTimeString(),
+            ];
+        }
+
+        return $this->apiReturnJson(0,compact('entrustApply','checkEntrust',
+            'waitHandle','waitInterview','waitEntry'));
     }
 }

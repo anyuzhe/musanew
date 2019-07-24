@@ -54,6 +54,10 @@ class RecruitResume extends Model
     {
         return $this->belongsTo('App\Models\Recruit', 'company_job_recruit_id');
     }
+    public function job()
+    {
+        return $this->belongsTo('App\Models\Job', 'job_id');
+    }
 
     public function entrust()
     {

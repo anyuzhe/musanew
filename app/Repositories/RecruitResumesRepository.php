@@ -196,15 +196,18 @@ class RecruitResumesRepository
                 $data->status_str = '邀请面试';
                 break;
             case 3:
-                $data->status_str = '面试完成';
+                $data->status_str = '修改面试时间';
                 break;
             case 4:
-                $data->status_str = '再次邀请面试';
+                $data->status_str = '面试完成';
                 break;
             case 5:
-                $data->status_str = '录用';
+                $data->status_str = '再次邀请面试';
                 break;
             case 6:
+                $data->status_str = '录用';
+                break;
+            case 7:
                 $data->status_str = '成功入职';
                 break;
             default:

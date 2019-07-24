@@ -157,6 +157,9 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/currentInfo', 'API\CompaniesController@getCurrentInfo');
     $router->post('/company/currentInfo', 'API\CompaniesController@updateCurrentInfo');
 
+    //代办事项
+    $router->get('/company/backlog', 'API\CompaniesController@getBacklog');
+
 
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
