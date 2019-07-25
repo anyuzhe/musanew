@@ -22,12 +22,12 @@ class CommonController extends Controller
 
     public function requireMoodleConfig()
     {
-        requireMoodleConfig();
+        return requireMoodleConfig();
     }
 
     public function getMoodleRoot()
     {
-        getMoodleRoot();
+        return getMoodleRoot();
     }
 
     /*

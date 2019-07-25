@@ -149,8 +149,6 @@ class LoginController extends CommonController
         if (!$userauth->user_update_password($user, $password)) {
             return $this->apiReturnJson('9999');
         }else{
-            dump(getMoodleRoot());
-            dd($this->getMoodleRoot());
             require_once($this->getMoodleRoot().'/user/lib.php');
             global $CFG;
             $CFG->passwordreuselimit = 10;
