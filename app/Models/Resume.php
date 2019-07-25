@@ -32,8 +32,8 @@ class Resume extends Model
         'permanent_city_id',//户籍市
         'permanent_district_id',//户籍区
         'residence_province_id',//现居地省
-        'residence_city_id',//户籍市
-        'residence_district_id',//户籍区
+        'residence_city_id',//现居地市
+        'residence_district_id',//现居地区
         'residence_address',//现居地详细地址
         'third_party_evaluation',//第三方评价
         'type',//1:外包方录入的简历。 2个人简历

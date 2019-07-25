@@ -9,6 +9,7 @@ use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
+use App\Models\ResumeSkill;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -23,6 +24,10 @@ class EntrustResumesController extends ApiBaseCommonController
     public $recruitResumesRepository;
     public $search_field_array = [
       ['name','like'],
+      ['gender','='],
+      ['gender','='],
+      ['education','>='],
+      ['hope_job_text','like'],
     ];
 
     public function __construct(Request $request, ResumesRepository $resumesRepository,RecruitResumesRepository $recruitResumesRepository)
@@ -55,6 +60,7 @@ class EntrustResumesController extends ApiBaseCommonController
         $recruit_id = $this->request->get('recruit_id');
         $entrust_id = $this->request->get('entrust_id');
         $in_job = $this->request->get('in_job');
+        $skills = $this->request->get('skills');
         $model = $model->where('status','!=',-1);
         $company = $this->getCurrentCompany();
         if ($company) {
@@ -69,6 +75,14 @@ class EntrustResumesController extends ApiBaseCommonController
             $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray());
         }elseif ($recruit_id){
             $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_id', $entrust_id)->pluck('resume_id')->toArray());
+        }
+        if(is_array($skills) && count($skills)>0){
+            $resume_skill_ids = [];
+            foreach ($skills as $skill) {
+                $resume_skill_ids = array_merge($resume_skill_ids,
+                    ResumeSkill::where('skill_id',$skill[0])->where('skill_level','>=',$skill[1])->pluck('resume_id')->toArray());
+            }
+            $model = $model->whereIn('id', $resume_skill_ids);
         }
         return null;
     }
