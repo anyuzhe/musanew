@@ -473,9 +473,6 @@ function saveP($data,$p=null){
     }
 }
 
-
-
-
 function getModelArray($table_name,$key,$value,$title,$where=[],callable $func=null)
 {
     $data = [];
