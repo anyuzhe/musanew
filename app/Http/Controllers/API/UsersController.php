@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\User;
 use App\Models\UserBasicInfo;
 use DB;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +17,14 @@ class UsersController extends CommonController
         $info = $user->info;
         if(!$info)
             $info = UserBasicInfo::create(['user_id'=>$user->id]);
+
+        if(!$user->firstname && $info->realname){
+            $realname = $info->realname;
+            User::where('id', $user->id)->update([
+                'firstname'=>$realname?substr_text($realname,0,1):'',
+                'lastname'=>$realname?substr_text($realname,1, count($realname)):'',
+            ]);
+        }
         $info->companies = $user->companies;
         $info->current_company = $user->company->first();
         $this->requireMoodleConfig();
