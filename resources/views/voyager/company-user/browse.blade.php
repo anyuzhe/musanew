@@ -248,18 +248,6 @@
                                                     @include('voyager.bread.partials.actions', ['action' => $action])
                                                 @endif
                                             @endforeach
-
-                                            <a href="{!! route('voyager.company-user.create',['user_id'=>$data->id]) !!}" title="企业角色" class="btn btn-sm btn-warning pull-right edit" style="margin-right: 5px">
-                                                <i class="voyager-paperclip"></i> <span class="hidden-xs hidden-sm">添加企业</span>
-                                            </a>
-                                            <a href="{!! route('voyager.company-user.index',['user_id'=>$data->id]) !!}" title="企业角色" class="btn btn-sm btn-warning pull-right edit" style="margin-right: 5px">
-                                                <i class="voyager-paperclip"></i> <span class="hidden-xs hidden-sm">企业角色管理</span>
-                                            </a>
-                                            @if($data->info)
-                                                <a href="{!! route('voyager.user-info.edit',$data->info->id) !!}" title="信息修改" class="btn btn-sm btn-warning pull-right edit" style="margin-right: 5px">
-                                                    <i class="voyager-person"></i> <span class="hidden-xs hidden-sm">信息修改</span>
-                                                </a>
-                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
