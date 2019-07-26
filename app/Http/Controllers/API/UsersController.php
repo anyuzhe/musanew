@@ -27,6 +27,11 @@ class UsersController extends CommonController
         }
         $info->companies = $user->companies;
         $info->current_company = $user->company->first();
+        if(!$info->current_company){
+            $info->current_company = $info->companies->first();
+            $info->current_company->is_current = 1;
+            $info->current_company->save();
+        }
         $this->requireMoodleConfig();
         foreach ($info->companies as &$company) {
             $company->logo_url = getPicFullUrl($company->logo);
