@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Area;
+use App\Models\DataMapOption;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
@@ -232,6 +233,68 @@ class RecruitResumesRepository
 
     public function matching($data)
     {
-        dd($data->job);
+        $job = $data->job;
+        $resume = $data->resume;
+        //学历要求
+        $config_education_num = DataMapOption::where('data_map_id',7)->count()-1;
+        $config_education_score = 100/$config_education_num;
+        if($job->educational_requirements>1){
+            if($resume->education){
+                $education_score = 100-($job->educational_requirements-1-$resume->education)*$config_education_score;
+                if($education_score>100)
+                    $education_score = 100;
+            }else{
+                $education_score = 0;
+            }
+        }else{
+            $education_score = 100;
+        }
+//        //工作年数
+        if($job->working_years>0){
+            $config_working_years_score = 100/$job->working_years;
+            $years = (time()-strtotime($resume->start_work_at))/(3600*24*30*12);
+            $working_years_score = 100-($config_working_years_score)*($job->working_years-(int)$years);
+            if($working_years_score>100)
+                $working_years_score = 100;
+        }else{
+            $working_years_score = 100;
+        }
+        //技能
+        $resume_skills = $resume->skills->keyBy('skill_id')->toArray();
+        $skills_data = [];
+        $job_skills_count = count($job->skills);
+        $skills_score = 0;
+        //单分
+        $config_skill_score = 100/(DataMapOption::where('data_map_id',10)->count());
+        foreach ($job->skills as $job_skill) {
+            $_job_skill_name = $job_skill->name;
+            $_job_skill_id = $job_skill->pivot->skill_id;
+            $_job_skill_level = $job_skill->pivot->skill_level;
+            if(isset($resume_skills[$_job_skill_id])){
+                $resume_skill = $resume_skills[$_job_skill_id];
+                $_score = (int)(100 - ($_job_skill_level - $resume_skill['skill_level'])*$config_skill_score);
+                $skills_data[] = [
+                    'skill_name'=>$_job_skill_name,
+                    'job_level'=>$_job_skill_level,
+//                    'job_level_text'=>$job_skill->skill_level_text,
+                    'resume_level'=>$resume_skill['skill_level'],
+//                    'resume_level_text'=>$resume_skill->skill_level_text,
+                    'sroce'=>$_score,
+                ];
+                $skills_score += (int)($_score/$job_skills_count);
+            }else{
+                $skills_score += 0;
+                $skills_data[] = [
+                    'skill_name'=>$_job_skill_name,
+                    'job_level'=>$_job_skill_level,
+//                    'job_level_text'=>$job_skill->skill_level_text,
+                    'resume_level'=>0,
+//                    'resume_level_text'=>'无',
+                    'sroce'=>0,
+                ];
+            }
+        }
+        $score = (int)($education_score*0.2 + $working_years_score*0.1 + $skills_score*0.7);
+        return compact('score', 'education_score', 'working_years_score', 'skills_data', 'skills_score');
     }
 }
