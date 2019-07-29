@@ -169,7 +169,6 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //代办事项
     $router->get('/company/backlog', 'API\CompaniesController@getBacklog');
 
-
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表

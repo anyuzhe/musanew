@@ -229,4 +229,9 @@ class RecruitResumesRepository
 
         }
     }
+
+    public function matching($data)
+    {
+        dd($data->job);
+    }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserBasicInfo extends Model
 {
     protected $table = 'user_basic_info';
-    protected $connection = 'musa';
+    protected $connection = 'moodle';
 
     public $fillable = [
         'user_id',

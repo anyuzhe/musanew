@@ -70,6 +70,7 @@ class RecruitResumesController extends ApiBaseCommonController
         $data->logs->load('creatorInfo');
 
         $this->recruitResumesRepository->haveLook($data);
+//        $this->recruitResumesRepository->matching($data);
 
         $data = $data->toArray();
         $data['logs'] = array_reverse($data['logs']);
