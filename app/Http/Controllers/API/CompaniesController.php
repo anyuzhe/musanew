@@ -331,6 +331,7 @@ class CompaniesController extends ApiBaseCommonController
                 'resume_name'=>$v->resume->name,
                 'status'=>$v->status,
                 'status_str'=>$v->status_str,
+                'entry_at'=>$v->entry_at,
                 'created_at'=>$v->created_at->toDateTimeString(),
                 'updated_at'=>$v->updated_at->toDateTimeString(),
             ];

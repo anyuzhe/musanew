@@ -253,7 +253,7 @@ class VoyagerBaseController extends Controller
 
         $view = 'voyager.bread.edit-add';
 
-        if (view()->exists("voyager::$slug.edit-add")) {
+        if (view()->exists("voyager.$slug.edit-add")) {
             $view = "voyager.$slug.edit-add";
         }
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));

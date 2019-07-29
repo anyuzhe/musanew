@@ -18,6 +18,8 @@ class RecruitResume extends Model
         'creator_id',
         'status',
         'resume_source',//来源 1:来源于 委托方添加
+        'entry_at',
+        'interview_at',
     ];
 
     /**

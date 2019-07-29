@@ -96,7 +96,8 @@ class RecruitResumesRepository
             $recruitResume->interview_at = $otherData;
             $log->text =  '再次邀请面试-'.$otherData;
         }elseif($status==6){
-            $log->text =  '录用';
+            $log->text =  '录用-计划入职时间:'.$otherData;
+            $recruitResume->entry_at = $otherData;
         }elseif($status==7){
             $log->text =  '成功入职';
             $this->hiredEntryHandle($recruitResume);
