@@ -250,10 +250,21 @@ class RecruitResumesRepository
             $education_score = 100;
         }
 //        //工作年数
-        if($job->working_years>0){
-            $config_working_years_score = 100/$job->working_years;
+        if($job->working_years){
+            $config_working_years_score = 100/(DataMapOption::where('data_map_id',9)->count()-1);
             $years = (time()-strtotime($resume->start_work_at))/(3600*24*30*12);
-            $working_years_score = 100-($config_working_years_score)*($job->working_years-(int)$years);
+            if($years<1){
+                $year_value = 1;
+            }elseif ($years<3){
+                $year_value = 2;
+            }elseif ($years<5){
+                $year_value = 3;
+            }elseif ($years<10){
+                $year_value = 4;
+            }else{
+                $year_value = 5;
+            }
+            $working_years_score = 100-($config_working_years_score)*($job->working_years-$year_value);
             if($working_years_score>100)
                 $working_years_score = 100;
         }else{
