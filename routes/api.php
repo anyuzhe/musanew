@@ -169,6 +169,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //代办事项
     $router->get('/company/backlog', 'API\CompaniesController@getBacklog');
     //数据分析
+    $router->get('/company/count/statistics/{type}', 'API\CompaniesController@countStatistics');
     $router->get('/company/data/statistics/{type}', 'API\CompaniesController@dataStatistics');
 
 });
