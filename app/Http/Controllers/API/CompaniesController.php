@@ -14,6 +14,7 @@ use App\Repositories\CompaniesRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
+use App\Repositories\StatisticsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Support\Facades\Log;
@@ -339,5 +340,15 @@ class CompaniesController extends ApiBaseCommonController
 
         return $this->apiReturnJson(0,compact('entrustApply','checkEntrust',
             'waitHandle','waitInterview','waitEntry'));
+    }
+
+    public function dataStatistics()
+    {
+        if($this->request->type ==1){
+            $data = app()->build(StatisticsRepository::class)->getCompanyDataStatistics($this->getCurrentCompany());
+        }else{
+            $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatistics($this->getCurrentCompany());
+        }
+        return $this->apiReturnJson(0,$data);
     }
 }
