@@ -17,6 +17,11 @@ class JobsController extends ApiBaseCommonController
 
     public $model_name = Job::class;
 
+    public $search_field_array = [
+        ['name','like'],
+        ['is_formal','='],
+    ];
+
     public function getTest()
     {
         $data = Course::where('category', 6)->get();

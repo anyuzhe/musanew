@@ -34,6 +34,7 @@ class Job extends Model
         'educational_requirements',
         'address_id',
         'department_id',
+        'is_formal',
     ];
 
     public function tests()
