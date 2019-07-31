@@ -362,4 +362,16 @@ class CompaniesController extends ApiBaseCommonController
         }
         return $this->apiReturnJson(0,$data);
     }
+    public function dataStatisticsDetail()
+    {
+        $company_id = $this->request->get('company_id');
+        $start_date = $this->request->get('start_date',date('Y-m-01'));
+        $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        if($this->request->type ==1){
+            $data = app()->build(StatisticsRepository::class)->getCompanyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
+        }else{
+            $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
+        }
+        return $this->apiReturnJson(0,$data);
+    }
 }

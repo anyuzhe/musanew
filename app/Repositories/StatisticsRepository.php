@@ -12,6 +12,8 @@ class StatisticsRepository
 {
     public function getCompanyCountStatistics(Company $company)
     {
+        $companies = $company->thirdParty();
+
         $all_job_count = Recruit::where('company_id', $company->id)->count();
         $month_job_count = Recruit::where('company_id', $company->id)->whereIn('status',[1,2,3])->count();
         $month_people_count = (int)Recruit::where('company_id', $company->id)->whereIn('status',[1,2,3])->sum('need_num');
@@ -34,11 +36,13 @@ class StatisticsRepository
             ->count();
         return compact('all_job_count', 'month_job_count', 'month_people_count',
             'month_recommend_resume_count', 'all_recommend_resume_count','month_recommend_resume_succeed_count','all_recommend_resume_succeed_count',
-            'month_recommend_resume_entry_count', 'all_recommend_resume_entry_count');
+            'month_recommend_resume_entry_count', 'all_recommend_resume_entry_count','companies');
     }
 
     public function getCompanyThirdPartyCountStatistics(Company $company)
     {
+        $companies = $company->demandSides;
+
         $all_job_count = Entrust::where('third_party_id', $company->id)->count();
         $month_job_count = Entrust::where('third_party_id', $company->id)->whereIn('status',[0,1])->count();
         $month_people_count = (int)Recruit::whereIn('id',
@@ -61,30 +65,51 @@ class StatisticsRepository
             ->count();
         return compact('all_job_count', 'month_job_count', 'month_people_count',
             'month_recommend_resume_count', 'all_recommend_resume_count','month_recommend_resume_succeed_count','all_recommend_resume_succeed_count',
-            'month_recommend_resume_entry_count', 'all_recommend_resume_entry_count');
+            'month_recommend_resume_entry_count', 'all_recommend_resume_entry_count','companies');
     }
 
     public function getCompanyDataStatistics(Company $company,$start_date,$end_date)
     {
         $company_job_recruit_resume_ids = RecruitResume::where('company_id', $company->id)->pluck('id')->toArray();
         //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”
-        $thirdParty = $company->thirdParty->keyBy('id')->toArray();
+        $companies = Company::all()->keyBy('id')->toArray();
 
         //推荐简历
-        $recommend_resume = $this->getCountByStatus([1], $thirdParty, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //邀请面试
-        $invite_interview = $this->getCountByStatus([2], $thirdParty, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //面试中
-        $interviewing = $this->getCountByStatus([2,3,4,5], $thirdParty, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //录用
-        $hire = $this->getCountByStatus([6], $thirdParty, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //入职
-        $entry = $this->getCountByStatus([7], $thirdParty, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
 
         return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry');
     }
 
-    protected function getCountByStatus($status, $thirdParty, $company_job_recruit_resume_ids, $start_date, $end_date)
+    public function getCompanyThirdPartyDataStatistics(Company $company,$start_date,$end_date)
+    {
+        $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $company->id)->pluck('id')->toArray();
+        //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”
+        $companies = Company::all()->keyBy('id')->toArray();
+        $thirdParties = $company->thirdParty();
+
+        //推荐简历
+        $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //邀请面试
+        $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //面试中
+        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //录用
+        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //入职
+        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+
+        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties');
+    }
+
+    protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date)
     {
         $data = [
             'num'=>0,
@@ -104,11 +129,34 @@ class StatisticsRepository
             }else{
                 $_data[$third_party_id]=[
                     'num'=>1,
-                    'name'=>$thirdParty[$third_party_id]['company_alias']
+                    'name'=>$companies[$third_party_id]['company_alias']
                 ];
             }
         }
         $data['data'] = array_values($_data);
         return $data;
+    }
+
+    public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
+    {
+        $company_job_recruits = Entrust::where('third_party_id', $third_party_id)->get();
+        $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $company->id)->pluck('id')->toArray();
+
+        //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”
+        $companies = Company::all()->keyBy('id')->toArray();
+        $thirdParties = $company->thirdParty();
+
+        //推荐简历
+        $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //邀请面试
+        $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //面试中
+        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //录用
+        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //入职
+        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+
+        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties');
     }
 }

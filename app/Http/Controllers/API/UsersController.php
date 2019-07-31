@@ -22,7 +22,7 @@ class UsersController extends CommonController
             $realname = $info->realname;
             User::where('id', $user->id)->update([
                 'firstname'=>$realname?substr_text($realname,0,1):'',
-                'lastname'=>$realname?substr_text($realname,1, count($realname)):'',
+                'lastname'=>$realname?substr_text($realname,1, strlen($realname)):'',
             ]);
         }
         $info->companies = $user->companies;

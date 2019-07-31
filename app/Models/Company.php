@@ -29,6 +29,13 @@ class Company extends Model
         //status 雇佣关系 -1:解除 -2:审核不通过 0待审核 1正常雇佣关系
         return $this->belongsToMany('App\Models\Company','company_relationship','company_id','relationship_id')->wherePivotIn('status', [1]);
     }
+
+    public function demandSides()
+    {
+        //status 雇佣关系 -1:解除 -2:审核不通过 0待审核 1正常雇佣关系
+        return $this->belongsToMany('App\Models\Company','company_relationship','relationship_id','company_id')->wherePivotIn('status', [1]);
+    }
+
     public function resumes()
     {
         return $this->belongsToMany('App\Models\Resume','company_resume','company_id','resume_id')->wherePivotIn('type', [1]);
