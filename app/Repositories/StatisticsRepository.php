@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Company;
 use App\Models\Entrust;
 use App\Models\Recruit;
+use App\Models\RecruitEndLog;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 
@@ -139,7 +140,17 @@ class StatisticsRepository
 
     public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
     {
-        $entrusts = Entrust::where('third_party_id', $third_party_id)->where('company_id', $company->id)->get();
+        $entrustLogs = RecruitEndLog::where('third_party_id', $third_party_id)->where('company_id', $company->id)
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->get();
+        $entrustLogsIds = $entrustLogs->pluck('company_job_recruit_entrust_id')->toArray();
+        $entrusts = Entrust::whereNotIn('id', $entrustLogsIds)->where('third_party_id', $third_party_id)->where('company_id', $company->id)
+            ->where('created_at','>=',$start_date)->where('created_at','<=',$end_date)->get();
         $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $company->id)->pluck('id')->toArray();
 
         //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”

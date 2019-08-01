@@ -65,7 +65,7 @@ class EntrustsRepository
                 $status_text = '外包中';
                 break;
             case 4:
-                $status_text = '招聘取消';
+                $status_text = '结束招聘';
                 break;
             case 5:
                 $status_text = '招聘完成';
@@ -82,7 +82,7 @@ class EntrustsRepository
                 $status_text = $entrust['third_party']['company_alias'].' 拒绝委托招聘';
                 break;
             case -1:
-                $status_text = '招聘取消';
+                $status_text = '结束招聘';
                 break;
             case 0:
                 $status_text = '等待外包公司审核';
