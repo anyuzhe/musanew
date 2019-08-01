@@ -130,7 +130,10 @@ class RecruitsController extends ApiBaseCommonController
         $id = $this->request->get('id');
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
-            Entrust::where('id', $entrust_id)->update(['status'=>2]);
+            $entrust = Entrust::find($entrust_id);
+            $entrust->status = -1;
+            $entrust->save();
+            app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
         }else{
             $obj = Recruit::find($id);
             $obj->status = 4;

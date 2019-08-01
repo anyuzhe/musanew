@@ -139,7 +139,7 @@ class StatisticsRepository
 
     public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
     {
-        $company_job_recruits = Entrust::where('third_party_id', $third_party_id)->get();
+        $entrusts = Entrust::where('third_party_id', $third_party_id)->where('company_id', $company->id)->get();
         $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $company->id)->pluck('id')->toArray();
 
         //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”

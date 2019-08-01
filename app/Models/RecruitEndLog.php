@@ -11,8 +11,11 @@ class RecruitEndLog extends Model
 
     public $fillable = [
         'company_id',
+        'third_party_id',
         'job_id',
         'company_job_recruit_id',
+        'company_job_recruit_entrust_id',
+        'status',
         'need_num',
         'done_num',
         'resume_num',

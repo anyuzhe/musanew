@@ -135,6 +135,7 @@ class RecruitResumesRepository
 
     public function hiredEntryHandle(RecruitResume $recruitResume)
     {
+        $recruitRepository = app()->build(RecruitRepository::class);
         $recruit = $recruitResume->recruit;
         $entrust = $recruitResume->entrust;
         $resume = $recruitResume->resume;
@@ -146,10 +147,11 @@ class RecruitResumesRepository
             foreach ($recruit->entrusts as $_entrust) {
                 $_entrust->status = 2;
                 $_entrust->save();
+                $recruitRepository->generateEndLog($entrust->recruit, $_entrust);
             }
 
             $recruit->end_at = date('Y-m-d H:i:s');
-            app()->build(RecruitRepository::class)->generateEndLog($recruit);
+            $recruitRepository->generateEndLog($recruit);
         }
         $recruit->save();
         if($entrust){
