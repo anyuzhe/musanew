@@ -149,8 +149,10 @@ class StatisticsRepository
                 });
             })->get();
         $entrustLogsIds = $entrustLogs->pluck('company_job_recruit_entrust_id')->toArray();
+        dump($entrustLogs->toArray());
         $entrusts = Entrust::whereNotIn('id', $entrustLogsIds)->where('third_party_id', $third_party_id)->where('company_id', $company->id)
             ->where('created_at','>=',$start_date)->where('created_at','<=',$end_date)->get();
+        dd($entrusts->toArray());
         $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $company->id)->pluck('id')->toArray();
 
         //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”

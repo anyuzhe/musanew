@@ -22,7 +22,7 @@ class RecruitRepository
             'new_resume_num'=>$entrust?$entrust->new_resume_num:$recruit->new_resume_num,
             'start_at'=>$entrust?$entrust->created_at:$recruit->created_at,
             'status'=>$entrust?$entrust->status:$recruit->status,
-            'end_at'=>date('Y-m-d H:i:s'),
+            'end_at'=>$entrust?$entrust->end_at:$recruit->end_at,
         ]);
     }
 }

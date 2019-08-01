@@ -19,6 +19,7 @@ class Entrust extends Model
         'new_resume_num',
         'status',
         'creator_id',
+        'end_at',
     ];
 
     public function job()

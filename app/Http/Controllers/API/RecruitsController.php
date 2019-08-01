@@ -132,6 +132,7 @@ class RecruitsController extends ApiBaseCommonController
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
             $entrust->status = -1;
+            $entrust->end_at = date('Y-m-d H:i:s');
             $entrust->save();
             app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
         }else{

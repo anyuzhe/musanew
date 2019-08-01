@@ -146,6 +146,7 @@ class RecruitResumesRepository
                 $recruit->satus = 5;
             foreach ($recruit->entrusts as $_entrust) {
                 $_entrust->status = 2;
+                $_entrust->end_at = date('Y-m-d H:i:s');
                 $_entrust->save();
                 $recruitRepository->generateEndLog($entrust->recruit, $_entrust);
             }
