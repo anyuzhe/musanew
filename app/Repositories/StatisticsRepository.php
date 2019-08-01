@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Company;
+use App\Models\CompanyDepartment;
 use App\Models\Entrust;
 use App\Models\Recruit;
 use App\Models\RecruitEndLog;
@@ -110,6 +111,78 @@ class StatisticsRepository
         return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties');
     }
 
+    public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
+    {
+        $entrustLogs = RecruitEndLog::where('third_party_id', $third_party_id)->where('company_id', $company->id)
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->get();
+        $entrustLogsIds = $entrustLogs->pluck('company_job_recruit_entrust_id')->toArray();
+//        dump($start_date);
+//        dump($end_date);
+//        dump($entrustLogs->toArray());
+        $entrusts = Entrust::whereNotIn('id', $entrustLogsIds)->where('third_party_id', $third_party_id)->where('company_id', $company->id)
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->whereIn('status', [1])->get();
+//        dump($entrusts->toArray());
+//        $departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
+        $departments = CompanyDepartment::where('company_id', $company->id)->get()->keyBy('id')->toArray();
+        $entrusts->load('job');
+        $entrusts->load('recruit');
+        $has_entrust_ids = [];
+        foreach ($entrusts as $entrust) {
+            $job = $entrust->job;
+            if($job->department_id && isset($departments[$job->department_id]) && !in_array($entrust->id, $has_entrust_ids)){
+                $recruit = $entrust->recruit;
+                $company_job_recruit_resume_ids = RecruitResume::where('company_job_recruit_entrust_id', $entrust->id)->pluck('id')->toArray();
+                $_data = [
+                    'job_name'=>$job->name,
+                    'recruit_days'=>getDays(strtotime($entrust->created_at)),
+                    'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),
+                    'need_num'=>$recruit->need_num,
+                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),
+                    'residue_num'=>$recruit->need_num - $recruit->done_num,
+                    'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),
+                    'interview_resume_num'=>$this->getEntrustCountByStatus([2], $company_job_recruit_resume_ids),
+                ];
+                if(!isset($departments[$job->department_id]['data'])){
+                    $departments[$job->department_id]['data'] = [];
+                }
+                $departments[$job->department_id]['data'][] = $_data;
+                $has_entrust_ids[] = $entrust->id;
+            }
+        }
+        $data = [];
+        foreach ($departments as $department) {
+            if($department['level']==1){
+                $department['child'] = [];
+                foreach ($departments as $v) {
+                    if($v['pid']==$department['id']){
+                        if(isset($v['data']))
+                            $department['child'][] = $v;
+                    }
+                }
+                if(count($department['child'])==0 && isset($department['data'])){
+                    $department['child'] = $department;
+                }
+                if(count($department['child'])>0)
+                    $data[] = $department;
+            }
+        }
+        return ['departments'=>$data];
+    }
+
+
     protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date)
     {
         $data = [
@@ -138,38 +211,11 @@ class StatisticsRepository
         return $data;
     }
 
-    public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
+    protected function getEntrustCountByStatus($status, $company_job_recruit_resume_ids)
     {
-        $entrustLogs = RecruitEndLog::where('third_party_id', $third_party_id)->where('company_id', $company->id)
-            ->where(function ($quesy)use($start_date,$end_date){
-                $quesy->where(function ($query1)use($start_date,$end_date){
-                    $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
-                })->orWhere(function ($query2)use($start_date,$end_date){
-                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
-                });
-            })->get();
-        $entrustLogsIds = $entrustLogs->pluck('company_job_recruit_entrust_id')->toArray();
-        dump($entrustLogs->toArray());
-        $entrusts = Entrust::whereNotIn('id', $entrustLogsIds)->where('third_party_id', $third_party_id)->where('company_id', $company->id)
-            ->where('created_at','>=',$start_date)->where('created_at','<=',$end_date)->get();
-        dd($entrusts->toArray());
-        $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $company->id)->pluck('id')->toArray();
-
-        //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”
-        $companies = Company::all()->keyBy('id')->toArray();
-        $thirdParties = $company->thirdParty();
-
-        //推荐简历
-        $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
-        //邀请面试
-        $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
-        //面试中
-        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
-        //录用
-        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
-        //入职
-        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
-
-        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties');
+        $count = RecruitResumeLog::whereIn('status',$status)
+            ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
+            ->groupBy('company_job_recruit_resume_id')->get()->count();
+        return $count;
     }
 }

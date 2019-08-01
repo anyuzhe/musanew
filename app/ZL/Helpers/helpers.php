@@ -630,3 +630,10 @@ function getMoodleRoot()
 {
     return app()->basePath().'/musa';
 }
+
+function getDays($start_time, $end_time=null)
+{
+    if(!$end_time)
+        $end_time = time();
+    return (int)ceil(($end_time - $start_time)/(3600*24));
+}

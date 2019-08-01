@@ -16,7 +16,6 @@ class Job extends Model
         'code',
         'major_requirements',
         'company_id',
-        'department',
         'name',
         'salary',
         'salary_min',
