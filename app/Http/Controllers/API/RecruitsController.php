@@ -7,6 +7,7 @@ use App\Models\Entrust;
 use App\Models\Recruit;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
+use App\Repositories\RecruitRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -108,6 +109,7 @@ class RecruitsController extends ApiBaseCommonController
                 $obj->company_id = $job->company_id;
         }
         $obj->creator_id = $this->getUser()->id;
+        $obj->true_created_at = $obj->created_at;
         $obj->save();
         return $this->apiReturnJson(0);
     }
@@ -130,9 +132,12 @@ class RecruitsController extends ApiBaseCommonController
         if($entrust_id){
             Entrust::where('id', $entrust_id)->update(['status'=>2]);
         }else{
-            $this->getModel()->where('id', $id)->update(['status'=>4]);
+            $obj = Recruit::find($id);
+            $obj->status = 4;
+            $obj->end_at = date('Y-m-d H:i:s');
+            $obj->save();
+            app()->build(RecruitRepository::class)->generateEndLog($obj);
         }
-        
         return $this->apiReturnJson(0);
     }
 

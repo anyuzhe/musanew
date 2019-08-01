@@ -147,6 +147,9 @@ class RecruitResumesRepository
                 $_entrust->status = 2;
                 $_entrust->save();
             }
+
+            $recruit->end_at = date('Y-m-d H:i:s');
+            app()->build(RecruitRepository::class)->generateEndLog($recruit);
         }
         $recruit->save();
         if($entrust){
