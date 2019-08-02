@@ -171,6 +171,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //数据分析
     $router->get('/company/count/statistics/{type}', 'API\CompaniesController@countStatistics');
     $router->get('/company/data/statistics/{type}', 'API\CompaniesController@dataStatistics');
+    $router->get('/company/data/statistics/detail/{type}', 'API\CompaniesController@dataStatisticsDetail');
 
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试

@@ -43,5 +43,6 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 Route::get('/company/data/statistics/excel/{type}', 'API\CompaniesController@dataStatisticsExcel');
+$router->get('/company/data/statistics/detail/excel/{type}', 'API\CompaniesController@dataStatisticsDetailExcel');
 
 

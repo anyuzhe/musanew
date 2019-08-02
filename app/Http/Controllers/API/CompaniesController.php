@@ -400,6 +400,7 @@ class CompaniesController extends ApiBaseCommonController
         }else{
             $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
         }
+        dd($data);
         return $this->apiReturnJson(0,$data);
     }
 }
