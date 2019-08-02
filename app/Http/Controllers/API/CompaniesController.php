@@ -16,6 +16,7 @@ use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\StatisticsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
+use App\ZL\ORG\Excel\ExcelHelper;
 use DB;
 use Illuminate\Support\Facades\Log;
 
@@ -362,7 +363,34 @@ class CompaniesController extends ApiBaseCommonController
         }
         return $this->apiReturnJson(0,$data);
     }
+
+    public function dataStatisticsExcel()
+    {
+        $start_date = $this->request->get('start_date',date('Y-m-01'));
+        $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        if($this->request->type ==1){
+            $data = app()->build(StatisticsRepository::class)->getCompanyDataStatistics($this->getCurrentCompany(),$start_date,$end_date);
+        }else{
+            $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatistics($this->getCurrentCompany(),$start_date,$end_date);
+        }
+        $res = app()->build(StatisticsRepository::class)->getExcelData($data);
+        $excelHelper = new ExcelHelper();
+        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],'数据');
+    }
+
     public function dataStatisticsDetail()
+    {
+        $company_id = $this->request->get('company_id');
+        $start_date = $this->request->get('start_date',date('Y-m-01'));
+        $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        if($this->request->type ==1){
+            $data = app()->build(StatisticsRepository::class)->getCompanyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
+        }else{
+            $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
+        }
+        return $this->apiReturnJson(0,$data);
+    }
+    public function dataStatisticsDetailExcel()
     {
         $company_id = $this->request->get('company_id');
         $start_date = $this->request->get('start_date',date('Y-m-01'));

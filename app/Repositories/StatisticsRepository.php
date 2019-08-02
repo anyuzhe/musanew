@@ -182,6 +182,128 @@ class StatisticsRepository
         return ['departments'=>$data];
     }
 
+    public function getCompanyThirdPartyDataStatisticsDetail(Company $company, $demand_side_id, $start_date, $end_date)
+    {
+        $entrustLogs = RecruitEndLog::where('third_party_id', $company->id)->where('company_id', $demand_side_id)
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->get();
+        $entrustLogsIds = $entrustLogs->pluck('company_job_recruit_entrust_id')->toArray();
+
+        $entrusts = Entrust::whereNotIn('id', $entrustLogsIds)->where('third_party_id', $company->id)->where('company_id', $demand_side_id)
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->whereIn('status', [1])->get();
+//        dump($entrusts->toArray());
+//        $departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
+        $departments = CompanyDepartment::where('company_id', $demand_side_id)->get()->keyBy('id')->toArray();
+        $entrusts->load('job');
+        $entrusts->load('recruit');
+        $has_entrust_ids = [];
+        foreach ($entrusts as $entrust) {
+            $job = $entrust->job;
+            if($job->department_id && isset($departments[$job->department_id]) && !in_array($entrust->id, $has_entrust_ids)){
+                $recruit = $entrust->recruit;
+                $company_job_recruit_resume_ids = RecruitResume::where('company_job_recruit_entrust_id', $entrust->id)->pluck('id')->toArray();
+                $_data = [
+                    'job_name'=>$job->name,
+                    'recruit_days'=>getDays(strtotime($entrust->created_at)),
+                    'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),
+                    'need_num'=>$recruit->need_num,
+                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),
+                    'residue_num'=>$recruit->need_num - $recruit->done_num,
+                    'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),
+                    'interview_resume_num'=>$this->getEntrustCountByStatus([2], $company_job_recruit_resume_ids),
+                ];
+                if(!isset($departments[$job->department_id]['data'])){
+                    $departments[$job->department_id]['data'] = [];
+                }
+                $departments[$job->department_id]['data'][] = $_data;
+                $has_entrust_ids[] = $entrust->id;
+            }
+        }
+        $data = [];
+        foreach ($departments as $department) {
+            if($department['level']==1){
+                $department['child'] = [];
+                foreach ($departments as $v) {
+                    if($v['pid']==$department['id']){
+                        if(isset($v['data']))
+                            $department['child'][] = $v;
+                    }
+                }
+                if(count($department['child'])==0 && isset($department['data'])){
+                    $department['child'] = $department;
+                }
+                if(count($department['child'])>0)
+                    $data[] = $department;
+            }
+        }
+        return ['departments'=>$data];
+    }
+
+    public function getExcelData($data)
+    {
+        $companyArray = [];
+        function getCompanyArray(&$companyArray,$data,$key){
+            foreach ($data[$key]['data'] as $v) {
+                if(!isset($companyArray[$v['id']])){
+                    $companyArray[$v['id']] = [
+                        'name'=>$v['name'],
+                        'id'=>$v['id']
+                    ];
+                }
+            }
+        }
+        function getRowData($data,$companyArray,&$row){
+            $all = 0;
+            foreach ($companyArray as $key=>$value) {
+                foreach ($data as $v) {
+                    if($value['id']==$v['id']){
+                        $all += $v['num'];
+                        $row[$key+1] = $v['num'];
+                        continue 2;
+                    }
+                }
+                $row[] = 0;
+            }
+            $row[] = $all;
+        }
+        getCompanyArray($companyArray,$data,'recommend_resume');
+        getCompanyArray($companyArray,$data,'invite_interview');
+        getCompanyArray($companyArray,$data,'interviewing');
+        getCompanyArray($companyArray,$data,'hire');
+        getCompanyArray($companyArray,$data,'entry');
+        $title = [''];
+        $companyArray = array_values($companyArray);
+        foreach ($companyArray as $item) {
+            $title[] = $item['name'];
+        }
+        $title[] = '总计';
+        $recommend_resume = ['推荐简历'];
+        getRowData($data['recommend_resume']['data'],$companyArray,$recommend_resume);
+        $invite_interview = ['邀请面试'];
+        getRowData($data['invite_interview']['data'],$companyArray,$invite_interview);
+        $interviewing = ['面试中'];
+        getRowData($data['interviewing']['data'],$companyArray,$interviewing);
+        $hire = ['录用'];
+        getRowData($data['hire']['data'],$companyArray,$hire);
+        $entry = ['入职'];
+        getRowData($data['entry']['data'],$companyArray,$entry);
+        $excelData = [
+            $recommend_resume,$invite_interview,$interviewing,$hire,$entry
+        ];
+        return ['title'=>$title,'data'=>$excelData];
+    }
 
     protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date)
     {
@@ -203,7 +325,8 @@ class StatisticsRepository
             }else{
                 $_data[$third_party_id]=[
                     'num'=>1,
-                    'name'=>$companies[$third_party_id]['company_alias']
+                    'name'=>$companies[$third_party_id]['company_alias'],
+                    'id'=>$companies[$third_party_id]['id'],
                 ];
             }
         }

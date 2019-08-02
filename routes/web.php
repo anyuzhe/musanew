@@ -38,3 +38,10 @@ Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
 
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
+
+Route::get('/company/data/statistics/excel/{type}', 'API\CompaniesController@dataStatisticsExcel');
+
+
