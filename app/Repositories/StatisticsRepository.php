@@ -145,18 +145,31 @@ class StatisticsRepository
                 $recruit = $entrust->recruit;
                 $company_job_recruit_resume_ids = RecruitResume::where('company_job_recruit_entrust_id', $entrust->id)->pluck('id')->toArray();
                 $_data = [
-                    'job_name'=>$job->name,
-                    'recruit_days'=>getDays(strtotime($entrust->created_at)),
-                    'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),
-                    'need_num'=>$recruit->need_num,
-                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),
-                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),
-                    'residue_num'=>$recruit->need_num - $recruit->done_num,
-                    'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),
-                    'interview_resume_num'=>$this->getEntrustCountByStatus([2], $company_job_recruit_resume_ids),
+                    'job_name'=>$job->name,//职位
+                    'publish_at'=>$entrust->created_at->toDateTimeString(),//招聘发布时间
+                    'recruit_days'=>getDays(strtotime($entrust->created_at)),//招聘天数
+                    'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),//完成率
+                    'need_num'=>$recruit->need_num,//需求量
+                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//入职成功
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//等待入职
+                    'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
+                    'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
+                    'interview_resume_num'=>$this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids),//邀请面试
+                    'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
+                    'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
+                    'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids),//待定
+                    'interview_defeated_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//面试失败
+                    'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
+                    'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
                 ];
                 if(!isset($departments[$job->department_id]['data'])){
                     $departments[$job->department_id]['data'] = [];
+                }
+                if($departments[$job->department_id]['level']==1){
+                    $_data['department1_name'] = $departments[$job->department_id]['name'];
+                    $_data['department2_name'] = $departments[$job->department_id]['name'];
+                }elseif ($departments[$job->department_id]['level']==2){
+                    $_data['department2_name'] = $departments[$job->department_id]['name'];
                 }
                 $departments[$job->department_id]['data'][] = $_data;
                 $has_entrust_ids[] = $entrust->id;
@@ -168,8 +181,12 @@ class StatisticsRepository
                 $department['child'] = [];
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
-                        if(isset($v['data']))
+                        if(isset($v['data'])){
+                            foreach ($v['data'] as &$vv) {
+                                $vv['department1_name'] = $department['name'];
+                            }
                             $department['child'][] = $v;
+                        }
                     }
                 }
                 if(count($department['child'])==0 && isset($department['data'])){
@@ -214,18 +231,28 @@ class StatisticsRepository
                 $recruit = $entrust->recruit;
                 $company_job_recruit_resume_ids = RecruitResume::where('company_job_recruit_entrust_id', $entrust->id)->pluck('id')->toArray();
                 $_data = [
-                    'job_name'=>$job->name,
-                    'recruit_days'=>getDays(strtotime($entrust->created_at)),
-                    'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),
-                    'need_num'=>$recruit->need_num,
-                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),
-                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),
-                    'residue_num'=>$recruit->need_num - $recruit->done_num,
-                    'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),
-                    'interview_resume_num'=>$this->getEntrustCountByStatus([2], $company_job_recruit_resume_ids),
+                    'job_name'=>$job->name,//职位
+                    'publish_at'=>$entrust->created_at->toDateTimeString(),//招聘发布时间
+                    'recruit_days'=>getDays(strtotime($entrust->created_at)),//招聘天数
+                    'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),//完成率
+                    'need_num'=>$recruit->need_num,//需求量
+                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//入职成功
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//等待入职
+                    'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
+                    'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
+                    'interview_resume_num'=>$this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids),//邀请面试
+                    'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
+                    'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
+                    'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids),//待定
+                    'interview_defeated_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//面试失败
+                    'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
+                    'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
                 ];
-                if(!isset($departments[$job->department_id]['data'])){
-                    $departments[$job->department_id]['data'] = [];
+                if($departments[$job->department_id]['level']==1){
+                    $_data['department1_name'] = $departments[$job->department_id]['name'];
+                    $_data['department2_name'] = $departments[$job->department_id]['name'];
+                }elseif ($departments[$job->department_id]['level']==2){
+                    $_data['department2_name'] = $departments[$job->department_id]['name'];
                 }
                 $departments[$job->department_id]['data'][] = $_data;
                 $has_entrust_ids[] = $entrust->id;
@@ -237,8 +264,12 @@ class StatisticsRepository
                 $department['child'] = [];
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
-                        if(isset($v['data']))
+                        if(isset($v['data'])){
+                            foreach ($v['data'] as &$vv) {
+                                $vv['department1_name'] = $department['name'];
+                            }
                             $department['child'][] = $v;
+                        }
                     }
                 }
                 if(count($department['child'])==0 && isset($department['data'])){
