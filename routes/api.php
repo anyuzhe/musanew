@@ -24,7 +24,6 @@ Route::get('/course/jump', function () {
 });
 
 $router->get('/', function () use ($router) {
-
     $request = app('request');
     dd($request->all());
     return 'test';
@@ -80,33 +79,33 @@ $router->post('/user/findpassword/sendcode', 'API\LoginController@sendCode');
 //找回密码--修改密码
 $router->any('/user/findpassword/edit', 'API\LoginController@editPassword');
 
-$router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
 
-//职位列表
-$router->get('/company/jobs', 'API\JobsController@index');
-$router->get('/company/jobs/{id}', 'API\JobsController@show');
-
+//图片上传
 $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
-
-//招聘列表
-$router->get('/company/recruits/type/1', 'API\RecruitsController@index');
-$router->get('/company/recruits/type/4', 'API\CompaniesController@entrustsList');
-$router->get('/company/recruits/type/{type}', 'API\EntrustsController@index');
-
-$router->get('/company/recruits/{id}', 'API\RecruitsController@show');
-
-//合作第三方
-$router->get('/company/thirdParty', 'API\CompaniesController@thirdPartyList');
-//合作第三方
-$router->get('/company/thirdParty/idName', 'API\CompaniesController@thirdPartyListIdName');
-
-//验证职位编号
-$router->post('/company/jobs/checkCode', 'API\JobsController@checkCode');
-
-
 
 
 $router->group(['middleware' => 'auth.api'], function () use ($router) {
+    $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
+
+//职位列表
+    $router->get('/company/jobs', 'API\JobsController@index');
+    $router->get('/company/jobs/{id}', 'API\JobsController@show');
+
+//招聘列表
+    $router->get('/company/recruits/type/1', 'API\RecruitsController@index');
+    $router->get('/company/recruits/type/4', 'API\CompaniesController@entrustsList');
+    $router->get('/company/recruits/type/{type}', 'API\EntrustsController@index');
+
+    $router->get('/company/recruits/{id}', 'API\RecruitsController@show');
+
+//合作第三方
+    $router->get('/company/thirdParty', 'API\CompaniesController@thirdPartyList');
+//合作第三方
+    $router->get('/company/thirdParty/idName', 'API\CompaniesController@thirdPartyListIdName');
+
+//验证职位编号
+    $router->post('/company/jobs/checkCode', 'API\JobsController@checkCode');
+
     //个人信息
     $router->get('/user/info', 'API\UsersController@info');
     $router->post('/user/info', 'API\UsersController@setInfo');
