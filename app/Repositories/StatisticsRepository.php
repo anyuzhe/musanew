@@ -190,7 +190,8 @@ class StatisticsRepository
                     }
                 }
                 if(count($department['child'])==0 && isset($department['data'])){
-                    $department['child'] = $department;
+                    $department['child'][] = $department;
+                    unset($department['data']);
                 }
                 if(count($department['child'])>0)
                     $data[] = $department;
@@ -273,7 +274,8 @@ class StatisticsRepository
                     }
                 }
                 if(count($department['child'])==0 && isset($department['data'])){
-                    $department['child'] = $department;
+                    $department['child'][] = $department;
+                    unset($department['data']);
                 }
                 if(count($department['child'])>0)
                     $data[] = $department;
@@ -332,6 +334,58 @@ class StatisticsRepository
         getRowData($data['entry']['data'],$companyArray,$entry);
         $excelData = [
             $recommend_resume,$invite_interview,$interviewing,$hire,$entry
+        ];
+        return ['title'=>$title,'data'=>$excelData];
+    }
+
+    public function getExcelDetailData($data)
+    {
+        $excelData = [];
+        foreach ($data['departments'] as $department) {
+            foreach ($department['child'] as $level2) {
+                foreach ($level2['data'] as $v) {
+                    $excelData[] = [
+                        $v['department1_name'],
+                        $v['department2_name'],
+                        $v['job_name'],
+                        $v['publish_at'],
+                        $v['recruit_days'],
+                        $v['need_num'],
+                        $v['residue_num'],
+                        $v['done_rate'],
+                        $v['recommend_resume_num'],
+                        $v['resume_mismatching_num'],
+                        $v['interview_resume_num'],
+                        $v['give_up_interview_num'],
+                        $v['undetermined_num'],
+                        $v['interview_defeated_num'],
+                        $v['interview_pass_inappropriate_num'],
+                        $v['hire_num'],
+                        $v['wait_entry_num'],
+                        $v['entry_success_num'],
+                    ];
+                }
+            }
+        }
+        $title = [
+            '一级部门',
+            '二级部门',
+            '职位',
+            '招聘发布时间',
+            '招聘天数',
+            '需求量',
+            '剩余量',
+            '完成率',
+            '推荐简历',
+            '简历不匹配',
+            '邀请面试',
+            '放弃面试',
+            '待定',
+            '面试失败',
+            '面试通过不合适',
+            '录用',
+            '待入职',
+            '成功入职',
         ];
         return ['title'=>$title,'data'=>$excelData];
     }

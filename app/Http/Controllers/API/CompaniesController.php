@@ -390,16 +390,47 @@ class CompaniesController extends ApiBaseCommonController
         }
         return $this->apiReturnJson(0,$data);
     }
+
     public function dataStatisticsDetailExcel()
     {
         $company_id = $this->request->get('company_id');
         $start_date = $this->request->get('start_date',date('Y-m-01'));
         $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        $company = Company::find($company_id);
         if($this->request->type ==1){
             $data = app()->build(StatisticsRepository::class)->getCompanyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
         }else{
             $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
         }
-        return $this->apiReturnJson(0,$data);
+        $res = app()->build(StatisticsRepository::class)->getExcelDetailData($data);
+        $excelHelper = new ExcelHelper();
+        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],'数据',"$start_date-$end_date {$company->company_alias}职位招聘数据");
+    }
+
+    public function resumeRelationSet()
+    {
+        $company_id = $this->request->get('company_id');
+        $resume_id = $this->request->get('resume_id');
+        $type = $this->request->get('type',2);
+        $action = $this->request->get('action','add');
+        if(!$company_id || in_array($type,[2,3])!==true || in_array($action, ['add','cancel'])!==true){
+            return $this->apiReturnJson(9999, null, '参数出错');
+        }
+        $has = CompanyResume::where('company_id', $company_id)
+            ->where('resume_id', $resume_id)
+            ->where('type',$type)
+            ->first();
+        if($has && $action=='cancel'){
+            $has->delete();
+        }
+        if(!$has && $action=='add'){
+            CompanyResume::create([
+                'company_id'=>$company_id,
+                'resume_id'=>$resume_id,
+                'type'=>$type,
+                'creator_id'=>$this->getUser()->id,
+            ]);
+        }
+        return $this->apiReturnJson(0);
     }
 }

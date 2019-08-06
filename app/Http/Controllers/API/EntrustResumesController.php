@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Models\CompanyResume;
 use App\Models\Entrust;
-use App\Models\ExtendMap;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;

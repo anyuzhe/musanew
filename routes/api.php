@@ -154,7 +154,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->post('/company/entrusts/sendResumes', 'API\EntrustResumesController@sendResumes');
 
     //招聘下的-简历列表
-    $router->get('/company/recruit/resumes', 'API\RecruitResumesController@index');
+    $router->any('/company/recruit/resumes', 'API\RecruitResumesController@index');
 
     //招聘下的-简历详情
     $router->get('/company/recruit/resumes/{id}', 'API\RecruitResumesController@show');
@@ -172,6 +172,9 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/count/statistics/{type}', 'API\CompaniesController@countStatistics');
     $router->get('/company/data/statistics/{type}', 'API\CompaniesController@dataStatistics');
     $router->get('/company/data/statistics/detail/{type}', 'API\CompaniesController@dataStatisticsDetail');
+
+    //收藏和拉黑简历
+    $router->any('/company/resume/relation', 'API\CompaniesController@resumeRelationSet');
 
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试

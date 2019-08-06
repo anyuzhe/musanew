@@ -202,17 +202,33 @@ class ExcelHelper
 
 
 
-    public function dumpExcel($title,$data,$name){
+    public function dumpExcel($title,$data,$name,$headline=null){
 //        $dir = dirname(__FILE__);
 //        require $dir."/PHPExcel/PHPExcel.php";//引入PHPExcel
         $excel = new \PHPExcel();
         $letter = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','BB','CC');
-        for($i = 0;$i < count($title);$i++) {
 
-            $excel->getActiveSheet()->setCellValue("$letter[$i]1","$title[$i]");
+        if($headline){
+            $column_index = "A";
+            //清空要合并的首行单元格值，用于填充合并后的单元格值
+            $excel->getActiveSheet()->setCellValue($column_index.''.'1',$headline);
+            //合并单元格,值为''
+            $h = $column_index.''.'1'.":".$letter[count($title)-1].''.'1';
+            $excel->getActiveSheet()->mergeCells($h);
+            $excel->getActiveSheet()->getStyle($h)->getFont()->setBold(true);
+            $excel->getActiveSheet()->getStyle($h)->getFont()->setSize(16);
+            $excel->getActiveSheet()->getStyle($h)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $excel->getActiveSheet()->getStyle($h)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            //拆分单元格,将清空合并前单元格的值并还原合并前单元格的样式
+//            $excel->getActiveSheet()->unmergeCells($column_index.''.'1'.":".$column_index.''.count($title));
+        }
+
+        for($i = 0;$i < count($title);$i++) {
+            $_v = $headline?2:1;
+            $excel->getActiveSheet()->setCellValue("$letter[$i]{$_v}","$title[$i]");
 
         }
-        $i = 2;
+        $i = $headline?3:2;
         $j = 0;
 //        for ($i = 2;$i <= count($data) + 1;$i++) {
         foreach ($data as $v) {

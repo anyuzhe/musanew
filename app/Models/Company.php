@@ -38,6 +38,7 @@ class Company extends Model
 
     public function resumes()
     {
+        //人才库
         return $this->belongsToMany('App\Models\Resume','company_resume','company_id','resume_id')->wherePivotIn('type', [1]);
     }
 
