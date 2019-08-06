@@ -160,6 +160,11 @@ class EntrustResumesController extends ApiBaseCommonController
 
         foreach ($ids as $id) {
             $resume = Resume::find($id);
+
+            if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $id)->where('type',3)->first()){
+                return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
+            }
+
             $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
                 ->where('resume_id', $id)
                 ->where('company_job_recruit_entrust_id', $entrust_id)->first();
