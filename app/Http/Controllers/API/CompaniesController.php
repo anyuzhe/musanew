@@ -193,7 +193,9 @@ class CompaniesController extends ApiBaseCommonController
             $v->area = [$v->province_id,$v->city_id,$v->district_id];
         }
         $company->logo = getPicFullUrl($company->logo);
+        $company->industry;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
+        getOptionsText($company);
         return $this->apiReturnJson(0,$company);
     }
     public function updateCurrentInfo()
