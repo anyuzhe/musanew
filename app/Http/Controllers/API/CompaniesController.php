@@ -409,7 +409,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function resumeRelationSet()
     {
-        $company_id = $this->request->get('company_id');
+        $company_id = $this->request->get('company_id', $this->getCurrentCompany()->id);
         $resume_id = $this->request->get('resume_id');
         $type = $this->request->get('type',2);
         $action = $this->request->get('action','add');
