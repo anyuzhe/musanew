@@ -46,17 +46,26 @@ trait ControllerCRUDORG
     //获取 并且 搜索
     protected function modelGetSearch(&$model)
     {
+        $groups = [];
         if(isset($this->search_field_array)){
             foreach ($this->search_field_array as $item) {
                 if(is_array($item)){
                     $_name = $item[0];
                     $_action = $item[1];
                     $_str = app('request')->get($_name,null);
-                    if($_str){
-                        if($_action=='like'){
-                            $model = $model->where($_name, $_action, "%$_str%");
+                    if(!$this->isEmpty($_str)){
+                        if(isset($item[2])){
+                            $group = $item[2];
+                            if(!isset($groups[$group]))
+                                $groups[$group] = [];
+                            $item['value'] = $_str;
+                            $groups[$group][] = $item;
                         }else{
-                            $model = $model->where($_name, $_action, $_str);
+                            if($_action=='like'){
+                                $model = $model->where($_name, $_action, "%$_str%");
+                            }else{
+                                $model = $model->where($_name, $_action, $_str);
+                            }
                         }
                     }
                 }else{
@@ -67,7 +76,46 @@ trait ControllerCRUDORG
                 }
             }
         }
+        foreach ($groups as $group) {
+            $model = $model->where(function ($query)use($group){
+                $_first = true;
+                foreach ($group as $item) {
+                    $_name = $item[0];
+                    $_action = $item[1];
+                    $_str = $item['value'];
+                    if(!$this->isEmpty($_str)){
+                        if($_first){
+                            $_first = false;
+                            if($_action=='like'){
+                                $query->where($_name, $_action, "%$_str%");
+                            }else{
+                                $query->where($_name, $_action, $_str);
+                            }
+                        }else{
+                            if($_action=='like'){
+                                $query->orWhere($_name, $_action, "%$_str%");
+                            }else{
+                                $query->orWhere($_name, $_action, $_str);
+                            }
+                        }
+                    }
+                }
+            });
+        }
         return $model;
+    }
+
+    protected function isEmpty($_str)
+    {
+        if($_str)
+            return false;
+        if(is_null($_str))
+            return true;
+        if(is_int($_str))
+            return false;
+        if(is_string($_str) && strlen($_str)==0)
+            return true;
+        return false;
     }
 
     //排序

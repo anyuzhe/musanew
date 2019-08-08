@@ -18,7 +18,8 @@ class JobsController extends ApiBaseCommonController
     public $model_name = Job::class;
 
     public $search_field_array = [
-        ['name','like'],
+        ['code','like',0],
+        ['name','like',0],
         ['is_formal','='],
     ];
 
