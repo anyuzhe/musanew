@@ -66,4 +66,9 @@ class Company extends Model
     {
         return $this->belongsTo('App\Models\Industry');
     }
+
+    public function conglomerate()
+    {
+        return $this->belongsTo('App\Models\Conglomerate');
+    }
 }

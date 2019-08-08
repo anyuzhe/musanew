@@ -199,6 +199,7 @@ class CompaniesController extends ApiBaseCommonController
         }
         $company->logo = getPicFullUrl($company->logo);
         $company->industry;
+        $company->conglomerate;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         getOptionsText($company);
         return $this->apiReturnJson(0,$company);
