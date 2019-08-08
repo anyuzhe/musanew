@@ -56,6 +56,14 @@ class CompaniesRepository
 
                     $_address->save();
                 }else{
+                    if(isset($address['area']) && is_array($address['area'])){
+                        if(isset($address['area'][0]))
+                            $address['province_id'] = $address['area'][0];
+                        if(isset($address['area'][1]))
+                            $address['city_id'] = $address['area'][1];
+                        if(isset($address['area'][2]))
+                            $address['district_id'] = $address['area'][2];
+                    }
                     $obj = CompanyAddress::create($address);
                     $addresses_ids[] = $obj->id;
                 }
