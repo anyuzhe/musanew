@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Area;
 use App\Models\Company;
+use App\Models\CompanyAddress;
 use App\Models\CompanyResume;
 use App\Models\Entrust;
 use App\Models\Job;
@@ -192,6 +194,9 @@ class CompaniesController extends ApiBaseCommonController
         foreach ($company->addresses as &$v) {
             $v->area = [$v->province_id,$v->city_id,$v->district_id];
         }
+        $company->addresses_text = Area::where('id', $v->province_id)->value('cname').
+            Area::where('id', $v->city_id)->value('cname').
+            Area::where('id', $v->district_id)->value('cname');
         $company->logo = getPicFullUrl($company->logo);
         $company->industry;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
