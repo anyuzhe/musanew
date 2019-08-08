@@ -197,7 +197,7 @@ class CompaniesController extends ApiBaseCommonController
                 Area::where('id', $v->city_id)->value('cname').
                 Area::where('id', $v->district_id)->value('cname');
         }
-        $company->logo = getPicFullUrl($company->logo);
+        $company->full_logo = getPicFullUrl($company->logo);
         $company->industry;
         $company->conglomerate;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
