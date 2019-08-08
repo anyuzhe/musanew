@@ -193,10 +193,10 @@ class CompaniesController extends ApiBaseCommonController
         $company->addresses;
         foreach ($company->addresses as &$v) {
             $v->area = [$v->province_id,$v->city_id,$v->district_id];
+            $v->area_text = Area::where('id', $v->province_id)->value('cname').
+                Area::where('id', $v->city_id)->value('cname').
+                Area::where('id', $v->district_id)->value('cname');
         }
-        $company->addresses_text = Area::where('id', $v->province_id)->value('cname').
-            Area::where('id', $v->city_id)->value('cname').
-            Area::where('id', $v->district_id)->value('cname');
         $company->logo = getPicFullUrl($company->logo);
         $company->industry;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
