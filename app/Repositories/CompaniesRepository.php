@@ -68,7 +68,7 @@ class CompaniesRepository
                 $department['company_id'] = $company_id;
                 if(isset($department['id']) && $department['id']){
                     $departments_ids[] = $department['id'];
-                    $_department = CompanyDepartment::find($address['id']);
+                    $_department = CompanyDepartment::find($department['id']);
                     $_department->fill($department);
                     $_department->save();
                 }else{
