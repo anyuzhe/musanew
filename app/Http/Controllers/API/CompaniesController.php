@@ -211,7 +211,20 @@ class CompaniesController extends ApiBaseCommonController
         $model->where('id', '=', $company->id)->update($this->request->only($model->fillable));
         app()->build(CompaniesRepository::class)->saveAddressesAndDepartments($this->request->get('addresses'),
             $this->request->get('departments'),$company->id);
-        return $this->apiReturnJson(0);
+
+        $company->addresses;
+        foreach ($company->addresses as &$v) {
+            $v->area = [$v->province_id,$v->city_id,$v->district_id];
+            $v->area_text = Area::where('id', $v->province_id)->value('cname').
+                Area::where('id', $v->city_id)->value('cname').
+                Area::where('id', $v->district_id)->value('cname');
+        }
+        $company->full_logo = getPicFullUrl($company->logo);
+        $company->industry;
+        $company->conglomerate;
+        $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
+        getOptionsText($company);
+        return $this->apiReturnJson(0, $company);
     }
 
     public function getBacklog()
