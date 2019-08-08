@@ -550,7 +550,7 @@ function getOptionsText(&$model){
     foreach ($options as $map) {
         $name = $map->name;
         $new_name = $name.'_text';
-        if(isset($model[$name])) {
+        if(isset($model[$name]) && is_int($model[$name])) {
             $_ops = $map->options->keyBy('value')->toArray();
             $model->{$new_name} = '';
             if(isset($_ops[$model->{$name}])){

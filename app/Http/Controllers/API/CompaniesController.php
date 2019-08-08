@@ -212,6 +212,7 @@ class CompaniesController extends ApiBaseCommonController
         app()->build(CompaniesRepository::class)->saveAddressesAndDepartments($this->request->get('addresses'),
             $this->request->get('departments'),$company->id);
 
+        $company = Company::find($company->id);
         $company->addresses;
         foreach ($company->addresses as &$v) {
             $v->area = [$v->province_id,$v->city_id,$v->district_id];
