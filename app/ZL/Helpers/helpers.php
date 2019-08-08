@@ -533,7 +533,7 @@ function getPicFullUrl($url){
     if(is_numeric($url)){
         return getMoodlePICURL($url);
     }else{
-        return env('APP_URL').'/storege/'.$url;
+        return env('APP_URL').'/storage/'.$url;
     }
 }
 
