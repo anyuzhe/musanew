@@ -86,6 +86,7 @@ class CompaniesRepository
                                 $_department1->save();
                                 $departments_ids[] = $_department1->id;
                             }else{
+                                $item['company_id'] = $company_id;
                                 $item['pid'] = $_department->id;
                                 $item['level'] = 2;
                                 $obj = CompanyDepartment::create($item);
@@ -95,9 +96,11 @@ class CompaniesRepository
                     }
                     $departments_ids[] = $department['id'];
                 }else{
+                    $department['company_id'] = $company_id;
                     $obj = CompanyDepartment::create($department);
                     if(isset($department['children']) && count($department['children'])>0){
                         foreach ($department['children'] as $item) {
+                            $item['company_id'] = $company_id;
                             $item['pid'] = $obj->id;
                             $item['level'] = 2;
                             $obj = CompanyDepartment::create($item);
