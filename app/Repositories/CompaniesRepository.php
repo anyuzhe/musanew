@@ -75,12 +75,35 @@ class CompaniesRepository
             foreach ($departments as $department) {
                 $department['company_id'] = $company_id;
                 if(isset($department['id']) && $department['id']){
-                    $departments_ids[] = $department['id'];
                     $_department = CompanyDepartment::find($department['id']);
                     $_department->fill($department);
                     $_department->save();
+                    if(isset($department['children']) && count($department['children'])>0){
+                        foreach ($department['children'] as $item) {
+                            if(isset($item['id']) && $item['id']){
+                                $_department1 = CompanyDepartment::find($item['id']);
+                                $_department1->fill($department);
+                                $_department1->save();
+                                $departments_ids[] = $_department1->id;
+                            }else{
+                                $item['pid'] = $_department->id;
+                                $item['level'] = 2;
+                                $obj = CompanyDepartment::create($item);
+                                $departments_ids[] = $obj->id;
+                            }
+                        }
+                    }
+                    $departments_ids[] = $department['id'];
                 }else{
                     $obj = CompanyDepartment::create($department);
+                    if(isset($department['children']) && count($department['children'])>0){
+                        foreach ($department['children'] as $item) {
+                            $item['pid'] = $obj->id;
+                            $item['level'] = 2;
+                            $obj = CompanyDepartment::create($item);
+                            $departments_ids[] = $obj->id;
+                        }
+                    }
                     $departments_ids[] = $obj->id;
                 }
             }
