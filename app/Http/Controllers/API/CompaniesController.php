@@ -207,6 +207,8 @@ class CompaniesController extends ApiBaseCommonController
     public function updateCurrentInfo()
     {
         $company = $this->getCurrentCompany();
+        if(!$company)
+            return $this->apiReturnJson(9999,null,'没有当前公司');
         $model = new Company();
         $model->where('id', '=', $company->id)->update($this->request->only($model->fillable));
         app()->build(CompaniesRepository::class)->saveAddressesAndDepartments($this->request->get('addresses'),

@@ -82,7 +82,7 @@ class CompaniesRepository
                         foreach ($department['children'] as $item) {
                             if(isset($item['id']) && $item['id']){
                                 $_department1 = CompanyDepartment::find($item['id']);
-                                $_department1->fill($department);
+                                $_department1->fill($item);
                                 $_department1->save();
                                 $departments_ids[] = $_department1->id;
                             }else{
