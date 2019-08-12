@@ -174,6 +174,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //收藏和拉黑简历
     $router->any('/company/resume/relation', 'API\CompaniesController@resumeRelationSet');
+    //企业部门
+    $router->any('/company/departments', 'API\CompaniesController@getDepartments');
 
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试

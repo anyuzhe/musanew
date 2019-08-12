@@ -204,6 +204,13 @@ class CompaniesController extends ApiBaseCommonController
         getOptionsText($company);
         return $this->apiReturnJson(0,$company);
     }
+
+    public function getDepartments()
+    {
+        $company = $this->getCurrentCompany();
+        return $this->apiReturnJson(0,app()->build(CompaniesRepository::class)->getDepartmentTree($company->id));
+    }
+
     public function updateCurrentInfo()
     {
         $company = $this->getCurrentCompany();
