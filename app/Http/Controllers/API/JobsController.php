@@ -92,15 +92,15 @@ class JobsController extends ApiBaseCommonController
         if(!$job->company_id){
             $job->company_id = $this->getCurrentCompany()->id;
         }
-
-        if(isset($data['area']) && is_array($data['area'])){
-            if(isset($data['area'][0]))
-                $job->province_id = $data['area'][0];
-            if(isset($data['area'][1]))
-                $job->city_id = $data['area'][1];
-            if(isset($data['area'][2]))
-                $job->district_id = $data['area'][2];
-        }
+//
+//        if(isset($data['area']) && is_array($data['area'])){
+//            if(isset($data['area'][0]))
+//                $job->province_id = $data['area'][0];
+//            if(isset($data['area'][1]))
+//                $job->city_id = $data['area'][1];
+//            if(isset($data['area'][2]))
+//                $job->district_id = $data['area'][2];
+//        }
         $job->save();
 
         $skills = isset($data['skills'])?$data['skills']:[];
@@ -112,13 +112,13 @@ class JobsController extends ApiBaseCommonController
                 $skill['job_id'] = $id;
                 if(isset($skill['id']) && $skill['id']){
                     $skill_ids[] = $skill['id'];
-                    app('db')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
                 }else{
-                    $_id = app('db')->table('job_skill')->insertGetId($skill);
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
                     $skill_ids[] = $_id;
                 }
             }
-            app('db')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
         }
         if($tests && is_array($tests)){
             $test_ids = [];
@@ -126,14 +126,14 @@ class JobsController extends ApiBaseCommonController
                 $test['job_id'] = $id;
                 if(isset($test['id']) && $test['id']){
                     $test_ids[] = $test['id'];
-                    app('db')->table('job_test')->where('id', $test['id'])->update($test);
+                    app('db')->connection('moodle')->table('job_test')->where('id', $test['id'])->update($test);
                 }else{
                     $test['job_id'] = $id;
-                    $_id = app('db')->table('job_test')->insertGetId($test);
+                    $_id = app('db')->connection('moodle')->table('job_test')->insertGetId($test);
                     $test_ids[] = $_id;
                 }
             }
-            app('db')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
+            app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
         }
         return $this->apiReturnJson(0);
     }
@@ -144,14 +144,14 @@ class JobsController extends ApiBaseCommonController
         $tests = isset($data['tests'])?$data['tests']:[];
 
         $job = Job::find($id);
-        if(isset($data['area']) && is_array($data['area'])){
-            if(isset($data['area'][0]))
-                $job->province_id = $data['area'][0];
-            if(isset($data['area'][1]))
-                $job->city_id = $data['area'][1];
-            if(isset($data['area'][2]))
-                $job->district_id = $data['area'][2];
-        }
+//        if(isset($data['area']) && is_array($data['area'])){
+//            if(isset($data['area'][0]))
+//                $job->province_id = $data['area'][0];
+//            if(isset($data['area'][1]))
+//                $job->city_id = $data['area'][1];
+//            if(isset($data['area'][2]))
+//                $job->district_id = $data['area'][2];
+//        }
         $job->modifier_id = $this->getUser()->id;
         $job->save();
 
@@ -161,13 +161,13 @@ class JobsController extends ApiBaseCommonController
                 $skill['job_id'] = $id;
                 if(isset($skill['id']) && $skill['id']){
                     $skill_ids[] = $skill['id'];
-                    app('db')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
                 }else{
-                    $_id = app('db')->table('job_skill')->insertGetId($skill);
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
                     $skill_ids[] = $_id;
                 }
             }
-            app('db')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
         }
         if($tests && is_array($tests)){
             $test_ids = [];
@@ -175,13 +175,13 @@ class JobsController extends ApiBaseCommonController
                 $test['job_id'] = $id;
                 if(isset($test['id']) && $test['id']){
                     $test_ids[] = $test['id'];
-                    app('db')->table('job_test')->where('id', $test['id'])->update($test);
+                    app('db')->connection('moodle')->table('job_test')->where('id', $test['id'])->update($test);
                 }else{
-                    $_id = app('db')->table('job_test')->insertGetId($test);
+                    $_id = app('db')->connection('moodle')->table('job_test')->insertGetId($test);
                     $test_ids[] = $_id;
                 }
             }
-            app('db')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
+            app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
         }
         return $this->apiReturnJson(0);
     }
