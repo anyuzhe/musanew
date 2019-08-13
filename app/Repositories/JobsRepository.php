@@ -9,6 +9,7 @@ class JobsRepository
 {
     public function getListData($data)
     {
+        $data->load('department');
         $data->load('skills');
         $data->load('address');
         $area_ids = [];
@@ -38,6 +39,7 @@ class JobsRepository
     }
     public function getData($data)
     {
+        $data->department;
         $data->skills;
         $data->tests;
         $data->address;
