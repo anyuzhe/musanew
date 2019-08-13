@@ -22,9 +22,9 @@ class JobsRepository
         $areas = Area::whereIn('id', $area_ids)->get()->keyBy('id')->toArray();
         foreach ($data as &$v) {
             if($v->address){
-                $v->address->province_text = isset($areas[$v->province_id])?$areas[$v->province_id]['cname']:'';
-                $v->address->city_text = isset($areas[$v->city_id])?$areas[$v->city_id]['cname']:'';
-                $v->address->district_text = isset($areas[$v->district_id])?$areas[$v->district_id]['cname']:'';
+                $v->address->province_text = isset($areas[$v->address->province_id])?$areas[$v->address->province_id]['cname']:'';
+                $v->address->city_text = isset($areas[$v->address->city_id])?$areas[$v->address->city_id]['cname']:'';
+                $v->address->district_text = isset($areas[$v->address->district_id])?$areas[$v->address->district_id]['cname']:'';
             }
             getOptionsText($v);
             foreach ($v->skills as &$skill) {
