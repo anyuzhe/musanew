@@ -21,6 +21,7 @@ use App\ZL\Controllers\ApiBaseCommonController;
 use App\ZL\ORG\Excel\ExcelHelper;
 use DB;
 use Illuminate\Support\Facades\Log;
+use mod_questionnaire\question\date;
 
 class CompaniesController extends ApiBaseCommonController
 {
@@ -374,6 +375,27 @@ class CompaniesController extends ApiBaseCommonController
 
         return $this->apiReturnJson(0,compact('entrustApply','checkEntrust',
             'waitHandle','waitInterview','waitEntry'));
+    }
+
+    public function getCalendarData()
+    {
+        $start_date = $this->request->get('start_date',date('Y-m-01'));
+        $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        //面试
+        $interviews = RecruitResumeLog::select(DB::raw('left (other_data,10) as date'))
+            ->where('user_id', $this->getUser()->id)
+            ->whereIn('status',[2,3,5])
+        ->where('other_data','>=',$start_date)->where('other_data','<=',$end_date)->get()->keyBy('date')->toArray();
+        $dates = [];
+        while (strtotime($start_date)<strtotime($end_date)){
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $dates[] = [
+                'date'=>$start_date,
+                'have_interview'=>isset($interviews[$start_date])?1:0,
+            ];
+            $start_date = date('Y-m-d', strtotime($start_date)+3600*24);
+        }
+        return $this->apiReturnJson(0,$dates);
     }
 
     public function countStatistics()
