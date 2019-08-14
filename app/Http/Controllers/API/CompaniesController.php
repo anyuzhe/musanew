@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Company;
 use App\Models\CompanyAddress;
 use App\Models\CompanyResume;
+use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\Entrust;
 use App\Models\Job;
@@ -410,17 +411,25 @@ class CompaniesController extends ApiBaseCommonController
     public function getUsers()
     {
         $company_id = $this->request->get('company_id',$this->getCurrentCompany()->id);
-        $userIds = CompanyUser::where('company_id', $company_id)->pluck('user_id')->toArray();
+        $companyUsers = CompanyUser::where('company_id', $company_id)->get();
+        $userIds = $companyUsers->pluck('user_id')->toArray();
+        $roleIds = $companyUsers->pluck('company_role_id')->toArray();
         $users = User::whereIn('id', $userIds)->get();
         $users->load('info');
+        $users = $users->keyBy('id')->toArray();
+        $roles = CompanyRole::whereIn('id', $roleIds)->get()->keyBy('id')->toArray();
         $data = [];
-        foreach ($users as $user) {
-            $info = $user->info;
-            if(!$info)
-                $info = UserBasicInfo::create(['user_id'=>$user->id]);
+        foreach ($companyUsers as $companyUser) {
+            $user = $users[$companyUser->user_id];
+            if(isset($roles[$companyUser->company_role_id]))
+                $role = $roles[$companyUser->company_role_id];
+            else
+                $role = null;
+            $info = $user['info'];
             $data[] = [
-              'id'=>$user->id,
-              'name'=>$info->realname
+              'id'=>$user['id'],
+              'name'=>$info?$info['realname']:'无姓名',
+              'role_name'=>$role?$role['name']:'无角色',
             ];
         }
         return $this->apiReturnJson(0,$data);
