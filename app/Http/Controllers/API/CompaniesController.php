@@ -380,7 +380,13 @@ class CompaniesController extends ApiBaseCommonController
     public function getCalendarData()
     {
         $start_date = $this->request->get('start_date',date('Y-m-01'));
+        $center_date = $this->request->get('center_date', null);
         $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        $end_date = date('Y-m-d 23:59:59', strtotime($end_date));
+        if($center_date){
+            $start_date = date('Y-m-d', strtotime($center_date)-(3600*24*30));
+            $end_date = date('Y-m-d', strtotime($center_date)+(3600*24*30));
+        }
         //面试
         $interviews = RecruitResumeLog::select(DB::raw('left (other_data,10) as date'))
             ->where('user_id', $this->getUser()->id)
