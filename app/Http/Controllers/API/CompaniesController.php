@@ -311,15 +311,15 @@ class CompaniesController extends ApiBaseCommonController
         }
 
         //待面试
-        $waitInterviewData = RecruitResume::where(function ($query)use($user){
+        $waitInterviewData = RecruitResume::where(function ($query)use($user, $company){
             $query->where('status',2)
-                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
-        })->orWhere(function ($query)use($user){
+                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('company_id',$company->id)->where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
+        })->orWhere(function ($query)use($user, $company){
             $query->where('status',3)
-                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
-        })->orWhere(function ($query)use($user){
+                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('company_id',$company->id)->where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
+        })->orWhere(function ($query)use($user, $company){
             $query->where('status',5)
-                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
+                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('company_id',$company->id)->where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
         })->where('status',2)->get();
         $waitInterviewData->load('job');
         $waitInterviewData->load('resume');
@@ -330,7 +330,7 @@ class CompaniesController extends ApiBaseCommonController
         foreach ($waitInterviewData as $v) {
 
             $recruitResumesRepository->addFieldText($v);
-            $waitEntry[] = [
+            $waitInterview[] = [
                 'recruit_id'=>$v->company_job_recruit_id,
                 'entrust_id'=>$v->company_job_recruit_entrust_id,
                 'resume_id'=>$v->resume_id,
