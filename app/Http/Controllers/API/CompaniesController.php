@@ -6,11 +6,14 @@ use App\Models\Area;
 use App\Models\Company;
 use App\Models\CompanyAddress;
 use App\Models\CompanyResume;
+use App\Models\CompanyUser;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
+use App\Models\User;
+use App\Models\UserBasicInfo;
 use App\Repositories\AreaRepository;
 use App\Repositories\CompaniesRepository;
 use App\Repositories\EntrustsRepository;
@@ -402,6 +405,25 @@ class CompaniesController extends ApiBaseCommonController
             $start_date = date('Y-m-d', strtotime($start_date)+3600*24);
         }
         return $this->apiReturnJson(0,$dates);
+    }
+
+    public function getUsers()
+    {
+        $company_id = $this->request->get('company_id',$this->getCurrentCompany()->id);
+        $userIds = CompanyUser::where('company_id', $company_id)->pluck('user_id')->toArray();
+        $users = User::whereIn('id', $userIds)->get();
+        $users->load('info');
+        $data = [];
+        foreach ($users as $user) {
+            $info = $user->info;
+            if(!$info)
+                $info = UserBasicInfo::create(['user_id'=>$user->id]);
+            $data[] = [
+              'id'=>$user->id,
+              'name'=>$info->realname
+            ];
+        }
+        return $this->apiReturnJson(0,$data);
     }
 
     public function countStatistics()

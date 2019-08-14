@@ -18,6 +18,10 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+
+    \Illuminate\Support\Facades\Mail::to('68067348@qq.com')->send(new App\Mail\RecruitResumeLogEmail());
+    return new App\Mail\RecruitResumeLogEmail();
+
     require_once(getMoodleRoot().'/user/lib.php');
     dd(getMoodleRoot());
     return view('test');
