@@ -222,6 +222,8 @@ class EntrustResumesController extends ApiBaseCommonController
                 $this->recruitResumesRepository->haveLook($recruitResume);
 
                 $data->recruit = $recruitResume;
+
+                $data->matching = $this->recruitResumesRepository->matching($data);
             }else{
                 $data->recruit = null;
             }
