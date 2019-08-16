@@ -103,10 +103,10 @@ class JobsController extends ApiBaseCommonController
 //        }
         $job->save();
 
-        $skills = isset($data['skills'])?$data['skills']:[];
-        $tests = isset($data['tests'])?$data['tests']:[];
+        $skills = isset($data['skills'])?$data['skills']:null;
+        $tests = isset($data['tests'])?$data['tests']:null;
 
-        if($skills && is_array($skills)){
+        if(is_array($skills)){
             $skill_ids = [];
             foreach ($skills as $skill) {
                 $skill['job_id'] = $id;
@@ -120,7 +120,7 @@ class JobsController extends ApiBaseCommonController
             }
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
         }
-        if($tests && is_array($tests)){
+        if(is_array($tests)){
             $test_ids = [];
             foreach ($tests as $test) {
                 $test['job_id'] = $id;
@@ -140,8 +140,8 @@ class JobsController extends ApiBaseCommonController
 
     public function afterUpdate($id, $data)
     {
-        $skills = isset($data['skills'])?$data['skills']:[];
-        $tests = isset($data['tests'])?$data['tests']:[];
+        $skills = isset($data['skills'])?$data['skills']:null;
+        $tests = isset($data['tests'])?$data['tests']:null;
 
         $job = Job::find($id);
 //        if(isset($data['area']) && is_array($data['area'])){
@@ -155,7 +155,7 @@ class JobsController extends ApiBaseCommonController
         $job->modifier_id = $this->getUser()->id;
         $job->save();
 
-        if($skills && is_array($skills)){
+        if(is_array($skills)){
             $skill_ids = [];
             foreach ($skills as $skill) {
                 $skill['job_id'] = $id;
@@ -169,7 +169,7 @@ class JobsController extends ApiBaseCommonController
             }
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
         }
-        if($tests && is_array($tests)){
+        if(is_array($tests)){
             $test_ids = [];
             foreach ($tests as $test) {
                 $test['job_id'] = $id;

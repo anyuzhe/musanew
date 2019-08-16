@@ -18,7 +18,10 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-
+    $d=[];
+    if($d)
+        dd(1);
+    dd(2);
     \Illuminate\Support\Facades\Mail::to('68067348@qq.com')->send(new App\Mail\RecruitResumeLogEmail(\App\Models\RecruitResumeLog::find(1)));
     return new App\Mail\RecruitResumeLogEmail(\App\Models\RecruitResumeLog::find(1));
 
