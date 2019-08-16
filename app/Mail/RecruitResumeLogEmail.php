@@ -14,6 +14,11 @@ class RecruitResumeLogEmail extends Mailable
 
 //    public $subject = '招聘简历更新';
     public $log;
+
+    /*
+     * 1 流转
+     * 2 24小时未处理
+     */
     public $type;
 
     public function __construct(RecruitResumeLog $log, $type=1)
@@ -34,11 +39,19 @@ class RecruitResumeLogEmail extends Mailable
         $resume = $recruitResume->resume;
         $recruit = $recruitResume->recruit;
         $job = $recruitResume->job;
-
-        $this->subject = "{$job->name}招聘有更新";
-        $content_text_array = ["职位：$job->name", "简历：$resume->name", "更新内容：$log->text"];
+        $content_text_array = [];
+        $url = '';
+        if($this->type==1){
+            $this->subject = "{$job->name}招聘有更新";
+            $content_text_array = ["职位：$job->name", "简历：$resume->name", "更新内容：$log->text"];
+            $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
+        }elseif ($this->type==2){
+            $this->subject = "{$job->name}招聘未即使处理";
+            $content_text_array = ["职位：$job->name", "简历：$resume->name", " 请即使处理"];
+            $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
+        }
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array)
-            ->with('url', "http://musa.anyuzhe.com/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1");
+            ->with('url', $url);
     }
 }
