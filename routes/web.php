@@ -19,8 +19,8 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
 
-    \Illuminate\Support\Facades\Mail::to('68067348@qq.com')->send(new App\Mail\RecruitResumeLogEmail());
-    return new App\Mail\RecruitResumeLogEmail();
+    \Illuminate\Support\Facades\Mail::to('68067348@qq.com')->send(new App\Mail\RecruitResumeLogEmail(\App\Models\RecruitResumeLog::find(1)));
+    return new App\Mail\RecruitResumeLogEmail(\App\Models\RecruitResumeLog::find(1));
 
     require_once(getMoodleRoot().'/user/lib.php');
     dd(getMoodleRoot());

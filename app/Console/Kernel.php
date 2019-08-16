@@ -27,6 +27,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->call(function () {
+            //简历24小时没有操作提示
+//            ::table('recent_users')->delete();
+        })->everyMinute();
     }
 
     /**

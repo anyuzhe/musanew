@@ -27,6 +27,7 @@ class RecruitResumeLog extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
     public function creatorInfo()
     {
         return $this->hasOneThrough(

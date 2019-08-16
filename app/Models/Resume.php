@@ -24,6 +24,7 @@ class Resume extends Model
         'phone',//手机
         'gender',//性别 1男0女
         'is_married',//婚姻状态 0未婚 1已婚
+        'is_upload',//是否上传
         'birthdate',//出生年月日
         'avator',//头像
         'visable',//可见1，不可见2

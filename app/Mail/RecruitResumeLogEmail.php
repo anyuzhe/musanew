@@ -12,15 +12,14 @@ class RecruitResumeLogEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $subject = '招聘简历更新';
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct(RecruitResumeLog $log)
+//    public $subject = '招聘简历更新';
+    public $log;
+    public $type;
+
+    public function __construct(RecruitResumeLog $log, $type=1)
     {
-        //
+        $this->log = $log;
+        $this->type = $type;
     }
 
     /**
@@ -30,6 +29,16 @@ class RecruitResumeLogEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.recruitResumeLogEmail');
+        $log = $this->log;
+        $recruitResume = $log->recruitResume;
+        $resume = $recruitResume->resume;
+        $recruit = $recruitResume->recruit;
+        $job = $recruitResume->job;
+
+        $this->subject = "{$job->name}招聘有更新";
+        $content_text_array = ["职位：$job->name", "简历：$resume->name", "更新内容：$log->text"];
+        return $this->view('emails.recruitResumeLogEmail')
+            ->with('content_text_array', $content_text_array)
+            ->with('url', "http://musa.anyuzhe.com/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1");
     }
 }

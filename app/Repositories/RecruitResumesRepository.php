@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Mail\RecruitResumeLogEmail;
 use App\Models\Area;
 use App\Models\DataMapOption;
 use App\Models\Recruit;
@@ -9,6 +10,8 @@ use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\RecruitResumeLook;
 use App\Models\Resume;
+use App\User;
+use Illuminate\Support\Facades\Mail;
 
 class RecruitResumesRepository
 {
@@ -114,9 +117,17 @@ class RecruitResumesRepository
         }elseif($status==-5){
             $log->text =  '录用之后未到岗';
         }
-        $recruitResume->logs()->save($log);
+        $logObj = $recruitResume->logs()->save($log);
         $recruitResume->status = $status;
         $recruitResume->save();
+
+        //给负责人发送邮件通知
+        $recruit = $recruitResume->recruit;
+        if($recruit->leading_id && $leading = User::find($recruit->leading_id)){
+            if($leading->email){
+                Mail::to($leading->email)->send(new RecruitResumeLogEmail($logObj));
+            }
+        }
     }
 
     public function haveLook(RecruitResume $recruitResume)
