@@ -26,11 +26,13 @@ class EntrustsController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
+        $in_recruit = $this->request->get('in_recruit', null);
+        $resume_id = $this->request->get('resume_id', null);
         $user = $this->getUser();
         if ($user) {
             $company = $this->getCurrentCompany();
             $type = $this->request->type;
-            $model = app()->build(EntrustsRepository::class)->getModelByType($type, $company);
+            $model = app()->build(EntrustsRepository::class)->getModelByType($type, $company, $in_recruit, $resume_id);
         }
         return null;
     }

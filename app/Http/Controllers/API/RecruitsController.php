@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Recruit;
+use App\Models\RecruitResume;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitRepository;
@@ -41,6 +42,8 @@ class RecruitsController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
+        $in_recruit = $this->request->get('in_recruit', null);
+        $resume_id = $this->request->get('resume_id', null);
         $user = $this->getUser();
         if ($user) {
             $company = $user->company->first();
@@ -48,7 +51,20 @@ class RecruitsController extends ApiBaseCommonController
 //                $model = $model->where('company_id', $company->id)->whereIn('status', [1,4]);
                 //委托了的招聘
                 $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-                $model = $model->where('company_id', $company->id)->whereIn('status', [1,4])->whereNotIn('id', $has_entrust_ids);
+
+                $model = $model->where('company_id', $company->id)->whereNotIn('id', $has_entrust_ids);
+                if($in_recruit){
+                    if($in_recruit==1){
+                        $model = $model->whereIn('status', [1]);
+                    }else{
+                        $model = $model->whereIn('status', [4,5]);
+                    }
+                }else{
+                    $model = $model->whereIn('status', [1,4]);
+                }
+                if($resume_id){
+                    $model = $model->whereNotIn('id', RecruitResume::where('resume_id', $resume_id)->pluck('company_job_recruit_id')->toArray());
+                }
             }else{
                 $model = $model->where('id', 0);
             }

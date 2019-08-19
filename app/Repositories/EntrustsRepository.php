@@ -4,20 +4,31 @@ namespace App\Repositories;
 
 
 use App\Models\Entrust;
+use App\Models\RecruitResume;
 
 class EntrustsRepository
 {
-    public function getModelByType($type, $company)
+    public function getModelByType($type, $company, $in_recruit=null, $resume_id=null)
     {
         $model = new Entrust();
+        //过滤简历
+        if($resume_id){
+            $model = $model->whereNotIn('company_job_recruit_id', RecruitResume::where('resume_id', $resume_id)->pluck('company_job_recruit_id')->toArray());
+        }
         if($type==2){
             //外包出去的
             $model = $model->where('company_id', $company->id);
-//            $model = $model->whereIn('status', [1,0])->where('company_id', $company->id);
+            if($in_recruit){
+                $model = $model->whereIn('status', [1]);
+            }
         }elseif ($type==3){
             //作为外包公司
-            $model = $model->whereIn('status', [1,2,-1])->where('third_party_id', $company->id);
-//            $model = $model->where('third_party_id', $company->id);
+            $model = $model->where('third_party_id', $company->id);
+            if($in_recruit){
+                $model = $model->whereIn('status', [1]);
+            }else{
+                $model = $model->whereIn('status', [1,2,-1]);
+            }
         }elseif ($type==4){
             //委托申请
             $model = $model->whereIn('status', [0])->where('third_party_id', $company->id);
