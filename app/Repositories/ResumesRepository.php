@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Area;
+use App\Models\Company;
+use App\Models\CompanyResume;
 use App\Models\Resume;
 use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
@@ -23,8 +25,26 @@ class ResumesRepository
         return $text;
     }
 
-    public function getListData($data)
+    public function getListData($data, Company $company=null)
     {
+        if($company){
+            $_blacklist_resume_ids = CompanyResume::where('company_id', $company->id)->where('type', 3)->pluck('resume_id')->toArray();
+            $_mark_resume_ids = CompanyResume::where('company_id', $company->id)->where('type', 3)->pluck('resume_id')->toArray();
+            foreach ($data as &$v) {
+                if(in_array($v->id, $_blacklist_resume_ids)){
+                    $v->in_blacklist = 1;
+                }else{
+                    $v->in_blacklist = 0;
+                }
+                if(in_array($v->id, $_mark_resume_ids)){
+                    $v->have_mark = 1;
+                }else{
+                    $v->have_mark = 0;
+                }
+            }
+        }
+
+
         $data->load('jobCompany');
         $data->load('educations');
         $data->load('companies');

@@ -11,6 +11,6 @@ class CompanyResume extends Model
     public $fillable = [
         'resume_id',
         'company_id',
-        'type',//公司名称
+        'type',// 2 标识 3名单
     ];
 }

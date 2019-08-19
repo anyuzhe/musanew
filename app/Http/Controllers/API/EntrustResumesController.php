@@ -60,6 +60,7 @@ class EntrustResumesController extends ApiBaseCommonController
         $entrust_id = $this->request->get('entrust_id');
         $in_job = $this->request->get('in_job');
         $skills = $this->request->get('skills');
+        $in_blacklist = $this->request->get('in_blacklist',0);
         $model = $model->where('status','!=',-1);
         $company = $this->getCurrentCompany();
         if ($company) {
@@ -74,6 +75,15 @@ class EntrustResumesController extends ApiBaseCommonController
             $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray());
         }elseif ($recruit_id){
             $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_id', $entrust_id)->pluck('resume_id')->toArray());
+        }
+
+        if($in_blacklist!==null){
+            $_resume_ids = CompanyResume::where('company_id', $this->getCurrentCompany()->id)->where('type', 3)->pluck('resume_id')->toArray();
+            if($in_blacklist==1){
+                $model = $model->whereIn('id', $_resume_ids);
+            }else{
+                $model = $model->whereNotIn('id', $_resume_ids);
+            }
         }
         if(is_array($skills) && count($skills)>0){
             $resume_skill_ids = [];
@@ -210,7 +220,7 @@ class EntrustResumesController extends ApiBaseCommonController
 
     public function _after_get(&$data)
     {
-        return app()->build(ResumesRepository::class)->getListData($data);
+        return app()->build(ResumesRepository::class)->getListData($data, $this->getCurrentCompany());
     }
 
     public function _after_find(&$data)
