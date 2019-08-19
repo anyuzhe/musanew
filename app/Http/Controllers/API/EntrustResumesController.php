@@ -97,6 +97,8 @@ class EntrustResumesController extends ApiBaseCommonController
         if(is_array($skills) && count($skills)>0){
             $resume_skill_ids = [];
             foreach ($skills as $skill) {
+                if(is_string($skill))
+                    $skill = json_decode($skill, true);
                 $resume_skill_ids = array_merge($resume_skill_ids,
                     ResumeSkill::where('skill_id',$skill[0])->where('skill_level','>=',$skill[1])->pluck('resume_id')->toArray());
             }

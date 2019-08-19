@@ -18,6 +18,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    
+    dd(\App\Models\ResumeSkill::where('skill_id',10004)->where('skill_level','>=',1)->pluck('resume_id')->toArray());
     $d=[];
     if($d)
         dd(1);
