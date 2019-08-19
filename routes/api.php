@@ -150,7 +150,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->post('/company/entrusts/resume/{id}', 'API\EntrustResumesController@update');
 
     //投递简历
-    $router->post('/company/entrusts/sendResumes', 'API\EntrustResumesController@sendResumes');
+    $router->post('/company/entrusts/sendResumes', 'API\EntrustResumesController@entrustSendResumes');
+    $router->post('/company/resume/sendRecruits', 'API\EntrustResumesController@resumeSendEntrust');
 
     //招聘下的-简历列表
     $router->any('/company/recruit/resumes', 'API\RecruitResumesController@index');
