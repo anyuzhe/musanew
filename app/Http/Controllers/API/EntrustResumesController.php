@@ -61,6 +61,7 @@ class EntrustResumesController extends ApiBaseCommonController
         $in_job = $this->request->get('in_job');
         $skills = $this->request->get('skills');
         $in_blacklist = $this->request->get('in_blacklist',0);
+        $have_mark = $this->request->get('have_mark',null);
         $model = $model->where('status','!=',-1);
         $company = $this->getCurrentCompany();
         if ($company) {
@@ -80,6 +81,14 @@ class EntrustResumesController extends ApiBaseCommonController
         if($in_blacklist!==null){
             $_resume_ids = CompanyResume::where('company_id', $this->getCurrentCompany()->id)->where('type', 3)->pluck('resume_id')->toArray();
             if($in_blacklist==1){
+                $model = $model->whereIn('id', $_resume_ids);
+            }else{
+                $model = $model->whereNotIn('id', $_resume_ids);
+            }
+        }
+        if($have_mark!==null){
+            $_resume_ids = CompanyResume::where('company_id', $this->getCurrentCompany()->id)->where('type', 2)->pluck('resume_id')->toArray();
+            if($have_mark==1){
                 $model = $model->whereIn('id', $_resume_ids);
             }else{
                 $model = $model->whereNotIn('id', $_resume_ids);
