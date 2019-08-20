@@ -236,7 +236,7 @@ class RecruitResumesRepository
         }
         switch ($data->resume_source){
             case 1:
-                $data->resume_source_str = "外包({$data->thirdParty->company_alias})";
+                $data->resume_source_str = $data->thirdParty?"外包({$data->thirdParty->company_alias})":"{$data->company->company_alias}";
                 break;
             case 2:
                 $data->resume_source_str = '个人投递';
