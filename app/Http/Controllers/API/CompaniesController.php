@@ -241,6 +241,7 @@ class CompaniesController extends ApiBaseCommonController
         $company->conglomerate;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         getOptionsText($company);
+        $company->is_demand_side = count($company->thirdParty)>0?1:0;
         return $this->apiReturnJson(0, $company);
     }
 
