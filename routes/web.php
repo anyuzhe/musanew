@@ -54,6 +54,9 @@ Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
 
+Route::get('/resume/{id}', 'Admin\ResumesController@show');
+Route::get('/resume/dumpPdf/{id}', 'Admin\ResumesController@dumpPdf');
+
 Route::get('/company/data/statistics/excel/{type}', 'API\CompaniesController@dataStatisticsExcel');
 Route::get('/company/data/statistics/detail/excel/{type}', 'API\CompaniesController@dataStatisticsDetailExcel');
 
