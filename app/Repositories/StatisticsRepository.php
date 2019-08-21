@@ -182,22 +182,28 @@ class StatisticsRepository
         foreach ($departments as $department) {
             if($department['level']==1){
                 $department['child'] = [];
+                $department['recruit_num'] = 0;
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
                         if(isset($v['data'])){
                             foreach ($v['data'] as &$vv) {
                                 $vv['department1_name'] = $department['name'];
                             }
+                            $department['recruit_num']+= count($v['data']);
                             $department['child'][] = $v;
                         }
                     }
                 }
-                if(count($department['child'])==0 && isset($department['data'])){
-                    $department['child'][] = $department;
-                    unset($department['data']);
-                }
-                if(count($department['child'])>0)
+//                if(count($department['child'])==0 && isset($department['data'])){
+//                    $department['child'][] = $department;
+//                    unset($department['data']);
+//                }
+//                if(count($department['child'])>0)
+//                    $data[] = $department;
+
+                if(count($department['child'])>0 || isset($department['data'])){
                     $data[] = $department;
+                }
             }
         }
         return ['departments'=>$data];
@@ -268,22 +274,28 @@ class StatisticsRepository
         foreach ($departments as $department) {
             if($department['level']==1){
                 $department['child'] = [];
+                $department['recruit_num'] = 0;
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
                         if(isset($v['data'])){
                             foreach ($v['data'] as &$vv) {
                                 $vv['department1_name'] = $department['name'];
                             }
+                            $department['recruit_num'] += count($v['data']);
                             $department['child'][] = $v;
                         }
                     }
                 }
-                if(count($department['child'])==0 && isset($department['data'])){
-                    $department['child'][] = $department;
-                    unset($department['data']);
-                }
-                if(count($department['child'])>0)
+//                if(count($department['child'])==0 && isset($department['data'])){
+//                    $department['child'][] = $department;
+//                    unset($department['data']);
+//                }
+//                if(count($department['child'])>0)
+//                    $data[] = $department;
+
+                if(count($department['child'])>0 || isset($department['data'])){
                     $data[] = $department;
+                }
             }
         }
         return ['departments'=>$data];
