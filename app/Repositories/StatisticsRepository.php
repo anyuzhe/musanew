@@ -157,6 +157,7 @@ class StatisticsRepository
                     'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//等待入职
                     'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
                     'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
+                    'value'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'interview_resume_num'=>$this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids),//邀请面试
                     'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
                     'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
@@ -191,6 +192,7 @@ class StatisticsRepository
                             foreach ($v['data'] as &$vv) {
                                 $vv['department1_name'] = $department['name'];
                             }
+                            $v['value'] = count($v['data']);
                             $department['value']+= count($v['data']);
                             $department['child'][] = $v;
                         }
@@ -253,6 +255,7 @@ class StatisticsRepository
                     'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//入职成功
                     'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//等待入职
                     'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
+                    'value'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'interview_resume_num'=>$this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids),//邀请面试
                     'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
@@ -285,6 +288,7 @@ class StatisticsRepository
                             foreach ($v['data'] as &$vv) {
                                 $vv['department1_name'] = $department['name'];
                             }
+                            $v['value'] = count($v['data']);
                             $department['value'] += count($v['data']);
                             $department['child'][] = $v;
                         }
