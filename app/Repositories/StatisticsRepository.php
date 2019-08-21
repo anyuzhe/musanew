@@ -125,14 +125,17 @@ class StatisticsRepository
 //        dump($start_date);
 //        dump($end_date);
 //        dump($entrustLogs->toArray());
-        $entrusts = Entrust::whereIn('id', $entrustLogsIds)->where('third_party_id', $third_party_id)->where('company_id', $company->id)
-            ->where(function ($quesy)use($start_date,$end_date){
-                $quesy->where(function ($query1)use($start_date,$end_date){
-                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
-                })->orWhere(function ($query2)use($start_date,$end_date){
-                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
-                });
-            })->get();
+        $entrusts = Entrust::whereIn('id', $entrustLogsIds)->orWhere(function ($q)use ($third_party_id, $company, $start_date, $end_date){
+            $q->where('third_party_id', $third_party_id)->where('company_id', $company->id)
+                ->where(function ($quesy)use($start_date,$end_date){
+                    $quesy->where(function ($query1)use($start_date,$end_date){
+                        $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                    })->orWhere(function ($query2)use($start_date,$end_date){
+                        $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                    });
+                })->whereIn('status', [1]);
+        })->get();
+        dd($entrusts->toArray());
 //        dump($entrusts->toArray());
 //        $departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         $departments = CompanyDepartment::where('company_id', $company->id)->get()->keyBy('id')->toArray();
@@ -211,14 +214,17 @@ class StatisticsRepository
                 });
             })->get();
         $entrustLogsIds = $entrustLogs->pluck('company_job_recruit_entrust_id')->toArray();
-        $entrusts = Entrust::whereIn('id', $entrustLogsIds)->where('third_party_id', $company->id)->where('company_id', $demand_side_id)
-            ->where(function ($query)use($start_date,$end_date){
-                $query->where(function ($query1)use($start_date,$end_date){
-                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
-                })->orWhere(function ($query2)use($start_date,$end_date){
-                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
-                });
-            })->get();
+
+        $entrusts = Entrust::whereIn('id', $entrustLogsIds)->orWhere(function ($q)use ($demand_side_id, $company, $start_date, $end_date){
+            $q->where('third_party_id', $company->id)->where('company_id', $demand_side_id)
+                ->where(function ($quesy)use($start_date,$end_date){
+                    $quesy->where(function ($query1)use($start_date,$end_date){
+                        $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                    })->orWhere(function ($query2)use($start_date,$end_date){
+                        $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                    });
+                })->whereIn('status', [1]);
+        })->get();
 //        dump($entrusts->toArray());
 //        $departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         $departments = CompanyDepartment::where('company_id', $demand_side_id)->get()->keyBy('id')->toArray();
