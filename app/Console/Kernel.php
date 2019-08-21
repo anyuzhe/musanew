@@ -38,14 +38,18 @@ class Kernel extends ConsoleKernel
             $recruitResumeLogs = RecruitResumeLog::where('status',1)
             ->where('created_at','>=',date('Y-m-d H:i:s',time()-(3600*24+60)))
 //                ->where('created_at','>=',date('Y-m-d H:i:s',time()-(3600*2400+60)))
-                ->where('created_at','<=',date('Y-m-d H:i:s',time()-(3600*24)))->get();
+                ->where('created_at','<=',date('Y-m-d H:i:s',time()-(3600*24)))->where('is_send_email',0)->get();
             $recruitResumeIds = $recruitResumeLogs->pluck('company_job_recruit_resume_id')->toArray();
 
             $recruitResumeHasIds = RecruitResumeLog::where('status','!=',1)->whereIn('company_job_recruit_resume_id', $recruitResumeIds)
                 ->pluck('company_job_recruit_resume_id')->toArray();
-            
+
+//            $recruitResumeLogs=RecruitResumeLog::all();
+//            $recruitResumeHasIds=[];
             $recruits = [];
             foreach ($recruitResumeLogs as $recruitResumeLog) {
+                $recruitResumeLog->is_send_email = 1;
+                $recruitResumeLog->save();
                 if(in_array($recruitResumeLog->company_job_recruit_resume_id, $recruitResumeHasIds)===false){
                     $recruitResume = $recruitResumeLog->recruitResume;
                     //给负责人发送邮件通知
@@ -53,15 +57,22 @@ class Kernel extends ConsoleKernel
                     if($recruit->leading_id && $leading = User::find($recruit->leading_id)){
                         if($leading->email){
                             $recruitResume->leading = $leading;
-                            if(!isset($recruitResume[$recruit->id]))
-                                $recruitResume[$recruit->id] = [];
-                            $recruitResume[$recruit->id][] = $recruitResume;
+                            if(!isset($recruits[$recruit->id])){
+                                $recruit->count = 0;
+                                $recruit->resumes = [];
+                                $recruits[$recruit->id] = $recruit;
+                            }
+                            $resumes = $recruits[$recruit->id]->resumes;
+                            $resumes[] = $recruitResume->resume;
+                            $recruits[$recruit->id]->resumes = $resumes;
+                            $recruit->count++;
                         }
                     }
                 }
             }
             foreach ($recruits as $recruit) {
-                Mail::to($recruit[0]->leading)->send(new RecruitResumeUntreatedEmail($recruit));
+//                Mail::to("68067348@qq.com")->send(new RecruitResumeUntreatedEmail($recruit, $recruit->resumes));
+                Mail::to($recruit->leading->email)->send(new RecruitResumeUntreatedEmail($recruit, $recruit->count));
             }
         })->everyMinute();
     }

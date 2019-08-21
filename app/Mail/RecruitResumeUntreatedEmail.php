@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Recruit;
 use App\Models\RecruitResume;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -12,11 +13,13 @@ class RecruitResumeUntreatedEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $recruitResumes;
+    protected $recruit;
+    protected $resumes;
 
-    public function __construct($recruitResumes)
+    public function __construct(Recruit $recruit, $resumes)
     {
-        $this->recruitResumes = $recruitResumes;
+        $this->recruit = $recruit;
+        $this->resumes = $resumes;
     }
 
     /**
@@ -26,17 +29,22 @@ class RecruitResumeUntreatedEmail extends Mailable
      */
     public function build()
     {
-        $recruitResumes = $this->recruitResumes;
+        $recruit = $this->recruit;
+        $job = $recruit->job;
+        $this->subject = "{$job->name}招聘未即使处理";
         $content_text_array = [];
-        foreach ($recruitResumes as $recruitResume) {
-            $resume = $recruitResume->resume;
-            $recruit = $recruitResume->recruit;
-            $job = $recruitResume->job;
-            $this->subject = "{$job->name}招聘未即使处理";
-            $content_text_array = ["职位：$job->name", "简历：$resume->name", " 请即使处理"];
-            $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
-            $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
+        $str = '';
+        $str .= "您招聘的{$job->name}有";
+        foreach ($this->resumes as $resume) {
+            $str .= "{$resume->name}，";
         }
+        $str = substr($str,0,strlen($str)-1);
+        $count = count($this->resumes);
+        $str .= " 共计{$count}份简历未即使处理，请及时查看";
+        $content_text_array[] = $str;
+        $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
+        $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
+//        $content_text_array[] = '<br/>';
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);
     }
