@@ -66,10 +66,11 @@ class RecruitResumesRepository
 //6 录用
 //7 成功入职
         global $LOGIN_USER;
+        global $LOGIN_USER_CURRENT_COMPANY;
         $log = new RecruitResumeLog();
         $log->user_id = $LOGIN_USER->id;
         if(!$company){
-            $company = $LOGIN_USER->company->first();
+            $company = $LOGIN_USER_CURRENT_COMPANY;
             if(!$company)
                 return;
         }
