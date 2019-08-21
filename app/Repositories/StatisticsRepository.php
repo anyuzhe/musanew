@@ -183,6 +183,8 @@ class StatisticsRepository
             if($department['level']==1){
                 $department['child'] = [];
                 $department['recruit_num'] = 0;
+                if(isset($department['data']))
+                    $department['recruit_num'] += count($department['data']);
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
                         if(isset($v['data'])){
@@ -275,6 +277,8 @@ class StatisticsRepository
             if($department['level']==1){
                 $department['child'] = [];
                 $department['recruit_num'] = 0;
+                if(isset($department['data']))
+                    $department['recruit_num'] += count($department['data']);
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
                         if(isset($v['data'])){
