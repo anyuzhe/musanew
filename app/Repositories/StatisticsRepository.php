@@ -182,16 +182,16 @@ class StatisticsRepository
         foreach ($departments as $department) {
             if($department['level']==1){
                 $department['child'] = [];
-                $department['recruit_num'] = 0;
+                $department['value'] = 0;
                 if(isset($department['data']))
-                    $department['recruit_num'] += count($department['data']);
+                    $department['value'] += count($department['data']);
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
                         if(isset($v['data'])){
                             foreach ($v['data'] as &$vv) {
                                 $vv['department1_name'] = $department['name'];
                             }
-                            $department['recruit_num']+= count($v['data']);
+                            $department['value']+= count($v['data']);
                             $department['child'][] = $v;
                         }
                     }
@@ -276,16 +276,16 @@ class StatisticsRepository
         foreach ($departments as $department) {
             if($department['level']==1){
                 $department['child'] = [];
-                $department['recruit_num'] = 0;
+                $department['value'] = 0;
                 if(isset($department['data']))
-                    $department['recruit_num'] += count($department['data']);
+                    $department['value'] += count($department['data']);
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
                         if(isset($v['data'])){
                             foreach ($v['data'] as &$vv) {
                                 $vv['department1_name'] = $department['name'];
                             }
-                            $department['recruit_num'] += count($v['data']);
+                            $department['value'] += count($v['data']);
                             $department['child'][] = $v;
                         }
                     }
