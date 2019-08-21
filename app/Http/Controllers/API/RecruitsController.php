@@ -75,6 +75,7 @@ class RecruitsController extends ApiBaseCommonController
     public function _after_get(&$recruits)
     {
         $recruits->load('job');
+        $recruits->load('leading');
 
         $entrustRes = app()->build(EntrustsRepository::class);
 
@@ -94,6 +95,7 @@ class RecruitsController extends ApiBaseCommonController
 
     public function _after_find(&$data)
     {
+        $data->leading;
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
@@ -113,7 +115,6 @@ class RecruitsController extends ApiBaseCommonController
 
         $entrustRes = app()->build(EntrustsRepository::class);
         $data['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($data);
-
     }
 
     public function afterStore($obj, $data)

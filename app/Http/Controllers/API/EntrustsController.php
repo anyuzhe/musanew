@@ -49,6 +49,7 @@ class EntrustsController extends ApiBaseCommonController
     {
         $entrusts->load('job');
         $entrusts->load('recruit');
+        $entrusts->load('leading');
         $entrusts->load('company');
         $entrusts->load('thirdParty');
 
@@ -77,6 +78,7 @@ class EntrustsController extends ApiBaseCommonController
         $data->status = app()->build(EntrustsRepository::class)->getStatusByEntrustAndRecruit($data->status, $data->recruit->status);
         $data->company;
         $data->thirdParty;
+        $data->leading;
         $data->job = app()->build(JobsRepository::class)->getData($data->job);
     }
 
@@ -93,6 +95,7 @@ class EntrustsController extends ApiBaseCommonController
                 if(in_array($third_party_id, $thirdPartyIds)){
                     Entrust::create([
                         'job_id'=>$recruit->job_id,
+                        'leading_id'=>$recruit->leading_id,
                         'company_id'=>$recruit->company_id,
                         'third_party_id'=>$third_party_id,
                         'company_job_recruit_id'=>$company_job_recruit_id,

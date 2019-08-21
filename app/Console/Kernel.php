@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\ClearData;
 use App\Mail\RecruitResumeLogEmail;
+use App\Mail\RecruitResumeUntreatedEmail;
 use App\Models\RecruitResumeLog;
 use App\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
@@ -42,7 +43,8 @@ class Kernel extends ConsoleKernel
 
             $recruitResumeHasIds = RecruitResumeLog::where('status','!=',1)->whereIn('company_job_recruit_resume_id', $recruitResumeIds)
                 ->pluck('company_job_recruit_resume_id')->toArray();
-
+            
+            $recruits = [];
             foreach ($recruitResumeLogs as $recruitResumeLog) {
                 if(in_array($recruitResumeLog->company_job_recruit_resume_id, $recruitResumeHasIds)===false){
                     $recruitResume = $recruitResumeLog->recruitResume;
@@ -50,10 +52,16 @@ class Kernel extends ConsoleKernel
                     $recruit = $recruitResume->recruit;
                     if($recruit->leading_id && $leading = User::find($recruit->leading_id)){
                         if($leading->email){
-                            Mail::to($leading->email)->send(new RecruitResumeLogEmail($recruitResumeLog,2));
+                            $recruitResume->leading = $leading;
+                            if(!isset($recruitResume[$recruit->id]))
+                                $recruitResume[$recruit->id] = [];
+                            $recruitResume[$recruit->id][] = $recruitResume;
                         }
                     }
                 }
+            }
+            foreach ($recruits as $recruit) {
+                Mail::to($recruit[0]->leading)->send(new RecruitResumeUntreatedEmail($recruit));
             }
         })->everyMinute();
     }

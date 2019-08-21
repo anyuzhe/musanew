@@ -102,6 +102,9 @@ class RecruitResumesRepository
         }elseif($status==6){
             $log->text =  '录用-计划入职时间:'.$otherData;
             $recruitResume->entry_at = $otherData;
+            $recruit = $recruitResume->recruit;
+            $recruit->wait_entry_num++;
+            $recruit->save();
         }elseif($status==7){
             $log->text =  '成功入职';
             $this->hiredEntryHandle($recruitResume);
@@ -120,14 +123,6 @@ class RecruitResumesRepository
         $logObj = $recruitResume->logs()->save($log);
         $recruitResume->status = $status;
         $recruitResume->save();
-
-        //给负责人发送邮件通知
-        $recruit = $recruitResume->recruit;
-        if($recruit->leading_id && $leading = User::find($recruit->leading_id)){
-            if($leading->email){
-                Mail::to($leading->email)->send(new RecruitResumeLogEmail($logObj));
-            }
-        }
     }
 
     public function haveLook(RecruitResume $recruitResume)
@@ -151,6 +146,7 @@ class RecruitResumesRepository
         $entrust = $recruitResume->entrust;
         $resume = $recruitResume->resume;
         $recruit->done_num++;
+        $recruit->wait_entry_num--;
         if($recruit->done_num>=$recruit->need_num){
             //如果是委托 就不改成结束状态
             if(!$entrust)

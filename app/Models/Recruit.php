@@ -20,6 +20,17 @@ class Recruit extends Model
         return $this->belongsTo('App\Models\Job', 'job_id');
     }
 
+    public function leading()
+    {
+        return $this->hasOneThrough(
+            'App\Models\UserBasicInfo',
+            'App\Models\User',
+            'id',
+            'user_id',
+            'leading_id'
+        );
+    }
+
     public function entrusts()
     {
         //status 状态 -2 拒绝  -1 取消 0申请中 1正常 2完成

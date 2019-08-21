@@ -19,6 +19,7 @@ class Entrust extends Model
         'new_resume_num',
         'status',
         'creator_id',
+        'leading_id',
         'end_at',
     ];
 
@@ -40,5 +41,16 @@ class Entrust extends Model
     public function company()
     {
         return $this->belongsTo('App\Models\Company', 'company_id');
+    }
+
+    public function leading()
+    {
+        return $this->hasOneThrough(
+            'App\Models\UserBasicInfo',
+            'App\Models\User',
+            'id',
+            'user_id',
+            'leading_id'
+        );
     }
 }

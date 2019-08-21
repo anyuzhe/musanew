@@ -4,6 +4,4 @@
             {!! $text !!}
         </div>
     @endforeach
-
-        <a href="{!! $url !!}">点击查看详情</a>
 </div>

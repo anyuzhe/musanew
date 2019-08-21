@@ -452,6 +452,10 @@ class CompaniesController extends ApiBaseCommonController
     {
         $start_date = $this->request->get('start_date',date('Y-m-01'));
         $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        if(!$start_date)
+            $start_date = date('Y-m-01');
+        if(!$end_date)
+            $end_date = date('Y-m-d 23:59:59');
         if($this->request->type ==1){
             $data = app()->build(StatisticsRepository::class)->getCompanyDataStatistics($this->getCurrentCompany(),$start_date,$end_date);
         }else{
@@ -464,6 +468,10 @@ class CompaniesController extends ApiBaseCommonController
     {
         $start_date = $this->request->get('start_date',date('Y-m-01'));
         $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        if(!$start_date)
+            $start_date = date('Y-m-01');
+        if(!$end_date)
+            $end_date = date('Y-m-d 23:59:59');
         if($this->request->type ==1){
             $data = app()->build(StatisticsRepository::class)->getCompanyDataStatistics($this->getCurrentCompany(),$start_date,$end_date);
         }else{
@@ -479,6 +487,10 @@ class CompaniesController extends ApiBaseCommonController
         $company_id = $this->request->get('company_id');
         $start_date = $this->request->get('start_date',date('Y-m-01'));
         $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        if(!$start_date)
+            $start_date = date('Y-m-01');
+        if(!$end_date)
+            $end_date = date('Y-m-d 23:59:59');
         if($this->request->type ==1){
             $data = app()->build(StatisticsRepository::class)->getCompanyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
         }else{
@@ -492,6 +504,10 @@ class CompaniesController extends ApiBaseCommonController
         $company_id = $this->request->get('company_id');
         $start_date = $this->request->get('start_date',date('Y-m-01'));
         $end_date = $this->request->get('end_date',date('Y-m-d 23:59:59'));
+        if(!$start_date)
+            $start_date = date('Y-m-01');
+        if(!$end_date)
+            $end_date = date('Y-m-d 23:59:59');
         $company = Company::find($company_id);
         if($this->request->type ==1){
             $data = app()->build(StatisticsRepository::class)->getCompanyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);

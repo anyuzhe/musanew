@@ -18,14 +18,17 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-    
-    dd(\App\Models\ResumeSkill::where('skill_id',10004)->where('skill_level','>=',1)->pluck('resume_id')->toArray());
-    $d=[];
-    if($d)
-        dd(1);
-    dd(2);
-    \Illuminate\Support\Facades\Mail::to('68067348@qq.com')->send(new App\Mail\RecruitResumeLogEmail(\App\Models\RecruitResumeLog::find(1)));
-    return new App\Mail\RecruitResumeLogEmail(\App\Models\RecruitResumeLog::find(1));
+    $rs = \App\Models\Recruit::all();
+    foreach ($rs as $r) {
+        if(!$r->leading_id)
+            continue;
+        foreach ($r->entrusts as $entrust) {
+            $entrust->leading_id = $r->leading_id;
+            $entrust->save();
+        }
+    }
+//    \Illuminate\Support\Facades\Mail::to('68067348@qq.com')->send(new App\Mail\RecruitResumeLogEmail(\App\Models\RecruitResumeLog::find(1)));
+    return new App\Mail\RecruitResumeUntreatedEmail(\App\Models\RecruitResume::find(1));
 
     require_once(getMoodleRoot().'/user/lib.php');
     dd(getMoodleRoot());
