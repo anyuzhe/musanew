@@ -141,7 +141,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 'creator_id'=>$this->getUser()->id,
             ]);
             $this->recruitResumesRepository->haveLook($recruitResume);
-            $this->recruitResumesRepository->generateLog($recruitResume,1,$entrust?$entrust->thirdParty:null, null,1);
+            $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$entrust?$entrust->thirdParty:null, null,1);
             $recruit->resume_num++;
             $recruit->new_resume_num++;
             $recruit->save();
@@ -150,6 +150,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 $entrust->new_resume_num++;
                 $entrust->save();
             }
+            sendLogsEmail([$log]);
         }
         return $this->apiReturnJson(0);
     }
@@ -251,6 +252,7 @@ class EntrustResumesController extends ApiBaseCommonController
 
         app('db')->beginTransaction();
         if($recruit_ids && is_array($recruit_ids)){
+            $logs = [];
             foreach ($recruit_ids as $recruit_id) {
                 $recruit = Recruit::find($recruit_id);
 
@@ -279,13 +281,16 @@ class EntrustResumesController extends ApiBaseCommonController
                     'creator_id'=>$this->getUser()->id,
                 ]);
                 $this->recruitResumesRepository->haveLook($recruitResume);
-                $this->recruitResumesRepository->generateLog($recruitResume,1, $company, null,1);
+                $log = $this->recruitResumesRepository->generateLog($recruitResume,1, $company, null,1);
                 $recruit->resume_num++;
                 $recruit->new_resume_num++;
                 $recruit->save();
+                $logs[] = $log;
             }
+            sendLogsEmail($logs);
         }
         if($entrust_ids && is_array($entrust_ids)){
+            $logs=[];
             foreach ($entrust_ids as $entrust_id) {
                 $entrust = Entrust::find($entrust_id);
 
@@ -318,7 +323,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 ]);
                 $this->recruitResumesRepository->haveLook($recruitResume);
                 if($entrust_id && $entrust){
-                    $this->recruitResumesRepository->generateLog($recruitResume,1,$entrust->thirdParty, null,1);
+                    $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$entrust->thirdParty, null,1);
                     $recruit->resume_num++;
                     $recruit->new_resume_num++;
                     $recruit->save();
@@ -326,11 +331,13 @@ class EntrustResumesController extends ApiBaseCommonController
                     $entrust->resume_num++;
                     $entrust->new_resume_num++;
                     $entrust->save();
-
+                    $logs[] = $log;
                 }else{
                     //暂无
                 }
             }
+
+            sendLogsEmail($logs);
         }
 
         app('db')->commit();

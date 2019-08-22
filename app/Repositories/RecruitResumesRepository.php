@@ -128,6 +128,11 @@ class RecruitResumesRepository
         $logObj = $recruitResume->logs()->save($log);
         $recruitResume->status = $status;
         $recruitResume->save();
+        //给负责人发送邮件通知
+        if($logObj->status!=1){
+            sendLogsEmail([$logObj]);
+        }
+        return $logObj;
     }
 
     public function haveLook(RecruitResume $recruitResume)

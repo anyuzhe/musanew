@@ -637,3 +637,17 @@ function getDays($start_time, $end_time=null)
         $end_time = time();
     return (int)ceil(($end_time - $start_time)/(3600*24));
 }
+
+function sendLogsEmail($logs)
+{
+    //给负责人发送邮件通知
+    if(count($logs)>0){
+        $logObj = $logs[0];
+        $recruit = $logObj->recruit;
+        if($recruit->leading_id && $leading = \App\Models\User::find($recruit->leading_id)){
+            if($leading->email){
+                \Illuminate\Support\Facades\Mail::to($leading->email)->send(new \App\Mail\RecruitResumeLogEmail($logs));
+            }
+        }
+    }
+}

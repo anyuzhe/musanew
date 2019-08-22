@@ -18,6 +18,15 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $logs = \App\Models\RecruitResumeLog::all();
+    foreach ($logs as $log) {
+        $recruitResume = $log->recruitResume;
+        $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
+        $log->company_job_recruit_entrust_id = $recruitResume->company_job_recruit_entrust_id;
+        $log->job_id = $recruitResume->job_id;
+        $log->save();
+    }
+    die(1);
     $rs = \App\Models\Recruit::all();
     foreach ($rs as $r) {
         if(!$r->leading_id)
