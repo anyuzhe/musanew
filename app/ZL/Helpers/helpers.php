@@ -640,11 +640,12 @@ function getDays($start_time, $end_time=null)
 
 function sendLogsEmail($logs)
 {
+    global $LOGIN_USER;
     //给负责人发送邮件通知
     if(count($logs)>0){
         $logObj = $logs[0];
         $recruit = $logObj->recruit;
-        if($recruit->leading_id && $leading = \App\Models\User::find($recruit->leading_id)){
+        if($recruit->leading_id && $recruit->leading_id!=$LOGIN_USER->id && $leading = \App\Models\User::find($recruit->leading_id)){
             if($leading->email){
                 \Illuminate\Support\Facades\Mail::to($leading->email)->send(new \App\Mail\RecruitResumeLogEmail($logs));
             }
