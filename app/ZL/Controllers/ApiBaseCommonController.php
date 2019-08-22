@@ -59,11 +59,13 @@ class ApiBaseCommonController extends CommonController
         //判断是否有表单验证 并且验证
         if(method_exists($this,'storeValidate')){
             $validatorArr = $this->storeValidate();
-            $validator = app('validator')->make($request->all(),$validatorArr[0],$validatorArr[1]);
+            if(count($validatorArr)>1){
+                $validator = app('validator')->make($request->all(),$validatorArr[0],$validatorArr[1]);
 
-            if($validator->fails()){
-                $errors = $validator->errors();
-                return responseZK(ErrorCode::$fieldError['code'],[],implode(',',$errors->all()));
+                if($validator->fails()){
+                    $errors = $validator->errors();
+                    return responseZK(ErrorCode::$fieldError['code'],[],implode(',',$errors->all()));
+                }
             }
         }
         if(method_exists($this,'checkStore')){
@@ -206,11 +208,13 @@ class ApiBaseCommonController extends CommonController
         //判断是否有表单验证 并且验证
         if(method_exists($this,'updateValidate')){
             $validatorArr = $this->updateValidate($id);
-            $validator = app('validator')->make($request->all(),$validatorArr[0],$validatorArr[1]);
+            if(count($validatorArr)>1){
+                $validator = app('validator')->make($request->all(),$validatorArr[0],$validatorArr[1]);
 
-            if($validator->fails()){
-                $errors = $validator->errors();
-                return responseZK(ErrorCode::$fieldError['code'],[],implode(',',$errors->all()));
+                if($validator->fails()){
+                    $errors = $validator->errors();
+                    return responseZK(ErrorCode::$fieldError['code'],[],implode(',',$errors->all()));
+                }
             }
         }
 
