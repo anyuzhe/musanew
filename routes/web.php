@@ -18,7 +18,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-    $logs = \App\Models\RecruitResumeLog::all();
+    $log = \App\Models\RecruitResumeLog::orderBy('id', 'desc')->first();
+    sendLogsEmail([$log]);
+    die(2);
     foreach ($logs as $log) {
         $recruitResume = $log->recruitResume;
         $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
