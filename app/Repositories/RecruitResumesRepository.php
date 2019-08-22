@@ -77,6 +77,9 @@ class RecruitResumesRepository
         $log->company_id = $company->id;
         $log->status = $status;
         $log->resume_id = $recruitResume->resume_id;
+        $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
+        $log->company_job_recruit_entrust_id = $recruitResume->company_job_recruit_entrust_id;
+        $log->job_id = $recruitResume->job_id;
         $log->other_data = $otherData;
         if($status==1){
             if($type==1){

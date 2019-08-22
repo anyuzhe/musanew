@@ -38,15 +38,23 @@ class RecruitResumeLogEmail extends Mailable
         $status = $this->status;
         $content_text_array = [];
         $_one = $logs[0];
-        $job = $_one->recruitResume->job;
+        $job = $_one->job;
         if($status==1){
             $this->subject = "{$job->name}招聘收到简历";
             $str = '';
             $str .= "您招聘的{$job->name}收到";
             foreach ($logs as $log) {
                 $resume = $log->resume;
-                $str .= "{$resume->name}，";
+                $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$log->recruit_resume_id}&showChart=1";
+                $str .= "<a href=\"$url\">{$resume->name}</a>，";
             }
+            $str = substr($str,0,strlen($str)-1);
+
+            $count = count($logs);
+            $str .= " 共计{$count}份新简历，请及时查看";
+            $content_text_array[] = $str;
+            $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$_one->recruit_id}&activeType=1";
+            $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
         }else{
 
         }
