@@ -36,7 +36,8 @@ class RecruitResumeUntreatedEmail extends Mailable
         $str = '';
         $str .= "您招聘的{$job->name}有";
         foreach ($this->resumes as $resume) {
-            $str .= "{$resume->name}，";
+            $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$resume->recruit_resume_id}&showChart=1";
+            $str .= "<a href=\"$url\">{$resume->name}</a>，";
         }
         $str = substr($str,0,strlen($str)-1);
         $count = count($this->resumes);

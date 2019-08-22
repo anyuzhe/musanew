@@ -14,15 +14,17 @@ class RecruitResumeLogEmail extends Mailable
 
 //    public $subject = '招聘简历更新';
     public $logs;
+    public $status;
 
     /*
      * 1 流转
      * 2 24小时未处理
      */
 
-    public function __construct($logs)
+    public function __construct($logs, $status=1)
     {
         $this->logs = $logs;
+        $this->status = $status;
     }
 
     /**
@@ -33,8 +35,27 @@ class RecruitResumeLogEmail extends Mailable
     public function build()
     {
         $logs = $this->logs;
+        $status = $this->status;
         $content_text_array = [];
+        $_one = $logs[0];
+        $job = $_one->recruitResume->job;
+        if($status==1){
+            $this->subject = "{$job->name}招聘收到简历";
+            $str = '';
+            $str .= "您招聘的{$job->name}收到";
+            foreach ($logs as $log) {
+                $resume = $log->resume;
+                $str .= "{$resume->name}，";
+            }
+        }else{
+
+        }
         foreach ($logs as $log) {
+            if($status==1){
+
+            }elseif ($status==-1){
+
+            }
             $recruitResume = $log->recruitResume;
             $resume = $recruitResume->resume;
             $recruit = $recruitResume->recruit;

@@ -23,6 +23,11 @@ class RecruitResumeLog extends Model
         return $this->belongsTo('App\Models\RecruitResume','company_job_recruit_resume_id');
     }
 
+    public function resume()
+    {
+        return $this->belongsTo('App\Models\Resume', 'resume_id');
+    }
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

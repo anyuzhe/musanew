@@ -83,9 +83,6 @@ $router->any('/user/findpassword/edit', 'API\LoginController@editPassword');
 //图片上传
 $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 
-//详情
-$router->get('/company/resumes/{id}', 'API\EntrustResumesController@show');
-
 $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
 
@@ -141,6 +138,9 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 //    $router->get('/user/resume', 'ResumesController@view');
     //列表
     $router->get('/company/resumes', 'API\EntrustResumesController@index');
+//详情
+    $router->get('/company/resumes/{id}', 'API\EntrustResumesController@show');
+
     //删除
     $router->post('/company/resumes/delete/{id}', 'API\EntrustResumesController@destroy');
 
