@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     $log = \App\Models\RecruitResumeLog::orderBy('id', 'desc')->first();
+    return new \App\Mail\RecruitResumeLogEmail([$log]);
     sendLogsEmail([$log]);
     die(2);
     foreach ($logs as $log) {

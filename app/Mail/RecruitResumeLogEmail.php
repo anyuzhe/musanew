@@ -90,7 +90,7 @@ class RecruitResumeLogEmail extends Mailable
                 }elseif ($status==4){
                     $content_text_array[] = "{$resume->name} 应聘 {$job->name}，完成面试，目前处于待定状态，请及时处理";
                     $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
-                    $content_text_array[] = "<a href=\"{!! $url !!}\">点击查看详情</a>";
+                    $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
                 }elseif ($status==6){
                     $content_text_array[] = "<span style='color: red'>{$resume->name} 录用 {$job->name}，将于 {$log->other_data} 正式入职。</span>";
                 }elseif ($status==7){
