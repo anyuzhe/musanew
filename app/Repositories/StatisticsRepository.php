@@ -14,7 +14,7 @@ class StatisticsRepository
 {
     public function getCompanyCountStatistics(Company $company)
     {
-        $companies = $company->thirdParty();
+        $companies = $company->thirdParty;
 
         $all_job_count = Recruit::where('company_id', $company->id)->count();
         $month_job_count = Recruit::where('company_id', $company->id)->whereIn('status',[1,2,3])->count();
