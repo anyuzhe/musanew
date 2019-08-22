@@ -44,8 +44,8 @@ class Kernel extends ConsoleKernel
             $recruitResumeHasIds = RecruitResumeLog::where('status','!=',1)->whereIn('company_job_recruit_resume_id', $recruitResumeIds)
                 ->pluck('company_job_recruit_resume_id')->toArray();
 
-            $recruitResumeLogs=RecruitResumeLog::all();
-            $recruitResumeHasIds=[];
+//            $recruitResumeLogs=RecruitResumeLog::all();
+//            $recruitResumeHasIds=[];
             $recruits = [];
             foreach ($recruitResumeLogs as $recruitResumeLog) {
                 $recruitResumeLog->is_send_email = 1;
@@ -73,8 +73,8 @@ class Kernel extends ConsoleKernel
                 }
             }
             foreach ($recruits as $recruit) {
-                Mail::to("68067348@qq.com")->send(new RecruitResumeUntreatedEmail($recruit, $recruit->resumes));
-//                Mail::to($recruit->leading->email)->send(new RecruitResumeUntreatedEmail($recruit, $recruit->count));
+//                Mail::to("68067348@qq.com")->send(new RecruitResumeUntreatedEmail($recruit, $recruit->resumes));
+                Mail::to($recruit->leading->email)->send(new RecruitResumeUntreatedEmail($recruit, $recruit->count));
             }
         })->everyMinute();
     }
