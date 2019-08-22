@@ -108,6 +108,7 @@ class RecruitResumesRepository
             $recruit->save();
         }elseif($status==7){
             $log->text =  '成功入职';
+            $recruitResume->formal_entry_at = $otherData?$otherData:date('Y-m-d H:i:s');
             $this->hiredEntryHandle($recruitResume);
         }elseif($status==-1){
             $log->text =  '简历不匹配';
