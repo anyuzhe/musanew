@@ -76,6 +76,24 @@ class StatisticsRepository
         //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”
         $companies = Company::all()->keyBy('id')->toArray();
 
+        //招聘职位数量
+        $recruitLogs = RecruitEndLog::where('company_id', $company->id)
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->get();
+        $recruitLogIds = $recruitLogs->pluck('company_job_recruit_id')->toArray();
+        $recruit_num = Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
+            $query->where('company_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
+        })->count();
+        //招聘职位人数
+        $recruit_people_num = Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
+            $query->where('company_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
+        })->sum('need_num');
+
         //推荐简历
         $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //邀请面试
@@ -87,7 +105,7 @@ class StatisticsRepository
         //入职
         $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
 
-        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry');
+        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry','recruit_num','recruit_people_num');
     }
 
     public function getCompanyThirdPartyDataStatistics(Company $company,$start_date,$end_date)
@@ -97,6 +115,24 @@ class StatisticsRepository
         $companies = Company::all()->keyBy('id')->toArray();
         $thirdParties = $company->thirdParty;
 
+        //招聘职位数量
+        $recruitLogs = RecruitEndLog::where('third_party_id', $company->id)
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->get();
+        $recruitLogIds = $recruitLogs->pluck('company_job_recruit_id')->toArray();
+        $recruit_num = Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
+            $query->where('third_party_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
+        })->count();
+        //招聘职位人数
+        $recruit_people_num = Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
+            $query->where('third_party_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
+        })->sum('need_num');
+
         //推荐简历
         $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //邀请面试
@@ -108,7 +144,7 @@ class StatisticsRepository
         //入职
         $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
 
-        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties');
+        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties','recruit_num','recruit_people_num');
     }
 
     public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
