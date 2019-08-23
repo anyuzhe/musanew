@@ -133,15 +133,15 @@ class StatisticsRepository
         $recruit_people_num = (int)(Recruit::whereIn('id', $recruitLogIds)->sum('need_num'));
 
         //推荐简历
-        $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //邀请面试
-        $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //面试中
-        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //录用
-        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //入职
-        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
 
         return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties','recruit_num','recruit_people_num');
     }
@@ -449,7 +449,7 @@ class StatisticsRepository
         return ['title'=>$title,'data'=>$excelData];
     }
 
-    protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date)
+    protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date, $type=3)
     {
         $data = [
             'value'=>0,
@@ -463,7 +463,10 @@ class StatisticsRepository
         $_data = [];
         foreach ($_recruitResumes as $recruitResume) {
             $data['value']++;
-            $third_party_id = $recruitResume->recruitResume->third_party_id;
+            if($type==3)
+                $third_party_id = $recruitResume->recruitResume->third_party_id;
+            else
+                $third_party_id = $recruitResume->recruitResume->company_id;
             if(isset($_data[$third_party_id])){
                 $_data[$third_party_id]['value']++;
             }else{

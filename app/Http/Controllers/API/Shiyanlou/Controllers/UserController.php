@@ -11,8 +11,8 @@ class UserController extends CommonController
 {
     public function index()
     {
-        if ($this->request->has('enterprise_uid')) {
-            $path = "/api/saas/v1/users/" . $_GET['enterprise_uid'] . '/';
+        if ($this->request->has('uid')) {
+            $path = "/api/saas/v1/users/" . $this->request->get('uid') . '/';
             $params = [];//请求参数
             if (!$params) {
                 $jwt_token = ShiYanLou::getToken('', $path);//获取token
@@ -25,8 +25,12 @@ class UserController extends CommonController
             $data = ShiYanLou::curl_get($url);
             return $this->apiReturnJson(0, $data);
         } else {
+            $cursor = $this->request->get('cursor');
             $path = '/api/saas/v1/users/';
-            $params = [];//请求参数
+            $params = ['page_size'=>100];//请求参数
+            if($cursor){
+                $params['cursor'] = $cursor;
+            }
             if (!$params) {
                 $jwt_token = ShiYanLou::getToken('', $path);//获取token
             } else {
