@@ -95,7 +95,7 @@ class StatisticsRepository
         $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $company->id)->pluck('id')->toArray();
         //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”
         $companies = Company::all()->keyBy('id')->toArray();
-        $thirdParties = $company->thirdParty();
+        $thirdParties = $company->thirdParty;
 
         //推荐简历
         $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
@@ -135,7 +135,6 @@ class StatisticsRepository
                     });
                 })->whereIn('status', [1]);
         })->get();
-        dd($entrusts->toArray());
 //        dump($entrusts->toArray());
 //        $departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         $departments = CompanyDepartment::where('company_id', $company->id)->get()->keyBy('id')->toArray();
@@ -418,7 +417,7 @@ class StatisticsRepository
     protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date)
     {
         $data = [
-            'num'=>0,
+            'value'=>0,
             'data'=>[]
         ];
 
@@ -428,13 +427,13 @@ class StatisticsRepository
         $_recruitResumes->load('recruitResume');
         $_data = [];
         foreach ($_recruitResumes as $recruitResume) {
-            $data['num']++;
+            $data['value']++;
             $third_party_id = $recruitResume->recruitResume->third_party_id;
             if(isset($_data[$third_party_id])){
-                $_data[$third_party_id]['num']++;
+                $_data[$third_party_id]['value']++;
             }else{
                 $_data[$third_party_id]=[
-                    'num'=>1,
+                    'value'=>1,
                     'name'=>$companies[$third_party_id]['company_alias'],
                     'id'=>$companies[$third_party_id]['id'],
                 ];
