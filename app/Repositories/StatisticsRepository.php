@@ -90,9 +90,9 @@ class StatisticsRepository
             $query->where('company_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
         })->count();
         //招聘职位人数
-        $recruit_people_num = Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
+        $recruit_people_num = (int)(Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
             $query->where('company_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
-        })->sum('need_num');
+        })->sum('need_num'));
 
         //推荐简历
         $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
@@ -130,7 +130,7 @@ class StatisticsRepository
         })->pluck('company_job_recruit_id')->toArray();
         $recruit_num = Recruit::whereIn('id', $recruitLogIds)->count();
         //招聘职位人数
-        $recruit_people_num = Recruit::whereIn('id', $recruitLogIds)->sum('need_num');
+        $recruit_people_num = (int)(Recruit::whereIn('id', $recruitLogIds)->sum('need_num'));
 
         //推荐简历
         $recommend_resume = $this->getCountByStatus([1], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
