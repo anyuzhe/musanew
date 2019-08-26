@@ -50,6 +50,7 @@ class TokenRepository
                     $r = CompanyUser::where('company_id',$current_company->id)->first();
                     $r->is_current = 1;
                     $r->save();
+                    $LOGIN_USER_CURRENT_COMPANY = $current_company;
                 }
             }
         }
