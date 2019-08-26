@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\CompanyUser;
 use App\Models\ExternalToken;
 
 class TokenRepository
@@ -41,8 +42,17 @@ class TokenRepository
             return $LOGIN_USER_CURRENT_COMPANY;
 
         $user = self::getUser();
-        if($user)
+        if($user){
             $LOGIN_USER_CURRENT_COMPANY = $user->company->first();
+            if(!$LOGIN_USER_CURRENT_COMPANY){
+                $current_company = $user->companies->first();
+                if($current_company){
+                    $r = CompanyUser::where('company_id',$current_company->id)->first();
+                    $r->is_current = 1;
+                    $r->save();
+                }
+            }
+        }
         return $LOGIN_USER_CURRENT_COMPANY;
     }
 
