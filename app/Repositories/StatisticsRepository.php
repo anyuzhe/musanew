@@ -361,8 +361,8 @@ class StatisticsRepository
             foreach ($companyArray as $key=>$value) {
                 foreach ($data as $v) {
                     if($value['id']==$v['id']){
-                        $all += $v['num'];
-                        $row[$key+1] = $v['num'];
+                        $all += $v['value'];
+                        $row[$key+1] = $v['value'];
                         continue 2;
                     }
                 }
