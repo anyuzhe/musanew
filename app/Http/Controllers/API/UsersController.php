@@ -30,7 +30,9 @@ class UsersController extends CommonController
         if(!$info->current_company){
             $info->current_company = $info->companies->first();
             $info->current_company->is_current = 1;
-            $info->current_company->save();
+            $r = CompanyUser::where('company_id',$info->current_company->id)->first();
+            $r->is_current = 1;
+            $r->save();
         }
         $this->requireMoodleConfig();
         foreach ($info->companies as &$company) {

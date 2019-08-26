@@ -6,6 +6,7 @@ use App\Models\CompanyResume;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
+use App\Models\RecruitEndLog;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\RecruitResumeLook;
@@ -53,6 +54,7 @@ class ClearData extends Command
         CompanyResume::truncate();
         Entrust::truncate();
         Recruit::truncate();
+        RecruitEndLog::truncate();
         RecruitResume::truncate();
         RecruitResumeLog::truncate();
         RecruitResumeLook::truncate();
@@ -62,7 +64,7 @@ class ClearData extends Command
         ResumeProject::truncate();
         ResumeSkill::truncate();
         Job::truncate();
-        DB::table('job_test')->truncate();
-        DB::table('job_skill')->truncate();
+        DB::connection('moodle')->table('job_test')->truncate();
+        DB::connection('musa')->table('job_skill')->truncate();
     }
 }
