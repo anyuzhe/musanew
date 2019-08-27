@@ -30,7 +30,7 @@ class JobsRepository
         foreach ($data as &$v) {
             if($v->department){
                 if($v->department->pid && isset($departments[$v->department->pid])){
-                    $v->department->full_name = $departments[$v->department->pid]->name.'-'.$v->department->name;
+                    $v->department->full_name = $departments[$v->department->pid]['name'].'-'.$v->department->name;
                 }else{
                     $v->department->full_name = $v->department->name;
                 }
