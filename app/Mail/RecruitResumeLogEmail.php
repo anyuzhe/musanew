@@ -50,7 +50,7 @@ class RecruitResumeLogEmail extends Mailable
             foreach ($logs as $log) {
                 $resume = $log->resume;
                 //查找重复
-                $resumeIds = Resume::where('name', $resume->name)->where('id','!=',$resume->id)->pluck()->toArray();
+                $resumeIds = Resume::where('name', $resume->name)->where('id','!=',$resume->id)->pluck('id')->toArray();
                 $has = RecruitResume::whereIn('resume_id', $resumeIds)->where('company_job_recruit_id', $log->company_job_recruit_id)->get();
                 if($has){
                     $has_text = '<span style="color: red">(可能是重复简历)</span>';
