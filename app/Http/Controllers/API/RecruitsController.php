@@ -46,12 +46,11 @@ class RecruitsController extends ApiBaseCommonController
         $resume_id = $this->request->get('resume_id', null);
         $user = $this->getUser();
         if ($user) {
-            $company = $user->company->first();
+            $company = $this->getCurrentCompany();
             if ($company) {
 //                $model = $model->where('company_id', $company->id)->whereIn('status', [1,4]);
                 //委托了的招聘
                 $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-
                 $model = $model->where('company_id', $company->id)->whereNotIn('id', $has_entrust_ids);
                 if($in_recruit){
                     if($in_recruit==1){
