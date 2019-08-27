@@ -14,4 +14,8 @@ class CompanyDepartment extends Model
         'pid',
         'level',
     ];
+
+    public function parent() {
+        return $this->belongsTo('App\Models\CompanyDepartment','id', 'pid');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Models\Area;
+use App\Models\CompanyDepartment;
 
 class JobsRepository
 {
@@ -13,15 +14,27 @@ class JobsRepository
         $data->load('skills');
         $data->load('address');
         $area_ids = [];
+        $depIds = [];
         foreach ($data as $v) {
             if($v->address){
                 $area_ids[] = $v->address->province_id;
                 $area_ids[] = $v->address->city_id;
                 $area_ids[] = $v->address->district_id;
             }
+            if($v->department){
+                $depIds[] = $v->department->pid;
+            }
         }
         $areas = Area::whereIn('id', $area_ids)->get()->keyBy('id')->toArray();
+        $departments = CompanyDepartment::whereIn('id',$depIds)->get()->keyBy('id')->toArray();
         foreach ($data as &$v) {
+            if($v->department){
+                if($v->department->pid && isset($departments[$v->department->pid])){
+                    $v->department->full_name = $departments[$v->department->pid]->name.'-'.$v->department->name;
+                }else{
+                    $v->department->full_name = $v->department->name;
+                }
+            }
             if($v->address){
                 $v->address->province_text = isset($areas[$v->address->province_id])?$areas[$v->address->province_id]['cname']:'';
                 $v->address->city_text = isset($areas[$v->address->city_id])?$areas[$v->address->city_id]['cname']:'';
@@ -44,6 +57,13 @@ class JobsRepository
         $data->tests;
         $data->address;
         getOptionsText($data);
+        if($data->department){
+            if($data->department->parent){
+                $data->department->full_name = $data->department->parent->name.'-'.$data->department->name;
+            }else{
+                $data->department->full_name = $data->department->name;
+            }
+        }
         foreach ($data->skills as &$skill) {
             $skill->skill_level = $skill->pivot->skill_level;
             $skill->used_time = $skill->pivot->used_time;
