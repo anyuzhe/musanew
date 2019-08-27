@@ -59,10 +59,15 @@ class LoginController extends CommonController
         if(!$user){
             return $this->apiReturnJson("9998", null, '邮箱不存在');
         }
+
+        $old = PasswordFindCode::where('user_id',$user->id)->where('type',1)->where('operation',3)->where('created_at','',date('Y-m-d H:i:s',time()-60))->first();
+        if($old){
+            return $this->apiReturnJson("9998", null, '验证码发送频繁，请稍后再试');
+        }
         $code = rand(100000, 999999);
         PasswordFindCode::create([
             'type'=>1,
-            'userid'=>$user->id,
+            'user_id'=>$user->id,
             'operation'=>3,
             'status'=>0,
             'code'=>$code,

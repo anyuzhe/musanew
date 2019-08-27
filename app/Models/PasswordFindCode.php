@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class PasswordFindCode extends Model
 {
-    public $timestamps = false;
     public $table = 'user_password_find_code';
     protected $connection = 'musa';
 
     public $fillable = [
-        'userid',
+        'user_id',
         'type',
         'operation',
         'code',
