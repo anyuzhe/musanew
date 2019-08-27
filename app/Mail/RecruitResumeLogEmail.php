@@ -52,14 +52,14 @@ class RecruitResumeLogEmail extends Mailable
                 //查找重复
                 $resumeIds = Resume::where('name', $resume->name)->where('id','!=',$resume->id)->pluck('id')->toArray();
                 $has = RecruitResume::whereIn('resume_id', $resumeIds)->where('company_job_recruit_id', $log->company_job_recruit_id)->get();
+
+                $has_text = '';
                 if($has){
                     $has_text = '<span style="color: red">(可能是重复简历)</span>';
-                }else{
-                    $has_text = '';
                 }
                 $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$log->recruit_resume_id}&showChart=1";
 
-                $str .= "<a href=\"$url\">{$resume->name}</a>$has_text，";
+                $str .= "<a href=\"$url\">{$resume->name}</a>{$has_text}，";
             }
             $str = substr($str,0,strlen($str)-1);
 
