@@ -51,7 +51,7 @@ class RecruitResumeLogEmail extends Mailable
                 $resume = $log->resume;
                 //查找重复
                 $resumeIds = Resume::where('name', $resume->name)->where('id','!=',$resume->id)->pluck('id')->toArray();
-                $has = RecruitResume::whereIn('resume_id', $resumeIds)->where('company_job_recruit_id', $log->company_job_recruit_id)->get();
+                $has = RecruitResume::whereIn('resume_id', $resumeIds)->where('company_job_recruit_id', $log->company_job_recruit_id)->first();
 
                 $has_text = '';
                 if($has){
