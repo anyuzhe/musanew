@@ -236,7 +236,7 @@ class EntrustResumesController extends ApiBaseCommonController
         }
         sendLogsEmail($logs);
         app('db')->commit();
-        return $this->apiReturnJson(0);
+        return $this->apiReturnJson(0,$logs);
     }
 
     public function resumeSendEntrust()
@@ -341,7 +341,7 @@ class EntrustResumesController extends ApiBaseCommonController
         }
 
         app('db')->commit();
-        return $this->apiReturnJson(0);
+        return $this->apiReturnJson(0,$logs);
     }
 
     public function _after_get(&$data)
