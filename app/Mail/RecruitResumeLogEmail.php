@@ -57,7 +57,7 @@ class RecruitResumeLogEmail extends Mailable
                 if($has){
                     $has_text = '<span style="color: red">(可能是重复简历)</span>';
                 }
-                $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$log->recruit_resume_id}&showChart=1";
+                $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$log->company_job_recruit_resume_id}&showChart=1";
 
                 $str .= "<a href=\"$url\">{$resume->name}</a>{$has_text}，";
             }
