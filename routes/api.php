@@ -94,6 +94,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/recruits/type/1', 'API\RecruitsController@index');
     $router->get('/company/recruits/type/4', 'API\CompaniesController@entrustsList');
     $router->get('/company/recruits/type/{type}', 'API\EntrustsController@index');
+    $router->get('/company/entrust/{id}', 'API\EntrustsController@show');
 
     $router->get('/company/recruits/{id}', 'API\RecruitsController@show');
 

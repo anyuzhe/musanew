@@ -60,6 +60,7 @@ class EntrustsController extends ApiBaseCommonController
             $job_ids[] = $entrust['job']['id'];
         }
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
+
         foreach ($entrusts as &$entrust) {
             $entrust['job'] = $jobs[$entrust['job']['id']];
             $entrust['need_num'] = $entrust['recruit']['need_num'];
@@ -82,7 +83,6 @@ class EntrustsController extends ApiBaseCommonController
         $data->leading;
         $data->job = app()->build(JobsRepository::class)->getData($data->job);
         $data->recruit->residue_num = $data->recruit->need_num - $data->recruit->done_num - $data->recruit->wait_entry_num;
-
     }
 
     public function applyEntrust()

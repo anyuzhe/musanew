@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\CompanyDepartment;
 use App\Models\Course;
 use App\Repositories\JobsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -20,6 +21,7 @@ class JobsController extends ApiBaseCommonController
     public $search_field_array = [
         ['code','like',0],
         ['name','like',0],
+//        ['department_id','='],
         ['is_formal','='],
     ];
 
@@ -61,6 +63,18 @@ class JobsController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
+        $department_id = $this->request->get('department_id');
+        if($department_id) {
+            $department = CompanyDepartment::find($department_id);
+            if($department){
+                if($department->level==1) {
+                    $departmentIds = CompanyDepartment::where('pid', $department_id)->pluck('id')->toArray();
+                    $model = $model->whereIn('department_id',array_merge($departmentIds,[$department_id]));
+                }else{
+                    $model = $model->where('department_id',$department_id);
+                }
+            }
+        }
         $model = $model->where('status','!=',-1);
         $user = $this->getUser();
         if ($user) {
