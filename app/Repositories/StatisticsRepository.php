@@ -14,14 +14,27 @@ class StatisticsRepository
 {
     public function getCompanyCountStatistics(Company $company)
     {
+        $start_date = date('Y-m-01');
+        $end_date = date('Y-m-31 23:59:59');
+
         $companies = $company->thirdParty;
 
-        $all_job_count = Recruit::where('company_id', $company->id)->count();
-        $month_job_count = Recruit::where('company_id', $company->id)->whereIn('status',[1,2,3])->count();
-        $month_people_count = (int)Recruit::where('company_id', $company->id)->whereIn('status',[1,2,3])->sum('need_num');
+        $endRecruitIds = RecruitEndLog::where('company_id', $company->id)->whereNotNull('third_party_id')
+            ->where(function ($quesy)use($start_date,$end_date){
+                $quesy->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->pluck('company_job_recruit_id')->toArray();
 
         $company_recruit_entrust_ids = Entrust::where('company_id', $company->id)->pluck('id')->toArray();
+        $company_job_recruit_ids = Entrust::where('company_id', $company->id)->pluck('company_job_recruit_id')->toArray();
         $company_recruit_ids = RecruitResume::where('company_id', $company->id)->pluck('id')->toArray();
+
+        $all_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->count();
+        $month_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->count();
+        $month_people_count = (int)Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->sum('need_num');
 
         $month_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $company_recruit_entrust_ids)
             ->where('created_at','>',date('Y-m-01'))->where('created_at','<=',date('Y-m-31 23:59:59'))->count();
