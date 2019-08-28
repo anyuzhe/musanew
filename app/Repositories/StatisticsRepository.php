@@ -72,7 +72,7 @@ class StatisticsRepository
 
     public function getCompanyDataStatistics(Company $company,$start_date,$end_date)
     {
-        $company_job_recruit_resume_ids = RecruitResume::where('company_id', $company->id)->pluck('id')->toArray();
+        $company_job_recruit_resume_ids = RecruitResume::where('company_id', $company->id)->whereNotNull('third_party_id')->pluck('id')->toArray();
         //“推荐简历”、“邀请面试”、“面试中”、“录用”、“入职”
         $companies = Company::all()->keyBy('id')->toArray();
 
