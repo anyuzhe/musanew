@@ -36,6 +36,8 @@
             height: 30px;
         }
         span {
+            text-overflow: ellipsis !important;
+            white-space: normal !important;
             /*max-width: 600px;*/
         }
     </style>
