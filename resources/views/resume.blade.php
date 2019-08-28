@@ -41,6 +41,9 @@
             white-space: normal !important;
             /*max-width: 600px;*/
         }
+        body{
+            width: 100%;
+        }
     </style>
 </head>
 
