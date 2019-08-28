@@ -39,7 +39,7 @@ class ResumesController extends Controller
             };
         }
         $html = env("APP_URL")."/resume/{$id}"; //需要导出pdf地址
-        $pdfName = date("Y-m-d_His") . '.pdf';
+        $pdfName = date("YmdHis").rand(1000,9999) . '.pdf';
         $path = $dir . '/' . $pdfName;
         if (strstr(php_uname('s'), "Windows ")) {
             shell_exec(" wkhtmltopdf $html $path"); //windows  wkhtmltopdf 调用

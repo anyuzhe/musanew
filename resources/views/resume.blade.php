@@ -19,7 +19,7 @@
             background-color: #fff;
             border-collapse: collapse;
             border-color: #000;
-            max-width: 900px;
+            max-width: 100px;
         }
         .resumeHead {
             background-color: #959595;
@@ -37,9 +37,8 @@
             height: 30px;
         }
         span {
-            text-overflow: ellipsis !important;
-            white-space: normal !important;
-            /*max-width: 600px;*/
+            text-overflow: ellipsis;
+            white-space: normal;
         }
         body{
             width: 100%;
