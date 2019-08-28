@@ -170,22 +170,26 @@ class EntrustResumesController extends ApiBaseCommonController
         $data = $this->request->all();
         $ids = $data['resume_ids'];
         $recruit_id = null;
+        $recruit = null;
         if(isset($data['recruit_id'])){
             $recruit_id = $data['recruit_id'];
+            $recruit = Recruit::find($recruit_id);
         }
         $entrust_id = null;
+        $entrust = null;
         if(isset($data['entrust_id'])){
             $entrust_id = $data['entrust_id'];
+            $entrust = Entrust::find($entrust_id);
+            if($entrust)
+                $recruit = $entrust->recruit;
         }
-        $recruit = Recruit::find($recruit_id);
-        $entrust = Entrust::find($entrust_id);
 
         if(!$recruit_id || !$recruit){
             return $this->apiReturnJson(9999, null, '缺少招聘信息');
         }
-        if(!$entrust_id || !$entrust){
-            return $this->apiReturnJson(9999, null, '缺少委托信息');
-        }
+//        if(!$entrust_id || !$entrust){
+//            return $this->apiReturnJson(9999, null, '缺少委托信息');
+//        }
 
         app('db')->beginTransaction();
         $logs = [];
@@ -195,10 +199,15 @@ class EntrustResumesController extends ApiBaseCommonController
             if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $id)->where('type',3)->first()){
                 return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
             }
+            if($entrust_id){
+                $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
+                    ->where('resume_id', $id)
+                    ->where('company_job_recruit_entrust_id', $entrust_id)->first();
+            }else{
+                $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
+                    ->where('resume_id', $id)->first();
+            }
 
-            $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
-                ->where('resume_id', $id)
-                ->where('company_job_recruit_entrust_id', $entrust_id)->first();
             if($resume->in_job==1){
                 app('db')->rollBack();
                 return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
@@ -210,11 +219,11 @@ class EntrustResumesController extends ApiBaseCommonController
 
             $recruitResume = RecruitResume::create([
                 'company_id'=>$recruit->company_id,
-                'third_party_id'=>$entrust->third_party_id,
+                'third_party_id'=>$entrust?$entrust->third_party_id:null,
                 'job_id'=>$recruit->job_id,
                 'resume_id'=>$id,
                 'company_job_recruit_id'=>$recruit->id,
-                'company_job_recruit_entrust_id'=>$entrust_id,
+                'company_job_recruit_entrust_id'=>$entrust?$entrust_id:null,
                 'status'=>1,
                 'resume_source'=>$resume->type,
                 'creator_id'=>$this->getUser()->id,
@@ -222,17 +231,16 @@ class EntrustResumesController extends ApiBaseCommonController
             $this->recruitResumesRepository->haveLook($recruitResume);
             if($entrust_id && $entrust){
                 $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$entrust->thirdParty, null,1);
-                $recruit->resume_num++;
-                $recruit->new_resume_num++;
-                $recruit->save();
-
                 $entrust->resume_num++;
                 $entrust->new_resume_num++;
                 $entrust->save();
-                $logs[] = $log;
             }else{
-                //暂无
+                $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$this->getCurrentCompany(), null,1);
             }
+            $logs[] = $log;
+            $recruit->resume_num++;
+            $recruit->new_resume_num++;
+            $recruit->save();
         }
         sendLogsEmail($logs);
         app('db')->commit();
