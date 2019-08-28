@@ -19,6 +19,7 @@
             background-color: #fff;
             border-collapse: collapse;
             border-color: #000;
+            max-width: 900px;
         }
         .resumeHead {
             background-color: #959595;
