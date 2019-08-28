@@ -103,8 +103,8 @@ class CompaniesRepository
                             $item['company_id'] = $company_id;
                             $item['pid'] = $obj->id;
                             $item['level'] = 2;
-                            $obj = CompanyDepartment::create($item);
-                            $departments_ids[] = $obj->id;
+                            $obj1 = CompanyDepartment::create($item);
+                            $departments_ids[] = $obj1->id;
                         }
                     }
                     $departments_ids[] = $obj->id;
