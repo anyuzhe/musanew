@@ -137,7 +137,9 @@ class RecruitResumesRepository
 
     public function haveLook(RecruitResume $recruitResume)
     {
-        $has = RecruitResumeLook::where('company_job_recruit_resume_id',$recruitResume->id)->where('company_id',TokenRepository::getCurrentCompany()->id)->first();
+        $has = RecruitResumeLook::where('company_job_recruit_resume_id',$recruitResume->id)
+            ->where('user_id', TokenRepository::getUser()->id)
+            ->where('company_id',TokenRepository::getCurrentCompany()->id)->first();
         if(!$has){
             RecruitResumeLook::create([
                 'company_job_recruit_resume_id'=>$recruitResume->id,
