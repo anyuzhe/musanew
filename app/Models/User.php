@@ -32,6 +32,6 @@ class User extends Model
 
     public function company()
     {
-        return $this->companies()->wherePivot('is_current', 1);
+        return $this->companies()->wherePivot('is_current', 1)->withPivot('company_role_id');
     }
 }

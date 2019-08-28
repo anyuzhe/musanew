@@ -35,6 +35,9 @@
         .subTr {
             height: 30px;
         }
+        span {
+            /*max-width: 600px;*/
+        }
     </style>
 </head>
 
@@ -140,7 +143,7 @@
         </tr>
         <tr class="subTr">
             <td>项目描述</td>
-            <td colspan="4">{!! $pro['project_desc'] !!}&nbsp;</td>
+            <td colspan="4"><span>{!! $pro['project_desc'] !!}</span>&nbsp;</td>
         </tr>
         <tr class="subTr">
             <td>个人职责</td>

@@ -8,7 +8,7 @@ class ResponseLayout
     {
         $res = [];
         $res['data'] = null;
-        if ($data) $res['data'] = $data;
+        if ($data || is_array($data)) $res['data'] = $data;
         $res['code'] = $code . '';
         if ($message === '') {
             if (isset(config('errCode')[$code])) {
