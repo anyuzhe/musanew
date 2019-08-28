@@ -41,6 +41,7 @@ class ResumesController extends Controller
         global $CFG;
         requireMoodleConfig();
         $moodleRoot = getMoodleRoot();
+        $resume = Resume::find($id);
 
         set_time_limit(0);
         $dir = $CFG->dataroot. '/estimate_pdf'; //放置pdf文件夹
@@ -74,6 +75,6 @@ class ResumesController extends Controller
             readfile($filename);
             unlink($path);
         }
-        upload($path, $pdfName);
+        upload($path, $resume->name.'的简历.pdf');
     }
 }
