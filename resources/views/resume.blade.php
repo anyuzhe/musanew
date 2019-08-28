@@ -32,6 +32,7 @@
         td {
             padding: 0 5px;
             white-space: pre;
+            max-width: 500px;
         }
         .subTr {
             height: 30px;
