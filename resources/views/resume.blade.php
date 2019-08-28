@@ -52,6 +52,23 @@
     <caption>
         <h3>{!! $data['name'] !!}简历</h3>
     </caption>
+    @if($matching)
+        <tr class="resumeHead">
+            <td colspan="5">简历匹配</td>
+        </tr>
+        <tr class="subTr">
+            <td>总分</td>
+            <td>{!! $matching['score'] !!}</td>
+            <td>学历分数</td>
+            <td colspan="2">{!! $matching['education_score'] !!}</td>
+        </tr>
+        <tr class="subTr">
+            <td>年资分数</td>
+            <td>{!! $matching['working_years_score'] !!}</td>
+            <td>技能分数</td>
+            <td colspan="2">{!! $matching['skills_score'] !!}</td>
+        </tr>
+    @endif
     <tr class="resumeHead">
         <td colspan="5">个人信息</td>
     </tr>

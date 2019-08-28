@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\RecruitResume;
 use App\Models\Resume;
+use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +23,21 @@ class ResumesController extends Controller
         $data['projects'] = (new Collection($data['projects']))->sortByDesc('project_start')->values()->toArray();
         $data['companies'] = (new Collection($data['companies']))->sortByDesc('job_start')->values()->toArray();
 //        dd($data);
-        return view('resume', ['data'=>$data]);
+
+        $matching = null;
+        $recruit_resume_id = request('recruit_resume_id');
+        if($recruit_resume_id){
+            $recruitResume = RecruitResume::find($recruit_resume_id);
+            if($recruitResume){
+                $matching = app()->build(RecruitResumesRepository::class)->matching($recruitResume);
+            }
+        }
+        return view('resume', ['data'=>$data, 'matching'=>$matching]);
     }
 
     public function dumpPdf($id)
     {
+        $recruit_resume_id = request('recruit_resume_id');
         global $CFG;
         requireMoodleConfig();
         $moodleRoot = getMoodleRoot();
@@ -38,7 +50,7 @@ class ResumesController extends Controller
                 exit;
             };
         }
-        $html = env("APP_URL")."/resume/{$id}"; //需要导出pdf地址
+        $html = env("APP_URL")."/resume/{$id}?recruit_resume_id={$recruit_resume_id}"; //需要导出pdf地址
         $pdfName = date("YmdHis").rand(1000,9999) . '.pdf';
         $path = $dir . '/' . $pdfName;
         if (strstr(php_uname('s'), "Windows ")) {
