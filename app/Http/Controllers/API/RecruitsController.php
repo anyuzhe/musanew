@@ -134,7 +134,7 @@ class RecruitsController extends ApiBaseCommonController
     //排序
     protected function modelGetSort(&$model)
     {
-        $model = $model->orderBy('status','asc')->orderBy('id','desc');
+        $model = $model->orderBy('status','asc')->orderBy('updated_at','desc');
         return $model;
     }
 
