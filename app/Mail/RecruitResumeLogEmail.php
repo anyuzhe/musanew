@@ -75,28 +75,28 @@ class RecruitResumeLogEmail extends Mailable
                 if($status==-5){
                     $content_text_array[] = "<span style='color: red'>{$resume->name}未到{$job->name}报道</span>，已关闭";
                 }elseif ($status==-4){
-                    $content_text_array[] = "{$resume->name} 面试通过但不合适 {$job->name} 面试，已关闭";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 面试通过但不合适 {$job->name} 面试，已关闭";
                 }elseif ($status==-3){
-                    $content_text_array[] = "{$resume->name} 面试 {$job->name} 失败，已关闭";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 面试 {$job->name} 失败，已关闭";
                 }elseif ($status==-2){
-                    $content_text_array[] = "{$resume->name} 放弃 {$job->name} 面试，已关闭";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 放弃 {$job->name} 面试，已关闭";
                 }elseif ($status==-1){
-                    $content_text_array[] = "{$resume->name} 不匹配 {$job->name}，已关闭";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 不匹配 {$job->name}，已关闭";
                 }elseif ($status==2 ||$status==5 ){
-                    $content_text_array[] = "{$resume->name} 应聘 {$job->name}，已协商约定 <span style='color: red'>{$log->other_data}</span> 进行面试";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，已协商约定 <span style='color: red'>{$log->other_data}</span> 进行面试";
                 }elseif ($status==3){
                     $old = RecruitResumeLog::where('company_job_recruit_resume_id', $log->company_job_recruit_resume_id)->where('id','!=',$log->id)->orderBy('id','desc')->first();
-                    $content_text_array[] = "{$resume->name} 应聘 {$job->name}，邀约面试时间时间从 {$old->other_data} 改成<span style='color: red'>{$log->other_data}</span> ,请知晓";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，邀约面试时间时间从 {$old->other_data} 改成<span style='color: red'>{$log->other_data}</span> ,请知晓";
                 }elseif ($status==4){
-                    $content_text_array[] = "{$resume->name} 应聘 {$job->name}，完成面试，目前处于待定状态，请及时处理";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，完成面试，目前处于待定状态，请及时处理";
                     $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
                     $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
                 }elseif ($status==6){
-                    $content_text_array[] = "<span style='color: red'>{$resume->name} 录用 {$job->name}，将于 {$log->other_data} 正式入职。</span>";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 录用 {$job->name}，将于<span style='color: red'> {$log->other_data} </span>正式入职。";
                 }elseif ($status==7){
                     $recruit = $log->recruit;
                     $residue_num = $recruit->need_num - $recruit->done_num - $recruit->wait_entry_num;
-                    $content_text_array[] = "{$resume->name} 正式入职 {$job->name}，目前还剩<span style='color: red'>{$residue_num}</span>人需要招聘";
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 正式入职 {$job->name}，目前还剩<span style='color: red'>{$residue_num}</span>人需要招聘";
                 }
 //                $recruitResume = $log->recruitResume;
 //                $resume = $recruitResume->resume;
@@ -112,5 +112,11 @@ class RecruitResumeLogEmail extends Mailable
         }
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);
+    }
+
+    public function getATag($resume, $company_job_recruit_resume_id)
+    {
+        $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$company_job_recruit_resume_id}&showChart=1";
+        return "<a href=\"$url\">{$resume->name}</a>";
     }
 }
