@@ -59,7 +59,7 @@ class RecruitsController extends ApiBaseCommonController
                         $model = $model->whereIn('status', [4,5]);
                     }
                 }else{
-                    $model = $model->whereIn('status', [1,4]);
+                    $model = $model->whereIn('status', [1,4,5]);
                 }
                 if($resume_id){
                     $model = $model->whereNotIn('id', RecruitResume::where('resume_id', $resume_id)->pluck('company_job_recruit_id')->toArray());
