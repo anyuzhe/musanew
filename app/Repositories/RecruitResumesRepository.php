@@ -162,7 +162,7 @@ class RecruitResumesRepository
         if($recruit->done_num>=$recruit->need_num){
             //如果是委托 就不改成结束状态
             if(!$entrust)
-                $recruit->satus = 5;
+                $recruit->status = 5;
             foreach ($recruit->entrusts as $_entrust) {
                 $_entrust->status = 2;
                 $_entrust->end_at = date('Y-m-d H:i:s');
