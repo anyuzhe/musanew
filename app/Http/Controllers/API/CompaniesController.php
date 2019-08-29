@@ -341,7 +341,7 @@ class CompaniesController extends ApiBaseCommonController
                 'entrust_id'=>$v->company_job_recruit_entrust_id,
                 'resume_id'=>$v->resume_id,
                 'company_name'=>$v->company->company_alias,
-                'third_party_name'=>$v->thirdParty->company_alias,
+                'third_party_name'=>$v->thirdParty?$v->thirdParty->company_alias:'无',
                 'recruit_resume_id'=>$v->id,
                 'job_name'=>$v->job->name,
                 'resume_name'=>$v->resume->name,
