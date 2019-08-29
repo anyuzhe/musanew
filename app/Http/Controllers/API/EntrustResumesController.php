@@ -184,7 +184,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 $recruit = $entrust->recruit;
         }
 
-        if(!$recruit_id || !$recruit){
+        if(!$recruit){
             return $this->apiReturnJson(9999, null, '缺少招聘信息');
         }
 //        if(!$entrust_id || !$entrust){
