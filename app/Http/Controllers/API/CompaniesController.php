@@ -319,13 +319,13 @@ class CompaniesController extends ApiBaseCommonController
         $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->pluck('id')->toArray());
         $waitInterviewData = RecruitResume::where(function ($query)use($user, $company){
             $query->where('status',2)
-                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
+                ->whereIn('id',RecruitResumeLog::where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
         })->orWhere(function ($query)use($user, $company){
             $query->where('status',3)
-                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
+                ->whereIn('id',RecruitResumeLog::where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
         })->orWhere(function ($query)use($user, $company){
             $query->where('status',5)
-                ->whereIn('id',RecruitResumeLog::where('user_id',$user->id)->where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
+                ->whereIn('id',RecruitResumeLog::where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
         })->where('status',2)->whereIn('id', $recruitIds)->get();
         $waitInterviewData->load('job');
         $waitInterviewData->load('resume');

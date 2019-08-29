@@ -90,7 +90,7 @@ class StatisticsRepository
         $companies = Company::all()->keyBy('id')->toArray();
 
         //招聘职位数量
-        $recruitLogs = RecruitEndLog::where('company_id', $company->id)
+        $recruitLogs = RecruitEndLog::where('company_id', $company->id)->whereNotNull('third_party_id')
             ->where(function ($quesy)use($start_date,$end_date){
                 $quesy->where(function ($query1)use($start_date,$end_date){
                     $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);
