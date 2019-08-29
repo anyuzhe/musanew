@@ -138,7 +138,7 @@ class LoginController extends CommonController
             return $this->apiReturnJson('9998');
         }
         $codeHas = PasswordFindCode::where([
-            ['userid',$user->id],
+            ['user_id',$user->id],
             ['type',1],
             ['operation',3],
             ['status',0],
