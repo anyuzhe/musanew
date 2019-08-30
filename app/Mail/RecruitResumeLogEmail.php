@@ -59,9 +59,9 @@ class RecruitResumeLogEmail extends Mailable
                 }
                 $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$log->company_job_recruit_resume_id}&showChart=1";
 
-                $str .= "<a href=\"$url\">{$resume->name}</a>{$has_text}，";
+                $str .= "<a href=\"$url\">{$resume->name}</a>{$has_text}, ";
             }
-            $str = substr($str,0,strlen($str)-1);
+            $str = substr($str,0,strlen($str)-2);
 
             $count = count($logs);
             $str .= " 共计{$count}份新简历，请及时查看";
