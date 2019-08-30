@@ -326,7 +326,7 @@ class CompaniesController extends ApiBaseCommonController
         })->orWhere(function ($query)use($user, $company){
             $query->where('status',5)
                 ->whereIn('id',RecruitResumeLog::where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
-        })->where('status',2)->whereIn('id', $recruitIds)->get();
+        })->where('status',2)->whereIn('company_job_recruit_id', $recruitIds)->get();
         $waitInterviewData->load('job');
         $waitInterviewData->load('resume');
         $waitInterviewData->load('recruit');
