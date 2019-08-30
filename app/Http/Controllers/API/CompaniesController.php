@@ -260,6 +260,7 @@ class CompaniesController extends ApiBaseCommonController
         $entrustApply = [];
         foreach ($entrustApplyData as $v) {
             $entrustApply[] = [
+              'recruit_id'=>$v->recruit->id,
               'entrust_id'=>$v->id,
               'job_name'=>$v->job->name,
               'need_num'=>$v->recruit->need_num,
