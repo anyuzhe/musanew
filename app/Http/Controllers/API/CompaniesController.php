@@ -317,15 +317,17 @@ class CompaniesController extends ApiBaseCommonController
         //待面试
         $recruitIds = Entrust::where('third_party_id', $company->id)->whereNotIn('status',[-2])->pluck('company_job_recruit_id')->toArray();
         $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->pluck('id')->toArray());
-        $waitInterviewData = RecruitResume::where(function ($query)use($user, $company){
-            $query->where('status',2)
-                ->whereIn('id',RecruitResumeLog::where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
-        })->orWhere(function ($query)use($user, $company){
-            $query->where('status',3)
-                ->whereIn('id',RecruitResumeLog::where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
-        })->orWhere(function ($query)use($user, $company){
-            $query->where('status',5)
-                ->whereIn('id',RecruitResumeLog::where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
+        $waitInterviewData = RecruitResume::where(function ($m){
+            $m->where(function ($query){
+                $query->where('status',2)
+                    ->whereIn('id',RecruitResumeLog::where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
+            })->orWhere(function ($query){
+                $query->where('status',3)
+                    ->whereIn('id',RecruitResumeLog::where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
+            })->orWhere(function ($query){
+                $query->where('status',5)
+                    ->whereIn('id',RecruitResumeLog::where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
+            });
         })->where('status',2)->whereIn('company_job_recruit_id', $recruitIds)->get();
         $waitInterviewData->load('job');
         $waitInterviewData->load('resume');
