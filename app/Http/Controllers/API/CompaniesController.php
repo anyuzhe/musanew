@@ -285,11 +285,14 @@ class CompaniesController extends ApiBaseCommonController
         }
 
         $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
+        //正在招聘的相关 招聘id
+        $recruitIds = Entrust::where('third_party_id', $company->id)->whereIn('status',[1])->pluck('company_job_recruit_id')->toArray();
+        $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->whereIn('status', [1,3])->pluck('id')->toArray());
 
         //待处理
         $waitHandleData = RecruitResume::where(function ($query)use ($company){
             $query->where('third_party_id',$company->id)->orWhere('company_id',$company->id);
-        })->whereIn('status',[1,2,3,4,5,6])->get();
+        })->whereIn('status',[1,2,3,4,5,6])->whereIn('company_job_recruit_id', $recruitIds)->get();
         $waitHandleData->load('job');
         $waitHandleData->load('resume');
         $waitHandleData->load('recruit');
@@ -316,20 +319,7 @@ class CompaniesController extends ApiBaseCommonController
         }
 
         //待面试
-        $recruitIds = Entrust::where('third_party_id', $company->id)->whereNotIn('status',[-2])->pluck('company_job_recruit_id')->toArray();
-        $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->pluck('id')->toArray());
-        $waitInterviewData = RecruitResume::where(function ($m){
-            $m->where(function ($query){
-                $query->where('status',2)
-                    ->whereIn('id',RecruitResumeLog::where('status',2)->pluck('company_job_recruit_resume_id')->toArray());
-            })->orWhere(function ($query){
-                $query->where('status',3)
-                    ->whereIn('id',RecruitResumeLog::where('status',3)->pluck('company_job_recruit_resume_id')->toArray());
-            })->orWhere(function ($query){
-                $query->where('status',5)
-                    ->whereIn('id',RecruitResumeLog::where('status',5)->pluck('company_job_recruit_resume_id')->toArray());
-            });
-        })->where('status',2)->whereIn('company_job_recruit_id', $recruitIds)->get();
+        $waitInterviewData = RecruitResume::whereIn('status', [2,3,5])->whereIn('company_job_recruit_id', $recruitIds)->get();
         $waitInterviewData->load('job');
         $waitInterviewData->load('resume');
         $waitInterviewData->load('recruit');
@@ -359,7 +349,7 @@ class CompaniesController extends ApiBaseCommonController
         //待入职
         $waitEntryData = RecruitResume::where(function ($query)use ($company){
             $query->where('third_party_id',$company->id)->orWhere('company_id',$company->id);
-        })->whereIn('status',[6])->get();
+        })->whereIn('status',[6])->whereIn('company_job_recruit_id', $recruitIds)->get();
         $waitEntryData->load('job');
         $waitEntryData->load('resume');
         $waitEntryData->load('recruit');
