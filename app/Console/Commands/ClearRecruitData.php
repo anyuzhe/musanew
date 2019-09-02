@@ -57,5 +57,12 @@ class ClearData extends Command
         RecruitResume::truncate();
         RecruitResumeLog::truncate();
         RecruitResumeLook::truncate();
+
+        Resume::truncate();
+        ResumeCompany::truncate();
+        ResumeEducation::truncate();
+        ResumeProject::truncate();
+        ResumeSkill::truncate();
+        CompanyResume::truncate();
     }
 }

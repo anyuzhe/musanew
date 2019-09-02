@@ -189,6 +189,7 @@ class StatisticsRepository
         $entrusts->load('job');
         $entrusts->load('recruit');
         $has_entrust_ids = [];
+        $all_resume_num = 0;
         foreach ($entrusts as $entrust) {
             $job = $entrust->job;
             if($job->department_id && isset($departments[$job->department_id]) && !in_array($entrust->id, $has_entrust_ids)){
@@ -213,6 +214,9 @@ class StatisticsRepository
                     'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
                     'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
                 ];
+
+                $all_resume_num += $_data['recommend_resume_num'];
+
                 if(!isset($departments[$job->department_id]['data'])){
                     $departments[$job->department_id]['data'] = [];
                 }
@@ -257,7 +261,7 @@ class StatisticsRepository
                 }
             }
         }
-        return ['departments'=>$data];
+        return ['departments'=>$data,'all_resume_num'=>$all_resume_num];
     }
 
     public function getCompanyThirdPartyDataStatisticsDetail(Company $company, $demand_side_id, $start_date, $end_date)
@@ -288,6 +292,7 @@ class StatisticsRepository
         $entrusts->load('job');
         $entrusts->load('recruit');
         $has_entrust_ids = [];
+        $all_resume_num = 0;
         foreach ($entrusts as $entrust) {
             $job = $entrust->job;
             if($job->department_id && isset($departments[$job->department_id]) && !in_array($entrust->id, $has_entrust_ids)){
@@ -312,6 +317,8 @@ class StatisticsRepository
                     'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
                     'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
                 ];
+                $all_resume_num += $_data['recommend_resume_num'];
+
                 if($departments[$job->department_id]['level']==1){
                     $_data['department1_name'] = $departments[$job->department_id]['name'];
                     $_data['department2_name'] = $departments[$job->department_id]['name'];
@@ -353,7 +360,7 @@ class StatisticsRepository
                 }
             }
         }
-        return ['departments'=>$data];
+        return ['departments'=>$data,'all_resume_num'=>$all_resume_num];
     }
 
     public function getExcelData($data)
