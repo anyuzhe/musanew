@@ -48,6 +48,13 @@ class RecruitResumesController extends ApiBaseCommonController
         $data->load('thirdParty');
         $data->load('company');
 
+        //已被其他公司录用 查询简历id
+        $_resumeIds = $data->pluck('resume_id')->toArray();
+        $_recruitResumeIds = $data->pluck('id')->toArray();
+        $_resumeHireIds = RecruitResume::whereIn('resume_id', $_resumeIds)->whereNotIn('company_job_recruit_id',$_recruitResumeIds)->where('status','>=',6)
+            ->pluck('resume_id')->toArray();
+
+
         $has_loos_ids = $this->getCurrentCompany()->looks()->where('user_id', $this->getUser()->id)->pluck('company_job_recruit_resume_id')->toArray();
         foreach ($data as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
@@ -56,6 +63,11 @@ class RecruitResumesController extends ApiBaseCommonController
                 $v->have_look = 1;
             }else{
                 $v->have_look = 0;
+            }
+            if(in_array($v->id, $_resumeHireIds)){
+                $v->is_other_hired = 1;
+            }else{
+                $v->is_other_hired = 0;
             }
         }
         return $data;
