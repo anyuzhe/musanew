@@ -187,15 +187,15 @@ class RecruitResumesRepository
             $resume->assignment_id = $entrust->company_id;
 
             //往需求方添加人才库关联
-//            $_has = CompanyResume::where('company_id', $entrust->company_id)->where('resume_id', $resume->id)->where('type', 1)->first();
-//            if(!$_has){
-//                CompanyResume::create([
-//                   'company_id'=>$entrust->company_id,
-//                   'resume_id'=>$resume->id,
-//                   'type'=>1,
-//                   'creator_id'=>TokenRepository::getUser()->id,
-//                ]);
-//            }
+            $_has = CompanyResume::where('company_id', $entrust->company_id)->where('resume_id', $resume->id)->where('type', 1)->first();
+            if(!$_has){
+                CompanyResume::create([
+                   'company_id'=>$entrust->company_id,
+                   'resume_id'=>$resume->id,
+                   'type'=>1,
+                   'creator_id'=>TokenRepository::getUser()->id,
+                ]);
+            }
         }else{
             $resume->company_id = $recruit->company_id;
         }
