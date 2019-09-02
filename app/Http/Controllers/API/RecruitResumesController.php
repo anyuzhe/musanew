@@ -64,7 +64,7 @@ class RecruitResumesController extends ApiBaseCommonController
             }else{
                 $v->have_look = 0;
             }
-            if(in_array($v->id, $_resumeHireIds)){
+            if(in_array($v->resume_id, $_resumeHireIds)){
                 $v->is_other_hired = 1;
             }else{
                 $v->is_other_hired = 0;
