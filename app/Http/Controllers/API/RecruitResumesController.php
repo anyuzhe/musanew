@@ -51,7 +51,7 @@ class RecruitResumesController extends ApiBaseCommonController
         //已被其他公司录用 查询简历id
         $_resumeIds = $data->pluck('resume_id')->toArray();
         $_recruitResumeIds = $data->pluck('id')->toArray();
-        $_resumeHireIds = RecruitResume::whereIn('resume_id', $_resumeIds)->whereNotIn('company_job_recruit_id',$_recruitResumeIds)->where('status','>=',6)
+        $_resumeHireIds = RecruitResume::whereIn('resume_id', $_resumeIds)->whereNotIn('id',$_recruitResumeIds)->where('status','>=',6)
             ->pluck('resume_id')->toArray();
 
 
