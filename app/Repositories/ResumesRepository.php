@@ -46,6 +46,7 @@ class ResumesRepository
 
 
         $data->load('jobCompany');
+        $data->load('assignmentCompany');
         $data->load('educations');
         $data->load('companies');
         $data->load('projects');
@@ -95,6 +96,7 @@ class ResumesRepository
     public function getData($data)
     {
         $data->jobCompany;
+        $data->assignmentCompany;
         $data->skills;
         $data->educations;
         $data->projects;

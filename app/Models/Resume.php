@@ -61,6 +61,11 @@ class Resume extends Model
         return $this->belongsTo('App\Models\Company','company_id');
     }
 
+    public function assignmentCompany()
+    {
+        return $this->belongsTo('App\Models\Company','assignment_id');
+    }
+
     public function projects()
     {
         return $this->hasMany('App\Models\ResumeProject');

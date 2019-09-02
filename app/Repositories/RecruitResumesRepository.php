@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Mail\RecruitResumeLogEmail;
 use App\Models\Area;
+use App\Models\CompanyResume;
 use App\Models\DataMapOption;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
@@ -11,6 +12,7 @@ use App\Models\RecruitResumeLog;
 use App\Models\RecruitResumeLook;
 use App\Models\Resume;
 use App\User;
+use App\ZL\Moodle\TokenHelper;
 use Illuminate\Support\Facades\Mail;
 
 class RecruitResumesRepository
@@ -180,6 +182,22 @@ class RecruitResumesRepository
                 $entrust->status = 2;
             }
             $entrust->save();
+
+            $resume->company_id = $entrust->third_party_id;
+            $resume->assignment_id = $entrust->company_id;
+
+            //往需求方添加人才库关联
+            $_has = CompanyResume::where('company_id', $entrust->company_id)->where('resume_id', $resume->id)->where('type', 1)->first();
+            if(!$_has){
+                CompanyResume::create([
+                   'company_id'=>$entrust->company_id,
+                   'resume_id'=>$resume->id,
+                   'type'=>1,
+                   'creator_id'=>TokenRepository::getUser()->id,
+                ]);
+            }
+        }else{
+            $resume->company_id = $recruit->company_id;
         }
         $resume->company_id = $recruit->company_id;
         $resume->in_job = 1;
