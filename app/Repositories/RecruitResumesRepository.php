@@ -262,7 +262,7 @@ class RecruitResumesRepository
         }
         switch ($data->resume_source){
             case 1:
-                if($data->resume_source_company_id==$data->thirdParty->id){
+                if(!$data->resume_source_company_id || $data->resume_source_company_id==$data->thirdParty->id){
                     $data->resume_source_str = $data->thirdParty?"外包({$data->thirdParty->company_alias})":"{$data->company->company_alias}";
                 }else{
                     $data->resume_source_str = "本企业";
