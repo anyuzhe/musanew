@@ -138,6 +138,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 'company_job_recruit_entrust_id'=>$entrust?$entrust->id:null,
                 'status'=>1,
                 'resume_source'=>$obj->type,
+                'resume_source_company_id'=>$this->getCurrentCompany()->id,
                 'creator_id'=>$this->getUser()->id,
             ]);
             $this->recruitResumesRepository->haveLook($recruitResume);
@@ -226,6 +227,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 'company_job_recruit_entrust_id'=>$entrust?$entrust_id:null,
                 'status'=>1,
                 'resume_source'=>$resume->type,
+                'resume_source_company_id'=>$this->getCurrentCompany()->id,
                 'creator_id'=>$this->getUser()->id,
             ]);
             $this->recruitResumesRepository->haveLook($recruitResume);
@@ -286,6 +288,7 @@ class EntrustResumesController extends ApiBaseCommonController
                     'company_job_recruit_id'=>$recruit->id,
                     'status'=>1,
                     'resume_source'=>$resume->type,
+                    'resume_source_company_id'=>$this->getCurrentCompany()->id,
                     'creator_id'=>$this->getUser()->id,
                 ]);
                 $this->recruitResumesRepository->haveLook($recruitResume);
@@ -327,6 +330,7 @@ class EntrustResumesController extends ApiBaseCommonController
                     'company_job_recruit_entrust_id'=>$entrust_id,
                     'status'=>1,
                     'resume_source'=>$resume->type,
+                    'resume_source_company_id'=>$this->getCurrentCompany()->id,
                     'creator_id'=>$this->getUser()->id,
                 ]);
                 $this->recruitResumesRepository->haveLook($recruitResume);
