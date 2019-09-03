@@ -75,7 +75,7 @@ class EntrustResumesController extends ApiBaseCommonController
         if($entrust_id){
             $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray());
         }elseif ($recruit_id){
-            $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_id', $entrust_id)->pluck('resume_id')->toArray());
+            $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_id', $recruit_id)->pluck('resume_id')->toArray());
         }
 
         if($in_blacklist!==null){
