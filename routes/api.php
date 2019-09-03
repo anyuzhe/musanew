@@ -102,6 +102,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/thirdParty', 'API\CompaniesController@thirdPartyList');
 //合作第三方
     $router->get('/company/thirdParty/idName', 'API\CompaniesController@thirdPartyListIdName');
+//需求方
+    $router->get('/company/demandSides/idName', 'API\CompaniesController@demandSideListIdName');
 
 //验证职位编号
     $router->post('/company/jobs/checkCode', 'API\JobsController@checkCode');

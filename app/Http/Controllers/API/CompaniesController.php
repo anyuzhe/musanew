@@ -104,6 +104,21 @@ class CompaniesController extends ApiBaseCommonController
         return $this->apiReturnJson(0, $arr);
     }
 
+
+    public function demandSideListIdName()
+    {
+        $company = $this->getCurrentCompany();
+        $demandSides = $company->demandSides;
+        $arr = [];
+        foreach ($demandSides as $key=>$item) {
+            $_arr = [];
+            $_arr['id'] = $item['id'];
+            $_arr['name'] = $item['company_name'];
+            $arr[] = $_arr;
+        }
+        return $this->apiReturnJson(0, $arr);
+    }
+
     public function entrustsList()
     {
         $this->requireMoodleConfig();
