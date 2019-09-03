@@ -262,7 +262,11 @@ class RecruitResumesRepository
         }
         switch ($data->resume_source){
             case 1:
-                $data->resume_source_str = $data->thirdParty?"外包({$data->thirdParty->company_alias})":"{$data->company->company_alias}";
+                if($data->company_job_recruit_entrust_id){
+                    $data->resume_source_str = $data->thirdParty?"外包({$data->thirdParty->company_alias})":"{$data->company->company_alias}";
+                }else{
+                    $data->resume_source_str = "本企业";
+                }
                 break;
             case 2:
                 $data->resume_source_str = '个人投递';
