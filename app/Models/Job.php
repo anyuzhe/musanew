@@ -49,6 +49,11 @@ class Job extends Model
             return $this->belongsToMany('App\Models\Skill', 'job_skill','job_id','skill_id')->withPivot('used_time', 'skill_level');;
     }
 
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company', 'company_id');
+    }
+
     public function recruits()
     {
         return $this->hasMany('App\Models\Recruit', 'job_id');

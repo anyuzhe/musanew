@@ -115,6 +115,12 @@ class JobsController extends ApiBaseCommonController
                 $job->source_company_id = $_recruit->company->id;
             }
         }
+        if($job->source_job_id){
+            $_job = Job::find($job->source_job_id);
+            if($_job) {
+                $job->source_company_id = $_job->company->id;
+            }
+        }
 //
 //        if(isset($data['area']) && is_array($data['area'])){
 //            if(isset($data['area'][0]))
