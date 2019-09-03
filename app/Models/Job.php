@@ -34,6 +34,9 @@ class Job extends Model
         'address_id',
         'department_id',
         'is_formal',
+        'source_job_id',
+        'source_company_id',
+        'source_recruit_id',
     ];
 
     public function tests()

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\CompanyDepartment;
 use App\Models\Course;
+use App\Models\Recruit;
 use App\Repositories\JobsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
@@ -23,6 +24,7 @@ class JobsController extends ApiBaseCommonController
         ['name','like',0],
 //        ['department_id','='],
         ['is_formal','='],
+        ['source_company_id','='],
     ];
 
     public function getTest()
@@ -105,6 +107,13 @@ class JobsController extends ApiBaseCommonController
 
         if(!$job->company_id){
             $job->company_id = $this->getCurrentCompany()->id;
+        }
+        if($job->source_recruit_id){
+            $_recruit = Recruit::find($job->source_recruit_id);
+            if($_recruit) {
+                $job->source_job_id = $_recruit->job->id;
+                $job->source_company_id = $_recruit->company->id;
+            }
         }
 //
 //        if(isset($data['area']) && is_array($data['area'])){
