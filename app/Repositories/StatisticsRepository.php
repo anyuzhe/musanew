@@ -217,14 +217,14 @@ class StatisticsRepository
                     'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),//完成率
                     'need_num'=>$recruit->need_num,//需求量
                     'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//入职成功
-                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//等待入职
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids,2),//等待入职
                     'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
                     'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'value'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'interview_resume_num'=>$this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids),//邀请面试
                     'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
                     'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
-                    'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids),//待定
+                    'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids,2),//待定
                     'interview_defeated_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//面试失败
                     'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
                     'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
@@ -320,14 +320,14 @@ class StatisticsRepository
                     'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),//完成率
                     'need_num'=>$recruit->need_num,//需求量
                     'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//入职成功
-                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//等待入职
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids,2),//等待入职
                     'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
                     'value'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'interview_resume_num'=>$this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids),//邀请面试
                     'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
                     'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
-                    'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids),//待定
+                    'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids,2),//待定
                     'interview_defeated_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//面试失败
                     'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
                     'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
@@ -516,11 +516,43 @@ class StatisticsRepository
         return $data;
     }
 
-    protected function getEntrustCountByStatus($status, $company_job_recruit_resume_ids)
+    protected function getEntrustCountByStatus($status, $company_job_recruit_resume_ids, $type=1)
     {
-        $count = RecruitResumeLog::whereIn('status',$status)
-            ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
-            ->groupBy('company_job_recruit_resume_id')->get()->count();
+        if($type==1){
+            $data = RecruitResumeLog::whereIn('status',$status)
+                ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
+                ->groupBy('company_job_recruit_resume_id')->orderBy('id','desc')->get();
+            $count = $data->count();
+        }else{
+            $count = 0;
+            $all = RecruitResumeLog::whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)->orderBy('id','asc')->get();
+            $lastData = [];
+            foreach ($all as $log) {
+                $recruitResumeId = $log->company_job_recruit_resume_id;
+                if(!isset($lastData[$recruitResumeId])){
+                    $lastData[$recruitResumeId] = [
+                        'lastStatus'=> $log->statsu,
+                        'lastAt'=> $log->created_at,
+                    ];
+                }else{
+                    if(strtotime($log->created_at)>strtotime($lastData[$recruitResumeId]['lastAt'])){
+                        $lastData[$recruitResumeId] = [
+                            'lastStatus'=> $log->statsu,
+                            'lastAt'=> $log->created_at,
+                        ];
+                    }
+                }
+            }
+
+            $data = RecruitResumeLog::whereIn('status',$status)
+                ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
+                ->groupBy('company_job_recruit_resume_id')->get();
+            foreach ($data as $v) {
+                $last = $lastData[$v->company_job_recruit_resume_id];
+                if($last['lastStatus']==$v->status)
+                    $count++;
+            }
+        }
         return $count;
     }
 }

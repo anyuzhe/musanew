@@ -11,6 +11,8 @@
 |
 */
 
+use App\Models\RecruitResumeLog;
+
 Route::get('/', function () {
     echo phpinfo();
 //    return view('welcome');
@@ -18,6 +20,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $data = RecruitResumeLog::where('company_job_recruit_resume_id',13)->orderBy('id','asc')->groupBy('company_job_recruit_resume_id')->get()->toArray();
+    dd($data);
+    dd(1);
     $log = \App\Models\RecruitResumeLog::where('id',1)->orderBy('id', 'desc')->first();
     return new \App\Mail\RecruitResumeLogEmail([$log]);
     sendLogsEmail([$log]);
