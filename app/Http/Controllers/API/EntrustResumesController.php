@@ -57,6 +57,7 @@ class EntrustResumesController extends ApiBaseCommonController
     public function authLimit(&$model)
     {
         $recruit_id = $this->request->get('recruit_id');
+        $area = $this->request->get('area');
         $entrust_id = $this->request->get('entrust_id');
         $in_job = $this->request->get('in_job');
         $skills = $this->request->get('skills');
@@ -103,6 +104,17 @@ class EntrustResumesController extends ApiBaseCommonController
                     ResumeSkill::where('skill_id',$skill[0])->where('skill_level','>=',$skill[1])->pluck('resume_id')->toArray());
             }
             $model = $model->whereIn('id', $resume_skill_ids);
+        }
+        if(is_array($area) && count($area)>0){
+            if(isset($area[0])){
+                $model = $model->where('residence_province_id', $area[0]);
+            }
+            if(isset($area[1])){
+                $model = $model->where('residence_city_id', $area[1]);
+            }
+            if(isset($area[2])){
+                $model = $model->where('residence_district_id', $area[2]);
+            }
         }
         return null;
     }
