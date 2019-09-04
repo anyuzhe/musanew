@@ -68,6 +68,7 @@ class EntrustsController extends ApiBaseCommonController
             $entrust['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($entrust['recruit'],$entrust);
             $entrust['status'] = $entrustRes->getStatusByEntrustAndRecruit($entrust['status'],$entrust['recruit']['status']);
             $entrust['recruit']['residue_num'] = $entrust['recruit']['need_num'] - $entrust['recruit']['done_num'] - $entrust['recruit']['wait_entry_num'];
+            $entrust['recruit']['residue_num'] = $entrust['recruit']['residue_num']>0?$entrust['recruit']['residue_num']:0;
         }
         return $entrusts;
     }
@@ -83,6 +84,7 @@ class EntrustsController extends ApiBaseCommonController
         $data->leading;
         $data->job = app()->build(JobsRepository::class)->getData($data->job);
         $data->recruit->residue_num = $data->recruit->need_num - $data->recruit->done_num - $data->recruit->wait_entry_num;
+        $data->recruit->residue_num = $data->recruit->residue_num>0?$data->recruit->residue_num:0;
     }
 
     public function applyEntrust()

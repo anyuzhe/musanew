@@ -87,6 +87,7 @@ class RecruitsController extends ApiBaseCommonController
         foreach ($recruits as &$recruit) {
             $recruit['job'] = $jobs[$recruit['job']['id']];
             $recruit['residue_num'] = $recruit['need_num'] - $recruit['done_num'] - $recruit['wait_entry_num'];
+            $recruit['residue_num'] = $recruit['residue_num']>0?$recruit['residue_num']:0;
             $recruit['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($recruit);
         }
         return $recruits;
@@ -115,6 +116,7 @@ class RecruitsController extends ApiBaseCommonController
         $entrustRes = app()->build(EntrustsRepository::class);
         $data['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($data);
         $data['residue_num'] = $data['need_num'] - $data['done_num'] - $data['wait_entry_num'];
+        $data['residue_num'] = $data['residue_num']>0?$data['residue_num']:0;
     }
 
     public function afterStore($obj, $data)
