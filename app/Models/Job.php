@@ -54,6 +54,11 @@ class Job extends Model
         return $this->belongsTo('App\Models\Company', 'company_id');
     }
 
+    public function sourceCompany()
+    {
+        return $this->belongsTo('App\Models\Company', 'source_company_id');
+    }
+
     public function recruits()
     {
         return $this->hasMany('App\Models\Recruit', 'job_id');

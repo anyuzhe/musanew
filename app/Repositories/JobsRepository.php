@@ -13,6 +13,7 @@ class JobsRepository
         $data->load('department');
         $data->load('skills');
         $data->load('address');
+        $data->load('sourceCompany');
         $area_ids = [];
         $depIds = [];
         foreach ($data as $v) {
@@ -56,6 +57,7 @@ class JobsRepository
         $data->skills;
         $data->tests;
         $data->address;
+        $data->sourceCompany;
         getOptionsText($data);
         if($data->department){
             if($data->department->parent){
