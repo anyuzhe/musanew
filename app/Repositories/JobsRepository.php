@@ -71,9 +71,9 @@ class JobsRepository
         }
         if($data->address){
             $areas = Area::whereIn('id', [$data->address->province_id, $data->address->city_id, $data->address->district_id])->get()->keyBy('id')->toArray();
-            $data->address->province_text = isset($areas[$data->province_id])?$areas[$data->province_id]['cname']:'';
-            $data->address->city_text = isset($areas[$data->city_id])?$areas[$data->city_id]['cname']:'';
-            $data->address->district_text = isset($areas[$data->district_id])?$areas[$data->district_id]['cname']:'';
+            $data->address->province_text = isset($areas[$data->address->province_id])?$areas[$data->address->province_id]['cname']:'';
+            $data->address->city_text = isset($areas[$data->address->city_id])?$areas[$data->address->city_id]['cname']:'';
+            $data->address->district_text = isset($areas[$data->address->district_id])?$areas[$data->address->district_id]['cname']:'';
         }
         return $data;
     }
