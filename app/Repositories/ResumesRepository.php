@@ -66,7 +66,7 @@ class ResumesRepository
             $v->permanent_province_text = isset($areas[$v->permanent_province_id])?$areas[$v->permanent_province_id]['cname']:'';
             $v->permanent_city_text = isset($areas[$v->permanent_city_id])?$areas[$v->permanent_city_id]['cname']:'';
             $v->permanent_district_text = isset($areas[$v->permanent_district_id])?$areas[$v->permanent_district_id]['cname']:'';
-            $v->residence_province_text = isset($areas[$v->province_id])?$areas[$v->province_id]['cname']:'';
+            $v->residence_province_text = isset($areas[$v->residence_province_id])?$areas[$v->residence_province_id]['cname']:'';
             $v->residence_city_text = isset($areas[$v->residence_city_id])?$areas[$v->residence_city_id]['cname']:'';
             $v->residence_district_text = isset($areas[$v->residence_district_id])?$areas[$v->residence_district_id]['cname']:'';
             getOptionsText($v);
