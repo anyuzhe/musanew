@@ -115,11 +115,11 @@ class StatisticsRepository
             })->get();
         $recruitLogIds = $recruitLogs->pluck('company_job_recruit_id')->toArray();
         $recruit_num = Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
-            $query->where('company_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
+            $query->where('company_id', $company->id)->whereNotNull('third_party_id')->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
         })->count();
         //招聘职位人数
         $recruit_people_num = (int)(Recruit::whereIn('id', $recruitLogIds)->orWhere(function ($query)use($company,$start_date,$end_date){
-            $query->where('company_id', $company->id)->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
+            $query->where('company_id', $company->id)->whereNotNull('third_party_id')->whereIn('status',[1,3])->where('created_at','>',$start_date)->where('created_at','<=',$end_date);
         })->sum('need_num'));
 
         //推荐简历
