@@ -15,6 +15,12 @@ class CompanyResume extends Model
         'source_type',// 1:外包招聘进来的简历
         'source_recruit_id',//
         'source_entrust_id',//
+        'source_company_id',//
         'source_job_id',//
     ];
+
+    public function sourceCompany()
+    {
+        return $this->belongsTo('App\Models\Company','source_company_id');
+    }
 }

@@ -30,6 +30,10 @@ class ResumesRepository
         if($company){
             $_blacklist_resume_ids = CompanyResume::where('company_id', $company->id)->where('type', 3)->pluck('resume_id')->toArray();
             $_mark_resume_ids = CompanyResume::where('company_id', $company->id)->where('type', 3)->pluck('resume_id')->toArray();
+            $_source_resumes = CompanyResume::where('company_id', $company->id)->whereIn('source_type', [1])->get();
+            $_source_resumes->load('sourceCompany');
+            $source_resumes = $_source_resumes->keyBy('resume_id')->toArray();
+
             foreach ($data as &$v) {
                 if(in_array($v->id, $_blacklist_resume_ids)){
                     $v->in_blacklist = 1;
@@ -40,6 +44,12 @@ class ResumesRepository
                     $v->have_mark = 1;
                 }else{
                     $v->have_mark = 0;
+                }
+                if(isset($source_resumes[$v->id])){
+                    $_data = $source_resumes[$v->id];
+                    $v->source_text = $_data['source_company']['company_alias'].'推荐入职';
+                }else{
+                    $v->source_text = '简历添加';
                 }
             }
         }

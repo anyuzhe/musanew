@@ -197,6 +197,7 @@ class RecruitResumesRepository
                    'source_recruit_id'=>$recruit->id,
                    'source_entrust_id'=>$entrust->id,
                    'source_job_id'=>$recruit->job->id,
+                   'source_company_id'=>$entrust->company_id,
                    'creator_id'=>TokenRepository::getUser()->id,
                 ]);
             }
