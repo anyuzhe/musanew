@@ -30,23 +30,23 @@ class StatisticsRepository
 
         $company_recruit_entrust_ids = Entrust::where('company_id', $company->id)->whereNotIn('status', [-2,0])->pluck('id')->toArray();
         $company_job_recruit_ids = Entrust::where('company_id', $company->id)->whereNotIn('status', [-2,0])->pluck('company_job_recruit_id')->toArray();
-        $company_recruit_ids = RecruitResume::where('company_id', $company->id)->pluck('id')->toArray();
+        $company_recruit_ids = RecruitResume::where('company_id', $company->id)->whereNotNull('third_party_id')->pluck('id')->toArray();
 
         $all_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->count();
         $month_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->count();
         $month_people_count = (int)Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->sum('need_num');
 
         $month_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $company_recruit_entrust_ids)
-            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=',date('Y-m-31 23:59:59'))->count();
+            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
         $all_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $company_recruit_entrust_ids)->count();
 
         $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',6)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
-            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=',date('Y-m-31 23:59:59'))->count();
+            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
         $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',6)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
             ->count();
 
         $month_recommend_resume_entry_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
-            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=',date('Y-m-31 23:59:59'))->count();
+            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
         $all_recommend_resume_entry_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
             ->count();
         return compact('all_job_count', 'month_job_count', 'month_people_count',
