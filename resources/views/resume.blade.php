@@ -40,6 +40,8 @@
         span {
             text-overflow: ellipsis;
             white-space: normal;
+            text-indent: 32px;
+            display: inline-block;
         }
         body{
             width: 100%;
@@ -163,7 +165,7 @@
         </tr>
         <tr class="subTr">
             <td>工作描述</td>
-            <td colspan="4">&nbsp{!! $com['job_desc'] !!}</td>
+            <td colspan="4"><span>{!! $com['job_desc'] !!}</span></td>
         </tr>
     @endforeach
     <tr class="resumeHead">
@@ -187,7 +189,7 @@
         </tr>
         <tr class="subTr">
             <td>个人职责</td>
-            <td colspan="4">{!! $pro['responsibility'] !!}&nbsp;</td>
+            <td colspan="4"><span>{!! $pro['responsibility'] !!}</span>&nbsp;</td>
         </tr>
     @endforeach
     <tr class="resumeHead">
@@ -210,13 +212,13 @@
         <td colspan="5">自我评价</td>
     </tr>
     <tr class="subTr">
-        <td colspan="5">{!! $data['self_evaluation'] !!}</td>
+        <td colspan="5"><span>{!! $data['self_evaluation'] !!}</span></td>
     </tr>
     <tr class="resumeHead">
         <td colspan="5">外包评价</td>
     </tr>
     <tr class="subTr">
-        <td colspan="5">{!! $data['third_party_evaluation'] !!}</td>
+        <td colspan="5"><span>{!! $data['third_party_evaluation'] !!}</span></td>
     </tr>
 </table>
 </body>
