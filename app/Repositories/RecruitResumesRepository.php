@@ -193,6 +193,10 @@ class RecruitResumesRepository
                    'company_id'=>$entrust->company_id,
                    'resume_id'=>$resume->id,
                    'type'=>1,
+                   'source_type'=>1,
+                   'source_recruit_id'=>$recruit->id,
+                   'source_entrust_id'=>$entrust->id,
+                   'source_job_id'=>$recruit->job->id,
                    'creator_id'=>TokenRepository::getUser()->id,
                 ]);
             }
