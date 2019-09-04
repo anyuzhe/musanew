@@ -325,6 +325,7 @@ class RecruitResumesRepository
         $skills_score = 0;
         //单分
         $config_skill_score = 100/(DataMapOption::where('data_map_id',10)->count());
+        $config_skill_data = DataMapOption::where('data_map_id',10)->get()->keyBy('value')->toArray();
         foreach ($job->skills as $job_skill) {
             $_job_skill_name = $job_skill->name;
             $_job_skill_id = $job_skill->pivot->skill_id;
@@ -335,9 +336,9 @@ class RecruitResumesRepository
                 $skills_data[] = [
                     'skill_name'=>$_job_skill_name,
                     'job_level'=>$_job_skill_level,
-//                    'job_level_text'=>$job_skill->skill_level_text,
+                    'job_level_text'=>$config_skill_data[$_job_skill_level]['text'],
                     'resume_level'=>$resume_skill['skill_level'],
-//                    'resume_level_text'=>$resume_skill->skill_level_text,
+                    'resume_level_text'=>$config_skill_data[$resume_skill['skill_level']]['text'],
                     'sroce'=>$_score,
                 ];
                 $skills_score += (int)($_score/$job_skills_count);
@@ -346,9 +347,9 @@ class RecruitResumesRepository
                 $skills_data[] = [
                     'skill_name'=>$_job_skill_name,
                     'job_level'=>$_job_skill_level,
-//                    'job_level_text'=>$job_skill->skill_level_text,
+                    'job_level_text'=>$config_skill_data[$_job_skill_level]['text'],
                     'resume_level'=>0,
-//                    'resume_level_text'=>'无',
+                    'resume_level_text'=>'无',
                     'sroce'=>0,
                 ];
             }

@@ -68,6 +68,23 @@
             <td>技能分数</td>
             <td colspan="2">{!! $matching['skills_score'] !!}</td>
         </tr>
+        <tr class="resumeHead">
+            <td colspan="5">技能对比</td>
+        </tr>
+        @if(isset($matching['skills_data']) && count($matching['skills_data'])>0)
+            <tr class="subTr">
+                <td colspan="2">技能名称</td>
+                <td>需要水平</td>
+                <td>实际水平</td>
+                <td>分数</td>
+            </tr>
+            @foreach($matching['skills_data'] as $skill)
+                <td colspan="2">{!! $skill['skill_name'] !!}</td>
+                <td>{!! $skill['job_level_text'] !!}</td>
+                <td>{!! $skill['resume_level_text'] !!}</td>
+                <td>{!! $skill['sroce'] !!}</td>
+            @endforeach
+        @endif
     @endif
     <tr class="resumeHead">
         <td colspan="5">个人信息</td>
