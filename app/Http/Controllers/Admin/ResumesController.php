@@ -68,22 +68,6 @@ class ResumesController extends Controller
         } else {
             shell_exec("/usr/local/bin/wkhtmltopdf $html $path"); // linux  wkhtmltopdf 调用
         }
-//文件输出浏览器下载
-        function upload($path, $pdfName)
-        {
-            if (!file_exists($path)) {
-                echo '文件不存在';
-                exit;
-            }
-            $filename = realpath($path); //文件名
-            Header("Content-type:  application/octet-stream ");
-            Header("Accept-Ranges:  bytes ");
-            Header("Accept-Length: " . filesize($filename));
-            header("Content-Disposition:  attachment;  filename= $pdfName");
-            echo file_get_contents($filename);
-            readfile($filename);
-            unlink($path);
-        }
         upload($path, $resume->name.'的简历.pdf');
     }
 }

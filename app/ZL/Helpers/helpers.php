@@ -105,13 +105,6 @@ if (! function_exists('objToArray')) {
     }
 }
 
-if (! function_exists('triggerClassAddEvent')) {
-    function triggerClassAddEvent($user,$class,$date,$handler_name=false)
-    {
-        $handler_name = $handler_name?$handler_name:Auth::user()->name;
-    }
-}
-
 if (! function_exists('request_post')) {
     function request_post($url,$post_data = array()) {
         $ch = curl_init();
@@ -264,7 +257,7 @@ if (! function_exists('saveNotification')) {
     function saveNotification($data,$title='msg')
     {
         $data = json_encode($data,256);
-        
+
         \Illuminate\Support\Facades\DB::table('notifications')->insert([
             ['json' => $data, 'title' => $title, 'created_at' => date('Y-m-d H:i:s')],
         ]);
@@ -495,25 +488,7 @@ function getModelArray($table_name,$key,$value,$title,$where=[],callable $func=n
     return $data;
 }
 
-function getTrueName($name)
-{
-    $name_arr = explode('-', $name);
-    if(count($name_arr)>1)
-        $name = $name_arr[0];
-
-    $name_arr = explode('（', $name);
-    if(count($name_arr)>1)
-        $name = $name_arr[0];
-
-    $name_arr = explode('(', $name);
-    if(count($name_arr)>1)
-        $name = $name_arr[0];
-
-    $name_arr = explode('【', $name);
-    if(count($name_arr)>1)
-        $name = $name_arr[0];
-    return $name;
-}
+//-----------musa--start---------------
 
 function getMoodlePICURL($logo){
     global $CFG;
@@ -587,7 +562,7 @@ function getAge($birthday){
     return $age;
 }
 
-function substr_text($str, $start=0, $length, $charset="utf-8", $suffix="")
+function substr_text($str, $start, $length, $charset="utf-8", $suffix="")
 {
     if(function_exists("mb_substr")){
         return mb_substr($str, $start, $length, $charset).$suffix;
@@ -655,4 +630,21 @@ function sendLogsEmail($logs)
             }
         }
     }
+}
+
+//文件输出浏览器下载
+function upload($path, $pdfName)
+{
+    if (!file_exists($path)) {
+        echo '文件不存在';
+        exit;
+    }
+    $filename = realpath($path); //文件名
+    Header("Content-type:  application/octet-stream ");
+    Header("Accept-Ranges:  bytes ");
+    Header("Accept-Length: " . filesize($filename));
+    header("Content-Disposition:  attachment;  filename= $pdfName");
+    echo file_get_contents($filename);
+    readfile($filename);
+    unlink($path);
 }
