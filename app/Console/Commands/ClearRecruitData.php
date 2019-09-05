@@ -18,7 +18,7 @@ use App\Models\ResumeSkill;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class ClearData extends Command
+class ClearRecruitData extends Command
 {
     /**
      * The name and signature of the console command.

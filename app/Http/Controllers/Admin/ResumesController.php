@@ -22,7 +22,6 @@ class ResumesController extends Controller
         $data['educations'] = (new Collection($data['educations']))->sortByDesc('start_date')->values()->toArray();
         $data['projects'] = (new Collection($data['projects']))->sortByDesc('project_start')->values()->toArray();
         $data['companies'] = (new Collection($data['companies']))->sortByDesc('job_start')->values()->toArray();
-//        dd($data);
 
         $matching = null;
         $recruit_resume_id = request('recruit_resume_id');
@@ -32,6 +31,17 @@ class ResumesController extends Controller
                 $matching = app()->build(RecruitResumesRepository::class)->matching($recruitResume);
             }
         }
+        foreach ($data['companies'] as &$company) {
+            $company['job_desc'] = str_replace("\n","<br/>", $company['job_desc']);
+//            $job_desc = $company['job_desc'];
+//            dump($job_desc);
+//            $job_descs = explode("\n", $job_desc);
+//            dump($job_descs);
+//            $job_descs = explode("\r\n", $job_desc);
+//            dump($job_descs);
+        }
+//        dd($data);
+
         return view('resume', ['data'=>$data, 'matching'=>$matching]);
     }
 
@@ -42,9 +52,8 @@ class ResumesController extends Controller
         requireMoodleConfig();
         $moodleRoot = getMoodleRoot();
         $resume = Resume::find($id);
-
         set_time_limit(0);
-        $dir = $CFG->dataroot. '/estimate_pdf'; //放置pdf文件夹
+        $dir = $CFG->dataroot. '/pdf_files'; //放置pdf文件夹
         if (!file_exists($dir)) {
             if (!mkdir($dir, 0777, true)) { //创建和写入权限
                 echo '文件夹创建失败';

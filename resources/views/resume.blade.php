@@ -19,7 +19,8 @@
             background-color: #fff;
             border-collapse: collapse;
             border-color: #000;
-            max-width: 100px;
+            max-width: 1000px;
+            min-width: 600px;
         }
         .resumeHead {
             background-color: #959595;
@@ -40,8 +41,9 @@
         span {
             text-overflow: ellipsis;
             white-space: normal;
-            text-indent: 32px;
+            /*text-indent: 32px;*/
             display: inline-block;
+            word-break: break-all;
         }
         body{
             width: 100%;
