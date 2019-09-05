@@ -22,7 +22,6 @@ class ResumesController extends Controller
         $data['educations'] = (new Collection($data['educations']))->sortByDesc('start_date')->values()->toArray();
         $data['projects'] = (new Collection($data['projects']))->sortByDesc('project_start')->values()->toArray();
         $data['companies'] = (new Collection($data['companies']))->sortByDesc('job_start')->values()->toArray();
-//        dd($data);
 
         $matching = null;
         $recruit_resume_id = request('recruit_resume_id');
@@ -32,6 +31,17 @@ class ResumesController extends Controller
                 $matching = app()->build(RecruitResumesRepository::class)->matching($recruitResume);
             }
         }
+        foreach ($data['companies'] as &$company) {
+            $company['job_desc'] = str_replace("\n","<br/>", $company['job_desc']);
+//            $job_desc = $company['job_desc'];
+//            dump($job_desc);
+//            $job_descs = explode("\n", $job_desc);
+//            dump($job_descs);
+//            $job_descs = explode("\r\n", $job_desc);
+//            dump($job_descs);
+        }
+//        dd($data);
+
         return view('resume', ['data'=>$data, 'matching'=>$matching]);
     }
 

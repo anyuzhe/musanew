@@ -40,7 +40,7 @@
         span {
             text-overflow: ellipsis;
             white-space: normal;
-            text-indent: 32px;
+            /*text-indent: 32px;*/
             display: inline-block;
         }
         body{
