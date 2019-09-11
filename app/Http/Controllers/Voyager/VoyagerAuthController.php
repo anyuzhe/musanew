@@ -46,6 +46,33 @@ class VoyagerAuthController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    public function frontPostLogin(Request $request)
+    {
+        $this->validateLogin($request);
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->apiReturnJson(422,null,'登录太频繁');
+        }
+
+        $credentials = $this->credentials($request);
+
+        if ($this->guard()->attempt($credentials, $request->has('remember'))) {
+            return $this->apiReturnJson(0,['url'=>url('/admin')]);
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return $this->apiReturnJson(422,null,'账号或者密码错误');
+    }
+
     /*
      * Preempts $redirectTo member variable (from RedirectsUsers trait)
      */

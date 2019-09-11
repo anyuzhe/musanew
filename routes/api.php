@@ -67,6 +67,7 @@ dd(1);
 });
 
 //登陆
+$router->any('/admin/login', 'Voyager\VoyagerAuthController@frontPostLogin');
 $router->any('/user/login', 'API\LoginController@login');
 
 $router->any('/skip/course', 'API\LoginController@skipCourse');
