@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\ZL\ResponseLayout;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -57,13 +58,13 @@ class VoyagerAuthController extends Controller
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
 
-            return $this->apiReturnJson(422,null,'登录太频繁');
+            return ResponseLayout::apply(422,null,'登录太频繁');
         }
 
         $credentials = $this->credentials($request);
 
         if ($this->guard()->attempt($credentials, $request->has('remember'))) {
-            return $this->apiReturnJson(0,['url'=>url('/admin')]);
+            return ResponseLayout::apply(0,['url'=>url('/admin')]);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -71,7 +72,7 @@ class VoyagerAuthController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
-        return $this->apiReturnJson(422,null,'账号或者密码错误');
+        return ResponseLayout::apply(422,null,'账号或者密码错误');
     }
 
     /*
