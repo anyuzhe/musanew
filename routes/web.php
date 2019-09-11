@@ -70,7 +70,7 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
-Route::get('/api/admin/login', 'Voyager\VoyagerAuthController@frontPostLogin');
+Route::any('/api/admin/login', 'Voyager\VoyagerAuthController@frontPostLogin');
 
 Route::get('/resume/{id}', 'Admin\ResumesController@show');
 Route::get('/resume/dumpPdf/{id}', 'Admin\ResumesController@dumpPdf');
