@@ -64,6 +64,9 @@ class VoyagerAuthController extends Controller
         $credentials = $this->credentials($request);
 
         if ($this->guard()->attempt($credentials, $request->has('remember'))) {
+            $request->session()->regenerate();
+
+            $this->clearLoginAttempts($request);
             return ResponseLayout::apply(0,['url'=>url('/admin')]);
         }
 
