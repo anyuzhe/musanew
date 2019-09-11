@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Voyager;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Http\Controllers\Controller;
 
 class VoyagerAuthController extends Controller
 {
