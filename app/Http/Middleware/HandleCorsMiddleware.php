@@ -36,13 +36,13 @@ class HandleCorsMiddleware
 
             return $response;
         }else{
-//            if(isset($_SERVER['HTTP_ORIGIN']) || isset($_SERVER['APP_URL'])){
-//                $origin = isset($_SERVER['HTTP_ORIGIN'])?$_SERVER['HTTP_ORIGIN']:$_SERVER['APP_URL'];
-//                header("Access-Control-Allow-Origin: {$origin}");//APP_URL
-//            }else{
-//                header("Access-Control-Allow-Origin: *");
-//            }
-            header("Access-Control-Allow-Origin: *");
+            if(isset($_SERVER['HTTP_ORIGIN']) || isset($_SERVER['APP_URL'])){
+                $origin = isset($_SERVER['HTTP_ORIGIN'])?$_SERVER['HTTP_ORIGIN']:$_SERVER['APP_URL'];
+                header("Access-Control-Allow-Origin: {$origin}");//APP_URL
+            }else{
+                header("Access-Control-Allow-Origin: *");
+            }
+//            header("Access-Control-Allow-Origin: *");
             header("Access-Control-Allow-Credentials: true");
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS');
             header('Access-Control-Allow-Headers:X-Token,Token,token,x-requested-with,content-type,session-id,remember-token,x-csrf-token');
