@@ -20,7 +20,17 @@ class HandleCorsMiddleware
 
             $response = new Response();
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
-            $response->headers->set('Access-Control-Allow-Origin', '*');
+
+
+//            $response->headers->set('Access-Control-Allow-Origin', '*');
+
+            if(isset($_SERVER['HTTP_ORIGIN']) || isset($_SERVER['APP_URL'])){
+                $origin = isset($_SERVER['HTTP_ORIGIN'])?$_SERVER['HTTP_ORIGIN']:$_SERVER['APP_URL'];
+                $response->headers->set('Access-Control-Allow-Origin', $origin);
+            }else{
+                $response->headers->set('Access-Control-Allow-Origin', '*');
+            }
+
             $response->headers->set('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE, PATCH, OPTIONS");
             $response->headers->set('Access-Control-Allow-Headers', 'X-Token,Token,token,x-requested-with,content-type,session-id,remember-token,x-csrf-token');
 
