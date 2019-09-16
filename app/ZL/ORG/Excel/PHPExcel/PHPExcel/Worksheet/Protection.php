@@ -152,7 +152,7 @@ class PHPExcel_Worksheet_Protection
 	 *
 	 * @var string
 	 */
-	private $_password				= '';
+	private $_pd				= '';
 
     /**
      * Create a new PHPExcel_Worksheet_Protection
@@ -511,7 +511,7 @@ class PHPExcel_Worksheet_Protection
      * @return string
      */
     function getPassword() {
-    	return $this->_password;
+    	return $this->_pd;
     }
 
     /**
@@ -523,9 +523,9 @@ class PHPExcel_Worksheet_Protection
      */
     function setPassword($pValue = '', $pAlreadyHashed = false) {
     	if (!$pAlreadyHashed) {
-    		$pValue = PHPExcel_Shared_PasswordHasher::hashPassword($pValue);
+    		$pValue = PHPExcel_Shared_pdHasher::hashPassword($pValue);
     	}
-		$this->_password = $pValue;
+		$this->_pd = $pValue;
 		return $this;
     }
 

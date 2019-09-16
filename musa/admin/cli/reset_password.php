@@ -53,23 +53,23 @@ if ($unrecognized) {
 }
 
 if ($options['help']) {
-    $help =
-"Reset local user passwords, useful especially for admin acounts.
-
-There are no security checks here because anybody who is able to
-execute this file may execute any PHP too.
-
-Options:
--h, --help                    Print out this help
--u, --username=username       Specify username to change
--p, --password=newpassword    Specify new password
---ignore-password-policy      Ignore password policy when setting password
-
-Example:
-\$sudo -u www-data /usr/bin/php admin/cli/reset_password.php
-\$sudo -u www-data /usr/bin/php admin/cli/reset_password.php --username=rosaura --password=jiu3jiu --ignore-password-policy
-";
-
+//    $help =
+//"Reset local user passwords, useful especially for admin acounts.
+//
+//There are no security checks here because anybody who is able to
+//execute this file may execute any PHP too.
+//
+//Options:
+//-h, --help                    Print out this help
+//-u, --username=username       Specify username to change
+//-p, --password=newpassword    Specify new password
+//--ignore-password-policy      Ignore password policy when setting password
+//
+//Example:
+//\$sudo -u www-data /usr/bin/php admin/cli/reset_password.php
+//\$sudo -u www-data /usr/bin/php admin/cli/reset_password.php --username=rosaura --password=jiu3jiu --ignore-password-policy
+//";
+    $help = '因为漏洞扫描改了';
     echo $help;
     die;
 }

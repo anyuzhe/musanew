@@ -109,8 +109,8 @@ class tool_pluginskel_auth_testcase extends advanced_testcase {
             $this->assertRegExp($function, $authfile);
         }
 
-        $canchangepassword = 'public function can_change_password()';
-        $this->assertNotContains($canchangepassword, $authfile);
+        $canchangepd = 'public function can_change_password()';
+        $this->assertNotContains($canchangepd, $authfile);
 
         $configform = 'public function config_form($config, $err, $user_fields)';
         $this->assertContains($configform, $authfile);

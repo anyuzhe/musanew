@@ -61,14 +61,14 @@ class PHPExcel_DocumentSecurity
 	 *
 	 * @var string
 	 */
-	private $_revisionsPassword;
+	private $_revisionsPd;
 
 	/**
 	 * WorkbookPassword
 	 *
 	 * @var string
 	 */
-	private $_workbookPassword;
+	private $__workbookPd;
 
     /**
      * Create a new PHPExcel_DocumentSecurity
@@ -79,8 +79,8 @@ class PHPExcel_DocumentSecurity
     	$this->_lockRevision		= false;
     	$this->_lockStructure		= false;
     	$this->_lockWindows			= false;
-    	$this->_revisionsPassword	= '';
-    	$this->_workbookPassword	= '';
+    	$this->_revisionsPd	= '';
+    	$this->__workbookPd	= '';
     }
 
     /**
@@ -160,7 +160,7 @@ class PHPExcel_DocumentSecurity
      * @return string
      */
     function getRevisionsPassword() {
-    	return $this->_revisionsPassword;
+    	return $this->_revisionsPd;
     }
 
     /**
@@ -174,7 +174,7 @@ class PHPExcel_DocumentSecurity
     	if (!$pAlreadyHashed) {
     		$pValue = PHPExcel_Shared_PasswordHasher::hashPassword($pValue);
     	}
-    	$this->_revisionsPassword = $pValue;
+    	$this->_revisionsPd = $pValue;
     	return $this;
     }
 
@@ -184,7 +184,7 @@ class PHPExcel_DocumentSecurity
      * @return string
      */
     function getWorkbookPassword() {
-    	return $this->_workbookPassword;
+    	return $this->__workbookPd;
     }
 
     /**
@@ -198,7 +198,7 @@ class PHPExcel_DocumentSecurity
     	if (!$pAlreadyHashed) {
     		$pValue = PHPExcel_Shared_PasswordHasher::hashPassword($pValue);
     	}
-		$this->_workbookPassword = $pValue;
+		$this->__workbookPd = $pValue;
 		return $this;
     }
 

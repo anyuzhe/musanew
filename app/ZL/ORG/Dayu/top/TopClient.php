@@ -59,10 +59,10 @@ class TopClient
 		}
 		curl_setopt ( $ch, CURLOPT_USERAGENT, "top-sdk-php" );
 		//https 请求
-		if(strlen($url) > 5 && strtolower(substr($url,0,5)) == "https" ) {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		}
+//		if(strlen($url) > 5 && strtolower(substr($url,0,5)) == "https" ) {
+//			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+//		}
 
 		if (is_array($postFields) && 0 < count($postFields))
 		{
@@ -72,7 +72,7 @@ class TopClient
 			{
 				if("@" != substr($v, 0, 1))//判断是不是文件上传
 				{
-					$postBodyString .= "$k=" . urlencode($v) . "&"; 
+					$postBodyString .= "$k=" . urlencode($v) . "&";
 				}
 				else//文件上传用multipart/form-data，否则用www-form-urlencoded
 				{
@@ -93,7 +93,7 @@ class TopClient
 			}
 		}
 		$reponse = curl_exec($ch);
-		
+
 		if (curl_errno($ch))
 		{
 			throw new Exception(curl_error($ch),0);
@@ -132,7 +132,7 @@ class TopClient
 
 	public function execute($request, $session = null,$bestUrl = null)
 	{
-		$result =  new ResultSet(); 
+		$result =  new ResultSet();
 		if($this->checkRequest) {
 			try {
 				$request->check();
