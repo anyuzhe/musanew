@@ -185,7 +185,7 @@ class CommonController extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36');
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//ssl验证
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//ssl验证
         $output = curl_exec($ch);
         if ($output === FALSE) {
             return "CURL Error:" . curl_error($ch);
@@ -210,7 +210,7 @@ class CommonController extends Controller
         //curl_setopt($ch, CURLOPT_HEADER,1); //定义是否显示状态头 1：显示 ； 0：不显示
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);//定义header
         curl_setopt($ch, CURLOPT_POSTFIELDS, $put_data); //定义提交的数据
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $output = curl_exec($ch);
         if ($output === FALSE) {
             return "CURL Error:" . curl_error($ch);
@@ -265,7 +265,7 @@ class CommonController extends Controller
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 16);
         curl_setopt($ch, CURLOPT_TIMEOUT, 300);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $output = curl_exec($ch);
         if ($output === FALSE) {
             return "CURL Error:" . curl_error($ch);
