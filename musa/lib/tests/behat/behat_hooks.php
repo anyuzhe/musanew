@@ -495,7 +495,7 @@ class behat_hooks extends behat_base {
                 break;
             } catch (DriverException $e) {
                 // Wait for timeout and try again.
-                sleep(self::TIMEOUT);
+//                sleep(self::TIMEOUT);
             }
         }
         // If session is not restarted above then it will try to start session before next scenario

@@ -80,7 +80,7 @@ class GoogleSpell extends SpellChecker {
 			curl_setopt($ch, CURLOPT_URL,$url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $header);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+//			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 			if (!empty($this->_config['GoogleSpell.proxyhost'])) {
 				if (!empty($this->_config['GoogleSpell.proxytype']) and ($this->_config['GoogleSpell.proxytype'] === 'SOCKS5')) {
                     curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);

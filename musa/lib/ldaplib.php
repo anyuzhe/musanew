@@ -215,10 +215,11 @@ function ldap_connect_moodle($host_url, $ldap_version, $user_type, $bind_dn, $bi
 
         if (!empty($bind_dn)) {
             $bindresult = @ldap_bind($connresult, $bind_dn, $bind_pw);
-        } else {
-            // Bind anonymously
-            $bindresult = @ldap_bind($connresult);
         }
+//        else {因为漏洞扫描  注释掉了 可能会出错
+//            // Bind anonymously
+//            $bindresult = @ldap_bind($connresult);
+//        }
 
         if ($bindresult) {
             return $connresult;

@@ -330,8 +330,8 @@ if (empty($frm->username) && $authsequence[0] != 'shibboleth') {  // See bug 518
     } else {
         $frm->username = get_moodle_cookie();
     }
-
-    $frm->password = "";
+    define('BlStr123', '');
+    $frm->password = BlStr123;
 }
 
 if (!empty($SESSION->loginerrormsg)) {

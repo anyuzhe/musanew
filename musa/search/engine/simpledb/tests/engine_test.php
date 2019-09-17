@@ -113,7 +113,7 @@ class search_simpledb_engine_testcase extends advanced_testcase {
         $this->assertTrue($this->search->index());
 
         // Not anymore as everything was already added.
-        sleep(1);
+//        sleep(1);
         $this->assertFalse($this->search->index());
 
         $this->generator->create_record();
@@ -152,9 +152,9 @@ class search_simpledb_engine_testcase extends advanced_testcase {
         $this->assertCount(0, $this->search->search($querydata));
         $querydata->q = 'message';
 
-        sleep(1);
+//        sleep(1);
         $beforeadding = time();
-        sleep(1);
+//        sleep(1);
         $this->generator->create_record();
         $this->search->index();
         $this->update_index();

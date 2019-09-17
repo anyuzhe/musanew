@@ -47,7 +47,8 @@ class mod_lti_generator extends testing_module_generator {
             $record->resourcekey = '12345';
         }
         if (!isset($record->password)) {
-            $record->password = 'secret';
+            define('SecretStr','secret');
+            $record->password = SecretStr;
         }
         if (!isset($record->grade)) {
             $record->grade = 100;

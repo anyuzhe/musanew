@@ -9150,9 +9150,9 @@ function mtrace($string, $eol = "\n", $sleep = 0)
     flush();
 
     // Delay to keep message on user's screen in case of subsequent redirect.
-    if ($sleep) {
-        sleep($sleep);
-    }
+//    if ($sleep) {
+//        sleep($sleep);
+//    }
 }
 
 /**

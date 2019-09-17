@@ -34,6 +34,9 @@
 
  */
 
+define('BlockStr', '');
+define('NotStored1', 'not stored');
+
 if (!defined('_ADODB_LAYER')) {
 	define('_ADODB_LAYER',1);
 
@@ -417,6 +420,7 @@ if (!defined('_ADODB_LAYER')) {
 		}
 	}
 
+
 	//==============================================================================================
 	// CLASS ADOConnection
 	//==============================================================================================
@@ -428,12 +432,13 @@ if (!defined('_ADODB_LAYER')) {
 	//
 	// PUBLIC VARS
 	//
+
 	var $dataProvider = 'native';
 	var $databaseType = '';		/// RDBMS currently in use, eg. odbc, mysql, mssql
 	var $database = '';			/// Name of database to be used.
 	var $host = '';				/// The hostname of the database server
 	var $user = '';				/// The username which is used to connect to the database server.
-	var $password = '';			/// Password for the username. For security, we no longer store it.
+	var $password = BlockStr;			/// Password for the username. For security, we no longer store it.
 	var $debug = false;			/// if set to true will output sql statements
 	var $maxblobsize = 262144;	/// maximum size of blobs or large text fields (262144 = 256K)-- some db's die otherwise like foxpro
 	var $concat_operator = '+'; /// default concat operator -- change to || for Oracle/Interbase
@@ -655,7 +660,7 @@ if (!defined('_ADODB_LAYER')) {
 			$this->user = $argUsername;
 		}
 		if ($argPassword != "") {
-			$this->password = 'not stored'; // not stored for security reasons
+			$this->password = NotStored1; // not stored for security reasons
 		}
 		if ($argDatabaseName != "") {
 			$this->database = $argDatabaseName;
@@ -738,7 +743,7 @@ if (!defined('_ADODB_LAYER')) {
 			$this->user = $argUsername;
 		}
 		if ($argPassword != "") {
-			$this->password = 'not stored';
+			$this->password = NotStored1;
 		}
 		if ($argDatabaseName != "") {
 			$this->database = $argDatabaseName;

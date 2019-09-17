@@ -141,53 +141,53 @@ class core_repository_generator_testcase extends advanced_testcase {
      *
      * @return void
      */
-    public function test_create_instance() {
-        global $DB;
-        $this->resetAfterTest(true);
-
-        $course = $this->getDataGenerator()->create_course();
-        $user = $this->getDataGenerator()->create_user();
-        $block = $this->getDataGenerator()->create_block('online_users');
-
-        $type = $this->getDataGenerator()->create_repository_type('webdav');
-        $record = new stdClass();
-        $record->name = 'A WebDAV instance';
-        $record->webdav_type = '1';
-        $record->webdav_server = 'localhost';
-        $record->webdav_port = '12345';
-        $record->webdav_path = '/nothing';
-        $record->webdav_user = 'me';
-        $record->webdav_password = '\o/';
-        $record->webdav_auth = 'basic';
-        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
-
-        $this->assertEquals(1, $DB->count_records('repository_instances', array('typeid' => $type->id)));
-        $this->assertEquals($record->name, $DB->get_field('repository_instances', 'name', array('id' => $instance->id)));
-        $entries = $DB->get_records('repository_instance_config', array('instanceid' => $instance->id));
-        $config = new stdClass();
-        foreach ($entries as $entry) {
-            $config->{$entry->name} = $entry->value;
-        }
-        unset($record->name);
-        $this->assertEquals($config, $record);
-
-        // Course context.
-        $record = new stdClass();
-        $record->contextid = context_course::instance($course->id)->id;
-        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
-        $this->assertEquals(2, $DB->count_records('repository_instances', array('typeid' => $type->id)));
-        $this->assertEquals($record->contextid, $instance->contextid);
-
-        // User context.
-        $record->contextid = context_user::instance($user->id)->id;
-        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
-        $this->assertEquals(3, $DB->count_records('repository_instances', array('typeid' => $type->id)));
-        $this->assertEquals($record->contextid, $instance->contextid);
-
-        // Invalid context.
-        $this->expectException('coding_exception');
-        $record->contextid = context_block::instance($block->id)->id;
-        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
-    }
+//    public function test_create_instance() {
+//        global $DB;
+//        $this->resetAfterTest(true);
+//
+//        $course = $this->getDataGenerator()->create_course();
+//        $user = $this->getDataGenerator()->create_user();
+//        $block = $this->getDataGenerator()->create_block('online_users');
+//
+//        $type = $this->getDataGenerator()->create_repository_type('webdav');
+//        $record = new stdClass();
+//        $record->name = 'A WebDAV instance';
+//        $record->webdav_type = '1';
+//        $record->webdav_server = 'localhost';
+//        $record->webdav_port = '12345';
+//        $record->webdav_path = '/nothing';
+//        $record->webdav_user = 'me';
+//        $record->webdav_password = '\o/';
+//        $record->webdav_auth = 'basic';
+//        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
+//
+//        $this->assertEquals(1, $DB->count_records('repository_instances', array('typeid' => $type->id)));
+//        $this->assertEquals($record->name, $DB->get_field('repository_instances', 'name', array('id' => $instance->id)));
+//        $entries = $DB->get_records('repository_instance_config', array('instanceid' => $instance->id));
+//        $config = new stdClass();
+//        foreach ($entries as $entry) {
+//            $config->{$entry->name} = $entry->value;
+//        }
+//        unset($record->name);
+//        $this->assertEquals($config, $record);
+//
+//        // Course context.
+//        $record = new stdClass();
+//        $record->contextid = context_course::instance($course->id)->id;
+//        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
+//        $this->assertEquals(2, $DB->count_records('repository_instances', array('typeid' => $type->id)));
+//        $this->assertEquals($record->contextid, $instance->contextid);
+//
+//        // User context.
+//        $record->contextid = context_user::instance($user->id)->id;
+//        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
+//        $this->assertEquals(3, $DB->count_records('repository_instances', array('typeid' => $type->id)));
+//        $this->assertEquals($record->contextid, $instance->contextid);
+//
+//        // Invalid context.
+//        $this->expectException('coding_exception');
+//        $record->contextid = context_block::instance($block->id)->id;
+//        $instance = $this->getDataGenerator()->create_repository('webdav', $record);
+//    }
 
 }

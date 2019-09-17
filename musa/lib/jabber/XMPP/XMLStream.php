@@ -316,7 +316,7 @@ class XMPPHP_XMLStream {
 				$this->log->log("Could not connect.",  XMPPHP_Log::LEVEL_ERROR);
 				$this->disconnected = true;
 				# Take it easy for a few seconds
-				sleep(min($timeout, 5));
+//				sleep(min($timeout, 5));
 			}
 		} while (!$this->socket && (time() - $starttime) < $timeout);
 		

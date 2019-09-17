@@ -254,14 +254,15 @@ class behat_general extends behat_base {
     public function i_wait_seconds($seconds) {
         if ($this->running_javascript()) {
             $this->getSession()->wait($seconds * 1000);
-        } else {
-            sleep($seconds);
         }
+//        else {
+//            sleep($seconds);
+//        }
     }
 
     /**
      * Waits until the page is completely loaded. This step is auto-executed after every step.
-     *
+     *musa/lib/tests/behat/behat_hooks.php
      * @Given /^I wait until the page is ready$/
      */
     public function wait_until_the_page_is_ready() {

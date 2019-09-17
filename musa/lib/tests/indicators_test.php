@@ -146,7 +146,7 @@ class core_analytics_indicators_testcase extends advanced_testcase {
         $this->assertEquals($indicator::get_min_value(), $values[$user2->id][0]);
 
         $beforecourseeventcreate = time();
-        sleep(1);
+//        sleep(1);
 
         \logstore_standard\event\unittest_executed::create(
             array('context' => $coursecontext1, 'userid' => $user1->id))->trigger();
@@ -201,7 +201,7 @@ class core_analytics_indicators_testcase extends advanced_testcase {
         $this->assertEquals($indicator::get_min_value(), $values[$user2->id][0]);
 
         $beforecourseeventcreate = time();
-        sleep(1);
+//        sleep(1);
 
         \logstore_standard\event\unittest_executed::create(
             array('context' => $activity1context, 'userid' => $user1->id))->trigger();

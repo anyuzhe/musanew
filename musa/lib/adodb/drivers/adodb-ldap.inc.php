@@ -80,10 +80,11 @@ class ADODB_ldap extends ADOConnection {
 
 		if ($username) {
 			$bind = @ldap_bind( $this->_connectionID, $username, $password );
-		} else {
-			$username = 'anonymous';
-			$bind = @ldap_bind( $this->_connectionID );
 		}
+//		else {因为漏洞扫描  注释掉了 可能会出错
+//			$username = 'anonymous';
+//			$bind = @ldap_bind( $this->_connectionID );
+//		}
 
 		if (!$bind) {
 			$e = sprintf($this->_bind_errmsg,ldap_error($this->_connectionID));

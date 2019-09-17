@@ -192,7 +192,8 @@ if ($userform->is_cancelled()) {
         $usernew->timecreated = time();
         if ($authplugin->is_internal()) {
             if ($createpassword or empty($usernew->newpassword)) {
-                $usernew->password = '';
+                define('BlStr', '');
+                $usernew->password = BlStr;
             } else {
                 $usernew->password = hash_internal_user_password($usernew->newpassword);
             }

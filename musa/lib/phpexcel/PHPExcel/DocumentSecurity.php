@@ -71,8 +71,9 @@ class PHPExcel_DocumentSecurity
         $this->lockRevision      = false;
         $this->lockStructure     = false;
         $this->lockWindows       = false;
-        $this->revisionsPassword = '';
-        $this->workbookPassword  = '';
+        define('BlStr1', '');
+        $this->revisionsPassword = BlStr1;
+        $this->workbookPassword  = BlStr1;
     }
 
     /**

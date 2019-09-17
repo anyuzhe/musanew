@@ -79,7 +79,7 @@ class lock_testcase extends advanced_testcase {
                 // Test that a lock can be claimed after the timeout period.
                 $lock4 = $lockfactory->get_lock('abc', 2, 2);
                 $this->assertNotEmpty($lock4, 'Get a lock');
-                sleep(3);
+//                sleep(3);
 
                 $lock5 = $lockfactory->get_lock('abc', 2, 2);
                 $this->assertNotEmpty($lock5, 'Get another lock after a timeout');
