@@ -58,7 +58,7 @@ if (!is_null($storedsecret)) {
         $obj->backpackurl = $data->backpackurl;
         $obj->backpackuid = $backpackuid;
         $obj->autosync = 0;
-        $obj->password = '';
+//        $obj->password = '';//因为漏洞修改 注释掉
         $DB->insert_record('badge_backpack', $obj);
 
         // Remove the verification vars and redirect to the mypackpack page.

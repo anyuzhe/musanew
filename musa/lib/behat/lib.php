@@ -522,9 +522,9 @@ function cli_execute_parallel($cmds, $cwd = null, $delay = 0) {
         }
 
         // Sleep for specified delay.
-        if ($delay) {
-            sleep($delay);
-        }
+//        if ($delay) {
+//            sleep($delay);
+//        }
     }
     return $processes;
 }

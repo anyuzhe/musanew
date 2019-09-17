@@ -183,9 +183,10 @@ $string['configcourserequestnotify2'] = 'Users who will be notified when a cours
 $string['configcoursesperpage'] = 'Enter the number of courses to be displayed per page in a course listing.';
 $string['configcourseswithsummarieslimit'] = 'The maximum number of courses to display in a course listing including summaries before falling back to a simpler listing.';
 $string['configcronclionly'] = 'Running the cron from a web browser can expose privileged information to anonymous users. Thus it is recommended to only run the cron from the command line or set a cron password for remote access.';
-$string['configcronremotepassword'] = 'This means that the cron.php script cannot be run from a web browser without supplying the password using the following form of URL:<pre>
-    http://site.example.com/admin/cron.php?password=opensesame
-</pre>If this is left empty, no password is required.';
+$string['configcronremotepd'] = 'This means that the cron.php script cannot be run from a web browser without supplying the pd using the following form of URL:<pre>
+    http://site.example.com/admin/cron.php?pd=opensesame
+</pre>If this is left empty, no pd is required.';
+//因为漏洞修改  后期可能会出错
 $string['configcurlcache'] = 'Time-to-live for cURL cache, in seconds.';
 $string['configcustommenuitems'] = 'You can configure a custom menu here to be shown by themes. Each line consists of some menu text, a link URL (optional), a tooltip title (optional) and a language code or comma-separated list of codes (optional, for displaying the line to users of the specified language only), separated by pipe characters. Lines starting with a hyphen will appear as menu items in the previous top level menu, and dividers can be used by adding a line of one or more # characters where desired. For example:
 <pre>

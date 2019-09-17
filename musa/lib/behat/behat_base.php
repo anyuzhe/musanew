@@ -339,13 +339,13 @@ class behat_base extends Behat\MinkExtension\Context\RawMinkContext {
                 }
             }
 
-            if ($this->running_javascript()) {
-                if ($microsleep) {
-                    usleep(100000);
-                } else {
-                    sleep(1);
-                }
-            }
+//            if ($this->running_javascript()) {
+//                if ($microsleep) {
+//                    usleep(100000);
+//                } else {
+//                    sleep(1);
+//                }
+//            }
         }
 
         // Using coding_exception as is a development issue if no exception has been provided.

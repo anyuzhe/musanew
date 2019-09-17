@@ -360,7 +360,7 @@ Committed_AS:   348732 kB
 			return (integer) $info[0];
 		}else {
 			if (empty($this->_lastLoad)) {
-				sleep(1);
+//				sleep(1);
 				$this->_lastLoad = $info;
 				$info = $this->_CPULoad();
 			}
@@ -779,7 +779,7 @@ Committed_AS:   348732 kB
 		$arro = $this->PollParameters();
 		$cnt = 0;
 		set_time_limit(0);
-		sleep($secs);
+//		sleep($secs);
 		while (1) {
 
 			$arr = $this->PollParameters();
@@ -804,7 +804,7 @@ Committed_AS:   348732 kB
 
 			if (connection_aborted()) return;
 
-			sleep($secs);
+//			sleep($secs);
 			$arro = $arr;
 		}
 	}

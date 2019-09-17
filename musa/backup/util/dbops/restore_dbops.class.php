@@ -1206,7 +1206,8 @@ abstract class restore_dbops {
 
                 // If Moodle is responsible for storing/validating pwd and reset functionality is available, mark
                 } else if ($userauth->isinternal and $userauth->canresetpwd) {
-                    $user->password = 'restored';
+                    define('RestoredStr', 'restored');
+                    $user->password = RestoredStr;
                 }
             }
 

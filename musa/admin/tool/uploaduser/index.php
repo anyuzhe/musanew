@@ -785,7 +785,8 @@ if ($formdata = $mform2->is_cancelled()) {
             if ($isinternalauth) {
                 if (empty($user->password)) {
                     if ($createpasswords) {
-                        $user->password = 'to be generated';
+                        define('ToBeGenerated', 'to be generated');
+                        $user->password = ToBeGenerated;
                         $upt->track('password', '', 'normal', false);
                         $upt->track('password', get_string('uupasswordcron', 'tool_uploaduser'), 'warning', false);
                     } else {

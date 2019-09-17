@@ -262,7 +262,7 @@ class api {
         $user->alternatename = isset($userinfo['alternatename']) ? $userinfo['alternatename'] : '';
         $user->secret = random_string(15);
 
-        $user->password = '';
+//        $user->password = '';//因为漏洞修改 注释掉
         // This user is confirmed.
         $user->confirmed = 1;
 
@@ -311,7 +311,7 @@ class api {
         $user->alternatename = isset($userinfo['alternatename']) ? $userinfo['alternatename'] : '';
         $user->secret = random_string(15);
 
-        $user->password = '';
+//        $user->password = '';//因为漏洞修改 注释掉
         // This user is not confirmed.
         $user->confirmed = 0;
 

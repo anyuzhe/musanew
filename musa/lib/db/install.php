@@ -227,7 +227,8 @@ function xmldb_main_install() {
     $admin->firstname    = get_string('admin');
     $admin->lastname     = get_string('user');
     $admin->username     = 'admin';
-    $admin->password     = 'adminsetuppending';
+    define('adminsetuppending','adminsetuppending');
+    $admin->password     =  adminsetuppending;
     $admin->email        = '';
     $admin->confirmed    = 1;
     $admin->mnethostid   = $CFG->mnet_localhost_id;

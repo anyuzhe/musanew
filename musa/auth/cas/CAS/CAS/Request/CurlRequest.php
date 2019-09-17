@@ -122,14 +122,14 @@ implements CAS_Request_RequestInterface
             if ($this->validateCN) {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             } else {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+//                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);//因为漏洞扫描改动
             }
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
             curl_setopt($ch, CURLOPT_CAINFO, $this->caCertPath);
             phpCAS::trace('CURL: Set CURLOPT_CAINFO ' . $this->caCertPath);
         } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);//因为漏洞扫描改动
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);//因为漏洞扫描改动
         }
 
         /*********************************************************

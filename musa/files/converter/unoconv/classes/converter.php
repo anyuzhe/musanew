@@ -206,7 +206,7 @@ class converter implements \core_files\converter_interface {
         // Convert the doc file to the target format and send it direct to the browser.
         $this->start_document_conversion($conversion);
         do {
-            sleep(1);
+//            sleep(1);
             $this->poll_conversion_status($conversion);
             $status = $conversion->get('status');
         } while ($status !== conversion::STATUS_COMPLETE && $status !== conversion::STATUS_FAILED);
