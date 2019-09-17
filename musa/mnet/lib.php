@@ -68,8 +68,8 @@ function mnet_get_public_key($uri, $application=null) {
     curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle');
     curl_setopt($ch, CURLOPT_POSTFIELDS, $rq);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+//    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
     // check for proxy
     if (!empty($CFG->proxyhost) and !is_proxybypass($uri)) {

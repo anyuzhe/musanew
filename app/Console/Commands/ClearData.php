@@ -39,10 +39,10 @@ class ClearData extends Command
      *
      * @return void
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+//    public function __construct()app/Console/Commands/ClearRecruitData.php
+//    {
+//        parent::__construct();
+//    }
 
     /**
      * Execute the console command.

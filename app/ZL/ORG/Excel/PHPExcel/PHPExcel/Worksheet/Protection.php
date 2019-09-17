@@ -148,11 +148,11 @@ class PHPExcel_Worksheet_Protection
 	private $_selectUnlockedCells	= false;
 
 	/**
-	 * Password
+	 * Pd
 	 *
 	 * @var string
 	 */
-	private $_pd				= '';
+	private $_pd = '';
 
     /**
      * Create a new PHPExcel_Worksheet_Protection

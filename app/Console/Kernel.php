@@ -50,26 +50,30 @@ class Kernel extends ConsoleKernel
             foreach ($recruitResumeLogs as $recruitResumeLog) {
                 $recruitResumeLog->is_send_email = 1;
                 $recruitResumeLog->save();
-                if(in_array($recruitResumeLog->company_job_recruit_resume_id, $recruitResumeHasIds)===false){
-                    $recruitResume = $recruitResumeLog->recruitResume;
-                    //给负责人发送邮件通知
-                    $recruit = $recruitResume->recruit;
-                    if($recruit->leading_id && $leading = User::find($recruit->leading_id)){
-                        if($leading->email){
-                            $recruitResume->leading = $leading;
-                            if(!isset($recruits[$recruit->id])){
-                                $recruit->count = 0;
-                                $recruit->resumes = [];
-                                $recruits[$recruit->id] = $recruit;
-                            }
-                            $resume = $recruitResume->resume;
-                            $resume->recruit_resume_id = $recruitResume->id;
-                            $resumes = $recruits[$recruit->id]->resumes;
-                            $resumes[] = $resume;
-                            $recruits[$recruit->id]->resumes = $resumes;
-                            $recruit->count++;
-                        }
+                if(in_array($recruitResumeLog->company_job_recruit_resume_id, $recruitResumeHasIds)!==false){
+                    continue;
+                }
+                $recruitResume = $recruitResumeLog->recruitResume;
+                //给负责人发送邮件通知
+                $recruit = $recruitResume->recruit;
+                if($recruit->leading_id){
+                    $leading = User::find($recruit->leading_id);
+                }else{
+                    $leading = null;
+                }
+                if($leading && $leading->email){
+                    $recruitResume->leading = $leading;
+                    if(!isset($recruits[$recruit->id])){
+                        $recruit->count = 0;
+                        $recruit->resumes = [];
+                        $recruits[$recruit->id] = $recruit;
                     }
+                    $resume = $recruitResume->resume;
+                    $resume->recruit_resume_id = $recruitResume->id;
+                    $resumes = $recruits[$recruit->id]->resumes;
+                    $resumes[] = $resume;
+                    $recruits[$recruit->id]->resumes = $resumes;
+                    $recruit->count++;
                 }
             }
             foreach ($recruits as $recruit) {

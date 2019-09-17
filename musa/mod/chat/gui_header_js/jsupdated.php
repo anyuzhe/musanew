@@ -132,7 +132,7 @@ for ($n = 0; $n <= CHAT_MAX_CLIENT_UPDATES; $n++) {
         $chatnewlastid   = 0;
         print " \n";
         print $CHAT_DUMMY_DATA;
-        sleep($CFG->chat_refresh_room);
+//        sleep($CFG->chat_refresh_room);
         continue;
     }
 
@@ -163,7 +163,7 @@ for ($n = 0; $n <= CHAT_MAX_CLIENT_UPDATES; $n++) {
     } else {
         print " \n";
         print $CHAT_DUMMY_DATA;
-        sleep($CFG->chat_refresh_room);
+//        sleep($CFG->chat_refresh_room);
         continue;
     }
 
@@ -230,7 +230,7 @@ EOD;
         print '</script>';
     }
     print $CHAT_DUMMY_DATA;
-    sleep($CFG->chat_refresh_room);
+//    sleep($CFG->chat_refresh_room);
 } // Here ends the for() loop.
 
 // Here & should be written & :-D.

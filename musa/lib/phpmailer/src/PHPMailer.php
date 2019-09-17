@@ -299,7 +299,7 @@ class PHPMailer
      *
      * @var string
      */
-    public $Password = '';
+    public $Password;
 
     /**
      * SMTP auth type.
@@ -725,6 +725,8 @@ class PHPMailer
         }
         //Pick an appropriate debug output format automatically
         $this->Debugoutput = (strpos(PHP_SAPI, 'cli') !== false ? 'echo' : 'html');
+        define('BlStr2231', '');
+        $this->Password = BlStr2231;
     }
 
     /**

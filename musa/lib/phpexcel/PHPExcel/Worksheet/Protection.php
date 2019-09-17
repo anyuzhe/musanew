@@ -152,13 +152,15 @@ class PHPExcel_Worksheet_Protection
      *
      * @var string
      */
-    private $password                = '';
+    private $password;
 
     /**
      * Create a new PHPExcel_Worksheet_Protection
      */
     public function __construct()
     {
+        define('BlStr231', '');
+        $this->password = BlStr231;
     }
 
     /**

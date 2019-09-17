@@ -27,10 +27,10 @@ class ExcelTest extends Command
      *
      * @return void
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+//    public function __construct()
+//    {
+//        parent::__construct();
+//    }
 
     /**
      * Execute the console command.
@@ -41,7 +41,7 @@ class ExcelTest extends Command
     {
         $dir = dirname(__FILE__);
         $file = $dir.'/../../../'.'1234.xlsx';
-        $excel = new ExcelHelper();
+//        $excel = new ExcelHelper();
         $arr = ExcelHelper::getArr($file);
 
         $level1 = null;
