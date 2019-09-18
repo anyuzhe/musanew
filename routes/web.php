@@ -12,6 +12,7 @@
 */
 
 use App\Models\RecruitResumeLog;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     echo phpinfo();
@@ -20,7 +21,24 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-    $data = RecruitResumeLog::where('company_job_recruit_resume_id',13)->orderBy('id','asc')->groupBy('company_job_recruit_resume_id')->get()->toArray();
+
+    $file = Storage::disk(config('voyager.storage.disk'))->get('/resumes/doc.NO.4.docx');
+    $data = [
+        'filename'=>'doc.NO.4.docx',
+        'content'=>base64_encode((string)$file),
+        'need_avatar'=>0
+    ];
+    $headers = [
+        'X-API-KEY: izrNtgTds8XEi3fwvJu88klg6X9Im9Jx'
+    ];
+    $url = "https://www.belloai.com/v2/open/resume/parse";
+    $res = http_post_json($url, json_encode($data, 256) ,$headers);
+
+    if($res[0]=='200'){
+        $array = json_decode($res[1], true);
+        dd($array);
+    }
+    dd($res);    $data = RecruitResumeLog::where('company_job_recruit_resume_id',13)->orderBy('id','asc')->groupBy('company_job_recruit_resume_id')->get()->toArray();
     dd($data);
     dd(1);
     $log = \App\Models\RecruitResumeLog::where('id',1)->orderBy('id', 'desc')->first();

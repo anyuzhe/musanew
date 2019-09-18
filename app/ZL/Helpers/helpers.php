@@ -421,18 +421,26 @@ if (! function_exists('postCurl')) {
     }
 }
 
-function http_post_json($url, $jsonStr)
+function http_post_json($url, $jsonStr,$headers=null)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonStr);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    if($headers){
+        $headers = array_merge($headers, [
             'Content-Type: application/json; charset=utf-8',
             'Content-Length: ' . strlen($jsonStr)
-        )
-    );
+        ]);
+    }else{
+        $headers = [
+            'Content-Type: application/json; charset=utf-8',
+            'Content-Length: ' . strlen($jsonStr)
+        ];
+    }
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
