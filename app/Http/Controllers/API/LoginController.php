@@ -14,8 +14,8 @@ class LoginController extends CommonController
     public function test()
     {
         $this->requireMoodleConfig();
-        dump($CFG->tokenduration);
-        dump(date('Y-m-d H:i;s'));
+//        dump($CFG->tokenduration);
+//        dump(date('Y-m-d H:i;s'));
     }
 
     public function skipCourse()
@@ -203,10 +203,10 @@ class LoginController extends CommonController
 //            print_error('auth_emailnoemail', 'auth_email');
 //        }
 
-        if ($notify) {
+//        if ($notify) {
             return true;
-        } else {
-            return true;
-        }
+//        } else {
+//            return true;
+//        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\Recruit;
 use App\Models\RecruitResume;
+use App\Models\Resume;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -38,7 +39,7 @@ class RecruitResumeUntreatedEmail extends Mailable
         foreach ($this->resumes as $resume) {
             //查找重复
             $resumeIds = Resume::where('name', $resume->name)->where('id','!=',$resume->id)->pluck()->toArray();
-            $has = RecruitResume::whereIn('resume_id', $resumeIds)->where('company_job_recruit_id', $log->company_job_recruit_id)->get();
+            $has = RecruitResume::whereIn('resume_id', $resumeIds)->where('company_job_recruit_id', $recruit->id)->get();
             if($has){
                 $has_text = '<span style="color: red">(可能是重复简历)</span>';
             }else{

@@ -72,10 +72,10 @@ class UserHelper
 //            print_error('auth_emailnoemail', 'auth_email');
 //        }
 
-        if ($notify) {
+//        if ($notify) {
+//            return true;
+//        } else {
             return true;
-        } else {
-            return true;
-        }
+//        }
     }
 }
