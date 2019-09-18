@@ -45,6 +45,11 @@ class ResumesController extends Controller
         return view('resume', ['data'=>$data, 'matching'=>$matching]);
     }
 
+    public function uploadTest()
+    {
+        return view('uploadTest');
+    }
+
     public function dumpPdf($id)
     {
         $recruit_resume_id = request('recruit_resume_id');

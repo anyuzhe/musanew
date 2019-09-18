@@ -31,9 +31,10 @@ class HttpHelper
 		}
 		//https request
 		if(strlen($url) > 5 && strtolower(substr($url,0,5)) == "https" ) {
-		    $fff = false;
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $fff);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $fff);
+            $fff = [CURLOPT_SSL_VERIFYPEER=>false,CURLOPT_SSL_VERIFYHOST=>false];
+            foreach ($fff as $k=>$v) {
+                curl_setopt($ch, $k, $v);
+            }
 		}
 		if (is_array($headers) && 0 < count($headers))
 		{

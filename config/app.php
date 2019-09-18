@@ -4,24 +4,7 @@ return [
 
 //    'pic_oss_url_domain' => 'https://clear1.oss-cn-hangzhou.aliyuncs.com/',
     'faker_locale' => 'zh_CN',
-//    'ts' => [
-//        'areas' => '工作区域',
-//        'roles' => '角色',
-//        'users' => '用户',
-//        'settings' => '设置',
-//        'jobs' => '工作类型',
-//        'workers' => '工作人员',
-//        'cars' => '环卫车辆',
-//        'work-lines' => '作业路线',
-//        'work lines' => '作业路线',
-//        'toilets' => '厕所',
-//        'stations' => '站点',
-//        'ways' => '道路',
-//        'edit' => '修改',
-//        'show' => '详情',
-//        'add' => '添加',
-//        'create' => '添加',
-//    ],
+    'BELLO-API-KEY' => 'izrNtgTds8XEi3fwvJu88klg6X9Im9Jx',
     /*
     |--------------------------------------------------------------------------
     | Application Name

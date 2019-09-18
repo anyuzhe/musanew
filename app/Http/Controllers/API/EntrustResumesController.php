@@ -429,21 +429,51 @@ class EntrustResumesController extends ApiBaseCommonController
 
         $ext = $file->guessClientExtension();
 
-        if (in_array($ext, ['jpeg', 'jpg', 'png', 'gif'])) {
-
-            // move uploaded file from temp to uploads directory
-            if (Storage::disk(config('voyager.storage.disk'))->put($fullPath, file_get_contents($file->getRealPath()), 'public')) {
-                $fullFilename = $fullPath;
-                $res = [
-                    'path'=>$fullFilename,
-                    'full_path'=>Voyager::image($fullFilename),
-                ];
-                return responseZK(0,$res);
-            } else {
-                return responseZK(9999,null,'保存出错');
-            }
-        } else {
+        if (!in_array($ext, [
+            'msg',
+            'doc',
+            'pptx',
+            'htm',
+            'html',
+            'mht',
+            'jpg',
+            'docx',
+            'pdf'
+        ])) {
             return responseZK(9999,null,'不正确的上传格式');
+        }
+
+        $_content = file_get_contents($file->getRealPath());
+        // move uploaded file from temp to uploads directory
+        if (Storage::disk(config('voyager.storage.disk'))->put($fullPath, $_content, 'public')) {
+            $fullFilename = $fullPath;
+            $res = [
+                'path'=>$fullFilename,
+                'full_path'=>Voyager::image($fullFilename),
+            ];
+            //保存简历完毕
+
+            //解析简历
+            $data = [
+                'filename'=>$filename,
+                'content'=>base64_encode($_content),
+                'need_avatar'=>0
+            ];
+            $headers = [
+                'X-API-KEY: '.config('app.BELLO-API-KEY')
+            ];
+            $url = "https://www.belloai.com/v2/open/resume/parse";
+            $res = http_post_json($url, json_encode($data, 256) ,$headers);
+            if($res[0]=='200'){
+                $array = json_decode($res[1], true);
+                dd($array);
+            }else{
+                return responseZK(9999,null,'简历解析出错');
+            }
+
+            return responseZK(0,$res);
+        } else {
+            return responseZK(9999,null,'保存出错');
         }
     }
 }

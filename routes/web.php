@@ -90,6 +90,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Route::any('/api/admin/login', 'Voyager\VoyagerAuthController@frontPostLogin');
 
+Route::get('/resume/uploadTest', 'Admin\ResumesController@uploadTest');
 Route::get('/resume/{id}', 'Admin\ResumesController@show');
 Route::get('/resume/dumpPdf/{id}', 'Admin\ResumesController@dumpPdf');
 

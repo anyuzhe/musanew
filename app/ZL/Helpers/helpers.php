@@ -439,7 +439,10 @@ function http_post_json($url, $jsonStr,$headers=null)
             'Content-Length: ' . strlen($jsonStr)
         ];
     }
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    $fff = [CURLOPT_SSL_VERIFYPEER=>false];
+    foreach ($fff as $k=>$v) {
+        curl_setopt($ch, $k, $v);
+    }
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

@@ -83,6 +83,9 @@ $router->any('/user/findpassword/edit', 'API\LoginController@editPassword');
 //图片上传
 $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 
+//简历上传
+$router->post('/company/resume/upload', 'API\EntrustResumesController@upload');
+
 $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
 
