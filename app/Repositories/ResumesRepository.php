@@ -5,6 +5,9 @@ namespace App\Repositories;
 use App\Models\Area;
 use App\Models\Company;
 use App\Models\CompanyResume;
+use App\Models\Entrust;
+use App\Models\Recruit;
+use App\Models\RecruitResume;
 use App\Models\Resume;
 use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
@@ -348,5 +351,47 @@ class ResumesRepository
 //            }
 //        }
         return $obj;
+    }
+
+    public function companyAddHandle(Resume $obj, $data)
+    {
+        $recruit = null;
+        $entrust = null;
+        if(isset($data['recruit_id'])){
+            $recruit_id = $data['recruit_id'];
+            $recruit = Recruit::find($recruit_id);
+        }
+        if(isset($data['entrust_id'])){
+            $entrust_id = $data['entrust_id'];
+            $entrust = Entrust::find($entrust_id);
+            if($entrust)
+                $recruit = $entrust->recruit;
+        }
+        if($recruit){
+            $recruitResume = RecruitResume::create([
+                'company_id'=>$recruit->company_id,
+                'third_party_id'=>$entrust?$entrust->third_party_id:null,
+                'job_id'=>$recruit->job_id,
+                'resume_id'=>$obj->id,
+                'company_job_recruit_id'=>$recruit->id,
+                'company_job_recruit_entrust_id'=>$entrust?$entrust->id:null,
+                'status'=>1,
+                'resume_source'=>$obj->type,
+                'resume_source_company_id'=>$this->getCurrentCompany()->id,
+                'creator_id'=>$this->getUser()->id,
+            ]);
+            $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
+            $recruitResumesRepository->haveLook($recruitResume);
+            $log = $recruitResumesRepository->generateLog($recruitResume,1,$entrust?$entrust->thirdParty:null, null,1);
+            $recruit->resume_num++;
+            $recruit->new_resume_num++;
+            $recruit->save();
+            if($entrust){
+                $entrust->resume_num++;
+                $entrust->new_resume_num++;
+                $entrust->save();
+            }
+            sendLogsEmail([$log]);
+        }
     }
 }
