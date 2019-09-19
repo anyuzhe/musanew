@@ -377,6 +377,9 @@ class EntrustResumesController extends ApiBaseCommonController
         $fullFilename = null;
         $slug = 'resumes';
         $file = $request->file('file');
+        if(!$file){
+            return responseZK(9999,null,'没有上传文件');
+        }
 
         $path = $slug.'/'.date('F').date('Y').'/';
 
