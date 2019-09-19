@@ -15,7 +15,6 @@ class Resume extends Model
         'hope_job_text',//期望职位
         'hope_salary_min',
         'hope_salary_max',
-        'career',//期望从事职业?
         'start_work_at',//开始工作
         'education',//最高学历
         'work_nature',//期望工作性质（全职 兼职）

@@ -238,6 +238,115 @@ class ResumesRepository
             }
             ResumeSkill::where('resume_id', $id)->whereNotIn('id', $skill_ids)->delete();
         }
+        $obj->is_upload_edit = 1;
         $obj->save();
+    }
+
+    public function saveDataForBelloData($data)
+    {
+        $obj = new Resume();
+        //名字
+        if(isset($data['basics']['name']) && !isEmpty($data['basics']['name'])){
+            $obj->name = $data['basics']['name'];
+        }
+        //手机号
+        if(isset($data['basics']['phone']) && !isEmpty($data['basics']['phone'])){
+            $obj->phone = $data['basics']['phone'];
+        }
+        //期望职位
+        if(isset($data['basics']['expected_job_title']) && !isEmpty($data['basics']['expected_job_title'])){
+            $obj->hope_job_text = $data['basics']['expected_job_title'];
+        }
+        //性别
+        if(isset($data['basics']['gender']) && !isEmpty($data['basics']['gender'])){
+            $obj->gender = $data['basics']['gender']=='男'?1:0;
+        }
+        //婚姻状态
+        if(isset($data['basics']['marital_status']) && !isEmpty($data['basics']['marital_status'])){
+            $obj->is_married = $data['basics']['marital_status']=='未婚'?0:1;
+        }
+        //开始工作时间
+        if(isset($data['basics']['start_year_of_employment']) && !isEmpty($data['basics']['start_year_of_employment'])){
+            $obj->start_work_at = $data['basics']['start_year_of_employment'];
+        }
+        //生日
+        if(isset($data['basics']['birthday']) && !isEmpty($data['basics']['birthday'])){
+            $obj->birthdate = $data['basics']['birthday'];
+        }
+        //最高学历
+        if(isset($data['basics']['top_edu_degree']) && !isEmpty($data['basics']['top_edu_degree'])){
+            $obj->education = getEducationValue($data['basics']['top_edu_degree']);
+        }
+        $obj->save();
+
+        $id = $obj->id;
+
+        $educations = isset($data['educations'])?$data['educations']:[];
+        $companies = isset($data['employments'])?$data['employments']:[];
+        $projects = isset($data['projects'])?$data['projects']:[];
+//        $skills = isset($data['skills'])?$data['skills']:[];
+
+        if($educations && is_array($educations)){
+            foreach ($educations as $education) {
+                if(isset($education['is_tongzhao'])){
+                    if($education['is_tongzhao']){
+                        $is_tongzhao = 1;
+                    }else{
+                        $is_tongzhao = 0;
+                    }
+                }else{
+                    $is_tongzhao = 1;
+                }
+                $_education = [
+                    'start_date'=>isset($education['start_date'])?$education['start_date']:'',
+                    'end_date'=>isset($education['end_date'])?$education['end_date']:'',
+                    'school_name'=>isset($education['school_name'])?$education['school_name']:'',
+                    'major'=>isset($education['major'])?$education['major']:'',
+                    'national'=>$is_tongzhao,
+                    'education'=>$education['degree']?getEducationValue($education['degree']):0,
+                ];
+                $_education['resume_id'] = $id;
+                ResumeEducation::create($_education);
+            }
+        }
+        if($companies && is_array($companies)){
+            foreach ($companies as $company) {
+                $_company = [
+                    'job_desc'=>isset($company['description'])?$company['description']:'',
+                    'job_title'=>isset($company['title'])?$company['title']:'',
+                    'company_name'=>isset($company['company_name'])?$company['company_name']:'',
+                    'job_start'=>isset($company['start_date'])?$company['start_date']:'',
+                    'job_end'=>isset($company['end_date'])?$company['end_date']:'',
+                ];
+                $_company['resume_id'] = $id;
+                if(isset($company['salary']))
+                    $_company['salary'] = $company['salary'];
+                ResumeCompany::create($_company);
+            }
+        }
+        if($projects && is_array($projects)){
+            foreach ($projects as $project) {
+                $_project = [
+                    'project_name'=>isset($project['project_name'])?$project['project_name']:'',
+                    'project_start'=>isset($project['start_date'])?$project['start_date']:'',
+                    'project_end'=>isset($project['end_date'])?$project['end_date']:'',
+                    'project_desc'=>isset($project['description'])?$project['description']:'',
+                    'responsibility'=>isset($project['responsibility'])?$project['responsibility']:'',
+                    'relate_company'=>isset($project['company'])?$project['company']:'',
+                ];
+                $_project['resume_id'] = $id;
+                ResumeProject::create($_project);
+            }
+        }
+//        if($skills && is_array($skills)){
+//            foreach ($skills as $skill) {
+//                $_skill = [
+//                  ''
+//                ];
+//                $_skill['resume_id'] = $id;
+//                ResumeSkill::create($_skill);
+//            }
+//        }
+        return $obj;
     }
 }

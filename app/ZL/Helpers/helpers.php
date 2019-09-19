@@ -659,3 +659,30 @@ function upload($path, $pdfName)
     readfile($filename);
     unlink($path);
 }
+
+function isEmpty($str)
+{
+    if($str===null)
+        return true;
+    if($str===false)
+        return true;
+    if($str==='')
+        return true;
+    if(is_array($str) && count($str)==0)
+        return true;
+    return false;
+}
+
+function getEducationValue($str)
+{
+    if($str=='本科' or $str=='学士'){
+        return 2;
+    }elseif($str=='大专' or $str=='专科'){
+        return 1;
+    }elseif($str=='研究生' or $str=='硕士'){
+        return 3;
+    }elseif($str=='博士' or $str=='博士后'){
+        return 4;
+    }
+    return 0;
+}

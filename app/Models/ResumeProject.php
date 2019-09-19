@@ -15,7 +15,6 @@ class ResumeProject extends Model
         'project_end',//结束时间
         'project_desc',//项目描述
         'responsibility',//职责
-        'salary',//薪水
         'relate_company',//所属公司
     ];
 }

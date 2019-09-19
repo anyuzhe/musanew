@@ -437,6 +437,7 @@ class EntrustResumesController extends ApiBaseCommonController
             'html',
             'mht',
             'jpg',
+            'jpeg',
             'docx',
             'pdf'
         ])) {
@@ -466,12 +467,21 @@ class EntrustResumesController extends ApiBaseCommonController
             $res = http_post_json($url, json_encode($data, 256) ,$headers);
             if($res[0]=='200'){
                 $array = json_decode($res[1], true);
-                dd($array);
+//                dd($array);
+                $obj = $this->resumeRepository->saveDataForBelloData($array);
+                if($this->getUser())
+                    $obj->creator_id = $this->getUser()->id;
+                $obj->type = 3;
+                $company = $this->getCurrentCompany();
+                if($company)
+                    $company->resumes()->attach($obj->id);
+
+                $obj->resume_file_path = '/storage/'.$fullPath;
+                $this->_after_find($obj);
+                return responseZK(0,$obj);
             }else{
                 return responseZK(9999,null,'简历解析出错');
             }
-
-            return responseZK(0,$res);
         } else {
             return responseZK(9999,null,'保存出错');
         }
