@@ -444,6 +444,8 @@ class EntrustResumesController extends ApiBaseCommonController
 
                 $obj->resume_file_path = '/storage/'.$fullPath;
 
+                $obj->save();
+
                 $this->resumeRepository->companyAddHandle($obj, $request->all());
 
                 $this->_after_find($obj);
