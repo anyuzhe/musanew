@@ -284,6 +284,8 @@ class ResumesRepository
         if(isset($data['basics']['top_edu_degree']) && !isEmpty($data['basics']['top_edu_degree'])){
             $obj->education = getEducationValue($data['basics']['top_edu_degree']);
         }
+        $obj->is_upload_edit = 0;
+        $obj->is_upload = 0;
         $obj->save();
 
         $id = $obj->id;
