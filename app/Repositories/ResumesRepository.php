@@ -306,7 +306,7 @@ class ResumesRepository
                     'school_name'=>isset($education['school_name'])?$education['school_name']:'',
                     'major'=>isset($education['major'])?$education['major']:'',
                     'national'=>$is_tongzhao,
-                    'education'=>$education['degree']?getEducationValue($education['degree']):0,
+                    'education'=>isset($education['degree'])?getEducationValue($education['degree']):0,
                 ];
                 $_education['resume_id'] = $id;
                 ResumeEducation::create($_education);
