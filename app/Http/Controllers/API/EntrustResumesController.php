@@ -414,10 +414,10 @@ class EntrustResumesController extends ApiBaseCommonController
         // move uploaded file from temp to uploads directory
         if (Storage::disk(config('voyager.storage.disk'))->put($fullPath, $_content, 'public')) {
             $fullFilename = $fullPath;
-            $res = [
-                'path'=>$fullFilename,
-                'full_path'=>Voyager::image($fullFilename),
-            ];
+//            $res = [
+//                'path'=>$fullFilename,
+//                'full_path'=>Voyager::image($fullFilename),
+//            ];
             //保存简历完毕
 
             //解析简历
@@ -429,11 +429,16 @@ class EntrustResumesController extends ApiBaseCommonController
             $headers = [
                 'X-API-KEY: '.config('app.BELLO-API-KEY')
             ];
-            $url = "https://www.belloai.com/v2/open/resume/parse";
+            $url = "http://47.92.100.9/api/resume/parse";
+//            $url = "https://www.belloai.com/v2/open/resume/parse";
             $res = http_post_json($url, json_encode($data, 256) ,$headers);
-            if($res[0]=='200'){
-                $array = json_decode($res[1], true);
-//                dd($array);
+            if(isset($res[1])){
+                $res_array = json_decode($res[1], true);
+            }else{
+                $res_array = null;
+            }
+            if($res[0]=='200' && $res_array && $res_array['status']['code']==200){
+                $array = $res_array['result'];
                 $obj = $this->resumeRepository->saveDataForBelloData($array);
                 if($this->getUser())
                     $obj->creator_id = $this->getUser()->id;
