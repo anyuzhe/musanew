@@ -14,6 +14,7 @@ class AreaRepository
             if($v['pid']==0){
                 self::getChild($v, $all);
                 $data[] = $v;
+                Area::where('id', $v['id'])->update(['fname'=>$v['cname'],'level'=>1]);
             }
         }
         return $data;
@@ -24,6 +25,9 @@ class AreaRepository
         $v['children'] = [];
         foreach ($all as $item) {
             if($item['pid']==$v['id']){
+                $item['fname'] = $v['fname'].$item['cname'];
+                $item['level'] = $v['level']+1;
+                Area::where('id', $item['id'])->update(['fname'=>$item['fname'], 'level'=>$item['level']]);
                 self::getChild($item, $all);
                 $v['children'][] = $item;
             }

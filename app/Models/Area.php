@@ -7,8 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Area extends Model
 {
     protected $table = 'area';
-
+    public $timestamps = false;
     protected $connection = 'musa';
     public $fillable = [
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(Area::class, 'pid','id');
+    }
 }

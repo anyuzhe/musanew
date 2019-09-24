@@ -396,6 +396,7 @@ class EntrustResumesController extends ApiBaseCommonController
         $ext = $file->guessClientExtension();
 
         if (!in_array($ext, [
+            'bin',
             'msg',
             'doc',
             'pptx',

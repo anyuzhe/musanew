@@ -14,6 +14,7 @@ use App\Models\ResumeEducation;
 use App\Models\ResumeProject;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
+use mod_questionnaire\question\date;
 
 class ResumesRepository
 {
@@ -278,12 +279,54 @@ class ResumesRepository
         }
         //生日
         if(isset($data['basics']['birthday']) && !isEmpty($data['basics']['birthday'])){
-            $obj->birthdate = $data['basics']['birthday'];
+            if(strlen($data['basics']['birthday'])==10){
+                $obj->birthdate = $data['basics']['birthday'];
+            }else{
+                $obj->birthdate = date('Y-m-01', strtotime($data['basics']['birthday']));
+            }
         }
         //最高学历
         if(isset($data['basics']['top_edu_degree']) && !isEmpty($data['basics']['top_edu_degree'])){
             $obj->education = getEducationValue($data['basics']['top_edu_degree']);
         }
+        //户籍地址 出生地址
+        $area = null;
+        if(isset($data['basics']['hukou'])){
+            $data['basics']['birth_place'] = $data['basics']['hukou'];
+        }
+        if(isset($data['basics']['birth_place']) && !isEmpty($data['basics']['birth_place'])){
+            $area = Area::where('fname',$data['basics']['birth_place'])->first();
+            if($area && $area->level==3){
+                $obj->permanent_province_id = $area->parent->parent->id;
+                $obj->permanent_city_id = $area->parent->id;
+                $obj->permanent_district_id = $area->id;
+            }elseif($area && $area->level==2){
+                $obj->permanent_province_id = $area->parent->id;
+                $obj->permanent_city_id = $area->id;
+            }elseif($area && $area->level==1){
+                $obj->permanent_province_id = $area->id;
+            }
+            $area = null;
+        }
+        //现居地
+        if(isset($data['basics']['current_job_location']))
+            $area = Area::where('cname',$data['basics']['current_job_location'])->first();
+        if($area || isset($data['basics']['current_location']) && !isEmpty($data['basics']['current_location'])){
+            if(!$area)
+                $area = Area::where('cname',$data['basics']['current_location'])->first();
+            if($area && $area->level==3){
+                $obj->residence_province_id = $area->parent->parent->id;
+                $obj->residence_city_id = $area->parent->id;
+                $obj->residence_district_id = $area->id;
+            }elseif($area && $area->level==2){
+                $obj->residence_province_id = $area->parent->id;
+                $obj->residence_city_id = $area->id;
+            }elseif($area && $area->level==1){
+                $obj->residence_district_id = $area->id;
+            }
+        }
+
+
         $obj->is_upload_edit = 0;
         $obj->is_upload = 1;
         $obj->save();
@@ -293,7 +336,8 @@ class ResumesRepository
         $educations = isset($data['educations'])?$data['educations']:[];
         $companies = isset($data['employments'])?$data['employments']:[];
         $projects = isset($data['projects'])?$data['projects']:[];
-//        $skills = isset($data['skills'])?$data['skills']:[];
+        $skills = isset($data['skills'])?$data['skills']:[];
+        $languages = isset($data['languages'])?$data['languages']:[];
 
         if($educations && is_array($educations)){
             foreach ($educations as $education) {
@@ -347,15 +391,91 @@ class ResumesRepository
                 ResumeProject::create($_project);
             }
         }
-//        if($skills && is_array($skills)){
-//            foreach ($skills as $skill) {
-//                $_skill = [
-//                  ''
-//                ];
-//                $_skill['resume_id'] = $id;
-//                ResumeSkill::create($_skill);
-//            }
-//        }
+        if($languages && is_array($languages)){
+            foreach ($languages as $language) {
+                $_language = [];
+                $_language['resume_id'] = $id;
+                $_language['used_time'] = 0;
+                $_s = Skill::where('name',$language['language'])->first();
+                if(!$_s){
+                    $_s = Skill::create([
+                        'name'=>$language['language'],
+                        'category_l1_id'=>22,
+                        'category_l2_id'=>21,
+                    ]);
+                }
+                $_language['skill_id'] = $_s->id;
+                $_language_level_str = '一般';
+                $_language_level = 1;
+                if(isset($language['listen_and_speak'])){
+                    $_language_level_str = $language['listen_and_speak'];
+                }elseif(isset($language['read_and_write'])){
+                    $_language_level_str = $language['read_and_write'];
+                }
+                switch ($_language_level_str){
+                    case '一般':
+                        $_language_level = 1;
+                        break;
+                    case '良好':
+                        $_language_level = 2;
+                        break;
+                    case '熟练':
+                        $_language_level = 3;
+                        break;
+                    case '精通':
+                        $_language_level = 4;
+                        break;
+                }
+                $_language['level'] = $_language_level;
+                ResumeSkill::create($_language);
+            }
+        }
+        if($skills && is_array($skills)){
+            foreach ($skills as $skill) {
+                $_skill = [];
+                $_skill['resume_id'] = $id;
+                $_skill['used_time'] = 0;
+                $_s = Skill::where('name',$skill['skill_name'])->first();
+                if(!$_s){
+                    $_s = Skill::create([
+                        'name'=>$skill['skill_name'],
+                        'category_l1_id'=>22,
+                        'category_l2_id'=>23,
+                    ]);
+                }
+                $_skill['skill_id'] = $_s->id;
+                $_skill_level_str = '了解';
+                $_skill_level = 1;
+                if(isset($skill['skill_level'])){
+                    $_skill_level_str = $skill['skill_level'];
+                }
+                switch ($_skill_level_str){
+                    case '了解':
+                        $_skill_level = 1;
+                        break;
+                    case '掌握':
+                        $_skill_level = 1;
+                        break;
+                    case '良好':
+                        $_skill_level = 2;
+                        break;
+                    case '擅长':
+                        $_skill_level = 2;
+                        break;
+                    case '熟悉':
+                        $_skill_level = 3;
+                        break;
+                    case '熟练':
+                        $_skill_level = 3;
+                        break;
+                    case '精通':
+                        $_skill_level = 4;
+                        break;
+                }
+                $_skill['level'] = $_skill_level;
+                ResumeSkill::create($_skill);
+            }
+        }
         return $obj;
     }
 

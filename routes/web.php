@@ -11,7 +11,9 @@
 |
 */
 
+use App\Models\Area;
 use App\Models\RecruitResumeLog;
+use App\Models\Resume;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
@@ -21,7 +23,13 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-
+    $r = Area::find(110102);
+    dd($r->parent);
+    $r = Resume::find(41);
+    $r->birthdate = "1987-08-01";
+    $r->save();
+    dd(strlen($r->birthdate));
+    dd($r);
     $file = Storage::disk(config('voyager.storage.disk'))->get('/resumes/doc.NO.4.docx');
     $data = [
         'filename'=>'doc.NO.4.docx',
