@@ -261,6 +261,10 @@ class ResumesRepository
         if(isset($data['basics']['phone']) && !isEmpty($data['basics']['phone'])){
             $obj->phone = $data['basics']['phone'];
         }
+        //自我评价
+        if(isset($data['sections']['summary']) && !isEmpty($data['sections']['summary'])){
+            $obj->self_evaluation = $data['sections']['summary'];
+        }
         //期望职位
         if(isset($data['basics']['expected_job_title']) && !isEmpty($data['basics']['expected_job_title'])){
             $obj->hope_job_text = $data['basics']['expected_job_title'];

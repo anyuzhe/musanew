@@ -141,7 +141,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
 //简历上传
     $router->post('/company/resume/upload', 'API\EntrustResumesController@upload');
-    
+
 //    $router->get('/user/resume', 'ResumesController@view');
     //列表
     $router->get('/company/resumes', 'API\EntrustResumesController@index');
