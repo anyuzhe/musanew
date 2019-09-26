@@ -23,6 +23,22 @@ class RecruitResumeLog extends Model
         'user_id',
     ];
 
+    /**
+     *
+    //    -5 录用之后未到岗
+    //    -4 面试通过但不合适
+    //    -3 面试不通过
+    //    -2 面试没来
+    //    -1 简历不匹配
+    //1 简历投递
+    //2 邀请面试 可以修改面试时间再次邀约
+    //3 修改时间
+    //4 面试完成(填写反馈后-待定状态)
+    //5 再次邀请面试
+    //6 录用
+    //7 成功入职
+     */
+
     public function recruitResume()
     {
         return $this->belongsTo('App\Models\RecruitResume','company_job_recruit_resume_id');
