@@ -443,6 +443,9 @@ class EntrustResumesController extends ApiBaseCommonController
             }
             if($res[0]=='200' && $res_array && $res_array['status']['code']==200){
                 $array = $res_array['result'];
+                if($request->get('is_test')){
+                    dd($array);
+                }
                 $obj = $this->resumeRepository->saveDataForBelloData($array);
                 if($this->getUser())
                     $obj->creator_id = $this->getUser()->id;

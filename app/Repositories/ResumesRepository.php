@@ -299,7 +299,7 @@ class ResumesRepository
             $data['basics']['birth_place'] = $data['basics']['hukou'];
         }
         if(isset($data['basics']['birth_place']) && !isEmpty($data['basics']['birth_place'])){
-            $area = Area::where('fname',$data['basics']['birth_place'])->first();
+            $area = $this->getAreaByText($data['basics']['birth_place']);
             if($area && $area->level==3){
                 $obj->permanent_province_id = $area->parent->parent->id;
                 $obj->permanent_city_id = $area->parent->id;
@@ -314,10 +314,10 @@ class ResumesRepository
         }
         //现居地
         if(isset($data['basics']['current_job_location']))
-            $area = Area::where('cname',$data['basics']['current_job_location'])->first();
+            $area = $this->getAreaByText($data['basics']['current_job_location']);
         if($area || isset($data['basics']['current_location']) && !isEmpty($data['basics']['current_location'])){
             if(!$area)
-                $area = Area::where('cname',$data['basics']['current_location'])->first();
+                $area = $this->getAreaByText($data['basics']['current_location']);
             if($area && $area->level==3){
                 $obj->residence_province_id = $area->parent->parent->id;
                 $obj->residence_city_id = $area->parent->id;
@@ -374,6 +374,7 @@ class ResumesRepository
                     'company_name'=>isset($company['company_name'])?$company['company_name']:'',
                     'job_start'=>isset($company['start_date'])?$company['start_date']:'',
                     'job_end'=>isset($company['end_date'])?$company['end_date']:'',
+                    'job_category'=>7,
                 ];
                 $_company['resume_id'] = $id;
                 if(isset($company['salary']))
@@ -523,5 +524,44 @@ class ResumesRepository
             }
             sendLogsEmail([$log]);
         }
+    }
+
+    public function getAreaByText($text)
+    {
+        $area = Area::where('fname', 'like', "%$text%")->first();
+        if(!$area)
+            $area = Area::where('cname', "%$text%")->first();
+        if(!$area){
+            //反向匹配
+            $areas1 = Area::where('level', 1)->get();
+            foreach ($areas1 as $area1) {
+                $_text = $area1->cname;
+                $_text = str_replace('省','',$_text);
+                $_text = str_replace('市','',$_text);
+                if(strstr($text, $_text)!==false){
+                    $areas2 = Area::where('pid', $area1->id)->get();
+                    foreach ($areas2 as $area2) {
+                        $_text = $area2->cname;
+                        $_text = str_replace('市','',$_text);
+                        $_text = str_replace('区','',$_text);
+                        if(strstr($text, $_text)!==false){
+                            $areas3 = Area::where('pid', $area2->id)->get();
+                            foreach ($areas3 as $area3) {
+                                $_text = $area3->cname;
+                                $_text = str_replace('市','',$_text);
+                                $_text = str_replace('区','',$_text);
+                                if(strstr($text, $_text)!==false){
+                                    return $area3;
+                                }
+                            }
+                            return $area1;
+                        }
+                        return $area2;
+                    }
+                    return $area1;
+                }
+            }
+        }
+        return $area;
     }
 }
