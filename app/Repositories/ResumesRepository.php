@@ -538,6 +538,7 @@ class ResumesRepository
                 $_text = $area1->cname;
                 $_text = str_replace('省','',$_text);
                 $_text = str_replace('市','',$_text);
+
                 if(strstr($text, $_text)!==false){
                     $areas2 = Area::where('pid', $area1->id)->get();
                     foreach ($areas2 as $area2) {
@@ -554,12 +555,39 @@ class ResumesRepository
                                     return $area3;
                                 }
                             }
-                            return $area1;
+                            return $area2;
                         }
-                        return $area2;
                     }
                     return $area1;
                 }
+            }
+        }
+        $areas2 = Area::where('level', 2)->get();
+
+        foreach ($areas2 as $area2) {
+            $_text = $area2->cname;
+            $_text = str_replace('市','',$_text);
+            $_text = str_replace('区','',$_text);
+            if(strstr($text, $_text)!==false){
+                $areas3 = Area::where('pid', $area2->id)->get();
+                foreach ($areas3 as $area3) {
+                    $_text = $area3->cname;
+                    $_text = str_replace('市','',$_text);
+                    $_text = str_replace('区','',$_text);
+                    if(strstr($text, $_text)!==false){
+                        return $area3;
+                    }
+                }
+                return $area2;
+            }
+        }
+        $areas3 = Area::where('level', 3)->get();
+        foreach ($areas3 as $area3) {
+            $_text = $area3->cname;
+            $_text = str_replace('市','',$_text);
+            $_text = str_replace('区','',$_text);
+            if(strstr($text, $_text)!==false){
+                return $area3;
             }
         }
         return $area;
