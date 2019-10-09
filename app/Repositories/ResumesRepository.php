@@ -283,11 +283,12 @@ class ResumesRepository
         }
         //生日
         if(isset($data['basics']['birthday']) && !isEmpty($data['basics']['birthday'])){
-            if(strlen($data['basics']['birthday'])==10){
-                $obj->birthdate = $data['basics']['birthday'];
-            }else{
-                $obj->birthdate = date('Y-m-01', strtotime($data['basics']['birthday']));
-            }
+            $obj->birthdate = $data['basics']['birthday'];
+//            if(strlen($data['basics']['birthday'])==10){
+//                $obj->birthdate = $data['basics']['birthday'];
+//            }else{
+//                $obj->birthdate = date('Y-m-01', strtotime($data['basics']['birthday']));
+//            }
         }
         //最高学历
         if(isset($data['basics']['top_edu_degree']) && !isEmpty($data['basics']['top_edu_degree'])){
@@ -369,7 +370,7 @@ class ResumesRepository
         if($companies && is_array($companies)){
             foreach ($companies as $company) {
                 $_company = [
-                    'job_desc'=>isset($company['description'])?$company['description']:'',
+                    'job_desc'=>isset($company['description'])?$company['description']:(isset($company['job_resp'])?$company['job_resp']:''),
                     'job_title'=>isset($company['title'])?$company['title']:'',
                     'company_name'=>isset($company['company_name'])?$company['company_name']:'',
                     'job_start'=>isset($company['start_date'])?$company['start_date']:'',
