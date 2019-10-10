@@ -479,6 +479,7 @@ class ResumesRepository
                         break;
                 }
                 $_skill['level'] = $_skill_level;
+                $_skill['skill_level'] = $_skill_level;
                 ResumeSkill::create($_skill);
             }
         }
