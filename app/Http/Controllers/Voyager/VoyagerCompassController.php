@@ -1,6 +1,6 @@
 <?php
 
-namespace TCG\Voyager\Http\Controllers;
+namespace App\Http\Controllers\Voyager;
 
 use Artisan;
 use Exception;
