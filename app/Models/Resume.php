@@ -45,6 +45,11 @@ class Resume extends Model
         return $this->hasMany('App\Models\ResumeSkill');
     }
 
+    public function attachments()
+    {
+        return $this->hasMany('App\Models\ResumeAttachment');
+    }
+
     public function educations()
     {
         return $this->hasMany('App\Models\ResumeEducation');

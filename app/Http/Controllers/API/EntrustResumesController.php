@@ -474,7 +474,7 @@ class EntrustResumesController extends ApiBaseCommonController
         }
     }
 
-    public function attachmentUpload($request)
+    public function attachmentUpload(Request $request)
     {
         $resume_id = $request->get('resume_id');
         if(!$resume_id)

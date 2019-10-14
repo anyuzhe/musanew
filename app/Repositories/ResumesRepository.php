@@ -65,6 +65,7 @@ class ResumesRepository
         $data->load('companies');
         $data->load('projects');
         $data->load('skills');
+        $data->load('attachments');
         $skills = Skill::all()->keyBy('id')->toArray();
         $area_ids = $data->pluck('permanent_province_id','permanent_city_id','permanent_district_id','residence_province_id','residence_city_id','residence_district_id');
         foreach ($data as $v) {
@@ -114,6 +115,7 @@ class ResumesRepository
         $data->jobCompany;
         $data->assignmentCompany;
         $data->skills;
+        $data->attachments;
         $data->educations;
         $data->projects;
         $data->companies;
