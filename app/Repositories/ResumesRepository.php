@@ -107,6 +107,10 @@ class ResumesRepository
             $v->residence_area = [$v->residence_province_id,$v->residence_city_id,$v->residence_district_id];
             $v->age = getAge($v->birthdate);
             $v->resume_file_path = $APP_URL.$v->resume_file_path;
+
+            foreach ($v->attachments as &$attachment) {
+                $attachment->file_full_path = getPicFullUrl($v->file_path);
+            }
         }
         return $data;
     }
@@ -128,6 +132,9 @@ class ResumesRepository
                 continue;
             }
             $skill->skill_name = $skills[$skill->skill_id]['name'];
+        }
+        foreach ($data->attachments as &$attachment) {
+            $attachment->file_full_path = getPicFullUrl($attachment->file_path);
         }
         foreach ($data->educations as &$education) {
             getOptionsText($education);
