@@ -225,7 +225,12 @@ class CompaniesController extends ApiBaseCommonController
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         getOptionsText($company);
         $company->is_demand_side = count($company->thirdParty)>0?1:0;
-        $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
+        $role = CompanyRole::find($company->pivot->company_role_id);
+        if($role){
+            $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
+        }else{
+            $company->role_name = '未设置角色';
+        }
 //        $company->is_third_party = count($company->demandSides)>0?1:0;
         return $this->apiReturnJson(0,$company);
     }
