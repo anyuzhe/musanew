@@ -8,6 +8,7 @@ use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
+use App\Models\ResumeAttachment;
 use App\Models\ResumeSkill;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
@@ -468,6 +469,69 @@ class EntrustResumesController extends ApiBaseCommonController
             }else{
                 return responseZK(9999,null,'简历解析出错');
             }
+        } else {
+            return responseZK(9999,null,'保存出错');
+        }
+    }
+
+    public function attachmentUpload($request)
+    {
+        $resume_id = $request->get('resume_id');
+        if(!$resume_id)
+            $resume_id = $request->get('id');
+        if(!$resume_id && $resume = Resume::find($resume_id)){
+            return responseZK(9999,null,'没有简历id');
+        }
+
+        $fullFilename = null;
+        $slug = 'attachments';
+        $file = $request->file('file');
+        if(!$file){
+            return responseZK(9999,null,'没有上传文件');
+        }
+
+        $path = $slug.'/'.date('F').date('Y').'/';
+
+        $filename = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension());
+        $filename_counter = 1;
+
+        // Make sure the filename does not exist, if it does make sure to add a number to the end 1, 2, 3, etc...
+        while (Storage::disk(config('voyager.storage.disk'))->exists($path.$filename.'.'.$file->getClientOriginalExtension())) {
+            $filename = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension()).(string) ($filename_counter++);
+        }
+
+        $fullPath = $path.$filename.'.'.$file->getClientOriginalExtension();
+
+        $ext = $file->guessClientExtension();
+
+        if (!in_array($ext, [
+            'bin',
+            'msg',
+            'doc',
+            'pptx',
+            'htm',
+            'html',
+            'mht',
+            'jpg',
+            'jpeg',
+            'docx',
+            'pdf'
+        ])) {
+            return responseZK(9999,null,'不正确的上传格式');
+        }
+
+        $_content = file_get_contents($file->getRealPath());
+        // move uploaded file from temp to uploads directory
+        if (Storage::disk(config('voyager.storage.disk'))->put($fullPath, $_content, 'public')) {
+
+            $obj = ResumeAttachment::create([
+                'resume_id'=>$resume_id,
+                'file_path'=>$fullPath,
+                'file_name'=>$filename.'.'.$file->getClientOriginalExtension(),
+                'creator_id'=>$this->getUser()->id,
+            ]);
+
+            return responseZK(0,$obj);
         } else {
             return responseZK(9999,null,'保存出错');
         }
