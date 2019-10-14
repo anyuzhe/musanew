@@ -82,6 +82,8 @@ $router->any('/user/findpassword/edit', 'API\LoginController@editPassword');
 
 //简历上传
 $router->post('/company/resume/upload', 'API\EntrustResumesController@upload');
+//简历附件上传
+$router->post('/company/resum1e/upload', 'API\EntrustResumesController@upload');
 //图片上传
 $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 
