@@ -480,8 +480,8 @@ class EntrustResumesController extends ApiBaseCommonController
         if(!$resume_id)
             $resume_id = $request->get('id');
 
-        if(!$resume_id || $resume = Resume::find($resume_id)){
-            return responseZK(9999,null,'没有简历id');
+        if(!$resume_id || !$resume = Resume::find($resume_id)){
+            return responseZK(9999,null,'没有简历id或id错误');
         }
 
         $fullFilename = null;
