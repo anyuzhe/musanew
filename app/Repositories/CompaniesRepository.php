@@ -68,7 +68,8 @@ class CompaniesRepository
                     $addresses_ids[] = $obj->id;
                 }
             }
-            CompanyAddress::where('company_id', $company_id)->whereNotIn('id', $addresses_ids)->delete();
+//            CompanyAddress::where('company_id', $company_id)->whereNotIn('id', $addresses_ids)->delete();//真删除
+            CompanyAddress::where('company_id', $company_id)->whereNotIn('id', $addresses_ids)->update(['company_id'=>null]);//假删除
         }
         if($departments && is_array($departments)){
             $departments_ids = [];
