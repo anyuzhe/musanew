@@ -12,8 +12,8 @@ class AreasController extends CommonController
     public function getTree()
     {
         set_time_limit(0);
-        
-        $areas = Cache::remember('areaData', 3600*24, function ()use() {
+
+        $areas = Cache::remember('areaData', 3600*24, function () {
             return AreaRepository::getTree();
         });
 
