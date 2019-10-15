@@ -537,4 +537,15 @@ class EntrustResumesController extends ApiBaseCommonController
             return responseZK(9999,null,'保存出错');
         }
     }
+
+    public function attachmentDestroy($id)
+    {
+        $model = ResumeAttachment::find($id);
+        if($model){
+            $model->delete();
+            return responseZK(0);
+        }else{
+            return responseZK(9999,null,'没有该附件');
+        }
+    }
 }

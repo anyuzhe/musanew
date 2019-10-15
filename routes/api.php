@@ -146,7 +146,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->post('/company/resume/attachment/upload', 'API\EntrustResumesController@attachmentUpload');
 
     //删除简历附件
-    $router->post('/company/resumes/attachment/delete/{id}', 'API\EntrustResumesController@attachmentDestroy');
+    $router->post('/company/resume/attachment/delete/{id}', 'API\EntrustResumesController@attachmentDestroy');
 
 //    $router->get('/user/resume', 'ResumesController@view');
     //列表
