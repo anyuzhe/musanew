@@ -519,7 +519,7 @@ function getPicFullUrl($url){
     if(is_numeric($url)){
         return getMoodlePICURL($url);
     }else{
-        return env('APP_URL').'/storage/'.$url;
+        return (env('APP_URL')?env('APP_URL'):"http://musaAdmin.musaconsult.com").'/storage/'.$url;
     }
 }
 
