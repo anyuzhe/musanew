@@ -123,13 +123,13 @@ class EntrustsController extends ApiBaseCommonController
         $recruit = $entrust->recruit;
         if($recruit->status==2){
             //假如委托没有进行中的了 才会变成1
+            $entrust->status = -1;
+            $entrust->save();
+
             if(!Entrust::where('company_job_recruit_id', $recruit->id)->whereIn('status',[0,1])->first()){
                 $recruit->status = 1;
                 $recruit->save();
             }
-
-            $entrust->status = -1;
-            $entrust->save();
             return $this->apiReturnJson(0);
         }else{
             return $this->apiReturnJson(9999);
