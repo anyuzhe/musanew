@@ -40,14 +40,14 @@ class StatisticsRepository
             ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
         $all_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $company_recruit_entrust_ids)->count();
 
-        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',6)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
+        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
             ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
-        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',6)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
+        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
             ->count();
 
-        $month_recommend_resume_entry_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
+        $month_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
             ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
-        $all_recommend_resume_entry_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
+        $all_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
             ->count();
         return compact('all_job_count', 'month_job_count', 'month_people_count',
             'month_recommend_resume_count', 'all_recommend_resume_count','month_recommend_resume_succeed_count','all_recommend_resume_succeed_count',
@@ -84,14 +84,14 @@ class StatisticsRepository
             ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->count();
         $all_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $third_party_recruit_entrust_ids)->count();
 
-        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',6)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
+        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
             ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->count();
-        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',6)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
+        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
             ->count();
 
-        $month_recommend_resume_entry_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
+        $month_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
             ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->count();
-        $all_recommend_resume_entry_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
+        $all_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
             ->count();
         return compact('all_job_count', 'month_job_count', 'month_people_count',
             'month_recommend_resume_count', 'all_recommend_resume_count','month_recommend_resume_succeed_count','all_recommend_resume_succeed_count',
@@ -126,11 +126,11 @@ class StatisticsRepository
         //邀请面试
         $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //面试中
-        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //录用
-        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $hire = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //入职
-        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $entry = $this->getCountByStatus([8], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
 
         return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry','recruit_num','recruit_people_num');
     }
@@ -164,11 +164,11 @@ class StatisticsRepository
         //邀请面试
         $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //面试中
-        $interviewing = $this->getCountByStatus([2,3,4,5], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
+        $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //录用
-        $hire = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
+        $hire = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //入职
-        $entry = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
+        $entry = $this->getCountByStatus([8], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
 
         return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties','recruit_num','recruit_people_num');
     }
@@ -215,8 +215,8 @@ class StatisticsRepository
                     'recruit_days'=>getDays(strtotime($entrust->created_at)),//招聘天数
                     'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),//完成率
                     'need_num'=>$recruit->need_num,//需求量
-                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//入职成功
-                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids,2),//等待入职
+                    'entry_success_num'=>$this->getEntrustCountByStatus([8], $company_job_recruit_resume_ids),//入职成功
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids,2),//等待入职
                     'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
                     'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'value'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
@@ -224,9 +224,10 @@ class StatisticsRepository
                     'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
                     'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
                     'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids,2),//待定
+                    'interview_pass_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//面试通过
                     'interview_defeated_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//面试失败
                     'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
-                    'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
+                    'hire_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//录用
                 ];
 
                 $all_resume_num += $_data['recommend_resume_num'];
@@ -318,8 +319,8 @@ class StatisticsRepository
                     'recruit_days'=>getDays(strtotime($entrust->created_at)),//招聘天数
                     'done_rate'=>(int)($entrust->done_num/$recruit->need_num*100),//完成率
                     'need_num'=>$recruit->need_num,//需求量
-                    'entry_success_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//入职成功
-                    'wait_entry_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids,2),//等待入职
+                    'entry_success_num'=>$this->getEntrustCountByStatus([8], $company_job_recruit_resume_ids),//入职成功
+                    'wait_entry_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids,2),//等待入职
                     'residue_num'=>$recruit->need_num - $recruit->done_num,//剩余量
                     'value'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'recommend_resume_num'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
@@ -327,9 +328,10 @@ class StatisticsRepository
                     'resume_mismatching_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//简历不匹配
                     'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
                     'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids,2),//待定
+                    'interview_pass_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//面试通过
                     'interview_defeated_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//面试失败
                     'interview_pass_inappropriate_num'=>$this->getEntrustCountByStatus([-4], $company_job_recruit_resume_ids),//面试通过不合适
-                    'hire_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//录用
+                    'hire_num'=>$this->getEntrustCountByStatus([7], $company_job_recruit_resume_ids),//录用
                 ];
                 $all_resume_num += $_data['recommend_resume_num'];
 
@@ -451,6 +453,7 @@ class StatisticsRepository
                         $v['interview_resume_num'],
                         $v['give_up_interview_num'],
                         $v['undetermined_num'],
+                        $v['interview_pass_num'],
                         $v['interview_defeated_num'],
                         $v['interview_pass_inappropriate_num'],
                         $v['hire_num'],
@@ -474,6 +477,7 @@ class StatisticsRepository
             '邀请面试',
             '放弃面试',
             '待定',
+            '面试通过',
             '面试失败',
             '面试通过不合适',
             '录用',
@@ -514,7 +518,12 @@ class StatisticsRepository
         $data['data'] = array_values($_data);
         return $data;
     }
-
+    /*
+     * type
+     *
+     * 1: 正常状态统计
+     * 2: 判断最后状态是不是已经变了
+     */
     protected function getEntrustCountByStatus($status, $company_job_recruit_resume_ids, $type=1)
     {
         if($type==1){
