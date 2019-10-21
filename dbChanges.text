@@ -1,0 +1,19 @@
+9.9到1018 数据库修改
+
+1 resume表
+字段变化
+新增is_upload_edit
+新增resume_file_path
+新增resume_file_name
+birthday 字段格式修改
+
+2 新增表resume_attachment
+
+3 area表需要重新拷贝 新增字段 并且字段新增了数据
+
+4 因为导入简历多个数据的空缺
+resume_company
+resume_education
+resume_project
+resume_skill
+以上4个表的除了id字段 都改为可为空

@@ -28,8 +28,10 @@ class RecruitResumesRepository
         }elseif($status==5 && !in_array($recruitResume->status,[4])){
             return '简历不是邀请面试状态或者完成状态,不能再次邀请面试';
         }elseif($status==6 && !in_array($recruitResume->status,[4])){
-            return '简历不是面试完成状态,不能录用';
+            return '简历不是面试完成状态,不能面试通过';
         }elseif($status==7 && !in_array($recruitResume->status,[6])){
+            return '简历不是面试通过状态,不能录用';
+        }elseif($status==8 && !in_array($recruitResume->status,[7])){
             return '简历不是录用状态,不能成功入职';
         }
 
@@ -39,9 +41,9 @@ class RecruitResumesRepository
             return '简历不是邀请或再次邀请面试状态,不能面试没来';
         }elseif($status==-3 && !in_array($recruitResume->status,[4])){
             return '简历不是面试完成状态,不能面试不通过';
-        }elseif($status==-4 && !in_array($recruitResume->status,[4])){
+        }elseif($status==-4 && !in_array($recruitResume->status,[4,6])){
             return '简历不是面试完成状态,不能面试通过但不合适';
-        }elseif($status==-5 && !in_array($recruitResume->status,[6])){
+        }elseif($status==-5 && !in_array($recruitResume->status,[7])){
             return '简历不是录用状态,不能录用之后未到岗';
         }
         if(($status==2||$status==3) && !$data){
@@ -55,18 +57,20 @@ class RecruitResumesRepository
 
     public function generateLog(RecruitResume $recruitResume, $status, $company, $otherData='', $type=1)
     {
-//        -5 录用之后未到岗
-//    -4 面试通过但不合适
-//    -3 面试不通过
-//    -2 面试没来
-//    -1 简历不匹配
-//1 简历投递
-//2 邀请面试 可以修改面试时间再次邀约
-//3 修改时间
-//4 面试完成(填写反馈后-待定状态)
-//5 再次邀请面试
-//6 录用
-//7 成功入职
+        //    -5 录用之后未到岗
+        //    -4 面试通过但不合适
+        //    -3 面试不通过
+        //    -2 面试没来
+        //    -1 简历不匹配
+        //1 简历投递
+        //2 邀请面试 可以修改面试时间再次邀约
+        //3 修改时间
+        //4 面试完成(填写反馈后-待定状态)
+        //5 再次邀请面试
+        //6 面试通过
+        //7 录用
+        //8 成功入职
+
         global $LOGIN_USER;
         global $LOGIN_USER_CURRENT_COMPANY;
         $log = new RecruitResumeLog();
@@ -106,12 +110,14 @@ class RecruitResumesRepository
             $recruitResume->interview_at = $otherData;
             $log->text =  '再次邀请面试-'.$otherData;
         }elseif($status==6){
+            $log->text =  '面试通过:'.$otherData;
+        }elseif($status==7){
             $log->text =  '录用-计划入职时间:'.$otherData;
             $recruitResume->entry_at = $otherData;
             $recruit = $recruitResume->recruit;
             $recruit->wait_entry_num++;
             $recruit->save();
-        }elseif($status==7){
+        }elseif($status==8){
             $log->text =  '成功入职';
             $recruitResume->formal_entry_at = $otherData?$otherData:date('Y-m-d H:i:s');
             $this->hiredEntryHandle($recruitResume);
@@ -255,9 +261,12 @@ class RecruitResumesRepository
                 $data->status_str = '再次邀请面试';
                 break;
             case 6:
-                $data->status_str = '录用';
+                $data->status_str = '面试通过';
                 break;
             case 7:
+                $data->status_str = '录用';
+                break;
+            case 8:
                 $data->status_str = '成功入职';
                 break;
             default:

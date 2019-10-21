@@ -367,7 +367,7 @@ class EntrustResumesController extends ApiBaseCommonController
 
     public function destroy($id)
     {
-        if(RecruitResumeLog::whereIn('status',[1,2,3,4,5,6])->where('resume_id', $id)->first()){
+        if(RecruitResumeLog::whereIn('status',[1,2,3,4,5,6,7])->where('resume_id', $id)->first()){
             return responseZK(9999, null, '该简历当前正在使用中，不可删除！');
         }
         $model = Resume::find($id);

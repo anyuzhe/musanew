@@ -35,8 +35,9 @@ class RecruitResumeLog extends Model
     //3 修改时间
     //4 面试完成(填写反馈后-待定状态)
     //5 再次邀请面试
-    //6 录用
-    //7 成功入职
+    //6 面试通过
+    //7 录用
+    //8 成功入职
      */
 
     public function recruitResume()
