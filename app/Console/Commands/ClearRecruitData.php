@@ -58,11 +58,13 @@ class ClearRecruitData extends Command
         RecruitResumeLog::truncate();
         RecruitResumeLook::truncate();
 
-        Resume::truncate();
-        ResumeCompany::truncate();
-        ResumeEducation::truncate();
-        ResumeProject::truncate();
-        ResumeSkill::truncate();
-        CompanyResume::truncate();
+//        Resume::truncate();
+//        ResumeCompany::truncate();
+//        ResumeEducation::truncate();
+//        ResumeProject::truncate();
+//        ResumeSkill::truncate();
+//        CompanyResume::truncate();
+
+        CompanyResume::where('source_type', 1)->delete();
     }
 }

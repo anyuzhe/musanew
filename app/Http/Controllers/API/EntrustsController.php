@@ -138,39 +138,51 @@ class EntrustsController extends ApiBaseCommonController
 
     public function acceptEntrust()
     {
-        $id = $this->request->get('id');
-        $entrust = Entrust::find($id);
-        $recruit = $entrust->recruit;
-        if($entrust->status==0){
-            $recruit->status = 3;
-            $recruit->save();
-
-            $entrust->status = 1;
-            $entrust->save();
-            return $this->apiReturnJson(0);
-        }else{
-            return $this->apiReturnJson(9999);
+        $ids = $this->request->get('ids');
+        if(!$ids || count($ids)==0){
+            $id = $this->request->get('id');
+            if($id){
+                $ids = [$id];
+            }
         }
+        foreach ($ids as $id) {
+            $entrust = Entrust::find($id);
+            $recruit = $entrust->recruit;
+            if($entrust->status==0){
+                $recruit->status = 3;
+                $recruit->save();
+
+                $entrust->status = 1;
+                $entrust->save();
+            }
+        }
+        return $this->apiReturnJson(0);
     }
 
     public function rejectEntrust()
     {
-        $id = $this->request->get('id');
-        $entrust = Entrust::find($id);
-        $recruit = $entrust->recruit;
-        if($entrust->status==0){
-            //假如委托没有进行中的了 直接变成结束
-            if(!Entrust::where('company_job_recruit_id', $recruit->id)->whereIn('status',[0,1])->first()){
-                $recruit->status = 4;
-                $recruit->save();
+        $ids = $this->request->get('ids');
+        if(!$ids || count($ids)==0){
+            $id = $this->request->get('id');
+            if($id){
+                $ids = [$id];
             }
-
-            $entrust->status = -2;
-            $entrust->save();
-            return $this->apiReturnJson(0);
-        }else{
-            return $this->apiReturnJson(9999);
         }
+        foreach ($ids as $id) {
+            $entrust = Entrust::find($id);
+            $recruit = $entrust->recruit;
+            if($entrust->status==0){
+                //假如委托没有进行中的了 直接变成结束
+                if(!Entrust::where('company_job_recruit_id', $recruit->id)->whereIn('status',[0,1])->first()){
+                    $recruit->status = 4;
+                    $recruit->save();
+                }
+
+                $entrust->status = -2;
+                $entrust->save();
+            }
+        }
+        return $this->apiReturnJson(0);
     }
 
     public function returnEntrust()
