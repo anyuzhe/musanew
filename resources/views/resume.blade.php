@@ -83,10 +83,12 @@
                 <td>分数</td>
             </tr>
             @foreach($matching['skills_data'] as $skill)
+            <tr class="subTr">
                 <td colspan="2">{!! $skill['skill_name'] !!}</td>
                 <td>{!! $skill['job_level_text'] !!}</td>
                 <td>{!! $skill['resume_level_text'] !!}</td>
                 <td>{!! $skill['sroce'] !!}</td>
+            </tr>
             @endforeach
         @endif
     @endif
