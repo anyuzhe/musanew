@@ -153,7 +153,7 @@
             <td>公司名称</td>
             <td>{!! $com['company_name'] !!}</td>
             <td>所属行业</td>
-            <td colspan="2">{!! $com['industry_text'] !!}</td>
+            <td colspan="2">{!! $com['industry']?$com['industry_text']:'' !!}</td>
         </tr>
         <tr class="subTr">
             <td>职位名称</td>
