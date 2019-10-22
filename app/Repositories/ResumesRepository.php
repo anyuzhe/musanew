@@ -519,7 +519,7 @@ class ResumesRepository
                 'company_job_recruit_entrust_id'=>$entrust?$entrust->id:null,
                 'status'=>1,
                 'resume_source'=>$obj->type,
-                'resume_source_company_id'=>$this->getCurrentCompany()->id,
+                'resume_source_company_id'=>TokenRepository::getCurrentCompany()->id,
                 'creator_id'=>$this->getUser()->id,
             ]);
             $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
