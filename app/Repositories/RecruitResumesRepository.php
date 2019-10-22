@@ -281,6 +281,10 @@ class RecruitResumesRepository
             case 2:
                 $data->resume_source_str = '个人投递';
                 break;
+            case 3:
+//                $data->resume_source_str = '导入简历';
+                $data->resume_source_str = $data->thirdParty?"外包({$data->thirdParty->company_alias})":"{$data->company->company_alias}";
+                break;
             default:
                 $data->resume_source_str = '来源未知';
                 break;
