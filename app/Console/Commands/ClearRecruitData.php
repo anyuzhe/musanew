@@ -51,6 +51,10 @@ class ClearRecruitData extends Command
      */
     public function handle()
     {
+//        Job::truncate();
+//        DB::connection('moodle')->table('job_test')->truncate();
+//        DB::connection('musa')->table('job_skill')->truncate();
+
         Entrust::truncate();
         Recruit::truncate();
         RecruitEndLog::truncate();
@@ -58,12 +62,12 @@ class ClearRecruitData extends Command
         RecruitResumeLog::truncate();
         RecruitResumeLook::truncate();
 
-//        Resume::truncate();
-//        ResumeCompany::truncate();
-//        ResumeEducation::truncate();
-//        ResumeProject::truncate();
-//        ResumeSkill::truncate();
-//        CompanyResume::truncate();
+        Resume::truncate();
+        ResumeCompany::truncate();
+        ResumeEducation::truncate();
+        ResumeProject::truncate();
+        ResumeSkill::truncate();
+        CompanyResume::truncate();
 
         CompanyResume::where('source_type', 1)->delete();
     }

@@ -11,6 +11,7 @@ use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\RecruitResumeLook;
 use App\Models\Resume;
+use App\Models\ResumeAttachment;
 use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
 use App\Models\ResumeProject;
@@ -51,20 +52,23 @@ class ClearData extends Command
      */
     public function handle()
     {
-        CompanyResume::truncate();
+        Job::truncate();
+        DB::connection('moodle')->table('job_test')->truncate();
+        DB::connection('musa')->table('job_skill')->truncate();
+
         Entrust::truncate();
         Recruit::truncate();
         RecruitEndLog::truncate();
         RecruitResume::truncate();
         RecruitResumeLog::truncate();
         RecruitResumeLook::truncate();
+
         Resume::truncate();
         ResumeCompany::truncate();
         ResumeEducation::truncate();
         ResumeProject::truncate();
         ResumeSkill::truncate();
-        Job::truncate();
-        DB::connection('moodle')->table('job_test')->truncate();
-        DB::connection('musa')->table('job_skill')->truncate();
+        ResumeAttachment::truncate();
+        CompanyResume::truncate();
     }
 }

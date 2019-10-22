@@ -136,7 +136,7 @@
     @foreach($data['educations'] as $ed)
         <tr class="subTr">
             <td>{!! $ed['school_name'] !!}</td>
-            <td>{!! $ed['start_date'] !!}</td>
+            <td>{!! $ed['start_date'] !!}{!! $ed['end_date']?' - '.$ed['end_date']:'' !!}</td>
             <td>{!! $ed['major'] !!}</td>
             <td>{!! $ed['national']==1?'是':'否' !!}</td>
             <td>{!! $ed['education_text'] !!}</td>
