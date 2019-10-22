@@ -520,7 +520,7 @@ class ResumesRepository
                 'status'=>1,
                 'resume_source'=>$obj->type,
                 'resume_source_company_id'=>TokenRepository::getCurrentCompany()->id,
-                'creator_id'=>$this->getUser()->id,
+                'creator_id'=>TokenRepository::getUser()->id,
             ]);
             $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
             $recruitResumesRepository->haveLook($recruitResume);
