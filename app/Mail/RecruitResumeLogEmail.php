@@ -91,9 +91,13 @@ class RecruitResumeLogEmail extends Mailable
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，完成面试，目前处于待定状态，请及时处理";
                     $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
                     $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
-                }elseif ($status==6){
-                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 录用 {$job->name}，将于<span style='color: red'> {$log->other_data} </span>正式入职。";
+                }elseif ($status==5){
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，通过面试，等待进一步确认";
+                    $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
+                    $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
                 }elseif ($status==7){
+                    $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 录用 {$job->name}，将于<span style='color: red'> {$log->other_data} </span>正式入职。";
+                }elseif ($status==8){
                     $recruit = $log->recruit;
                     $residue_num = $recruit->need_num - $recruit->done_num - $recruit->wait_entry_num;
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 正式入职 {$job->name}，目前还剩<span style='color: red'>{$residue_num}</span>人需要招聘";
