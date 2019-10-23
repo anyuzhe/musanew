@@ -34,6 +34,25 @@ class EntrustResumesController extends ApiBaseCommonController
       ['hope_job_text','like'],
     ];
 
+    protected $fileSuffixes = [
+        'bin',
+        'msg',
+        'doc',
+        'ppt',
+        'pptx',
+        'htm',
+        'html',
+        'mht',
+        'png',
+        'jpg',
+        'jpeg',
+        'docx',
+        'pdf',
+        'rtf',
+        'txt',
+        'text',
+    ];
+
     public function __construct(Request $request, ResumesRepository $resumesRepository,RecruitResumesRepository $recruitResumesRepository)
     {
         parent::__construct($request);
@@ -399,19 +418,7 @@ class EntrustResumesController extends ApiBaseCommonController
 
         $ext = $file->guessClientExtension();
 
-        if (!in_array($ext, [
-            'bin',
-            'msg',
-            'doc',
-            'pptx',
-            'htm',
-            'html',
-            'mht',
-            'jpg',
-            'jpeg',
-            'docx',
-            'pdf'
-        ])) {
+        if (!in_array($ext, $this->fileSuffixes)) {
             return responseZK(9999,null,'不正确的上传格式');
         }
 
@@ -505,19 +512,7 @@ class EntrustResumesController extends ApiBaseCommonController
 
         $ext = $file->guessClientExtension();
 
-        if (!in_array($ext, [
-            'bin',
-            'msg',
-            'doc',
-            'pptx',
-            'htm',
-            'html',
-            'mht',
-            'jpg',
-            'jpeg',
-            'docx',
-            'pdf'
-        ])) {
+        if (!in_array($ext, $this->fileSuffixes)) {
             return responseZK(9999,null,'不正确的上传格式');
         }
 
