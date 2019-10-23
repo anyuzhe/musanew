@@ -52,12 +52,13 @@ class JobsController extends ApiBaseCommonController
     {
         $model = $this->getModel();
         $this->authLimit($model);
-        $data = $model->pluck('name','id');
+        $data = $model->get();
         $arr = [];
         foreach ($data as $key=>$item) {
             $_arr = [];
-            $_arr['id'] = $key;
-            $_arr['name'] = $item;
+            $_arr['id'] = $item->id;
+            $_arr['name'] = $item->name;
+            $_arr['code'] = $item->code;
             $arr[] = $_arr;
         }
         return $this->apiReturnJson(0, $arr);
