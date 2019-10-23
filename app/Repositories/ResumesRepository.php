@@ -606,7 +606,7 @@ class ResumesRepository
 
     protected function getDateByAllTo01($start_date)
     {
-        if($start_date=='面议'){
+        if($start_date=='至今'){
             $_start_date = $start_date;
         }elseif($start_date){
             if(strlen($start_date)==10){
