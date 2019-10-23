@@ -271,10 +271,10 @@ class EntrustResumesController extends ApiBaseCommonController
 
                 $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
                     ->where('resume_id', $resume_id)->first();
-                if($resume->in_job==1){
-                    app('db')->rollBack();
-                    return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
-                }
+//                if($resume->in_job==1){
+//                    app('db')->rollBack();
+//                    return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
+//                }
                 if($has){
                     app('db')->rollBack();
                     return $this->apiReturnJson(9999, null, $resume->name.'已投递，无法重复添加');
@@ -311,10 +311,10 @@ class EntrustResumesController extends ApiBaseCommonController
                 $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
                     ->where('resume_id', $resume_id)
                     ->where('company_job_recruit_entrust_id', $entrust_id)->first();
-                if($resume->in_job==1){
-                    app('db')->rollBack();
-                    return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
-                }
+//                if($resume->in_job==1){
+//                    app('db')->rollBack();
+//                    return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
+//                }
                 if($has){
                     app('db')->rollBack();
                     return $this->apiReturnJson(9999, null, $resume->name.'已投递，无法重复添加');
