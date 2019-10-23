@@ -382,8 +382,8 @@ class ResumesRepository
                     'job_desc'=>isset($company['description'])?$company['description']:(isset($company['job_resp'])?$company['job_resp']:''),
                     'job_title'=>isset($company['title'])?$company['title']:'',
                     'company_name'=>isset($company['company_name'])?$company['company_name']:'',
-                    'job_start'=>isset($company['start_date'])?$company['start_date']:'',
-                    'job_end'=>isset($company['end_date'])?$company['end_date']:'',
+                    'job_start'=>isset($company['start_date'])?$this->getDateByAllTo01($company['start_date']):'',
+                    'job_end'=>isset($company['end_date'])?$this->getDateByAllTo01($company['end_date']):'',
                     'job_category'=>7,
                 ];
                 $_company['resume_id'] = $id;
@@ -396,8 +396,8 @@ class ResumesRepository
             foreach ($projects as $project) {
                 $_project = [
                     'project_name'=>isset($project['project_name'])?$project['project_name']:'',
-                    'project_start'=>isset($project['start_date'])?$project['start_date']:'',
-                    'project_end'=>isset($project['end_date'])?$project['end_date']:'',
+                    'project_start'=>isset($project['start_date'])?$this->getDateByAllTo01($project['start_date']):'',
+                    'project_end'=>isset($project['end_date'])?$this->getDateByAllTo01($project['end_date']):'',
                     'project_desc'=>isset($project['description'])?$project['description']:'',
                     'responsibility'=>isset($project['responsibility'])?$project['responsibility']:'',
                     'relate_company'=>isset($project['company'])?$project['company']:'',
@@ -602,5 +602,21 @@ class ResumesRepository
             }
         }
         return $area;
+    }
+
+    protected function getDateByAllTo01($start_date)
+    {
+        if($start_date=='面议'){
+            $_start_date = $start_date;
+        }elseif($start_date){
+            if(strlen($start_date)==10){
+                $_start_date = $start_date;
+            }else{
+                $_start_date = date('Y-m-01',strtotime($start_date));
+            }
+        }else{
+            $_start_date = '';
+        }
+        return $_start_date;
     }
 }
