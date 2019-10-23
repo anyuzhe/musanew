@@ -73,10 +73,12 @@ class CompaniesController extends ApiBaseCommonController
             $_all_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->sum('need_num');
             $v->recruitFinishingRate = (!$_all_count)?0:round($_finish_count/$_all_count*100, 2);
             $v->recruitSuccessRate = (!$_all_count)?0:round($_success_count/$_all_count*100, 2);
-            $_all_need_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->sum('need_num');
-            $_current_need_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereIn('status', [1])->pluck('company_job_recruit_id')->toArray())->sum('need_num');
+//            $_all_need_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->sum('need_num');
+            $_all_need_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->count();
+//            $_current_need_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereIn('status', [1])->pluck('company_job_recruit_id')->toArray())->sum('need_num');
+            $_current_need_count = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereIn('status', [1])->pluck('company_job_recruit_id')->toArray())->count();
             $v->allJobCount = $_all_need_count?$_all_need_count:0;
-            $v->ourJobCount = $_all_count;
+            $v->ourJobCount = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->count();;
             $v->currentRecruitCount = $_current_need_count?$_current_need_count:0;
 
             $v->logo_url = getPicFullUrl($v->logo);

@@ -208,10 +208,10 @@ class EntrustResumesController extends ApiBaseCommonController
                     ->where('resume_id', $id)->first();
             }
 
-            if($resume->in_job==1){
-                app('db')->rollBack();
-                return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
-            }
+//            if($resume->in_job==1){
+//                app('db')->rollBack();
+//                return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
+//            }
             if($has){
                 app('db')->rollBack();
                 return $this->apiReturnJson(9999, null, $resume->name.'已投递，无法重复添加');
