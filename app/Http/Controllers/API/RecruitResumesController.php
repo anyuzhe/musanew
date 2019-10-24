@@ -65,7 +65,7 @@ class RecruitResumesController extends ApiBaseCommonController
                 $v->have_look = 0;
             }
 
-            if(in_array($v->id, $_blacklist_resume_ids)){
+            if(in_array($v->resume->id, $_blacklist_resume_ids)){
                 $v->in_blacklist = 1;
                 $v->resume->in_blacklist = 1;
             }else{
