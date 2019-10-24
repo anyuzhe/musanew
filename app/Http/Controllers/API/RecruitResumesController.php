@@ -69,6 +69,7 @@ class RecruitResumesController extends ApiBaseCommonController
                 $v->in_blacklist = 1;
                 $v->resume->in_blacklist = 1;
             }else{
+                $v->in_blacklist = 0;
                 $v->resume->in_blacklist = 0;
             }
             if(in_array($v->resume_id, $_resumeHireIds)){
