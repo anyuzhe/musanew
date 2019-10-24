@@ -54,7 +54,7 @@ class RecruitResumesController extends ApiBaseCommonController
         $_resumeHireIds = RecruitResume::whereIn('resume_id', $_resumeIds)->whereNotIn('id',$_recruitResumeIds)->where('status','>=',6)
             ->pluck('resume_id')->toArray();
 
-
+        $_blacklist_resume_ids = CompanyResume::where('company_id', $this->getCurrentCompany()->id)->where('type', 3)->pluck('resume_id')->toArray();
         $has_loos_ids = $this->getCurrentCompany()->looks()->where('user_id', $this->getUser()->id)->pluck('company_job_recruit_resume_id')->toArray();
         foreach ($data as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
@@ -63,6 +63,12 @@ class RecruitResumesController extends ApiBaseCommonController
                 $v->have_look = 1;
             }else{
                 $v->have_look = 0;
+            }
+
+            if(in_array($v->id, $_blacklist_resume_ids)){
+                $v->in_blacklist = 1;
+            }else{
+                $v->in_blacklist = 0;
             }
             if(in_array($v->resume_id, $_resumeHireIds)){
                 $v->is_other_hired = 1;
