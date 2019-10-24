@@ -11,7 +11,7 @@ class EntrustsRepository
     public function getModelByType($type, $company, $in_recruit=null, $resume_id=null)
     {
         $model = new Entrust();
-        //过滤简历
+        //简历投递功能--过滤简历
         if($resume_id){
             $model = $model->whereNotIn('company_job_recruit_id', RecruitResume::where('resume_id', $resume_id)->pluck('company_job_recruit_id')->toArray());
         }
@@ -52,6 +52,8 @@ class EntrustsRepository
             $_status = 4;
         }elseif($_status==-2){
             $_status = 4;
+        }elseif($_status==-3){
+            $_status = 4;
         }else{
             $_status = $recruit_status;
         }
@@ -91,6 +93,9 @@ class EntrustsRepository
         switch ($entrust_status){
             case -2:
                 $status_text = $entrust['third_party']['company_alias'].' 拒绝委托招聘';
+                break;
+            case -3:
+                $status_text = '主动取消委托招聘';
                 break;
             case -1:
                 $status_text = '结束招聘';

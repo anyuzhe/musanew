@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Entrust extends Model
 {
-    //status 状态 -2 拒绝  -1 取消 0申请中 1正常 2完成
+    //status 状态 -3 外包方未确定直接取消  -2 拒绝  -1 取消 0申请中 1正常 2完成
     protected $table = 'company_job_recruit_entrust';
     protected $connection = 'musa';
     public $fillable = [
