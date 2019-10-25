@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Recruit;
 use App\Repositories\AreaRepository;
 use DB;
 use Illuminate\Support\Facades\Cache;
@@ -18,5 +19,10 @@ class AreasController extends CommonController
         });
 
         return self::apiReturnJson(0, $areas);
+    }
+
+    public function getHotCity()
+    {
+        Recruit::where('status', 1)->count();
     }
 }

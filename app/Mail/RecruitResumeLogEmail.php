@@ -82,7 +82,7 @@ class RecruitResumeLogEmail extends Mailable
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 放弃 {$job->name} 面试，已关闭";
                 }elseif ($status==-1){
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 不匹配 {$job->name}，已关闭";
-                }elseif ($status==2 ||$status==5 ){
+                }elseif ($status==2 || $status==5 ){
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，已协商约定 <span style='color: red'>{$log->other_data}</span> 进行面试";
                 }elseif ($status==3){
                     $old = RecruitResumeLog::where('company_job_recruit_resume_id', $log->company_job_recruit_resume_id)->where('id','!=',$log->id)->orderBy('id','desc')->first();
@@ -91,7 +91,7 @@ class RecruitResumeLogEmail extends Mailable
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，完成面试，目前处于待定状态，请及时处理";
                     $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
                     $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
-                }elseif ($status==5){
+                }elseif ($status==6){
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，通过面试，等待进一步确认";
                     $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
                     $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
