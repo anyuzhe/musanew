@@ -96,7 +96,7 @@ class LoginController extends CommonController
         $code = rand(100000, 999999);
         PasswordFindCode::create([
             'type'=>1,
-            'user_id'=>null,
+            'user_id'=>0,
             'operation'=>1,
             'status'=>0,
             'code'=>"$email-$code",
@@ -128,7 +128,6 @@ class LoginController extends CommonController
             }
 
             $codeHas = PasswordFindCode::where([
-                ['user_id',$user->id],
                 ['type',1],
                 ['operation',1],
                 ['status',0],
