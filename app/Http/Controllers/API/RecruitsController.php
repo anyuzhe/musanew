@@ -147,17 +147,51 @@ class RecruitsController extends ApiBaseCommonController
     public function finish()
     {
         $id = $this->request->get('id');
+        if(!$id){
+            $id = $this->request->get('recruit_id');
+        }
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
+            if(!$entrust)
+                return $this->apiReturnJson(9999);
             $entrust->status = -1;
             $entrust->end_at = date('Y-m-d H:i:s');
             $entrust->save();
             app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
         }else{
             $obj = Recruit::find($id);
+            if(!$obj)
+                return $this->apiReturnJson(9999);
             $obj->status = 4;
             $obj->end_at = date('Y-m-d H:i:s');
+            $obj->save();
+            app()->build(RecruitRepository::class)->generateEndLog($obj);
+        }
+        return $this->apiReturnJson(0);
+    }
+
+    public function pause()
+    {
+        $id = $this->request->get('id');
+        if(!$id){
+            $id = $this->request->get('recruit_id');
+        }
+        $entrust_id = $this->request->get('entrust_id');
+        if($entrust_id){
+            $entrust = Entrust::find($entrust_id);
+            if(!$entrust)
+                return $this->apiReturnJson(9999);
+            $entrust->status = 6;
+            $entrust->pause_at = date('Y-m-d H:i:s');
+            $entrust->save();
+            app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
+        }else{
+            $obj = Recruit::find($id);
+            if(!$obj)
+                return $this->apiReturnJson(9999);
+            $obj->status = 6;
+            $obj->pause_at = date('Y-m-d H:i:s');
             $obj->save();
             app()->build(RecruitRepository::class)->generateEndLog($obj);
         }
@@ -167,11 +201,28 @@ class RecruitsController extends ApiBaseCommonController
     public function restart()
     {
         $id = $this->request->get('id');
+        if(!$id){
+            $id = $this->request->get('recruit_id');
+        }
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
-            Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);;
+            Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
         }else{
             $this->getModel()->where('id', $id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
+        }
+        return $this->apiReturnJson(0);
+    }
+    public function start()
+    {
+        $id = $this->request->get('id');
+        if(!$id){
+            $id = $this->request->get('recruit_id');
+        }
+        $entrust_id = $this->request->get('entrust_id');
+        if($entrust_id){
+            Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1]);
+        }else{
+            $this->getModel()->where('id', $id)->update(['status'=>1]);
         }
         return $this->apiReturnJson(0);
     }

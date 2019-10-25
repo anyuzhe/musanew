@@ -129,6 +129,10 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->post('/company/recruits/finish', 'API\RecruitsController@finish');
     //重新开启
     $router->post('/company/recruits/restart', 'API\RecruitsController@restart');
+    //暂停
+    $router->post('/company/recruits/pause', 'API\RecruitsController@pause');
+    //开启
+    $router->post('/company/recruits/start', 'API\RecruitsController@start');
     //招聘职位提交申请给第三方
     $router->post('/company/entrusts/applyEntrust', 'API\EntrustsController@applyEntrust');
     //招聘职位提交申请给第三方-取消
