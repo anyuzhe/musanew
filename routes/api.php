@@ -76,6 +76,8 @@ $router->get('/user/login/test', 'API\LoginController@test');
 $router->any('/user/register', 'API\LoginController@register');
 //邮箱找回密码发送验证码
 $router->post('/user/findpassword/sendcode', 'API\LoginController@sendCode');
+//邮箱注册发送验证码
+$router->post('/user/register/sendcode', 'API\LoginController@sendCodeByRegister');
 //找回密码--修改密码
 $router->any('/user/findpassword/edit', 'API\LoginController@editPassword');
 

@@ -81,6 +81,35 @@ class LoginController extends CommonController
         }
     }
 
+    public function sendCodeByRegister()
+    {
+        $email = $this->request->get('email');
+        $user = User::where('email', $email)->first();
+        if($user){
+            return $this->apiReturnJson("9999", null, '该邮箱已存在');
+        }
+
+        $old = PasswordFindCode::where('code','like',"$email%")->where('type',1)->where('operation',1)->where('created_at','>',date('Y-m-d H:i:s',time()-60))->first();
+        if($old){
+            return $this->apiReturnJson("9999", null, '验证码发送频繁，请稍后再试');
+        }
+        $code = rand(100000, 999999);
+        PasswordFindCode::create([
+            'type'=>1,
+            'user_id'=>null,
+            'operation'=>1,
+            'status'=>0,
+            'code'=>"$email-$code",
+        ]);
+        $this->requireMoodleConfig();
+        $mailSendRes = EmailHelper::emailToUserCode($user, $code);
+        if($mailSendRes){
+            return $this->apiReturnJson("0", null, '发送成功');
+        }else{
+            return $this->apiReturnJson("9999");
+        }
+    }
+
     public function register()
     {
         try {
@@ -97,6 +126,18 @@ class LoginController extends CommonController
             if($userHas){
                 return $this->apiReturnJson("9998", null, '邮箱不能重复');
             }
+
+            $codeHas = PasswordFindCode::where([
+                ['user_id',$user->id],
+                ['type',1],
+                ['operation',1],
+                ['status',0],
+                ['code',"{$user->email}-{$user->code}"],
+            ])->first();
+            if(!$codeHas){
+                return $this->apiReturnJson('2002');
+            }
+
             $user->username = $user->email;
             $user = signup_setup_new_user($user);
             $this->userSignup($user, true);
@@ -114,6 +155,8 @@ class LoginController extends CommonController
             $user = User::find($user->id);
             $token = TokenHelper::getTokenForUser($user);
             $user->token = $token->token;
+
+            PasswordFindCode::where('id', $codeHas->id)->update(['status'=>1]);
 
             return $this->apiReturnJson(0, $user);
         }catch (\Exception $e) {
