@@ -288,16 +288,11 @@ class ResumesRepository
         }
         //开始工作时间
         if(isset($data['basics']['start_year_of_employment']) && !isEmpty($data['basics']['start_year_of_employment'])){
-            $obj->start_work_at = $data['basics']['start_year_of_employment'];
+            $obj->start_work_at = $this->getDateByAllTo01($data['basics']['start_year_of_employment']);
         }
         //生日
         if(isset($data['basics']['birthday']) && !isEmpty($data['basics']['birthday'])){
-            $obj->birthdate = $data['basics']['birthday'];
-//            if(strlen($data['basics']['birthday'])==10){
-//                $obj->birthdate = $data['basics']['birthday'];
-//            }else{
-//                $obj->birthdate = date('Y-m-01', strtotime($data['basics']['birthday']));
-//            }
+            $obj->birthdate = $this->getDateByAllTo01($data['basics']['birthday']);
         }
         //最高学历
         if(isset($data['basics']['top_edu_degree']) && !isEmpty($data['basics']['top_edu_degree'])){
@@ -365,8 +360,8 @@ class ResumesRepository
                     $is_tongzhao = 1;
                 }
                 $_education = [
-                    'start_date'=>isset($education['start_date'])?$education['start_date']:'',
-                    'end_date'=>isset($education['end_date'])?$education['end_date']:'',
+                    'start_date'=>isset($education['start_date'])?$this->getDateByAllTo01($education['start_date']):'',
+                    'end_date'=>isset($education['end_date'])?$this->getDateByAllTo01($education['end_date']):'',
                     'school_name'=>isset($education['school_name'])?$education['school_name']:'',
                     'major'=>isset($education['major'])?$education['major']:'',
                     'national'=>$is_tongzhao,
@@ -609,10 +604,13 @@ class ResumesRepository
         if($start_date=='至今'){
             $_start_date = $start_date;
         }elseif($start_date){
-            if(strlen($start_date)==10){
+            $len = strlen($start_date);
+            if($len==10){
                 $_start_date = $start_date;
-            }else{
+            }if($len==7){
                 $_start_date = date('Y-m-01',strtotime($start_date));
+            }else{
+                $_start_date = date('Y-01-01',strtotime($start_date));
             }
         }else{
             $_start_date = '';
