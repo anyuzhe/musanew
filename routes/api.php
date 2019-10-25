@@ -203,6 +203,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
 $router->get('/area/tree', 'API\AreasController@getTree');
+//获取热门城市
+$router->get('/area/hot/city', 'API\AreasController@getHotCity');
 //获取行业列表
 $router->get('/industry/tree', 'API\IndustriesController@getTree');
 //获取技能树列表

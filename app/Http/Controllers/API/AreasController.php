@@ -18,11 +18,22 @@ class AreasController extends CommonController
             return AreaRepository::getTree();
         });
 
-        return self::apiReturnJson(0, $areas);
+        return $this->apiReturnJson(0, $areas);
     }
 
     public function getHotCity()
     {
-        Recruit::where('status', 1)->count();
+        $data = DB::connection('musa')
+            ->table('company_job_recruit')
+            ->select(DB::raw('count(*) as num , mdl_musa_area.id, mdl_musa_area.cname'))
+            ->leftJoin('jobs', 'company_job_recruit.job_id', '=', 'jobs.id')
+            ->leftJoin('company_addresses', 'jobs.address_id', '=', 'company_addresses.id')
+            ->leftJoin('area', 'company_addresses.city_id', '=', 'area.id')
+            ->groupBy('area.id')
+            ->whereNotNull('company_addresses.city_id')
+            ->orderBy('num', 'desc')
+            ->get();
+
+        return $this->apiReturnJson(0, $data);
     }
 }
