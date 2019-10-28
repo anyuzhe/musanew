@@ -65,6 +65,7 @@ class ResumesRepository
         $data->load('educations');
         $data->load('companies');
         $data->load('projects');
+        $data->load('rains');
         $data->load('skills');
         $data->load('attachments');
         $skills = Skill::all()->keyBy('id')->toArray();
@@ -122,6 +123,7 @@ class ResumesRepository
         $data->skills;
         $data->attachments;
         $data->educations;
+        $data->rains;
         $data->projects;
         $data->companies;
         getOptionsText($data);

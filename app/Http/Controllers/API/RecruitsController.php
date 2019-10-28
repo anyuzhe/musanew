@@ -212,6 +212,7 @@ class RecruitsController extends ApiBaseCommonController
         }
         return $this->apiReturnJson(0);
     }
+
     public function start()
     {
         $id = $this->request->get('id');

@@ -17,6 +17,7 @@ class ChangeResumeTable extends Migration
             $table->tinyInteger('on_the_job')->default(0)->comment('是否在职');
             $table->tinyInteger('is_base')->default(0)->comment('是否是基本信息');
             $table->tinyInteger('is_personal')->default(0)->comment('是否是个人拥有');
+            $table->tinyInteger('is_public')->default(0)->comment('是否公开');
             $table->string('on_the_job_company_name', 191)->default('')->comment('在职公司');
         });
     }
@@ -31,6 +32,7 @@ class ChangeResumeTable extends Migration
         Schema::connection('musa')->table('resume', function (Blueprint $table) {
             $table->dropColumn('on_the_job');
             $table->dropColumn('on_the_job_company_name');
+            $table->dropColumn('is_public');
             $table->dropColumn('is_personal');
             $table->dropColumn('is_base');
         });

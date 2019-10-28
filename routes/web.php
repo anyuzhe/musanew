@@ -23,6 +23,20 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+
+    $first = DB::connection('musa')->table('company_job_recruit')
+        ->select(DB::raw('id, company_id, job_id, 0, need_num, done_num, resume_num, leading_id, created_at'))
+//        ->select('id','company_id','0')
+        ->where('status', 1);
+
+    $test = DB::connection('musa')->table('company_job_recruit_entrust')
+        ->select(DB::raw('id, third_party_id, job_id, company_job_recruit_id, 0, done_num, resume_num, 0, created_at'))
+        ->where('status', 1)
+//        ->whereNull('last_name')
+        ->union($first)
+        ->orderBy('id', 'desc')
+        ->get();
+    dd($test);
     $r = Area::find(110102);
     dd($r->parent);
     $r = Resume::find(41);

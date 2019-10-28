@@ -686,3 +686,20 @@ function getEducationValue($str)
     }
     return 0;
 }
+
+function getObjRelationBelongsTo(&$list, $relationName, $model, $fieldName, $id='id')
+{
+    $ids = [];
+    foreach ($list as $item) {
+        $ids[] = $item->{$fieldName};
+    }
+
+    $array = $model->whereIn($id, $ids)->get()->keyBy($id)->toArray();
+    foreach ($list as &$item) {
+        if(isset($array[$item->{$fieldName}])){
+            $item->{$relationName} = $array[$item->{$fieldName}];
+        }else{
+            $item->{$relationName} = null;
+        }
+    }
+}
