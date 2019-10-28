@@ -38,6 +38,8 @@ class Resume extends Model
         'third_party_evaluation',//第三方评价
         'type',//1:外包方录入的简历。 2个人简历
         'self_evaluation',//自我评价
+        'on_the_job',//是否在职
+        'on_the_job_company_name',//在职公司
     ];
 
     public function skills()

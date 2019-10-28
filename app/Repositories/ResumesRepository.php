@@ -12,6 +12,7 @@ use App\Models\Resume;
 use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
 use App\Models\ResumeProject;
+use App\Models\ResumeRain;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
 use mod_questionnaire\question\date;
@@ -198,6 +199,7 @@ class ResumesRepository
         $companies = isset($data['companies'])?$data['companies']:[];
         $projects = isset($data['projects'])?$data['projects']:[];
         $skills = isset($data['skills'])?$data['skills']:[];
+        $rains = isset($data['rains'])?$data['rains']:[];
 
         if($educations && is_array($educations)){
             $educations_ids = [];
@@ -226,6 +228,20 @@ class ResumesRepository
                 }
             }
             ResumeCompany::where('resume_id', $id)->whereNotIn('id', $companies_ids)->delete();
+        }
+        if($rains && is_array($rains)){
+            $rains_ids = [];
+            foreach ($rains as $rain) {
+                $rain['resume_id'] = $id;
+                if(isset($rain['id']) && $rain['id']){
+                    $rains_ids[] = $rain['id'];
+                    ResumeRain::where('id', $rain['id'])->update($rain);
+                }else{
+                    $_obj = ResumeRain::create($rain);
+                    $rains_ids[] = $_obj->id;
+                }
+            }
+            ResumeRain::where('resume_id', $id)->whereNotIn('id', $rains_ids)->delete();
         }
         if($projects && is_array($projects)){
             $projects_ids = [];
