@@ -240,7 +240,10 @@ class CompaniesController extends ApiBaseCommonController
     public function getDepartments()
     {
         $company = $this->getCurrentCompany();
-        return $this->apiReturnJson(0,app()->build(CompaniesRepository::class)->getDepartmentTree($company->id));
+        if($company)
+            return $this->apiReturnJson(0,app()->build(CompaniesRepository::class)->getDepartmentTree($company->id));
+        else
+            return $this->apiReturnJson(9999,null,'没有当前公司');
     }
 
     public function updateCurrentInfo()

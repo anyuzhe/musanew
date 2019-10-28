@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class UsersController extends CommonController
 {
     public function info()
-    { 
+    {
         $user = $this->getUser();
         $info = $user->info;
         if(!$info)
@@ -29,10 +29,12 @@ class UsersController extends CommonController
         $info->current_company = $user->company->first();
         if(!$info->current_company){
             $info->current_company = $info->companies->first();
-            $info->current_company->is_current = 1;
-            $r = CompanyUser::where('company_id',$info->current_company->id)->first();
-            $r->is_current = 1;
-            $r->save();
+            if($info->current_company){
+                $info->current_company->is_current = 1;
+                $r = CompanyUser::where('company_id',$info->current_company->id)->first();
+                $r->is_current = 1;
+                $r->save();
+            }
         }
         $this->requireMoodleConfig();
         foreach ($info->companies as &$company) {
