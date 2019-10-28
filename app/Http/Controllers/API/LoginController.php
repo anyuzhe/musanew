@@ -102,12 +102,13 @@ class LoginController extends CommonController
             'code'=>"$email-$code",
         ]);
         $this->requireMoodleConfig();
-        $mailSendRes = EmailHelper::emailToUserCode($user, $code);
-        if($mailSendRes){
-            return $this->apiReturnJson("0", null, '发送成功');
-        }else{
-            return $this->apiReturnJson("9999");
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($email)->send(new \App\Mail\SendCodeEmail($code));
+        } catch (\Exception $e) {
+
         }
+        return $this->apiReturnJson("0", null, '发送成功');
     }
 
     public function register()
