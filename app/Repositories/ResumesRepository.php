@@ -12,7 +12,7 @@ use App\Models\Resume;
 use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
 use App\Models\ResumeProject;
-use App\Models\ResumeRain;
+use App\Models\ResumeTrain;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
 use mod_questionnaire\question\date;
@@ -65,7 +65,7 @@ class ResumesRepository
         $data->load('educations');
         $data->load('companies');
         $data->load('projects');
-        $data->load('rains');
+        $data->load('trains');
         $data->load('skills');
         $data->load('attachments');
         $skills = Skill::all()->keyBy('id')->toArray();
@@ -123,7 +123,7 @@ class ResumesRepository
         $data->skills;
         $data->attachments;
         $data->educations;
-        $data->rains;
+        $data->trains;
         $data->projects;
         $data->companies;
         getOptionsText($data);
@@ -201,7 +201,7 @@ class ResumesRepository
         $companies = isset($data['companies'])?$data['companies']:[];
         $projects = isset($data['projects'])?$data['projects']:[];
         $skills = isset($data['skills'])?$data['skills']:[];
-        $rains = isset($data['rains'])?$data['rains']:[];
+        $trains = isset($data['trains'])?$data['trains']:[];
 
         if($educations && is_array($educations)){
             $educations_ids = [];
@@ -231,19 +231,19 @@ class ResumesRepository
             }
             ResumeCompany::where('resume_id', $id)->whereNotIn('id', $companies_ids)->delete();
         }
-        if($rains && is_array($rains)){
+        if($trains && is_array($trains)){
             $rains_ids = [];
-            foreach ($rains as $rain) {
+            foreach ($trains as $rain) {
                 $rain['resume_id'] = $id;
                 if(isset($rain['id']) && $rain['id']){
                     $rains_ids[] = $rain['id'];
-                    ResumeRain::where('id', $rain['id'])->update($rain);
+                    ResumeTrain::where('id', $rain['id'])->update($rain);
                 }else{
-                    $_obj = ResumeRain::create($rain);
+                    $_obj = ResumeTrain::create($rain);
                     $rains_ids[] = $_obj->id;
                 }
             }
-            ResumeRain::where('resume_id', $id)->whereNotIn('id', $rains_ids)->delete();
+            ResumeTrain::where('resume_id', $id)->whereNotIn('id', $rains_ids)->delete();
         }
         if($projects && is_array($projects)){
             $projects_ids = [];

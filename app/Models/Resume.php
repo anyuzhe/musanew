@@ -79,6 +79,6 @@ class Resume extends Model
 
     public function rains()
     {
-        return $this->hasMany('App\Models\ResumeRain');
+        return $this->hasMany('App\Models\ResumeTrain');
     }
 }
