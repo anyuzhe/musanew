@@ -12,7 +12,9 @@ class Recruit extends Model
     public $fillable = [
         'job_id',
         'need_num',
+        'is',
         'leading_id',
+        'is_public',
     ];
 
     public function job()

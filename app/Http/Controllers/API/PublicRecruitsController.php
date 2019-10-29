@@ -99,6 +99,7 @@ class PublicRecruitsController extends ApiBaseCommonController
         dd($recruits->toarray());
         getObjRelationBelongsTo($recruits, 'recruit', new Recruit(),'company_job_recruit_id');
         getObjRelationBelongsTo($recruits, 'entrust', new Entrust(),'company_job_recruit_entrust_id');
+//        getObjRelationBelongsTo($recruits, 'leading', new Entrust(),'company_job_recruit_entrust_id');
         dd($recruits);
         $recruits->load('job');
         $recruits->load('leading');

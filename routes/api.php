@@ -131,6 +131,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //人员招聘
     //添加招聘职位
     $router->post('/company/recruits', 'API\RecruitsController@store');
+    //更新招聘
+    $router->post('/company/recruits/{id}', 'API\RecruitsController@update');
     //结束
     $router->post('/company/recruits/finish', 'API\RecruitsController@finish');
     //重新开启

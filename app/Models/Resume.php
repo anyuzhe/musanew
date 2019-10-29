@@ -40,6 +40,7 @@ class Resume extends Model
         'self_evaluation',//自我评价
         'on_the_job',//是否在职
         'on_the_job_company_name',//在职公司
+        'is_public',//是否公开
     ];
 
     public function skills()
