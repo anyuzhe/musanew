@@ -41,6 +41,7 @@ class Resume extends Model
         'on_the_job',//是否在职
         'on_the_job_company_name',//在职公司
         'is_public',//是否公开
+//        is_personal,is_base
     ];
 
     public function skills()

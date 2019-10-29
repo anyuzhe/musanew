@@ -83,7 +83,7 @@ class UsersController extends CommonController
         $user_id = $this->getUser()->id;
         $obj->creator_id = $user_id;
         $obj->user_id = $user_id;
-        $obj->type = 1;
+        $obj->type = 2;
         $this->resumeRepository->saveDataForForm($obj, $data);
     }
 

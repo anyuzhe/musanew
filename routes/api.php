@@ -207,6 +207,23 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //企业部门
     $router->any('/company/departments', 'API\CompaniesController@getDepartments');
 
+
+    //----------------个人中心-------------------------
+
+
+    //列表
+    $router->get('/user/resumes', 'API\UserResumesController@index');
+//详情
+    $router->get('/user/resumes/{id}', 'API\UserResumesController@show');
+
+    //删除
+    $router->post('/user/resumes/delete/{id}', 'API\UserResumesController@destroy');
+
+    //第三方添加简历
+    $router->post('/user/resumes', 'API\UserResumesController@store');
+    //更新简历
+    $router->post('/user/resumes/{id}', 'API\UserResumesController@update');
+
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
