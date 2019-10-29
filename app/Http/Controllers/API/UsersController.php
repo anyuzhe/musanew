@@ -100,17 +100,29 @@ class UsersController extends CommonController
     	$request = $this->request->all();
 
     	$user = $this->getUser();
-    	$resume = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
-    	if($resume){
-            $resume->fill($request);
-            $resume->save();
-    	    $this->afterUpdate($resume->id, $request);
+        $obj = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
+    	if($obj){
+            $obj->fill($request);
+            $obj->save();
+    	    $this->afterUpdate($obj->id, $request);
         }else{
             $obj = Resume::create($request);
             $obj->is_base = 1;
+            $obj->is_personal = 1;
             $this->afterStore($obj, $request);
         }
+        $info = $user->info;
+        $info->realname = $request['name'];
+        $info->fill($request);
+        $info->save();
 
+        if(!$user->firstname && $info->realname){
+            $realname = $info->realname;
+            User::where('id', $user->id)->update([
+                'firstname'=>$realname?substr_text($realname,0,1):'',
+                'lastname'=>$realname?substr_text($realname,1, strlen($realname)):'',
+            ]);
+        }
     	return $this->apiReturnJson(0);
     }
 
