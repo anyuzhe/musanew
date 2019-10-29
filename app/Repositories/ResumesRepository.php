@@ -59,7 +59,6 @@ class ResumesRepository
             }
         }
 
-
         $data->load('jobCompany');
         $data->load('assignmentCompany');
         $data->load('educations');
@@ -116,6 +115,7 @@ class ResumesRepository
         }
         return $data;
     }
+
     public function getData($data)
     {
         $data->jobCompany;

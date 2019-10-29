@@ -4,13 +4,27 @@ namespace App\Http\Controllers\API;
 
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\Resume;
 use App\Models\User;
 use App\Models\UserBasicInfo;
+use App\Repositories\RecruitResumesRepository;
+use App\Repositories\ResumesRepository;
 use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class UsersController extends CommonController
 {
+    protected $resumeRepository;
+    protected $recruitResumesRepository;
+
+    public function __construct(Request $request, ResumesRepository $resumesRepository,RecruitResumesRepository $recruitResumesRepository)
+    {
+        parent::__construct($request);
+        $this->resumeRepository = $resumesRepository;
+        $this->recruitResumesRepository = $recruitResumesRepository;
+    }
+
     public function info()
     {
         $user = $this->getUser();
@@ -49,25 +63,48 @@ class UsersController extends CommonController
             $info->current_company->role_name = CompanyRole::find($info->current_company->pivot->company_role_id)->name;
         }
 
+
+        $resume = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
+        if($resume){
+            $info = $info->toArray();
+            $info = array_merge($info, $this->resumeRepository->getData($resume)->toArray());
+        }
+
         return $this->apiReturnJson(0, $info);
     }
 
+    public function afterStore($obj, $data)
+    {
+        $user_id = $this->getUser()->id;
+        $obj->creator_id = $user_id;
+        $obj->user_id = $user_id;
+        $obj->type = 1;
+        $this->resumeRepository->saveDataForForm($obj, $data);
+    }
+
+    public function afterUpdate($id, $data)
+    {
+        $obj = Resume::find($id);
+
+        $this->resumeRepository->saveDataForForm($obj, $data);
+        return $this->apiReturnJson(0);
+    }
+
     public function setInfo() {
-//    	$this->validate(
-//        $this->request,
-//        [
-//        	'realname' =>'required',
-//        	'idcard_no' =>'required'
-//        ]
-//    	);
+
     	$request = $this->request->all();
-    	if (isset($request['token'])) {
-    		unset($request['token']);
-    	}
 
     	$user = $this->getUser();
-    	$request['user_id'] = $user->id;
-    	$user->info()->update($request);
+    	$resume = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
+    	if($resume){
+            $resume->fill($request);
+            $resume->save();
+    	    $this->afterUpdate($resume->id, $request);
+        }else{
+            $obj = Resume::create($request);
+            $obj->is_base = 1;
+            $this->afterStore($obj, $request);
+        }
 
     	return $this->apiReturnJson(0);
     }
