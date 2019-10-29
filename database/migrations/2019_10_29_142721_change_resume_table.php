@@ -16,6 +16,7 @@ class ChangeResumeTable extends Migration
         Schema::connection('musa')->table('resume', function (Blueprint $table) {
             $table->string('resume_name', 191)->default('')->comment('简历名称');
             $table->string('usable_range', 191)->default('')->comment('使用范围');
+            $table->string('avatar', 191)->nullable()->comment('头像');
 
         });
     }
@@ -30,6 +31,7 @@ class ChangeResumeTable extends Migration
         Schema::connection('musa')->table('resume', function (Blueprint $table) {
             $table->dropColumn('resume_name');
             $table->dropColumn('usable_range');
+            $table->dropColumn('avatar');
         });
     }
 }

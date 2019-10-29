@@ -25,7 +25,7 @@ class Resume extends Model
         'is_married',//婚姻状态 0未婚 1已婚
         'is_upload',//是否上传
         'birthdate',//出生年月日
-        'avator',//头像
+        'avatar',//头像
         'visable',//可见1，不可见2
         'company_id',//
         'permanent_province_id',//户籍省
