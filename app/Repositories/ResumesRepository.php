@@ -172,6 +172,11 @@ class ResumesRepository
         $data->age = getAge($data->birthdate);
 
         $data->resume_file_path = env('APP_URL').$data->resume_file_path;
+        if($data->avator){
+            $data->avator_url = getPicFullUrl($data->avator);
+        }else{
+            $data->avator_url = "";
+        }
         return $data;
     }
 
