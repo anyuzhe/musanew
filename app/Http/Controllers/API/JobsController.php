@@ -6,6 +6,7 @@ use App\Models\CompanyDepartment;
 use App\Models\Course;
 use App\Models\Recruit;
 use App\Repositories\JobsRepository;
+use App\Repositories\SkillsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,7 +30,7 @@ class JobsController extends ApiBaseCommonController
 
     public function getTest()
     {
-        $data = Course::where('category', 6)->get();
+        $data = Course::whereIn('category', SkillsRepository::getTestCateId())->get();
         return $this->apiReturnJson(0, $data);
     }
 

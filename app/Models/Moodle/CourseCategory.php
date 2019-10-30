@@ -14,6 +14,6 @@ class CourseCategory extends Model
 
     public function children()
     {
-        return $this->hasMany(CourseCategory::class, 'parent');
+        return $this->hasMany(CourseCategory::class, 'parent', 'id');
     }
 }

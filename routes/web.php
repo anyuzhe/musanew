@@ -12,8 +12,10 @@
 */
 
 use App\Models\Area;
+use App\Models\Moodle\CourseCategory;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
+use App\Repositories\SkillsRepository;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
@@ -24,6 +26,7 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
 
+    dd(SkillsRepository::getTestCateId());
     $first = DB::connection('musa')->table('company_job_recruit')
         ->select(DB::raw('id, company_id, job_id, 0, need_num, done_num, resume_num, leading_id, created_at'))
 //        ->select('id','company_id','0')

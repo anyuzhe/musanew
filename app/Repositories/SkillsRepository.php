@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Area;
+use App\Models\Moodle\CourseCategory;
 use App\Models\Skill;
 use App\Models\SkillCategory;
 
@@ -42,5 +43,10 @@ class SkillsRepository
         if(count($v['children'])==0){
             $v['children'] = null;
         }
+    }
+
+    public static function getTestCateId()
+    {
+        return array_merge([6],CourseCategory::where('id',6)->first()->children->pluck('id')->toArray());
     }
 }
