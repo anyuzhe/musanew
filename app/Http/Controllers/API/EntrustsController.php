@@ -98,8 +98,9 @@ class EntrustsController extends ApiBaseCommonController
             $new = new Recruit();
             $new->fill($recruit->toArray());
 
+            $new->company_id = $recruit->company_id;
             $new->creator_id = $this->getUser()->id;
-            $new->true_created_at = $new->created_at;
+            $new->true_created_at = date('Y-m-d H:i:s');
             $new->save();
             $recruit = $new;
         }
