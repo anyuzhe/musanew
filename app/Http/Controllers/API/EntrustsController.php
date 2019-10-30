@@ -91,7 +91,16 @@ class EntrustsController extends ApiBaseCommonController
     public function applyEntrust()
     {
         $company_job_recruit_id = $this->request->get('company_job_recruit_id');
+        $is_new_create = $this->request->get('company_job_recruit_id',0);
         $recruit = Recruit::find($company_job_recruit_id);
+
+        if($is_new_create){
+            $new = new Recruit();
+            $new->fill($recruit->toArray());
+            $new->save();
+            $recruit = $new;
+        }
+
         $recruit->status = 2;
         $recruit->save();
         $third_party_ids = $this->request->get('third_party_ids');
