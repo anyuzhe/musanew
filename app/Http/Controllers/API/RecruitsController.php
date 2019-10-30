@@ -236,7 +236,6 @@ class RecruitsController extends ApiBaseCommonController
     public function outsourceList()
     {
         $model = $this->getModel();
-        $model->where();
 
         $company = $this->getCurrentCompany();
         if ($company) {
