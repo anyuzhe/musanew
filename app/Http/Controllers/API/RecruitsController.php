@@ -22,8 +22,6 @@ class RecruitsController extends ApiBaseCommonController
 
     public $model_name = Recruit::class;
 
-
-
     public function storeValidate()
     {
         return [
@@ -260,8 +258,13 @@ class RecruitsController extends ApiBaseCommonController
 
         $companies = Company::all()->keyBy('id')->toArray();
 
+        $entrustRes = app()->build(EntrustsRepository::class);
         foreach ($list as &$v) {
             foreach ($v['entrusts'] as &$entrust) {
+
+                $entrust['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($v,$entrust);
+                $entrust['status'] = $entrustRes->getStatusByEntrustAndRecruit($entrust['status'],$v['status']);
+
                 if(isset($companies[$entrust['third_party_id']])){
                     $entrust['thirdParty'] = $companies[$entrust['third_party_id']];
                 }else{
