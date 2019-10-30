@@ -97,6 +97,9 @@ class EntrustsController extends ApiBaseCommonController
         if($is_new_create){
             $new = new Recruit();
             $new->fill($recruit->toArray());
+
+            $new->creator_id = $this->getUser()->id;
+            $new->true_created_at = $new->created_at;
             $new->save();
             $recruit = $new;
         }
