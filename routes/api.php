@@ -106,6 +106,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/recruits/type/4', 'API\CompaniesController@entrustsList');
     $router->get('/company/recruits/type/{type}', 'API\EntrustsController@index');
     $router->get('/company/entrust/{id}', 'API\EntrustsController@show');
+//外包的招聘列表
+    $router->get('/company/recruits/outsource', 'API\RecruitsController@outsourceList');
 
     $router->get('/company/recruits/{id}', 'API\RecruitsController@show');
 

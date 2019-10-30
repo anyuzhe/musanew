@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Company;
 use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Recruit;
@@ -230,5 +231,49 @@ class RecruitsController extends ApiBaseCommonController
             $this->getModel()->where('id', $id)->update(['status'=>1]);
         }
         return $this->apiReturnJson(0);
+    }
+
+    public function outsourceList()
+    {
+        $model = $this->getModel();
+        $model->where();
+
+        $company = $this->getCurrentCompany();
+        if ($company) {
+            //委托了的招聘
+            $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+            $model = $model->where('company_id', $company->id)->whereIn('id', $has_entrust_ids);
+        }else{
+            $model = $model->where('id', 0);
+        }
+        $model = $this->modelPipeline([
+            'modelGetSearch',
+            'modelGetSort',
+        ],$model);
+        $model_data = clone $model;
+        $count = $model->count();
+        $list = $this->modelPipeline([
+            'modelGetPageData',
+            'collectionGetLoads',
+            'modelByAfterGet',
+        ],$model_data);
+
+        $companies = Company::all()->keyBy('id')->toArray();
+        $list->entrusts;
+        foreach ($list as &$v) {
+            foreach ($v->entrusts as &$entrust) {
+                if(isset($companies[$entrust->third_party_id])){
+                    $entrust->thirdParty = $companies[$entrust->third_party_id];
+                }else{
+                    $entrust->thirdParty = null;
+                }
+            }
+        }
+
+        $pageSize = app('request')->get('pageSize',10);
+        $pagination = app('request')->get('pagination',1);
+        $pagination = $pagination>0?$pagination:1;
+
+        return $this->apiReturnJson(0, $list,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 }
