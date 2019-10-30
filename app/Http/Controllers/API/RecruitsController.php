@@ -262,14 +262,14 @@ class RecruitsController extends ApiBaseCommonController
         foreach ($list as &$v) {
             foreach ($v['entrusts'] as &$entrust) {
 
+                if(isset($companies[$entrust['third_party_id']])){
+                    $entrust['third_party'] = $companies[$entrust['third_party_id']];
+                }else{
+                    $entrust['third_party'] = null;
+                }
                 $entrust['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($v,$entrust);
                 $entrust['status'] = $entrustRes->getStatusByEntrustAndRecruit($entrust['status'],$v['status']);
 
-                if(isset($companies[$entrust['third_party_id']])){
-                    $entrust['thirdParty'] = $companies[$entrust['third_party_id']];
-                }else{
-                    $entrust['thirdParty'] = null;
-                }
             }
         }
 
