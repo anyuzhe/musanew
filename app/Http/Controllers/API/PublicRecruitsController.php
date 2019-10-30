@@ -9,6 +9,7 @@ use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
+use App\Models\UserBasicInfo;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitRepository;
@@ -96,27 +97,21 @@ class PublicRecruitsController extends ApiBaseCommonController
 
     public function _after_get(&$recruits)
     {
-        dd($recruits->toarray());
         getObjRelationBelongsTo($recruits, 'recruit', new Recruit(),'company_job_recruit_id');
         getObjRelationBelongsTo($recruits, 'entrust', new Entrust(),'company_job_recruit_entrust_id');
-//        getObjRelationBelongsTo($recruits, 'leading', new Entrust(),'company_job_recruit_entrust_id');
-        dd($recruits);
-        $recruits->load('job');
-        $recruits->load('leading');
+        getObjRelationBelongsTo($recruits, 'leading', new UserBasicInfo(),'leading_id', 'user_id');
+        getObjRelationBelongsTo($recruits, 'company', new Company(),'third_party_id', 'id');
 
-        $entrustRes = app()->build(EntrustsRepository::class);
-
-        $job_ids = [];
-        $recruits = $recruits->toArray();
-        foreach ($recruits as $recruit) {
-            $job_ids[] = $recruit['job']['id'];
-        }
-        $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
+        $jobRes = app()->build(JobsRepository::class);
+        $jobs = $jobRes->getListData(Job::whereIn('id', $recruits->pluck('job_id')->toArray())->get())->keyBy('id')->toArray();
+//        dd($recruits);
         foreach ($recruits as &$recruit) {
-            $recruit['job'] = $jobs[$recruit['job']['id']];
-            $recruit['residue_num'] = $recruit['need_num'] - $recruit['done_num'] - $recruit['wait_entry_num'];
-            $recruit['residue_num'] = $recruit['residue_num']>0?$recruit['residue_num']:0;
-            $recruit['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($recruit);
+            $recruit->job = $jobs[$recruit->job_id];
+            if($recruit->leading && $recruit->leading['avatar']){
+                $recruit->leading['avatar_url'] = getPicFullUrl($recruit['leading']['avatar']);
+            }elseif ($recruit->leading){
+                $recruit->leading['avatar_url'] = '';
+            }
         }
         return $recruits;
     }
@@ -157,9 +152,18 @@ class PublicRecruitsController extends ApiBaseCommonController
     public function index(Request $request)
     {
         $model = $this->getModel();
+
+        $_model = clone $model;
+        $count = $_model->count();
+
         $model = $this->modelGetSort($model);
         $data = $this->modelGetPageData($model);
         $this->_after_get($data);
-        dd($data);
+
+        $pageSize = app('request')->get('pageSize',10);
+        $pagination = app('request')->get('pagination',1);
+        $pagination = $pagination>0?$pagination:1;
+
+        return $this->apiReturnJson(0, $data,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 }

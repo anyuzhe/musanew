@@ -34,25 +34,6 @@ class UserResumesController extends ApiBaseCommonController
       ['hope_job_text','like'],
     ];
 
-    protected $fileSuffixes = [
-        'bin',
-        'msg',
-        'doc',
-        'ppt',
-        'pptx',
-        'htm',
-        'html',
-        'mht',
-        'png',
-        'jpg',
-        'jpeg',
-        'docx',
-        'pdf',
-        'rtf',
-        'txt',
-        'text',
-    ];
-
     public function __construct(Request $request, ResumesRepository $resumesRepository,RecruitResumesRepository $recruitResumesRepository)
     {
         parent::__construct($request);
@@ -84,6 +65,9 @@ class UserResumesController extends ApiBaseCommonController
         $in_job = $this->request->get('in_job');
         $skills = $this->request->get('skills');
         $model = $model->where('status','!=',-1);
+
+        $user_id = $this->getUser()->id;
+        $model = $model->where('user_id', $user_id)->where('is_base', 0);
 
         if($in_job || is_numeric($in_job)){
             $model = $model->where('in_job', $in_job);

@@ -30,5 +30,6 @@ class UserBasicInfo extends Model
         'graduate_institutions',
         'major',
         'self_evaluation',
+        'avatar',
     ];
 }

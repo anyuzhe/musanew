@@ -171,7 +171,6 @@ class CompaniesController extends ApiBaseCommonController
             $entrusts->load('job');
             $entrusts->load('recruit');
             $entrusts->load('leading');
-            $entrusts->load('leading');
 
             $item = $v->toArray();
 

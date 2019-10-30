@@ -73,4 +73,9 @@ class Job extends Model
     {
         return $this->belongsTo('App\Models\CompanyDepartment', 'department_id');
     }
+
+    public function getDateFormat()
+    {
+        return 'Y-m-d H:i:s';
+    }
 }

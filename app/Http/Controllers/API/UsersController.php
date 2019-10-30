@@ -125,7 +125,7 @@ class UsersController extends CommonController
                 'lastname'=>$realname?substr_text($realname,1, strlen($realname)):'',
             ]);
         }
-    	return $this->apiReturnJson(0);
+    	return $this->info();
     }
 
     public function setCurrentCompany() {

@@ -18,4 +18,9 @@ class CompanyDepartment extends Model
     public function parent() {
         return $this->belongsTo('App\Models\CompanyDepartment','id', 'pid');
     }
+
+    public function getDateFormat()
+    {
+        return 'Y-m-d H:i:s';
+    }
 }
