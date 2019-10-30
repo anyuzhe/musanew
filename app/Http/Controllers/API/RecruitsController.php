@@ -140,9 +140,13 @@ class RecruitsController extends ApiBaseCommonController
         return $model;
     }
 
-//    public function afterUpdate($id, $data)
-//    {
-//    }
+    public function afterUpdate($id, $data)
+    {
+        if(isset($data['leading_id'])){
+            Entrust::where('company_job_recruit_id', $id)->update(['leading_id'=>$data['leading_id']]);
+        }
+        return $this->apiReturnJson(0);
+    }
 
     public function finish()
     {

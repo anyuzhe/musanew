@@ -85,6 +85,8 @@ $router->any('/user/findpassword/edit', 'API\LoginController@editPassword');
 //------------首页相关接口-------------------
 //公开的招聘信息
 $router->get('/public/recruits', 'API\PublicRecruitsController@index');
+//公开的招聘信息详情
+$router->get('/public/recruits/detail', 'API\PublicRecruitsController@detail');
 
 //简历上传
 $router->post('/company/resume/upload', 'API\EntrustResumesController@upload');

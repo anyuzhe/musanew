@@ -166,4 +166,44 @@ class PublicRecruitsController extends ApiBaseCommonController
 
         return $this->apiReturnJson(0, $data,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
+
+    public function detail()
+    {
+        $recruit_id = $this->request->get('recruit_id');
+        $entrust_id = $this->request->get('entrust_id');
+
+        $recruit = null;
+        $entrust = null;
+        if($entrust_id){
+            $entrust = Entrust::find($entrust_id);
+            if($entrust){
+                $recruit = $entrust->recruit;
+                $entrust->thirdParty->logo_url = getPicFullUrl($entrust->thirdParty->logo);
+            }
+        }elseif($recruit_id){
+            $recruit = Recruit::find($recruit_id);
+        }
+        if(!$recruit)
+            return $this->apiReturnJson(9999,null,'缺少数据');
+
+
+        $recruit->company->logo_url = getPicFullUrl($recruit->company->logo);
+
+        if($recruit->leading && $recruit->leading['avatar']){
+            $recruit->leading['avatar_url'] = getPicFullUrl($recruit['leading']['avatar']);
+        }elseif ($recruit->leading){
+            $recruit->leading['avatar_url'] = '';
+        }
+        $job = app()->build(JobsRepository::class)->getData($recruit->job);
+        unset($recruit->job);
+
+        $recommend = app()->build(RecruitRepository::class)->getRecommend($recruit, $entrust);
+        dd($recommend);
+        return $this->apiReturnJson(0,[
+            'recruit'=>$recruit,
+            'entrust'=>$entrust,
+            'job'=>$job,
+            'recommend'=>app()->build(RecruitRepository::class)->getRecommend($recruit, $entrust),
+        ]);
+    }
 }

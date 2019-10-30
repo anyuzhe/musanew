@@ -34,6 +34,7 @@ class ChangeResume1Table extends Migration
             $table->dropColumn('on_the_job');
             $table->dropColumn('on_the_job_company_name');
             $table->dropColumn('is_public');
+            $table->dropColumn('is_used');
             $table->dropColumn('is_personal');
             $table->dropColumn('is_base');
         });
