@@ -261,11 +261,11 @@ class RecruitsController extends ApiBaseCommonController
         $companies = Company::all()->keyBy('id')->toArray();
 
         foreach ($list as &$v) {
-            foreach ($v->entrusts as &$entrust) {
-                if(isset($companies[$entrust->third_party_id])){
-                    $entrust->thirdParty = $companies[$entrust->third_party_id];
+            foreach ($v['entrusts'] as &$entrust) {
+                if(isset($companies[$entrust['third_party_id']])){
+                    $entrust['thirdParty'] = $companies[$entrust['third_party_id']];
                 }else{
-                    $entrust->thirdParty = null;
+                    $entrust['thirdParty'] = null;
                 }
             }
         }
