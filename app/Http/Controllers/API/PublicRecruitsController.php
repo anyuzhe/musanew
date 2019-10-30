@@ -197,13 +197,35 @@ class PublicRecruitsController extends ApiBaseCommonController
         $job = app()->build(JobsRepository::class)->getData($recruit->job);
         unset($recruit->job);
 
-        $recommend = app()->build(RecruitRepository::class)->getRecommend($recruit, $entrust);
-        dd($recommend);
+        $recommendArray = app()->build(RecruitRepository::class)->getRecommend($recruit, $entrust);
+        $recommendRecruitArray = [];
+        $recommendEntrustArray = [];
+        foreach ($recommendArray as $item) {
+            if($item['type']=='entrust'){
+                $recommendEntrustArray[] = $item['id'];
+            }else{
+                $recommendRecruitArray[] = $item['id'];
+            }
+        }
+        $select1 = DB::raw('id, company_id, job_id, id as company_job_recruit_id, 0, need_num, done_num, resume_num, leading_id, created_at');
+        $select2 = DB::raw('id, third_party_id, job_id, company_job_recruit_id, id as company_job_recruit_entrust_id, "need_num", done_num, resume_num, leading_id, created_at');
+        $query = DB::connection('musa')->table('company_job_recruit')
+            ->select($select1)
+            ->whereIn('id', $recommendRecruitArray);
+
+        $model = DB::connection('musa')->table('company_job_recruit_entrust')
+            ->select($select2)
+            ->whereIn('id', $recommendEntrustArray)
+            ->union($query);
+
+        $data = $model->get();
+        $this->_after_get($data);
+
         return $this->apiReturnJson(0,[
             'recruit'=>$recruit,
             'entrust'=>$entrust,
             'job'=>$job,
-            'recommend'=>app()->build(RecruitRepository::class)->getRecommend($recruit, $entrust),
+            'recommend'=>$data,
         ]);
     }
 }
