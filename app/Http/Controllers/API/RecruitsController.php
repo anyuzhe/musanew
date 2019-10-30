@@ -76,6 +76,7 @@ class RecruitsController extends ApiBaseCommonController
     {
         $recruits->load('job');
         $recruits->load('leading');
+        $recruits->load('entrusts');
 
         $entrustRes = app()->build(EntrustsRepository::class);
 
@@ -258,7 +259,7 @@ class RecruitsController extends ApiBaseCommonController
         ],$model_data);
 
         $companies = Company::all()->keyBy('id')->toArray();
-        $list->load('entrusts');
+
         foreach ($list as &$v) {
             foreach ($v->entrusts as &$entrust) {
                 if(isset($companies[$entrust->third_party_id])){
