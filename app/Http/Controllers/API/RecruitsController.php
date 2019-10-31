@@ -252,13 +252,13 @@ class RecruitsController extends ApiBaseCommonController
         }
         $model = $this->modelPipeline([
             'modelGetSearch',
-            'modelGetSort',
+            'outsourceSort',
         ],$model);
         $model_data = clone $model;
         $count = $model->count();
         $list = $this->modelPipeline([
             'modelGetPageData',
-            'outsourceSort',
+            'collectionGetLoads',
             'modelByAfterGet',
         ],$model_data);
 
