@@ -234,7 +234,7 @@ class RecruitsController extends ApiBaseCommonController
 
     public function outsourceSort(&$model)
     {
-        $model = $model->orderBy("FIELD(status, 1) desc")->orderBy('updated_at','desc');
+        $model = $model->orderByRaw("FIELD(status, 1) desc")->orderBy('updated_at','desc');
         return $model;
     }
 
