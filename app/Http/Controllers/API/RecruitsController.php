@@ -232,6 +232,12 @@ class RecruitsController extends ApiBaseCommonController
         return $this->apiReturnJson(0);
     }
 
+    public function outsourceSort(&$model)
+    {
+        $model = $model->orderBy("FIELD(status, 1) desc")->orderBy('updated_at','desc');
+        return $model;
+    }
+
     public function outsourceList()
     {
         $model = $this->getModel();
@@ -252,7 +258,7 @@ class RecruitsController extends ApiBaseCommonController
         $count = $model->count();
         $list = $this->modelPipeline([
             'modelGetPageData',
-            'collectionGetLoads',
+            'outsourceSort',
             'modelByAfterGet',
         ],$model_data);
 
