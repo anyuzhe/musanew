@@ -76,7 +76,7 @@ class UsersController extends CommonController
         }
         $info = $info->toArray();
         $resumeInfo = $this->resumeRepository->getData($resume)->toArray();
-        $resumeInfo['resumeCompanies'] = $resumeInfo['companies'];
+        $resumeInfo['resume_companies'] = $resumeInfo['companies'];
         unset($resumeInfo['companies']);
         $info = array_merge($info, $resumeInfo);
         return $this->apiReturnJson(0, $info);

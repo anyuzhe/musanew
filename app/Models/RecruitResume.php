@@ -17,7 +17,7 @@ class RecruitResume extends Model
         'company_job_recruit_entrust_id',
         'creator_id',
         'status',
-        'resume_source',//来源 1:来源于 委托方添加
+        'resume_source',//来源 1:来源于 委托方添加 2个人投递
         'resume_source_company_id',
         'entry_at',
         'interview_at',

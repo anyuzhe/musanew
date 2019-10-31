@@ -275,7 +275,7 @@ class RecruitsController extends ApiBaseCommonController
                 }else{
                     $entrust['third_party'] = null;
                 }
-                $entrust['true_status']=$entrust['status'];
+                $entrust['true_status'] = $entrust['status'];//状态 -3 外包方未确定直接取消  -2 拒绝  -1 取消 0申请中 1正常 2完成
                 $entrust['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($v,$entrust);
                 $entrust['status'] = $entrustRes->getStatusByEntrustAndRecruit($entrust['status'],$v['status']);
 

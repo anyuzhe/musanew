@@ -75,12 +75,7 @@ class RecruitResumesRepository
         global $LOGIN_USER_CURRENT_COMPANY;
         $log = new RecruitResumeLog();
         $log->user_id = $LOGIN_USER->id;
-        if(!$company){
-            $company = $LOGIN_USER_CURRENT_COMPANY;
-            if(!$company)
-                return;
-        }
-        $log->company_id = $company->id;
+        $log->company_id = $company?$company->id:null;
         $log->status = $status;
         $log->resume_id = $recruitResume->resume_id;
         $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
@@ -91,7 +86,11 @@ class RecruitResumesRepository
             if($type==1){
                 $log->text = $company->company_alias.' 添加简历';
             }else{
-                $log->text =  $LOGIN_USER->info->realname.' 投递简历';
+                if($recruitResume->company_job_recruit_entrust_id){
+                    $log->text =  $LOGIN_USER->info->realname." 向($company->company_alias)投递简历";
+                }else{
+                    $log->text =  $LOGIN_USER->info->realname." 投递简历";
+                }
             }
         }elseif($status==2){
             $recruitResume->interview_at = $otherData;

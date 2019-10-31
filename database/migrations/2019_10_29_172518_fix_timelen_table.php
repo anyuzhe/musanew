@@ -21,6 +21,10 @@ class FixTimelenTable extends Migration
             $table->timestamp('created_at', 0)->nullable()->change();
             $table->timestamp('updated_at', 0)->nullable()->change();
         });
+        Schema::connection('musa')->table('company', function (Blueprint $table) {
+            $table->timestamp('created_at', 0)->nullable()->change();
+            $table->timestamp('updated_at', 0)->nullable()->change();
+        });
     }
 
     /**

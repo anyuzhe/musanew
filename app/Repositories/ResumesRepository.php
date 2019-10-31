@@ -542,7 +542,8 @@ class ResumesRepository
             ]);
             $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
             $recruitResumesRepository->haveLook($recruitResume);
-            $log = $recruitResumesRepository->generateLog($recruitResume,1,$entrust?$entrust->thirdParty:null, null,1);
+            global $LOGIN_USER_CURRENT_COMPANY;
+            $log = $recruitResumesRepository->generateLog($recruitResume,1,$entrust?$entrust->thirdParty:$LOGIN_USER_CURRENT_COMPANY, null,1);
             $recruit->resume_num++;
             $recruit->new_resume_num++;
             $recruit->save();

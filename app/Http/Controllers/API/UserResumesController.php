@@ -175,11 +175,11 @@ class UserResumesController extends ApiBaseCommonController
         }
             if($entrust_id){
                 $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
-                    ->where('resume_id', $id)
+                    ->where('resume_id', $resume_id)
                     ->where('company_job_recruit_entrust_id', $entrust_id)->first();
             }else{
                 $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
-                    ->where('resume_id', $id)->first();
+                    ->where('resume_id', $resume_id)->first();
             }
 
 //            if($resume->in_job==1){
@@ -195,22 +195,21 @@ class UserResumesController extends ApiBaseCommonController
                 'company_id'=>$recruit->company_id,
                 'third_party_id'=>$entrust?$entrust->third_party_id:null,
                 'job_id'=>$recruit->job_id,
-                'resume_id'=>$id,
+                'resume_id'=>$resume_id,
                 'company_job_recruit_id'=>$recruit->id,
                 'company_job_recruit_entrust_id'=>$entrust?$entrust_id:null,
                 'status'=>1,
                 'resume_source'=>$resume->type,
-                'resume_source_company_id'=>$this->getCurrentCompany()->id,
+                'resume_source_company_id'=>null,
                 'creator_id'=>$this->getUser()->id,
             ]);
-            $this->recruitResumesRepository->haveLook($recruitResume);
             if($entrust_id && $entrust){
-                $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$entrust->thirdParty, null,1);
+                $log = $this->recruitResumesRepository->generateLog($recruitResume,1, $entrust->thirdParty, null,2);
                 $entrust->resume_num++;
                 $entrust->new_resume_num++;
                 $entrust->save();
             }else{
-                $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$this->getCurrentCompany(), null,1);
+                $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$recruit->company, null,2);
             }
             $logs[] = $log;
             $recruit->resume_num++;
