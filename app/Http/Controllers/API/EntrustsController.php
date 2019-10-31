@@ -91,12 +91,11 @@ class EntrustsController extends ApiBaseCommonController
     public function applyEntrust()
     {
         $company_job_recruit_id = $this->request->get('company_job_recruit_id');
-        $is_new_create = $this->request->get('company_job_recruit_id',0);
+        $is_new_create = $this->request->get('is_new_create',0);
         $recruit = Recruit::find($company_job_recruit_id);
 
         if($is_new_create){
-            $new = new Recruit();
-            $new->fill($recruit->toArray());
+            $new = Recruit::create($recruit->toArray());
 
             $new->company_id = $recruit->company_id;
             $new->creator_id = $this->getUser()->id;
@@ -121,7 +120,7 @@ class EntrustsController extends ApiBaseCommonController
                         'leading_id'=>$recruit->leading_id,
                         'company_id'=>$recruit->company_id,
                         'third_party_id'=>$third_party_id,
-                        'company_job_recruit_id'=>$company_job_recruit_id,
+                        'company_job_recruit_id'=>$recruit->id,
                         'done_num'=>0,
                         'resume_num'=>0,
                         'new_resume_num'=>0,
