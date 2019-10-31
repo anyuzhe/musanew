@@ -143,7 +143,7 @@ class EntrustsController extends ApiBaseCommonController
         foreach ($id as $v) {
             $entrust = Entrust::find($v);
             $recruit = $entrust->recruit;
-            if($recruit->status==2) {
+//            if($recruit->status==2) {
                 if ($this->getCurrentCompany()->id == $entrust->company_id && $entrust->status == 0) {
                     $entrust->status = -3;
                 } else {
@@ -156,7 +156,7 @@ class EntrustsController extends ApiBaseCommonController
                     $recruit->status = 1;
                     $recruit->save();
                 }
-            }
+//            }
         }
         return $this->apiReturnJson(0);
     }
