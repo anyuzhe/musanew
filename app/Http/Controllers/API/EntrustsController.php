@@ -101,6 +101,10 @@ class EntrustsController extends ApiBaseCommonController
             $new->company_id = $recruit->company_id;
             $new->creator_id = $this->getUser()->id;
             $new->true_created_at = date('Y-m-d H:i:s');
+            $new->wait_entry_num = 0;
+            $new->done_num = 0;
+            $new->resume_num = 0;
+            $new->new_resume_num = 0;
             $new->save();
             $recruit = $new;
         }

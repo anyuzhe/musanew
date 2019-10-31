@@ -98,9 +98,9 @@ class EntrustResumesController extends ApiBaseCommonController
             $model = $model->where('in_job', $in_job);
         }
         if($entrust_id){
-            $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray());
+//            $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray());
             $model = $model->where(function ($query)use($entrust_id){
-                $query->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray())->whereIsNull('company_job_recruit_entrust_id');
+                $query->whereNotIn('id', RecruitResume::where('company_job_recruit_entrust_id', $entrust_id)->pluck('resume_id')->toArray())->orWhereIsNull('company_job_recruit_entrust_id');
             });
         }elseif ($recruit_id){
             $model = $model->whereNotIn('id', RecruitResume::where('company_job_recruit_id', $recruit_id)->pluck('resume_id')->toArray());
