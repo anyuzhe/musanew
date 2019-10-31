@@ -65,15 +65,17 @@ class UsersController extends CommonController
 
 
         $resume = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
-        if($resume){
-//            $info->resume =  $this->resumeRepository->getData($resume);
-
-            $info = $info->toArray();
-            $info = array_merge($info, $this->resumeRepository->getData($resume)->toArray());
+        if(!$resume){
+            $resume = Resume::create([
+                'is_personal'=>1,
+                'is_base'=>1,
+                'type'=>2,
+                'creator_id'=>$user->id,
+                'user_id'=>$user->id,
+            ]);
         }
-//        else{
-//            $info->resume = null;
-//        }
+        $info = $info->toArray();
+        $info = array_merge($info, $this->resumeRepository->getData($resume)->toArray());
 
         return $this->apiReturnJson(0, $info);
     }
