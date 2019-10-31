@@ -2,6 +2,7 @@
 
 namespace App\Models\Moodle;
 
+use App\Models\Course;
 use Illuminate\Database\Eloquent\Model;
 
 class CourseCategory extends Model
@@ -15,5 +16,10 @@ class CourseCategory extends Model
     public function children()
     {
         return $this->hasMany(CourseCategory::class, 'parent', 'id');
+    }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'category');
     }
 }

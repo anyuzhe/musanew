@@ -169,6 +169,9 @@ class UserResumesController extends ApiBaseCommonController
         app('db')->beginTransaction();
         $logs = [];
         $resume = Resume::find($resume_id);
+        if(!$resume){
+            return $this->apiReturnJson(9999, null, '缺少简历信息');
+        }
 
         if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $resume_id)->where('type',3)->first()){
             return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');

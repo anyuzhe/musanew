@@ -49,4 +49,8 @@ class SkillsRepository
     {
         return array_merge([6],CourseCategory::where('id',6)->first()->children->pluck('id')->toArray());
     }
+    public static function getTestCates()
+    {
+        return CourseCategory::where('id',6)->first()->children()->get();
+    }
 }

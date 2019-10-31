@@ -4,11 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\Course;
 use App\Models\Resume;
 use App\Models\User;
 use App\Models\UserBasicInfo;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
+use App\Repositories\SkillsRepository;
+use App\Repositories\TestsRepository;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -144,4 +147,16 @@ class UsersController extends CommonController
     	return $this->apiReturnJson(0);
     }
 
+    public function getTestData()
+    {
+        $skillsRes = app()->Build(TestsRepository::class);
+        $user = $this->getUser();
+        $cates = SkillsRepository::getTestCates();
+        foreach ($cates as $cate) {
+            foreach ($cate->courses as &$course) {
+                $course->result = $skillsRes->getTestData($course, $user);
+            }
+        }
+        return $this->apiReturnJson(0, $cates);
+    }
 }
