@@ -92,6 +92,7 @@ class EntrustsController extends ApiBaseCommonController
     {
         $company_job_recruit_id = $this->request->get('company_job_recruit_id');
         $is_new_create = $this->request->get('is_new_create',0);
+
         $recruit = Recruit::find($company_job_recruit_id);
 
         if($is_new_create){
@@ -136,25 +137,28 @@ class EntrustsController extends ApiBaseCommonController
     public function cancelEntrust()
     {
         $id = $this->request->get('id');
-        $entrust = Entrust::find($id);
-        $recruit = $entrust->recruit;
-        if($recruit->status==2){
-            if($this->getCurrentCompany()->id==$entrust->company_id && $entrust->status==0){
-                $entrust->status = -3;
-            }else{
-                $entrust->status = -1;
-            }
-            $entrust->save();
-
-            //假如委托没有进行中的了 才会变成1
-            if(!Entrust::where('company_job_recruit_id', $recruit->id)->whereIn('status',[0,1])->first()){
-                $recruit->status = 1;
-                $recruit->save();
-            }
-            return $this->apiReturnJson(0);
-        }else{
-            return $this->apiReturnJson(9999);
+        if(!is_array($id)){
+            $id = [$id];
         }
+        foreach ($id as $v) {
+            $entrust = Entrust::find($v);
+            $recruit = $entrust->recruit;
+            if($recruit->status==2) {
+                if ($this->getCurrentCompany()->id == $entrust->company_id && $entrust->status == 0) {
+                    $entrust->status = -3;
+                } else {
+                    $entrust->status = -1;
+                }
+                $entrust->save();
+
+                //假如委托没有进行中的了 才会变成1
+                if (!Entrust::where('company_job_recruit_id', $recruit->id)->whereIn('status', [0, 1])->first()) {
+                    $recruit->status = 1;
+                    $recruit->save();
+                }
+            }
+        }
+        return $this->apiReturnJson(0);
     }
 
     public function acceptEntrust()
