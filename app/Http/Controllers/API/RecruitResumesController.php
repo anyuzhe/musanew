@@ -39,7 +39,7 @@ class RecruitResumesController extends ApiBaseCommonController
         if ($entrust_id) {
 //            $model = $model->where('company_job_recruit_entrust_id', $entrust_id);
             $model = $model->where(function ($query)use($entrust_id){
-                $query->whereNotIn('company_job_recruit_entrust_id',$entrust_id)->orWhereNull('company_job_recruit_entrust_id');
+                $query->where('company_job_recruit_entrust_id',$entrust_id)->orWhereNull('company_job_recruit_entrust_id');
             });
         }
         return null;
