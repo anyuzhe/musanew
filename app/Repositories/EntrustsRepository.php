@@ -40,7 +40,7 @@ class EntrustsRepository
     {
         //recruit status 1招聘中 2等待外包公司审核 3外包中 4结束
 
-        //entrust status 状态 -2 拒绝  -1 取消 0申请中 1正常 2完成
+        //entrust status 状态 -3 外包方未确定直接取消  -2 拒绝  -1 取消 0申请中 1正常 2完成
         $_status = $entrust_status;
         if($_status==0){
             $_status = 2;
