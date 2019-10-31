@@ -234,7 +234,7 @@ class RecruitsController extends ApiBaseCommonController
 
     public function outsourceSort(&$model)
     {
-        $model = $model->orderByRaw("FIELD(status, 1) desc")->orderBy('updated_at','desc');
+        $model = $model->orderByRaw("FIELD(status, 3) desc")->orderBy('updated_at','desc');
         return $model;
     }
 
@@ -246,7 +246,7 @@ class RecruitsController extends ApiBaseCommonController
         if ($company) {
             //委托了的招聘
             $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-            $model = $model->where('company_id', $company->id)->whereIn('id', $has_entrust_ids);
+            $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,6])->whereIn('id', $has_entrust_ids);
         }else{
             $model = $model->where('id', 0);
         }
