@@ -272,6 +272,7 @@ class RecruitsController extends ApiBaseCommonController
 
                 if(isset($companies[$entrust['third_party_id']])){
                     $entrust['third_party'] = $companies[$entrust['third_party_id']];
+                    $entrust['third_party_company_alias'] = $entrust['third_party']['company_alias'];
                 }else{
                     $entrust['third_party'] = null;
                 }
