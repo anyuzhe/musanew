@@ -154,8 +154,6 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //第三方拒绝招聘需求
     $router->post('/company/entrusts/reject', 'API\EntrustsController@rejectEntrust');
 
-    //更新招聘
-    $router->post('/company/recruits/{id}', 'API\RecruitsController@update');
     //简历
 
 //简历附件上传
@@ -190,6 +188,9 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //招聘下的-简历流程
     $router->post('/company/recruits/resumeFlow', 'API\RecruitResumesController@resumeFlow');
+
+    //更新招聘
+    $router->post('/company/recruits/{id}', 'API\RecruitsController@update');
 
     //企业信息修改
     $router->get('/company/currentInfo', 'API\CompaniesController@getCurrentInfo');
