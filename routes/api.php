@@ -213,10 +213,10 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
 
     //----------------个人中心-------------------------
-
-
-    //列表
+    //简历列表
     $router->get('/user/resumes', 'API\UserResumesController@index');
+    //可投简历列表
+    $router->get('/user/resumes/used', 'API\UserResumesController@usedList');
 //详情
     $router->get('/user/resumes/{id}', 'API\UserResumesController@show');
 
