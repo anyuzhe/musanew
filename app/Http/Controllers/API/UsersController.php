@@ -75,8 +75,10 @@ class UsersController extends CommonController
             ]);
         }
         $info = $info->toArray();
-        $info = array_merge($info, $this->resumeRepository->getData($resume)->toArray());
-
+        $resumeInfo = $this->resumeRepository->getData($resume)->toArray();
+        $resumeInfo['resumeCompanies'] = $resumeInfo['companies'];
+        unset($resumeInfo['companies']);
+        $info = array_merge($info, $resumeInfo);
         return $this->apiReturnJson(0, $info);
     }
 
