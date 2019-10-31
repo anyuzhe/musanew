@@ -13,9 +13,11 @@
 
 use App\Models\Area;
 use App\Models\Course;
+use App\Models\Entrust;
 use App\Models\Moodle\CourseCategory;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
+use App\Repositories\EntrustsRepository;
 use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
 use App\User;
@@ -28,7 +30,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-
+    $testres = app()->build(EntrustsRepository::class);
+    dd($testres->getEntrustsAmount(Entrust::all()));
     dd(Resume::create([]));
     $testres = app()->build(TestsRepository::class);
     dd($testres->getTestData(Course::find(7), User::find(39)));

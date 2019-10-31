@@ -62,12 +62,19 @@ class EntrustsController extends ApiBaseCommonController
         }
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
 
+        $testres = app()->build(EntrustsRepository::class);
+        $allAcount = $entrustRes->getEntrustsAmount($entrusts);
         foreach ($entrusts as &$entrust) {
             $entrust['job'] = $jobs[$entrust['job']['id']];
             $entrust['need_num'] = $entrust['recruit']['need_num'];
             $entrust['recruit_id'] = $entrust['recruit']['id'];
             $entrust['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($entrust['recruit'],$entrust);
             $entrust['status'] = $entrustRes->getStatusByEntrustAndRecruit($entrust['status'],$entrust['recruit']['status']);
+
+            $acounts = $allAcount[$entrust['company_job_recruit_id']];
+            $entrust['resume_num'] = $entrust['recruit']['resume_num'] - $acounts['total_resume_num'] + $entrust['resume_num'];
+            $entrust['done_num'] = $entrust['recruit']['done_num'] - $acounts['total_done_num'] + $entrust['done_num'];
+            $entrust['new_resume_num'] = $entrust['recruit']['new_resume_num'] - $acounts['total_new_resume_num'] + $entrust['new_resume_num'];
             $entrust['recruit']['residue_num'] = $entrust['recruit']['need_num'] - $entrust['recruit']['done_num'] - $entrust['recruit']['wait_entry_num'];
             $entrust['recruit']['residue_num'] = $entrust['recruit']['residue_num']>0?$entrust['recruit']['residue_num']:0;
         }

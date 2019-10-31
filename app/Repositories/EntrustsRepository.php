@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Models\Entrust;
 use App\Models\RecruitResume;
+use Illuminate\Support\Facades\DB;
 
 class EntrustsRepository
 {
@@ -120,5 +121,11 @@ class EntrustsRepository
                 break;
         }
         return $status_text;
+    }
+
+    public function getEntrustsAmount($entrusts)
+    {
+        $recruitIds = array_unique($entrusts->pluck('company_job_recruit_id')->toArray());
+        return Entrust::select(DB::raw('company_job_recruit_id,SUM(done_num) as total_done_num,SUM(resume_num) as total_resume_num,SUM(new_resume_num) as total_new_resume_num'))->whereIn('company_job_recruit_id', $recruitIds)->groupBy('company_job_recruit_id')->get()->keyBy('company_job_recruit_id')->toArray();
     }
 }
