@@ -26,11 +26,13 @@ class UserTestsController extends ApiBaseCommonController
 {
     public $model_name = Resume::class;
     protected $testsRepository;
+    protected $recruitResumeRepository;
 
-    public function __construct(Request $request, TestsRepository $testsRepository)
+    public function __construct(Request $request, TestsRepository $testsRepository, RecruitResumesRepository $recruitResumeRepository)
     {
         parent::__construct($request);
         $this->testsRepository = $testsRepository;
+        $this->recruitResumeRepository = $recruitResumeRepository;
     }
 
     public function getTestByRecruitId($id)
@@ -41,7 +43,26 @@ class UserTestsController extends ApiBaseCommonController
         $tests = $job->tests;
         $user = $this->getUser();
         foreach ($tests as $test) {
-            $this->testsRepository->getTestData($test, $user);
+            $data[] = $this->testsRepository->getTestData($test, $user);
         }
+
+        $this->apiReturnJson(0, $data);
+    }
+
+    public function getMatching(Request $request)
+    {
+        $resume_id = $request->get('resume_id');
+        $recruit_id = $request->get('recruit_id');
+
+        $resume = Resume::find($resume_id);
+        $recruit = Recruit::find($recruit_id);
+        if(!$resume | !$recruit){
+            return $this->apiReturnJson(9999,null,'缺少参数');
+        }
+        $std = new \stdClass();
+        $std->job = $recruit->job;
+        $std->resume = $resume;
+        $data = $this->recruitResumeRepository->matching($std);
+        $this->apiReturnJson(0, $data);
     }
 }

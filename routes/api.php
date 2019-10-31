@@ -232,6 +232,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/user/resumes/used', 'API\UserResumesController@usedList');
     //职位测试情况
     $router->get('/user/recruits/tests/{id}', 'API\UserTestsController@getTestByRecruitId');
+    $router->get('/user/recruits/matching', 'API\UserTestsController@getMatching');
 
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
