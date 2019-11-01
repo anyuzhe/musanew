@@ -45,8 +45,7 @@ class UserTestsController extends ApiBaseCommonController
         foreach ($tests as $test) {
             $data[] = $this->testsRepository->getTestData($test, $user);
         }
-
-        $this->apiReturnJson(0, $data);
+        return $this->apiReturnJson(0, $data);
     }
 
     public function getMatching(Request $request)
