@@ -19,6 +19,7 @@ class RecruitResumesController extends ApiBaseCommonController
     public $recruitResumesRepository;
     public $resumeRepository;
     public $search_field_array = [
+        ['third_party_id','='],
     ];
 
     public function __construct(Request $request, ResumesRepository $resumesRepository, RecruitResumesRepository $recruitResumesRepository)

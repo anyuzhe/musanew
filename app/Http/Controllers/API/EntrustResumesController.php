@@ -28,7 +28,6 @@ class EntrustResumesController extends ApiBaseCommonController
     public $recruitResumesRepository;
     public $search_field_array = [
       ['name','like'],
-      ['third_party_id','='],
       ['gender','='],
       ['gender','='],
       ['education','>='],
