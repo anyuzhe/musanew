@@ -30,11 +30,11 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-    $testres = app()->build(EntrustsRepository::class);
-    dd($testres->getEntrustsAmount(Entrust::all()));
-    dd(Resume::create([]));
+//    $testres = app()->build(EntrustsRepository::class);
+//    dd($testres->getEntrustsAmount(Entrust::all()));
+//    dd(Resume::create([]));
     $testres = app()->build(TestsRepository::class);
-    dd($testres->getTestData(Course::find(7), User::find(39)));
+    dd($testres->getTestData(Course::find(7), \App\Models\User::find(43)));
     dd(SkillsRepository::getTestCateId());
     $first = DB::connection('musa')->table('company_job_recruit')
         ->select(DB::raw('id, company_id, job_id, 0, need_num, done_num, resume_num, leading_id, created_at'))

@@ -46,7 +46,6 @@ class Resume extends Model
         'is_base',//是否基础信息
        'resume_name',//简历名称
         'usable_range',//使用范围
-//        is_personal,
     ];
 
     public function skills()
