@@ -216,8 +216,6 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //----------------个人中心-------------------------
     //简历列表
     $router->get('/user/resumes', 'API\UserResumesController@index');
-//详情
-    $router->get('/user/resumes/{id}', 'API\UserResumesController@show');
 
     //删除
     $router->post('/user/resumes/delete/{id}', 'API\UserResumesController@destroy');
@@ -231,6 +229,10 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //------------首页相关接口-------------------
     //可投简历列表
     $router->get('/user/resumes/used', 'API\UserResumesController@usedList');
+
+//详情
+    $router->get('/user/resumes/{id}', 'API\UserResumesController@show');
+
     //职位测试情况
     $router->get('/user/recruits/tests/{id}', 'API\UserTestsController@getTestByRecruitId');
     $router->get('/user/recruits/matching', 'API\UserTestsController@getMatching');
