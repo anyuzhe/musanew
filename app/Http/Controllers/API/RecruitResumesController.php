@@ -143,6 +143,7 @@ class RecruitResumesController extends ApiBaseCommonController
         $list->load('resume');
         $list->load('thirdParty');
         $list->load('company');
+        $list->load('job');
 
         $job_ids = $list->pluck('job_id')->toArray();
         foreach ($list as &$v) {
