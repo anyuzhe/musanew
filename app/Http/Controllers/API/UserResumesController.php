@@ -146,6 +146,9 @@ class UserResumesController extends ApiBaseCommonController
             return responseZK(9999, null, '该简历当前正在使用中，不可删除！');
         }
         $model = Resume::find($id);
+        if($model->user_id!=$this->getUser()->id){
+            return responseZK(9999);
+        }
         $model->status = -1;
         $model->save();
         return responseZK(0);
@@ -176,48 +179,48 @@ class UserResumesController extends ApiBaseCommonController
         if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $resume_id)->where('type',3)->first()){
             return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
         }
-            if($entrust_id){
-                $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
-                    ->where('resume_id', $resume_id)
-                    ->where('company_job_recruit_entrust_id', $entrust_id)->first();
-            }else{
-                $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
-                    ->where('resume_id', $resume_id)->first();
-            }
+        if($entrust_id){
+            $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
+                ->where('resume_id', $resume_id)
+                ->where('company_job_recruit_entrust_id', $entrust_id)->first();
+        }else{
+            $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
+                ->where('resume_id', $resume_id)->first();
+        }
 
 //            if($resume->in_job==1){
 //                app('db')->rollBack();
 //                return $this->apiReturnJson(9999, null, $resume->name.'已入职，无法添加');
 //            }
-            if($has){
-                app('db')->rollBack();
-                return $this->apiReturnJson(9999, null, $resume->name.'已投递，无法重复添加');
-            }
+        if($has){
+            app('db')->rollBack();
+            return $this->apiReturnJson(9999, null, $resume->name.'已投递，无法重复添加');
+        }
 
-            $recruitResume = RecruitResume::create([
-                'company_id'=>$recruit->company_id,
-                'third_party_id'=>$entrust?$entrust->third_party_id:null,
-                'job_id'=>$recruit->job_id,
-                'resume_id'=>$resume_id,
-                'company_job_recruit_id'=>$recruit->id,
-                'company_job_recruit_entrust_id'=>$entrust?$entrust_id:null,
-                'status'=>1,
-                'resume_source'=>$resume->type,
-                'resume_source_company_id'=>null,
-                'creator_id'=>$this->getUser()->id,
-            ]);
-            if($entrust_id && $entrust){
-                $log = $this->recruitResumesRepository->generateLog($recruitResume,1, $entrust->thirdParty, null,2);
-                $entrust->resume_num++;
-                $entrust->new_resume_num++;
-                $entrust->save();
-            }else{
-                $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$recruit->company, null,2);
-            }
-            $logs[] = $log;
-            $recruit->resume_num++;
-            $recruit->new_resume_num++;
-            $recruit->save();
+        $recruitResume = RecruitResume::create([
+            'company_id'=>$recruit->company_id,
+            'third_party_id'=>$entrust?$entrust->third_party_id:null,
+            'job_id'=>$recruit->job_id,
+            'resume_id'=>$resume_id,
+            'company_job_recruit_id'=>$recruit->id,
+            'company_job_recruit_entrust_id'=>$entrust?$entrust_id:null,
+            'status'=>1,
+            'resume_source'=>$resume->type,
+            'resume_source_company_id'=>null,
+            'creator_id'=>$this->getUser()->id,
+        ]);
+        if($entrust_id && $entrust){
+            $log = $this->recruitResumesRepository->generateLog($recruitResume,1, $entrust->thirdParty, null,2);
+            $entrust->resume_num++;
+            $entrust->new_resume_num++;
+            $entrust->save();
+        }else{
+            $log = $this->recruitResumesRepository->generateLog($recruitResume,1,$recruit->company, null,2);
+        }
+        $logs[] = $log;
+        $recruit->resume_num++;
+        $recruit->new_resume_num++;
+        $recruit->save();
 
         sendLogsEmail($logs);
         app('db')->commit();

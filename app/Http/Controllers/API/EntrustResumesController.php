@@ -537,6 +537,7 @@ class EntrustResumesController extends ApiBaseCommonController
     {
         $model = ResumeAttachment::find($id);
         if($model){
+
             $model->delete();
             return responseZK(0);
         }else{

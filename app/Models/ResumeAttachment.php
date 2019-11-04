@@ -14,4 +14,9 @@ class ResumeAttachment extends Model
         'file_path',
         'creator_id',
     ];
+
+    public function resume()
+    {
+        return $this->belongsTo(Resume::class);
+    }
 }

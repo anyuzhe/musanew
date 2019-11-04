@@ -236,6 +236,9 @@ class JobsController extends ApiBaseCommonController
     public function destroy($id)
     {
         $model = $this->getModel()->find($id);
+        if($model->company_id!=$this->getCurrentCompany()->id){
+            return responseZK(9999);
+        }
         $has = $this->checkDestroy($model);
         if(!$has){
             $model->status = -1;

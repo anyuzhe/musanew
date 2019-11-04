@@ -62,6 +62,6 @@ class UserTestsController extends ApiBaseCommonController
         $std->job = $recruit->job;
         $std->resume = $resume;
         $data = $this->recruitResumeRepository->matching($std);
-        $this->apiReturnJson(0, $data);
+        return $this->apiReturnJson(0, $data);
     }
 }
