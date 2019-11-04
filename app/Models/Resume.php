@@ -42,9 +42,11 @@ class Resume extends Model
         'on_the_job_company_name',//在职公司
         'is_public',//是否公开
         'is_used',//是否使用
+        'is_personal',//是否个人的简历
+        'is_base',//是否基础信息
        'resume_name',//简历名称
         'usable_range',//使用范围
-//        is_personal,is_base
+//        is_personal,
     ];
 
     public function skills()
