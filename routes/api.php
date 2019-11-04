@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 
-Route::get('/course/jump', function () {
+$router->get('/course/jump', function () {
     requireMoodleConfig();
     global $CFG;
     $token = \App\Repositories\TokenRepository::getToken();

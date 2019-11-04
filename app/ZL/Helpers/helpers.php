@@ -1,5 +1,7 @@
 <?php
 
+use App\Repositories\TokenRepository;
+
 if (! function_exists('sendVerifyCode')) {
     function sendVerifyCode($mobile,$mobile_code) {
         $send_result = \App\ZL\ORG\Aliydx\Sms::sendSms(
@@ -701,5 +703,24 @@ function getObjRelationBelongsTo(&$list, $relationName, $model, $fieldName, $id=
         }else{
             $item->{$relationName} = null;
         }
+    }
+}
+
+
+function checkAuthByCompany($recruit , $is_recruit=true)
+{
+    $company = TokenRepository::getCurrentCompany();
+    if($is_recruit && $recruit->company_id!=$company->id){
+        throw new \Exception("非法越权操作!");
+    }elseif ($recruit->company_id!=$company->id && $recruit->third_party_id!=$company->id){
+        throw new \Exception("非法越权操作!");
+    }
+}
+
+function checkAuthByUser($recruit)
+{
+    $user = TokenRepository::getUser();
+    if($user && $recruit->user_id!=$user->id){
+        throw new \Exception("非法越权操作!");
     }
 }

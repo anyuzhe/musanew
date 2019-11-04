@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\CompanyDepartment;
 use App\Models\Course;
 use App\Models\Recruit;
+use App\Models\Resume;
 use App\Repositories\JobsRepository;
 use App\Repositories\SkillsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -36,11 +37,13 @@ class JobsController extends ApiBaseCommonController
 
     public function checkUpdate($id,$data)
     {
-        if(Job::where('code',$data->get('code'))->where('company_id',$this->getCurrentCompany()->id)->where('id','!=', $id)->first())
+        if(Job::where('code',$data->get('code'))->where('company_id',$this->getCurrentCompany()->id)->where('id','!=', $id)->first()){
             return '已获取该职位';
-//            return '职位代码必须唯一';
-        else
-            return null;
+            //            return '职位代码必须唯一';
+        }else{
+            $obj = Job::find($id);
+            checkAuthByCompany($obj);
+        }
     }
     public function checkStore($data)
     {
@@ -262,6 +265,7 @@ class JobsController extends ApiBaseCommonController
 
     public function checkDestroy($model)
     {
+        checkAuthByCompany($model);
         $has = $model->recruits()->whereIn('status', [1])->count();
         if($has){
             return '该职位处于招聘状态无法删除，请结束招聘状态！';

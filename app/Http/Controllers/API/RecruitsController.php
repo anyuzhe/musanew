@@ -161,6 +161,8 @@ class RecruitsController extends ApiBaseCommonController
             $entrust = Entrust::find($entrust_id);
             if(!$entrust)
                 return $this->apiReturnJson(9999);
+
+            checkAuthByCompany($entrust,false);
             $entrust->status = -1;
             $entrust->end_at = date('Y-m-d H:i:s');
             $entrust->save();
@@ -169,6 +171,8 @@ class RecruitsController extends ApiBaseCommonController
             $obj = Recruit::find($id);
             if(!$obj)
                 return $this->apiReturnJson(9999);
+
+            checkAuthByCompany($obj,true);
             $obj->status = 4;
             $obj->end_at = date('Y-m-d H:i:s');
             $obj->save();
@@ -188,6 +192,7 @@ class RecruitsController extends ApiBaseCommonController
             $entrust = Entrust::find($entrust_id);
             if(!$entrust)
                 return $this->apiReturnJson(9999);
+            checkAuthByCompany($entrust,false);
             $entrust->status = 6;
             $entrust->pause_at = date('Y-m-d H:i:s');
             $entrust->save();
@@ -196,6 +201,7 @@ class RecruitsController extends ApiBaseCommonController
             $obj = Recruit::find($id);
             if(!$obj)
                 return $this->apiReturnJson(9999);
+            checkAuthByCompany($obj);
             $obj->status = 6;
             $obj->pause_at = date('Y-m-d H:i:s');
             $obj->save();
@@ -212,8 +218,10 @@ class RecruitsController extends ApiBaseCommonController
         }
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
+            checkAuthByCompany(Entrust::find($id),false);
             Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
         }else{
+            checkAuthByCompany(Recruit::find($id));
             $this->getModel()->where('id', $id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
         }
         return $this->apiReturnJson(0);
@@ -227,8 +235,10 @@ class RecruitsController extends ApiBaseCommonController
         }
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
+            checkAuthByCompany(Entrust::find($id),false);
             Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1]);
         }else{
+            checkAuthByCompany(Recruit::find($id));
             $this->getModel()->where('id', $id)->update(['status'=>1]);
         }
         return $this->apiReturnJson(0);

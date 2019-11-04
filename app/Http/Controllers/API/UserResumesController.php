@@ -226,4 +226,12 @@ class UserResumesController extends ApiBaseCommonController
         app('db')->commit();
         return $this->apiReturnJson(0,$logs);
     }
+
+    public function checkUpdate($id,$request)
+    {
+        $obj = Resume::find($id);
+        if($obj &&$obj->user_id == $this->getUser()->id){
+            return '不能编辑不是自己的简历';
+        }
+    }
 }
