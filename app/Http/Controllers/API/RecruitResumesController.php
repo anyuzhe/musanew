@@ -162,7 +162,7 @@ class RecruitResumesController extends ApiBaseCommonController
         $pagination = app('request')->get('pagination',1);
         $pagination = $pagination>0?$pagination:1;
 
-        return $this->apiReturnJson(0, $list,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
+        return $this->apiReturnJson(0, $recruit,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
 //        return responseZK(1,$list,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 }
