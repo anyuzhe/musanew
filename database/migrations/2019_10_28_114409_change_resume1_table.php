@@ -19,7 +19,7 @@ class ChangeResume1Table extends Migration
             $table->tinyInteger('is_used')->default(1)->comment('是否使用');
             $table->tinyInteger('is_personal')->default(0)->comment('是否是个人拥有');
             $table->tinyInteger('is_public')->default(0)->comment('是否公开');
-            $table->string('on_the_job_company_name', 191)->default('')->comment('在职公司');
+            $table->string('on_the_job_company_name', 191)->default('')->nullable()->comment('在职公司');
         });
     }
 

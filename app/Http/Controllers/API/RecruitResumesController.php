@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Models\CompanyResume;
 use App\Models\Entrust;
+use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
+use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -114,5 +116,52 @@ class RecruitResumesController extends ApiBaseCommonController
             return $this->apiReturnJson(9999, null, $checkMsg);
         $this->recruitResumesRepository->generateLog($recruitResume,$status,$this->getCurrentCompany(), $feedback?$feedback:$date,1);
         return $this->apiReturnJson(0);
+    }
+
+    public function userRecruitList(Request $request)
+    {
+        $model = $this->getModel();
+        $model = $model->orderBy('updated_at','desc');
+        $user = $this->getUser();
+        $hasResumeIds = Resume::where('user_id', $user->id)->pluck('id')->toArray();
+        $model = $model->whereIn('resume_id', $hasResumeIds);
+        $is_end = $request->get('is_end',null);
+        if($is_end!==null){
+            if($is_end){
+                $model = $model->whereIn('status',[-5,-4,-3,-2,-1,8]);
+            }else{
+                $model = $model->whereIn('status',[1,2,3,4,5,6,7]);
+            }
+        }
+        $model_data = clone $model;
+        $count = $model->count();
+        $list = $this->modelPipeline([
+            'modelGetPageData',
+            'collectionGetLoads'
+        ],$model_data);
+
+        $list->load('resume');
+        $list->load('thirdParty');
+        $list->load('company');
+
+        $job_ids = $list->pluck('job_id')->toArray();
+        foreach ($list as &$v) {
+            $this->recruitResumesRepository->addFieldText($v);
+        }
+
+
+        $recruits = $list->toArray();
+
+        $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
+        foreach ($recruits as &$recruit) {
+            $recruit['job'] = $jobs[$recruit['job']['id']];
+        }
+
+        $pageSize = app('request')->get('pageSize',10);
+        $pagination = app('request')->get('pagination',1);
+        $pagination = $pagination>0?$pagination:1;
+
+        return $this->apiReturnJson(0, $list,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
+//        return responseZK(1,$list,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 }
