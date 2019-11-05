@@ -68,12 +68,12 @@ class PublicRecruitsController extends ApiBaseCommonController
                 ->select($select1)
                 ->where('status', 1)
                 ->whereIn('job_id', $searchPublicJobIds)
-                ->whereIn('job_id', $searchJobIds);
+                ->whereIn('job_id', $searchJobIds)->where('is_public', 1);
 
             //委托
             $model = DB::connection('musa')->table('company_job_recruit_entrust')
                 ->select($select2)
-                ->where('status', 1)
+                ->where('status', 1)->where('is_public', 1)
                 ->whereIn('job_id', $searchPublicJobIds)
                 ->where(function ($query)use($companyIds, $jobIds){
                     $query->whereIn('third_party_id', $companyIds)->orWhereIn('job_id', $jobIds);
@@ -82,12 +82,12 @@ class PublicRecruitsController extends ApiBaseCommonController
         }else{
             $recruit = DB::connection('musa')->table('company_job_recruit')
                 ->select($select1)
-                ->where('status', 1)
+                ->where('status', 1)->where('is_public', 1)
                 ->whereIn('job_id', $searchPublicJobIds);
 
             $model = DB::connection('musa')->table('company_job_recruit_entrust')
                 ->select($select2)
-                ->where('status', 1)
+                ->where('status', 1)->where('is_public', 1)
                 ->whereIn('job_id', $searchPublicJobIds)
                 ->union($recruit);
         }
