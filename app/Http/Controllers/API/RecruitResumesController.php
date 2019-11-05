@@ -95,8 +95,8 @@ class RecruitResumesController extends ApiBaseCommonController
         $this->recruitResumesRepository->addFieldText($data);
         $data->resume = app()->build(ResumesRepository::class)->getData($data->resume);
         $data->logs->load('creatorInfo');
-
-        $this->recruitResumesRepository->haveLook($data);
+        if($this->getCurrentCompany())
+            $this->recruitResumesRepository->haveLook($data);
         $data->matching = $this->recruitResumesRepository->matching($data);
         $data = $data->toArray();
         $data['logs'] = array_reverse($data['logs']);
