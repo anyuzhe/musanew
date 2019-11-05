@@ -280,6 +280,7 @@ class ResumesRepository
         }
         $obj->is_upload_edit = 1;
         $obj->save();
+        return $obj;
     }
 
     public function saveDataForBelloData($data)
