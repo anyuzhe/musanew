@@ -130,6 +130,9 @@ class UsersController extends CommonController
         }
         $info = $user->info;
         $info->realname = $request['name'];
+        if(isset($request['name'])){
+            unset($request['realname']);
+        }
         $info->fill($request);
         $info->save();
 
