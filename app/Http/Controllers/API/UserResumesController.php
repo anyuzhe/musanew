@@ -230,7 +230,7 @@ class UserResumesController extends ApiBaseCommonController
     public function checkUpdate($id,$request)
     {
         $obj = Resume::find($id);
-        if($obj &&$obj->user_id == $this->getUser()->id){
+        if($obj && $obj->user_id != $this->getUser()->id){
             return '不能编辑不是自己的简历';
         }
     }
