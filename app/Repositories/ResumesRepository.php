@@ -641,4 +641,28 @@ class ResumesRepository
         }
         return $_start_date;
     }
+
+    public function mixResumes($resumeNew, $resumeOld)
+    {
+        $resumeNew->fill(array_merge($resumeOld->toArray(), ['resume_name'=>$resumeNew->resume_name, 'usable_range'=>$resumeNew->usable_range, 'self_evaluation'=>$resumeNew->self_evaluation]));
+        $resumeNew->save();
+        foreach ($resumeOld->educations as $education) {
+            $_data = $education->toArray();
+            $_data['resume_id'] = $resumeNew->id;
+            $_data['id'] = null;
+            ResumeEducation::create($_data);
+        }
+        foreach ($resumeOld->trains as $train) {
+            $_data = $train->toArray();
+            $_data['resume_id'] = $resumeNew->id;
+            $_data['id'] = null;
+            ResumeTrain::create($_data);
+        }
+    }
+
+    public function getBaseResume()
+    {
+        $user= TokenRepository::getUser();
+        return Resume::where('user_id', $user->id)->where('is_base', 1)->first();
+    }
 }

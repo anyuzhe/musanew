@@ -93,14 +93,22 @@ class UsersController extends CommonController
         $obj->is_base = 1;
         $obj->is_personal = 1;
         $obj->type = 2;
-        $this->resumeRepository->saveDataForForm($obj, $data);
+        $obj = $this->resumeRepository->saveDataForForm($obj, $data);
+
+        $otherResumes = Resume::where('user_id', $user_id)->where('is_base', 0)->where('type', 2)->get();
+        foreach ($otherResumes as $otherResume) {
+            $this->resumeRepository->mixResumes($otherResume, $obj);
+        }
     }
 
     public function afterUpdate($id, $data)
     {
         $obj = Resume::find($id);
-
         $this->resumeRepository->saveDataForForm($obj, $data);
+        $otherResumes = Resume::where('user_id', $this->getUser()->id)->where('is_base', 0)->where('type', 2)->get();
+        foreach ($otherResumes as $otherResume) {
+            $this->resumeRepository->mixResumes($otherResume, $obj);
+        }
         return $this->apiReturnJson(0);
     }
 

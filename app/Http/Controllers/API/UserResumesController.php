@@ -106,7 +106,8 @@ class UserResumesController extends ApiBaseCommonController
         $obj->user_id = $user_id;
         $obj->type = 2;
         $obj->is_personal = 1;
-        $this->resumeRepository->saveDataForForm($obj, $data);
+        $obj = $this->resumeRepository->saveDataForForm($obj, $data);
+        $this->resumeRepository->mixResumes($obj, $this->resumeRepository->getBaseResume());
         return $this->apiReturnJson(0);
     }
 

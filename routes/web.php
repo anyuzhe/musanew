@@ -18,6 +18,7 @@ use App\Models\Moodle\CourseCategory;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
 use App\Repositories\EntrustsRepository;
+use App\Repositories\ResumesRepository;
 use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
 use App\User;
@@ -30,6 +31,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $resumeres = app()->build(ResumesRepository::class);
+    dd($resumeres->mixResumes(Resume::find(272),Resume::find(173)));
 //    $testres = app()->build(EntrustsRepository::class);
 //    dd($testres->getEntrustsAmount(Entrust::all()));
 //    dd(Resume::create([]));
