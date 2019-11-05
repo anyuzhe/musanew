@@ -125,6 +125,7 @@ class EntrustsController extends ApiBaseCommonController
             foreach ($third_party_ids as $third_party_id) {
                 if(in_array($third_party_id, $thirdPartyIds)){
                     Entrust::create([
+                        'is_public'=>$recruit->is_public,
                         'job_id'=>$recruit->job_id,
                         'leading_id'=>$recruit->leading_id,
                         'company_id'=>$recruit->company_id,
@@ -172,6 +173,7 @@ class EntrustsController extends ApiBaseCommonController
     public function acceptEntrust()
     {
         $ids = $this->request->get('ids');
+        $is_public = $this->request->get('is_public',null);
         if(!$ids || count($ids)==0){
             $id = $this->request->get('id');
             if($id){
@@ -185,6 +187,9 @@ class EntrustsController extends ApiBaseCommonController
                 $recruit->status = 3;
                 $recruit->save();
 
+                if($is_public!==null){
+                    $entrust->is_public  = $is_public;
+                }
                 $entrust->status = 1;
                 $entrust->save();
             }
