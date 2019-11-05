@@ -16,6 +16,7 @@ use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
 use App\Models\ResumeProject;
 use App\Models\ResumeSkill;
+use App\Models\ResumeTrain;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -65,10 +66,11 @@ class ClearData extends Command
 
         Resume::truncate();
         ResumeCompany::truncate();
+        ResumeAttachment::truncate();
         ResumeEducation::truncate();
         ResumeProject::truncate();
         ResumeSkill::truncate();
-        ResumeAttachment::truncate();
+        ResumeTrain::truncate();
         CompanyResume::truncate();
     }
 }

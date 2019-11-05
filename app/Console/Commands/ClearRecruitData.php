@@ -11,10 +11,12 @@ use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\RecruitResumeLook;
 use App\Models\Resume;
+use App\Models\ResumeAttachment;
 use App\Models\ResumeCompany;
 use App\Models\ResumeEducation;
 use App\Models\ResumeProject;
 use App\Models\ResumeSkill;
+use App\Models\ResumeTrain;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -64,9 +66,11 @@ class ClearRecruitData extends Command
 
         Resume::truncate();
         ResumeCompany::truncate();
+        ResumeAttachment::truncate();
         ResumeEducation::truncate();
         ResumeProject::truncate();
         ResumeSkill::truncate();
+        ResumeTrain::truncate();
         CompanyResume::truncate();
 
         CompanyResume::where('source_type', 1)->delete();

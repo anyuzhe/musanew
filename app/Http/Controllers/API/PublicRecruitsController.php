@@ -108,7 +108,7 @@ class PublicRecruitsController extends ApiBaseCommonController
         foreach ($recruits as &$recruit) {
             $recruit->job = $jobs[$recruit->job_id];
             if($recruit->leading && $recruit->leading['avatar']){
-                $recruit->leading['avatar_url'] = getPicFullUrl($recruit['leading']['avatar']);
+                $recruit->leading['avatar_url'] = getPicFullUrl($recruit->leading['avatar']);
             }elseif ($recruit->leading){
                 $recruit->leading['avatar_url'] = '';
             }
