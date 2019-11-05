@@ -644,7 +644,12 @@ class ResumesRepository
 
     public function mixResumes($resumeNew, $resumeOld)
     {
-        $resumeNew->fill(array_merge($resumeOld->toArray(), ['resume_name'=>$resumeNew->resume_name, 'usable_range'=>$resumeNew->usable_range, 'self_evaluation'=>$resumeNew->self_evaluation]));
+        $old = $resumeOld->toArray();
+        unset($old['is_public']);
+        unset($old['is_used']);
+        unset($old['is_personal']);
+        unset($old['is_base']);
+        $resumeNew->fill(array_merge($old, ['resume_name'=>$resumeNew->resume_name, 'usable_range'=>$resumeNew->usable_range, 'self_evaluation'=>$resumeNew->self_evaluation]));
         $resumeNew->save();
         foreach ($resumeOld->educations as $education) {
             $_data = $education->toArray();
