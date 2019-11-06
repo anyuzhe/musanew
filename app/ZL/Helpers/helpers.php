@@ -629,7 +629,6 @@ function getDays($start_time, $end_time=null)
 function sendLogsEmail($logs)
 {
     global $LOGIN_USER;
-    $LOGIN_USER = \App\Models\User::find(1);
     //给负责人发送邮件通知
     if(count($logs)>0){
         $logObj = $logs[0];
