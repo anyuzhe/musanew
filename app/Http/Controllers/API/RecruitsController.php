@@ -13,6 +13,7 @@ use App\Repositories\RecruitRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Job;
 
@@ -60,7 +61,7 @@ class RecruitsController extends ApiBaseCommonController
                         $model = $model->whereIn('status', [4,5]);
                     }
                 }else{
-                    $model = $model->whereIn('status', [1,4,5]);
+                    $model = $model->whereIn('status', [1,4,5,6,7]);
                 }
                 if($resume_id){
                     $model = $model->whereNotIn('id', RecruitResume::where('resume_id', $resume_id)->pluck('company_job_recruit_id')->toArray());
@@ -202,7 +203,12 @@ class RecruitsController extends ApiBaseCommonController
             if(!$obj)
                 return $this->apiReturnJson(9999);
             checkAuthByCompany($obj);
-            $obj->status = 6;
+
+            if($obj->status==1)
+                $obj->status = 6;
+            elseif($obj->status==3)
+                $obj->status = 7;
+
             $obj->pause_at = date('Y-m-d H:i:s');
             $obj->save();
             app()->build(RecruitRepository::class)->generateEndLog($obj);
@@ -238,8 +244,13 @@ class RecruitsController extends ApiBaseCommonController
             checkAuthByCompany(Entrust::find($id),false);
             Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1]);
         }else{
-            checkAuthByCompany(Recruit::find($id));
-            $this->getModel()->where('id', $id)->update(['status'=>1]);
+            $recruit = Recruit::find($id);
+            checkAuthByCompany($recruit);
+            if($recruit->status==6)
+                $this->getModel()->where('id', $id)->update(['status'=>1]);
+            elseif($recruit->status==7)
+                $this->getModel()->where('id', $id)->update(['status'=>3]);
+
         }
         return $this->apiReturnJson(0);
     }
@@ -250,15 +261,16 @@ class RecruitsController extends ApiBaseCommonController
         return $model;
     }
 
-    public function outsourceList()
+    public function outsourceList(Request $request)
     {
+        $job_id = $request->get('job_id');
         $model = $this->getModel();
 
         $company = $this->getCurrentCompany();
         if ($company) {
             //委托了的招聘
             $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-            $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,6])->whereIn('id', $has_entrust_ids);
+            $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,6,7])->whereIn('id', $has_entrust_ids);
         }else{
             $model = $model->where('id', 0);
         }

@@ -87,6 +87,9 @@ class EntrustsRepository
             case 6:
                 $status_text = '暂停招聘';
                 break;
+            case 7:
+                $status_text = '暂停招聘';
+                break;
             default:
                 $status_text = '未知状态';
                 break;
@@ -114,6 +117,9 @@ class EntrustsRepository
                 $status_text = '招聘完成';
                 break;
             case 6:
+                $status_text = '暂停招聘';
+                break;
+            case 7:
                 $status_text = '暂停招聘';
                 break;
             default:
