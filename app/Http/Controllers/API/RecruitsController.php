@@ -61,7 +61,7 @@ class RecruitsController extends ApiBaseCommonController
                         $model = $model->whereIn('status', [4,5]);
                     }
                 }else{
-                    $model = $model->whereIn('status', [1,4,5,6,7]);
+                    $model = $model->whereIn('status', [1,4,5,6]);
                 }
                 if($resume_id){
                     $model = $model->whereNotIn('id', RecruitResume::where('resume_id', $resume_id)->pluck('company_job_recruit_id')->toArray());
@@ -139,7 +139,9 @@ class RecruitsController extends ApiBaseCommonController
     //排序
     protected function modelGetSort(&$model)
     {
-        $model = $model->orderBy('status','asc')->orderBy('updated_at','desc');
+//        $model = $model->orderBy('status','asc')->orderBy('updated_at','desc');
+        $model = $model->orderByRaw("FIELD(status, 1, 2, 3 ,6 ,7 ,4 ,5) asc")->orderBy('updated_at', 'desc');
+
         return $model;
     }
 
@@ -264,6 +266,12 @@ class RecruitsController extends ApiBaseCommonController
     public function outsourceList(Request $request)
     {
         $job_id = $request->get('job_id');
+        $department_id = $request->get('department_id');
+        $start_at = $request->get('start_at');
+        $end_at = $request->get('end_at');
+        $leading_id = $request->get('leading_id');
+        $third_party_id = $request->get('third_party_id');
+
         $model = $this->getModel();
 
         $company = $this->getCurrentCompany();
