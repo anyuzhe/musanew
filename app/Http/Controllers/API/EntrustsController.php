@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Company;
+use App\Models\CompanyDepartment;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
@@ -26,6 +27,43 @@ class EntrustsController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
+
+        //筛选
+        $request = $this->request;
+        $job_id = $request->get('job_id');
+        $department_id = $request->get('department_id');
+        $start_at = $request->get('start_at');
+        $end_at = $request->get('end_at');
+        $leading_id = $request->get('leading_id');
+        $third_party_id = $request->get('third_party_id');
+        if($job_id){
+            $model = $model->where('job_id', $job_id);
+        }
+        if($department_id){
+            $department = CompanyDepartment::find($department_id);
+            if($department->level==1){
+                $departmentIds = [$department->id];
+            }else{
+                $departmentIds = $department->children->pluck('id')->toArray();
+            }
+            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck()->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }
+        if($leading_id){
+            $_ids = Recruit::where('leading_id', $leading_id)->pluck('id')->toArray();
+            $model = $model->where('company_job_recruit_id', $_ids);
+        }
+        if($start_at && !$end_at){
+            $model = $model->where('created_at', '>=' ,$start_at);
+        }elseif (!$start_at && $end_at){
+            $model = $model->where('created_at', '<=' ,$end_at);
+        }elseif ($start_at && $end_at){
+            $model = $model->where('created_at', '>=' ,$start_at)->where('created_at', '<=' ,$end_at);
+        }
+        if($third_party_id){
+            $model = $model->whereIn('third_party_id', $third_party_id);
+        }
+
         $in_recruit = $this->request->get('in_recruit', null);
         $resume_id = $this->request->get('resume_id', null);
         $user = $this->getUser();

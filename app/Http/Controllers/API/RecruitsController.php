@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Company;
+use App\Models\CompanyDepartment;
 use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Recruit;
@@ -42,6 +43,43 @@ class RecruitsController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
+
+        //筛选
+        $request = $this->request;
+        $job_id = $request->get('job_id');
+        $department_id = $request->get('department_id');
+        $start_at = $request->get('start_at');
+        $end_at = $request->get('end_at');
+        $leading_id = $request->get('leading_id');
+        $third_party_id = $request->get('third_party_id');
+        if($job_id){
+            $model = $model->where('job_id', $job_id);
+        }
+        if($department_id){
+            $department = CompanyDepartment::find($department_id);
+            if($department->level==1){
+                $departmentIds = [$department->id];
+            }else{
+                $departmentIds = $department->children->pluck('id')->toArray();
+            }
+            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck()->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }
+        if($leading_id){
+            $model = $model->where('leading_id', $leading_id);
+        }
+        if($start_at && !$end_at){
+            $model = $model->where('created_at', '>=' ,$start_at);
+        }elseif (!$start_at && $end_at){
+            $model = $model->where('created_at', '<=' ,$end_at);
+        }elseif ($start_at && $end_at){
+            $model = $model->where('created_at', '>=' ,$start_at)->where('created_at', '<=' ,$end_at);
+        }
+        if($third_party_id){
+            $_ids = Entrust::where('third_party_id', $third_party_id)->pluck('company_job_recruit_id')->toArray();
+            $model = $model->whereIn('id', $_ids);
+        }
+
         $in_recruit = $this->request->get('in_recruit', null);
         $resume_id = $this->request->get('resume_id', null);
         $user = $this->getUser();
@@ -278,12 +316,6 @@ class RecruitsController extends ApiBaseCommonController
 
     public function outsourceList(Request $request)
     {
-        $job_id = $request->get('job_id');
-        $department_id = $request->get('department_id');
-        $start_at = $request->get('start_at');
-        $end_at = $request->get('end_at');
-        $leading_id = $request->get('leading_id');
-        $third_party_id = $request->get('third_party_id');
 
         $model = $this->getModel();
 
@@ -294,6 +326,41 @@ class RecruitsController extends ApiBaseCommonController
             $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,6,7])->whereIn('id', $has_entrust_ids);
         }else{
             $model = $model->where('id', 0);
+        }
+        //筛选
+
+        $job_id = $request->get('job_id');
+        $department_id = $request->get('department_id');
+        $start_at = $request->get('start_at');
+        $end_at = $request->get('end_at');
+        $leading_id = $request->get('leading_id');
+        $third_party_id = $request->get('third_party_id');
+        if($job_id){
+            $model = $model->where('job_id', $job_id);
+        }
+        if($department_id){
+            $department = CompanyDepartment::find($department_id);
+            if($department->level==1){
+                $departmentIds = [$department->id];
+            }else{
+                $departmentIds = $department->children->pluck('id')->toArray();
+            }
+            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck()->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }
+        if($leading_id){
+            $model = $model->where('leading_id', $leading_id);
+        }
+        if($start_at && !$end_at){
+            $model = $model->where('created_at', '>=' ,$start_at);
+        }elseif (!$start_at && $end_at){
+            $model = $model->where('created_at', '<=' ,$end_at);
+        }elseif ($start_at && $end_at){
+            $model = $model->where('created_at', '>=' ,$start_at)->where('created_at', '<=' ,$end_at);
+        }
+        if($third_party_id){
+            $_ids = Entrust::where('third_party_id', $third_party_id)->pluck('company_job_recruit_id')->toArray();
+            $model = $model->whereIn('id', $_ids);
         }
         $model = $this->modelPipeline([
             'modelGetSearch',
