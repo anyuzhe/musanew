@@ -43,7 +43,9 @@ class EntrustsRepository
 
         //entrust status 状态 -3 外包方未确定直接取消  -2 拒绝  -1 取消 0申请中 1正常 2完成
         $_status = $entrust_status;
-        if($_status==0){
+        if($recruit_status==6 ||$recruit_status==7){
+            $_status = 6;
+        }elseif($_status==0){
             $_status = 2;
         }elseif($_status==1){
             $_status = 3;
@@ -86,9 +88,11 @@ class EntrustsRepository
                 break;
             case 6:
                 $status_text = '暂停招聘';
+                return $status_text;
                 break;
             case 7:
                 $status_text = '暂停招聘';
+                return $status_text;
                 break;
             default:
                 $status_text = '未知状态';
