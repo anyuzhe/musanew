@@ -120,6 +120,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
 //验证职位编号
     $router->post('/company/jobs/checkCode', 'API\JobsController@checkCode');
+//验证职位编号
+    $router->post('/company/recruits/check', 'API\RecruitsController@checkExist');
 
     //个人信息
     $router->get('/user/info', 'API\UsersController@info');

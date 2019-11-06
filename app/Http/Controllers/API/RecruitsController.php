@@ -257,6 +257,19 @@ class RecruitsController extends ApiBaseCommonController
         return $this->apiReturnJson(0);
     }
 
+    public function checkExist()
+    {
+        $job_id = $this->request->get('job_id');
+        $has = Recruit::where('job_id',$job_id)->whereNotIn('status',[4,5])->first();
+        if(!$job_id)
+            return $this->apiReturnJson(0,null,'缺少job_id');
+        if($has){
+            return $this->apiReturnJson(0,['has'=>1]);
+        }else{
+            return $this->apiReturnJson(0,['has'=>0]);
+        }
+    }
+
     public function outsourceSort(&$model)
     {
         $model = $model->orderByRaw("FIELD(status, 2, 3) desc")->orderBy('updated_at','desc');

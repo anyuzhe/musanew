@@ -31,6 +31,7 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    dd(date('Y-m-d H:i:s', strtotime("Tue Oct 01 2019 00:00:00 GMT+0800 (中国标准时间)")));
     $resumeres = app()->build(ResumesRepository::class);
     dd($resumeres->mixResumes(Resume::find(272),Resume::find(173)));
 //    $testres = app()->build(EntrustsRepository::class);
