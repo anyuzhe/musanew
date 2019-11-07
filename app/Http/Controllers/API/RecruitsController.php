@@ -52,6 +52,7 @@ class RecruitsController extends ApiBaseCommonController
         $end_at = $request->get('end_at');
         $leading_id = $request->get('leading_id');
         $third_party_id = $request->get('third_party_id');
+        $recruit_search_status = $request->get('recruit_search_status');
         if($job_id){
             $model = $model->where('job_id', $job_id);
         }
@@ -78,6 +79,22 @@ class RecruitsController extends ApiBaseCommonController
         if($third_party_id){
             $_ids = Entrust::where('third_party_id', $third_party_id)->pluck('company_job_recruit_id')->toArray();
             $model = $model->whereIn('id', $_ids);
+        }
+        if($recruit_search_status){
+            switch ($recruit_search_status){
+                case 1:
+                    $model = $model->whereIn('status', [2,3,7,4,5]);
+                    break;
+                case 2:
+                    $model = $model->whereIn('status', [1,6,4,5]);
+                    break;
+                case 3:
+                    $model = $model->whereIn('status', [4,5]);
+                    break;
+                case 4:
+                    $model = $model->whereIn('status', [6,7]);
+                    break;
+            }
         }
 
         $in_recruit = $this->request->get('in_recruit', null);
@@ -358,6 +375,7 @@ class RecruitsController extends ApiBaseCommonController
         $end_at = $request->get('end_at');
         $leading_id = $request->get('leading_id');
         $third_party_id = $request->get('third_party_id');
+        $recruit_search_status = $request->get('recruit_search_status');
         if($job_id){
             $model = $model->where('job_id', $job_id);
         }
@@ -384,6 +402,23 @@ class RecruitsController extends ApiBaseCommonController
         if($third_party_id){
             $_ids = Entrust::where('third_party_id', $third_party_id)->pluck('company_job_recruit_id')->toArray();
             $model = $model->whereIn('id', $_ids);
+        }
+
+        if($recruit_search_status){
+            switch ($recruit_search_status){
+                case 1:
+                    $model = $model->whereIn('status', [2,3,7,4,5]);
+                    break;
+                case 2:
+                    $model = $model->whereIn('status', [1,6,4,5]);
+                    break;
+                case 3:
+                    $model = $model->whereIn('status', [4,5]);
+                    break;
+                case 4:
+                    $model = $model->whereIn('status', [6,7]);
+                    break;
+            }
         }
         $model = $this->modelPipeline([
             'modelGetSearch',

@@ -36,6 +36,7 @@ class EntrustsController extends ApiBaseCommonController
         $end_at = $request->get('end_at');
         $leading_id = $request->get('leading_id');
         $third_party_id = $request->get('third_party_id');
+        $recruit_search_status = $request->get('recruit_search_status');
         if($job_id){
             $model = $model->where('job_id', $job_id);
         }
@@ -62,6 +63,23 @@ class EntrustsController extends ApiBaseCommonController
         }
         if($third_party_id){
             $model = $model->whereIn('third_party_id', $third_party_id);
+        }
+
+        if($recruit_search_status){
+            switch ($recruit_search_status){
+                case 1:
+                    $model = $model->whereIn('status', [0,1,2]);
+                    break;
+                case 2:
+                    $model = $model->whereIn('status', [-3,-2,-1]);
+                    break;
+                case 3:
+                    $model = $model->whereIn('status', [-3,-2,-1,2]);
+                    break;
+                case 4:
+                    $model = $model->whereIn('status', [6,7]);
+                    break;
+            }
         }
 
         $in_recruit = $this->request->get('in_recruit', null);
