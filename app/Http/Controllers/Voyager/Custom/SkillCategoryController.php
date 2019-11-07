@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Facades\Voyager;
 
-class SkillController extends VoyagerBaseController
+class SkillCategoryController extends VoyagerBaseController
 {
 
     public function index(Request $request)
@@ -29,7 +29,7 @@ class SkillController extends VoyagerBaseController
 
         $search = (object) ['value' => $request->get('s'), 'key' => $request->get('key'), 'filter' => $request->get('filter')];
         $searchable = $dataType->server_side ? array_keys(SchemaManager::describeTable(app($dataType->model_name)->getTable())->toArray()) : '';
-        $orderBy = $request->get('order_by', 'category_l2_id');
+        $orderBy = $request->get('order_by', 'pid');
         $sortOrder = $request->get('sort_order', null);
         $usesSoftDeletes = false;
         $showSoftDeleted = false;
