@@ -31,6 +31,7 @@ class AreasController extends CommonController
             ->leftJoin('area', 'company_addresses.city_id', '=', 'area.id')
             ->groupBy('area.id')
             ->whereNotNull('company_addresses.city_id')
+            ->where('company_job_recruit.is_public', 1)
             ->orderBy('num', 'desc')
             ->get();
 
