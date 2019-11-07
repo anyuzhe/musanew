@@ -191,6 +191,29 @@ class RecruitsController extends ApiBaseCommonController
         return $this->apiReturnJson(0);
     }
 
+    public function checkUpdate($id,$request)
+    {
+        $obj = Recruit::find($id);
+        checkAuthByCompany($obj);
+        $need_num = $request->get('need_num');
+        if ($need_num<($obj->done_num + $obj->wait_entry_num)){
+            return '需求人数必须大于或等于已存在的完成人数和待入职人数';
+        }
+        if($obj->done_num>=$need_num){
+            //如果是委托 就不改成结束状态
+//            if($obj->status==1 || $obj->status==6)
+            $obj->status = 5;
+            foreach ($obj->entrusts as $_entrust) {
+                $_entrust->status = 2;
+                $_entrust->end_at = date('Y-m-d H:i:s');
+                $_entrust->save();
+            }
+
+            $obj->end_at = date('Y-m-d H:i:s');
+            $obj->save();
+        }
+    }
+
     public function finish()
     {
         $id = $this->request->get('id');
