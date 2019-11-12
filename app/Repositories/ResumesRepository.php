@@ -652,6 +652,8 @@ class ResumesRepository
         unset($old['is_base']);
         $resumeNew->fill(array_merge($old, ['resume_name'=>$resumeNew->resume_name, 'usable_range'=>$resumeNew->usable_range, 'self_evaluation'=>$resumeNew->self_evaluation]));
         $resumeNew->save();
+        ResumeEducation::where('resume_id', $resumeNew->id)->delete();
+        ResumeTrain::where('resume_id', $resumeNew->id)->delete();
         foreach ($resumeOld->educations as $education) {
             $_data = $education->toArray();
             $_data['resume_id'] = $resumeNew->id;
