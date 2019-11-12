@@ -650,7 +650,13 @@ class ResumesRepository
         unset($old['is_used']);
         unset($old['is_personal']);
         unset($old['is_base']);
-        $resumeNew->fill(array_merge($old, ['resume_name'=>$resumeNew->resume_name, 'usable_range'=>$resumeNew->usable_range, 'self_evaluation'=>$resumeNew->self_evaluation]));
+        $newData = [
+            'resume_name'=>$resumeNew->resume_name,
+            'usable_range'=>$resumeNew->usable_range,
+            'self_evaluation'=>$resumeNew->self_evaluation,
+            'hope_job_text'=>$resumeNew->hope_job_text,
+        ];
+        $resumeNew->fill(array_merge($old, $newData));
         $resumeNew->save();
         ResumeEducation::where('resume_id', $resumeNew->id)->delete();
         ResumeTrain::where('resume_id', $resumeNew->id)->delete();

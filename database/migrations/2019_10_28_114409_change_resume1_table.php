@@ -14,6 +14,8 @@ class ChangeResume1Table extends Migration
     public function up()
     {
         Schema::connection('musa')->table('resume', function (Blueprint $table) {
+            $table->tinyInteger('education')->default(0)->comment('学历')->nullable()->change();
+
             $table->tinyInteger('on_the_job')->default(0)->comment('是否在职');
             $table->tinyInteger('is_base')->default(0)->comment('是否是基本信息');
             $table->tinyInteger('is_used')->default(1)->comment('是否使用');
