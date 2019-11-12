@@ -19,10 +19,18 @@ class TestsRepository
         $doneNum = 0;
         $allGrade = 0;
         $doneGrade = 0;
-        foreach ($data as $v) {
+        $data = $data->keyBy('quiz_id');
+        $quizs = Quiz::where('course', $test->id)->get();
+
+        foreach ($quizs as $quiz) {
+            if($data->get($quiz->id)){
+                $v = $data->get($quiz->id);
+            }else{
+                $v = null;
+            }
             $allNum++;
-            $allGrade+= $v->total_grade;
-            if($v->grade!==null){
+            $allGrade+= $quiz->grade;
+            if($v!==null){
                 $doneNum++;
                 $doneGrade+= $v->grade;
             }

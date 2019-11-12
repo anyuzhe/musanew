@@ -31,13 +31,14 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $testres = app()->build(TestsRepository::class);
+    dd($testres->getTestData(Course::find(7), \App\Models\User::find(55)));
     dd(date('Y-m-d H:i:s', strtotime("Tue Oct 01 2019 00:00:00 GMT+0800 (中国标准时间)")));
     $resumeres = app()->build(ResumesRepository::class);
     dd($resumeres->mixResumes(Resume::find(272),Resume::find(173)));
 //    $testres = app()->build(EntrustsRepository::class);
 //    dd($testres->getEntrustsAmount(Entrust::all()));
 //    dd(Resume::create([]));
-    $testres = app()->build(TestsRepository::class);
     dd($testres->getTestData(Course::find(7), \App\Models\User::find(43)));
     dd(SkillsRepository::getTestCateId());
     $first = DB::connection('musa')->table('company_job_recruit')
