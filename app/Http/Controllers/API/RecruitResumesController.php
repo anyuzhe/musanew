@@ -14,6 +14,7 @@ use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class RecruitResumesController extends ApiBaseCommonController
 {
@@ -100,6 +101,13 @@ class RecruitResumesController extends ApiBaseCommonController
         $data->matching = $this->recruitResumesRepository->matching($data);
         $data = $data->toArray();
         $data['logs'] = array_reverse($data['logs']);
+
+
+        $resume = $data['resume'];
+        $resume['educations'] = (new Collection($resume['educations']))->sortByDesc('start_date')->values()->toArray();
+        $resume['projects'] = (new Collection($resume['projects']))->sortByDesc('project_start')->values()->toArray();
+        $resume['companies'] = (new Collection($resume['companies']))->sortByDesc('job_start')->values()->toArray();
+        $data['resume'] = $resume;
     }
 
     public function resumeFlow()
