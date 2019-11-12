@@ -116,7 +116,16 @@ class UsersController extends CommonController
 
     	$request = $this->request->all();
 
-    	$user = $this->getUser();
+        if(isset($request['name']) && $request['name']){
+            $name = $request['name'];
+        }else{
+            $name = $request['realname'];
+        }
+        $request['name'] = $name;
+        $request['realname'] = $name;
+
+
+        $user = $this->getUser();
         $obj = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
     	if($obj){
             $obj->fill($request);
@@ -129,10 +138,8 @@ class UsersController extends CommonController
             $this->afterStore($obj, $request);
         }
         $info = $user->info;
-        $info->realname = $request['name'];
-        if(isset($request['name'])){
-            unset($request['realname']);
-        }
+        $info->realname = $name;
+
         $info->fill($request);
         $info->save();
 
