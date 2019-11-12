@@ -229,6 +229,8 @@ class EntrustsController extends ApiBaseCommonController
     public function acceptEntrust()
     {
         $ids = $this->request->get('ids');
+        $leading_id = $this->request->get('leading_id');
+
         $is_public = $this->request->get('is_public',null);
         if(!$ids || count($ids)==0){
             $id = $this->request->get('id');
@@ -241,6 +243,9 @@ class EntrustsController extends ApiBaseCommonController
             $recruit = $entrust->recruit;
             if($entrust->status==0){
                 $recruit->status = 3;
+                if($leading_id){
+                    $entrust->leading_id = $leading_id;
+                }
                 $recruit->save();
 
                 if($is_public!==null){
