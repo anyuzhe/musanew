@@ -17,6 +17,7 @@ use App\Models\Entrust;
 use App\Models\Moodle\CourseCategory;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
+use App\Models\ResumeEducation;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\ResumesRepository;
 use App\Repositories\SkillsRepository;
@@ -32,6 +33,16 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     $testres = app()->build(TestsRepository::class);
+    $resumeres = app()->build(ResumesRepository::class);
+    $resumes = Resume::all();
+    foreach ($resumes as $obj) {
+        $v = $resumeres->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        if($v){
+            dump($v);
+            $obj->education = $v;
+            $obj->save();
+        }
+    }
     dd($testres->getTestData(Course::find(7), \App\Models\User::find(55)));
     dd(date('Y-m-d H:i:s', strtotime("Tue Oct 01 2019 00:00:00 GMT+0800 (中国标准时间)")));
     $resumeres = app()->build(ResumesRepository::class);

@@ -6,6 +6,7 @@ use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\Course;
 use App\Models\Resume;
+use App\Models\ResumeEducation;
 use App\Models\User;
 use App\Models\UserBasicInfo;
 use App\Repositories\RecruitResumesRepository;
@@ -93,6 +94,9 @@ class UsersController extends CommonController
         $obj->is_base = 1;
         $obj->is_personal = 1;
         $obj->type = 2;
+        if(!$obj->education){
+            $obj->education = $this->resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        }
         $obj = $this->resumeRepository->saveDataForForm($obj, $data);
 
         $otherResumes = Resume::where('user_id', $user_id)->where('is_base', 0)->where('type', 2)->get();
@@ -104,6 +108,9 @@ class UsersController extends CommonController
     public function afterUpdate($id, $data)
     {
         $obj = Resume::find($id);
+        if(!$obj->education){
+            $obj->education = $this->resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        }
         $this->resumeRepository->saveDataForForm($obj, $data);
         $otherResumes = Resume::where('user_id', $this->getUser()->id)->where('is_base', 0)->where('type', 2)->get();
         foreach ($otherResumes as $otherResume) {

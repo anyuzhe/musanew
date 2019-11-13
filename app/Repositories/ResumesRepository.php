@@ -643,6 +643,16 @@ class ResumesRepository
         return $_start_date;
     }
 
+    public function getEducation($educations)
+    {
+        $value = 0;
+        foreach ($educations as $education) {
+            if($education->education>$value)
+                $value = $education->education;
+        }
+        return $value;
+    }
+
     public function mixResumes($resumeNew, $resumeOld)
     {
         $old = $resumeOld->toArray();
