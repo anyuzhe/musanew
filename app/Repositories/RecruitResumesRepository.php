@@ -24,11 +24,11 @@ class RecruitResumesRepository
         }elseif($status==3 && !in_array($recruitResume->status,[2,3,5])){
             return '简历不是邀请或再次邀请面试状态,不能修改时间';
         }elseif($status==4 && !in_array($recruitResume->status,[2,3,5])){
-            return '简历不是邀请或再次邀请面试状态,不能面试完成';
+            return '简历不是邀请或再次邀请面试状态,不能待定';
         }elseif($status==5 && !in_array($recruitResume->status,[4])){
             return '简历不是邀请面试状态或者完成状态,不能再次邀请面试';
         }elseif($status==6 && !in_array($recruitResume->status,[4])){
-            return '简历不是面试完成状态,不能面试通过';
+            return '简历不是待定状态,不能面试通过';
         }elseif($status==7 && !in_array($recruitResume->status,[6])){
             return '简历不是面试通过状态,不能录用';
         }elseif($status==8 && !in_array($recruitResume->status,[7])){
@@ -40,9 +40,9 @@ class RecruitResumesRepository
         }elseif($status==-2 && !in_array($recruitResume->status,[2,3,5])){
             return '简历不是邀请或再次邀请面试状态,不能面试没来';
         }elseif($status==-3 && !in_array($recruitResume->status,[4])){
-            return '简历不是面试完成状态,不能面试不通过';
+            return '简历不是待定状态,不能面试不通过';
         }elseif($status==-4 && !in_array($recruitResume->status,[4,6])){
-            return '简历不是面试完成状态,不能面试通过但不合适';
+            return '简历不是待定状态,不能面试通过但不合适';
         }elseif($status==-5 && !in_array($recruitResume->status,[7])){
             return '简历不是录用状态,不能录用之后未到岗';
         }
@@ -65,7 +65,7 @@ class RecruitResumesRepository
         //1 简历投递
         //2 邀请面试 可以修改面试时间再次邀约
         //3 修改时间
-        //4 面试完成(填写反馈后-待定状态)
+        //4 待定(填写反馈后-待定状态)
         //5 再次邀请面试
         //6 面试通过
         //7 录用
@@ -254,7 +254,7 @@ class RecruitResumesRepository
                 $data->status_str = '修改面试时间';
                 break;
             case 4:
-                $data->status_str = '面试完成';
+                $data->status_str = '待定';
                 break;
             case 5:
                 $data->status_str = '再次邀请面试';
