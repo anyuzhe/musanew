@@ -689,6 +689,20 @@ class ResumesRepository
         }
     }
 
+    public function handleNewSkill($resumeNew, $skills)
+    {
+        if($skills && is_array($skills)){
+            foreach ($skills as $skill) {
+                $skill['resume_id'] = $resumeNew->id;
+                if(isset($skill['id']) && $skill['id']){
+                }else{
+                    $_obj = ResumeSkill::create($skill);
+                    $skill_ids[] = $_obj->id;
+                }
+            }
+        }
+    }
+
     public function getBaseResume()
     {
         $user= TokenRepository::getUser();
