@@ -112,6 +112,11 @@ class ResumesRepository
             foreach ($v->attachments as &$attachment) {
                 $attachment->file_full_path = getPicFullUrl($v->file_path);
             }
+            if($v->avatar){
+                $v->avatar_url = getPicFullUrl($v->avatar);
+            }else{
+                $v->avatar_url = "";
+            }
         }
         return $data;
     }
