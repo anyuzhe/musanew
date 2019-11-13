@@ -108,8 +108,9 @@ class UsersController extends CommonController
     public function afterUpdate($id, $data)
     {
         $obj = Resume::find($id);
-        if(!$obj->education){
-            $obj->education = $this->resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        $educationValue = $this->resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        if($educationValue){
+            $obj->education = $educationValue;
         }
         $this->resumeRepository->saveDataForForm($obj, $data);
         $otherResumes = Resume::where('user_id', $this->getUser()->id)->where('is_base', 0)->where('type', 2)->get();
