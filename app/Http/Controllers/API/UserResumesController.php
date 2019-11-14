@@ -114,6 +114,9 @@ class UserResumesController extends ApiBaseCommonController
     public function afterUpdate($id, $data)
     {
         $obj = Resume::find($id);
+        $skills = isset($data['skills'])?$data['skills']:[];
+
+        $this->resumeRepository->handleNewSkill(Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->get(), $skills);
 
         $this->resumeRepository->saveDataForForm($obj, $data);
         return $this->apiReturnJson(0);
