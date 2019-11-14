@@ -434,7 +434,8 @@ class EntrustResumesController extends ApiBaseCommonController
 
             //解析简历
             $data = [
-                'filename'=>$filename,
+                'filename'=>$filename.'.'.$file->getClientOriginalExtension(),
+//                'filename'=>$filename,
                 'content'=>base64_encode($_content),
                 'need_avatar'=>0
             ];
