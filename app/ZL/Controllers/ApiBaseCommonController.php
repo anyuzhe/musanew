@@ -245,7 +245,7 @@ class ApiBaseCommonController extends CommonController
                     $res = $this->afterUpdate($id,$request->all());
                 } catch (\Exception $e) {
                     app('db')->rollBack();
-                    throw $e;
+//                    throw $e;
                     return responseZK(9999,null,$e->getFile().' '.$e->getLine().' '.$e->getMessage());
                 }
                 if(isset($res['code']) && $res['code']==0){
