@@ -85,10 +85,11 @@ class EntrustsController extends ApiBaseCommonController
         $in_recruit = $this->request->get('in_recruit', null);
         $resume_id = $this->request->get('resume_id', null);
         $user = $this->getUser();
-        if ($user) {
+        $type = $this->request->type;
+
+        if ($user && $type) {
             $company = $this->getCurrentCompany();
-            $type = $this->request->type;
-            $model = app()->build(EntrustsRepository::class)->getModelByType($type, $company, $in_recruit, $resume_id);
+            $model = app()->build(EntrustsRepository::class)->getModelByType($type, $company, $in_recruit, $resume_id, $model);
         }
         return null;
     }

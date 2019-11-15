@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class EntrustsRepository
 {
-    public function getModelByType($type, $company, $in_recruit=null, $resume_id=null)
+    public function getModelByType($type, $company, $in_recruit=null, $resume_id=null, $model=null)
     {
-        $model = new Entrust();
+        if(!$model)
+            $model = new Entrust();
         //简历投递功能--过滤简历
         if($resume_id){
             $model = $model->whereNotIn('company_job_recruit_id', RecruitResume::where('resume_id', $resume_id)->pluck('company_job_recruit_id')->toArray());
