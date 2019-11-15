@@ -43,11 +43,11 @@ class EntrustsController extends ApiBaseCommonController
         if($department_id){
             $department = CompanyDepartment::find($department_id);
             if($department->level==1){
-                $departmentIds = [$department->id];
-            }else{
                 $departmentIds = $department->children->pluck('id')->toArray();
+            }else{
+                $departmentIds = [$department->id];
             }
-            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck()->toArray();
+            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck('id')->toArray();
             $model = $model->whereIn('job_id', $jobIds);
         }
         if($leading_id){
