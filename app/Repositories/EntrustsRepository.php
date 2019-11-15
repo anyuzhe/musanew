@@ -20,6 +20,7 @@ class EntrustsRepository
         if($type==2){
             //外包出去的
             $model = $model->where('company_id', $company->id);
+            $model = $model->whereIn('status', '!=', '-2');
             if($in_recruit){
                 $model = $model->whereIn('status', [1]);
             }
