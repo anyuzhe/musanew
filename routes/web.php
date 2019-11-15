@@ -32,6 +32,7 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    dd(env('APP_DEBUG'));
     $testres = app()->build(TestsRepository::class);
     $resumeres = app()->build(ResumesRepository::class);
     $resumes = Resume::all();
