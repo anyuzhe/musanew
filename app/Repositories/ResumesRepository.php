@@ -691,11 +691,27 @@ class ResumesRepository
 
     public function handleNewSkill($resumeNew, $skills)
     {
+        $skillsOld = $resumeNew->skills;
         if($skills && is_array($skills)){
             foreach ($skills as $skill) {
                 $skill['resume_id'] = $resumeNew->id;
                 if(isset($skill['id']) && $skill['id']){
                 }else{
+                    $has = false;
+                    $old = false;
+                    foreach ($skillsOld as $item) {
+                        if($item->skill_id==$skill['skill_id'] && $skill['skill_level']<$item->skill_level){
+                            $has = $item->id;
+                        }elseif($item->skill_id==$skill['skill_id'] && $skill['skill_level']>$item->skill_level){
+                            $old = $item->id;
+                        }
+                    }
+                    if($has){
+                        continue;
+                    }
+                    if($old){
+                        ResumeSkill::where('id', $old)->delete();
+                    }
                     $_obj = ResumeSkill::create($skill);
                     $skill_ids[] = $_obj->id;
                 }
