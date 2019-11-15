@@ -100,8 +100,10 @@ class UsersController extends CommonController
         $obj = $this->resumeRepository->saveDataForForm($obj, $data);
 
         $otherResumes = Resume::where('user_id', $user_id)->where('is_base', 0)->where('type', 2)->get();
+        $skills = isset($data['skills'])?$data['skills']:[];
         foreach ($otherResumes as $otherResume) {
             $this->resumeRepository->mixResumes($otherResume, $obj);
+            $this->resumeRepository->handleNewSkill($otherResume, $skills);
         }
     }
 
