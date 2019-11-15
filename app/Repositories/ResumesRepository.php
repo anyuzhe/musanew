@@ -700,7 +700,7 @@ class ResumesRepository
                     $has = false;
                     $old = false;
                     foreach ($skillsOld as $item) {
-                        if($item->skill_id==$skill['skill_id'] && $skill['skill_level']<$item->skill_level){
+                        if($item->skill_id==$skill['skill_id'] && $skill['skill_level']<=$item->skill_level){
                             $has = $item->id;
                         }elseif($item->skill_id==$skill['skill_id'] && $skill['skill_level']>$item->skill_level){
                             $old = $item->id;
