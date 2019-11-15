@@ -62,7 +62,7 @@ class EntrustsController extends ApiBaseCommonController
             $model = $model->where('created_at', '>=' ,$start_at)->where('created_at', '<=' ,$end_at);
         }
         if($third_party_id){
-            $model = $model->whereIn('third_party_id', $third_party_id);
+            $model = $model->where('third_party_id', $third_party_id);
         }
 
         if($recruit_search_status){
