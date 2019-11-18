@@ -32,6 +32,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+//    dd(preg_match('/^(\w*(?=\w*\d)(?=\w*[A-Za-z])\w*){6,16}$/', '2123_!@1231'));
+    dd(preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$_@$!%*#?&]{8,}$/', '2123_!A@1231'));
+//    dd(preg_match('/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,16}/', '2123!ddddddA1'));
     dd(env('APP_DEBUG'));
     $testres = app()->build(TestsRepository::class);
     $resumeres = app()->build(ResumesRepository::class);

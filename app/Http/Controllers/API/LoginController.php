@@ -127,7 +127,11 @@ class LoginController extends CommonController
             if($userHas){
                 return $this->apiReturnJson("9998", null, '邮箱不能重复');
             }
-
+            $password = $user->password;
+            $checkPwd = $this->checkPassword($password);
+            if(!$checkPwd){
+                return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符');
+            }
             $codeHas = PasswordFindCode::where([
                 ['type',1],
                 ['operation',1],
@@ -179,6 +183,10 @@ class LoginController extends CommonController
         $user = $this->getUserByEmail($email);
         if(!$user) {
             return $this->apiReturnJson('9998');
+        }
+        $checkPwd = $this->checkPassword($password);
+        if(!$checkPwd){
+            return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符');
         }
         $codeHas = PasswordFindCode::where([
             ['user_id',$user->id],
@@ -251,5 +259,13 @@ class LoginController extends CommonController
 //        } else {
 //            return true;
 //        }
+    }
+
+    public function checkPassword($password)
+    {
+        $res = preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$_@$!%*#?&]{8,16}$/', $password);
+//        $res = preg_match('/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,16}/', $password);
+//        $res = preg_match('/^(\w*(?=\w*\d)(?=\w*[A-Za-z])\w*){6,16}$/', $password);
+        return $res;
     }
 }
