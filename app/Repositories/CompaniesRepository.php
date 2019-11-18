@@ -74,6 +74,8 @@ class CompaniesRepository
         if($departments && is_array($departments)){
             $departments_ids = [];
             foreach ($departments as $department) {
+                if(!$department['name'])
+                    continue;
                 $department['company_id'] = $company_id;
                 if(isset($department['id']) && $department['id']){
                     $_department = CompanyDepartment::find($department['id']);
