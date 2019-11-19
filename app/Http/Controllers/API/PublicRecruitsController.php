@@ -177,6 +177,7 @@ class PublicRecruitsController extends ApiBaseCommonController
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
             if($entrust){
+                $entrust->leading;
                 $recruit = $entrust->recruit;
                 $entrust->thirdParty->logo_url = getPicFullUrl($entrust->thirdParty->logo);
             }
