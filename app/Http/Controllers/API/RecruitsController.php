@@ -339,12 +339,13 @@ class RecruitsController extends ApiBaseCommonController
     {
         $job_id = $this->request->get('job_id');
         $has = Recruit::where('job_id',$job_id)->whereNotIn('status',[4,5])->first();
+        $has_pause = Recruit::where('job_id',$job_id)->whereNotIn('status',[6,7])->first();
         if(!$job_id)
             return $this->apiReturnJson(0,null,'缺少job_id');
         if($has){
-            return $this->apiReturnJson(0,['has'=>1]);
+            return $this->apiReturnJson(0,['has'=>1, 'has_pause'=>$has_pause?$has_pause->id:0]);
         }else{
-            return $this->apiReturnJson(0,['has'=>0]);
+            return $this->apiReturnJson(0,['has'=>0, 'has_pause'=>0]);
         }
     }
 
