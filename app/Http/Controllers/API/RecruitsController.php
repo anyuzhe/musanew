@@ -324,12 +324,18 @@ class RecruitsController extends ApiBaseCommonController
             checkAuthByCompany(Entrust::find($id),false);
             Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1]);
         }else{
-            $recruit = Recruit::find($id);
-            checkAuthByCompany($recruit);
-            if($recruit->status==6)
-                $this->getModel()->where('id', $id)->update(['status'=>1]);
-            elseif($recruit->status==7)
-                $this->getModel()->where('id', $id)->update(['status'=>3]);
+            if(!is_array($id))
+                $ids = [$id];
+            else
+                $ids = $id;
+            foreach ($ids as $id) {
+                $recruit = Recruit::find($id);
+                checkAuthByCompany($recruit);
+                if($recruit->status==6)
+                    $this->getModel()->where('id', $id)->update(['status'=>1]);
+                elseif($recruit->status==7)
+                    $this->getModel()->where('id', $id)->update(['status'=>3]);
+            }
 
         }
         return $this->apiReturnJson(0);
@@ -339,13 +345,13 @@ class RecruitsController extends ApiBaseCommonController
     {
         $job_id = $this->request->get('job_id');
         $has = Recruit::where('job_id',$job_id)->whereNotIn('status',[4,5])->first();
-        $has_pause = Recruit::where('job_id',$job_id)->whereNotIn('status',[6,7])->first();
+        $has_pause = Recruit::where('job_id',$job_id)->whereNotIn('status',[6,7])->pluck('id')->toArray();
         if(!$job_id)
             return $this->apiReturnJson(0,null,'缺少job_id');
         if($has){
-            return $this->apiReturnJson(0,['has'=>1, 'has_pause'=>$has_pause?$has_pause->id:0]);
+            return $this->apiReturnJson(0,['has'=>1, 'has_pause'=>$has_pause]);
         }else{
-            return $this->apiReturnJson(0,['has'=>0, 'has_pause'=>0]);
+            return $this->apiReturnJson(0,['has'=>0, 'has_pause'=>[]]);
         }
     }
 
