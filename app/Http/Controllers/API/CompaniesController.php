@@ -317,7 +317,7 @@ class CompaniesController extends ApiBaseCommonController
         //待处理
         $waitHandleData = RecruitResume::where(function ($query)use ($company){
             $query->where('third_party_id',$company->id)->orWhere('company_id',$company->id);
-        })->whereIn('status',[1,2,3,4,5,6])->whereIn('company_job_recruit_id', $recruitIds)->get();
+        })->whereIn('status',[1,4,6])->whereIn('company_job_recruit_id', $recruitIds)->get();
         $waitHandleData->load('job');
         $waitHandleData->load('resume');
         $waitHandleData->load('recruit');
@@ -374,7 +374,7 @@ class CompaniesController extends ApiBaseCommonController
         //待入职
         $waitEntryData = RecruitResume::where(function ($query)use ($company){
             $query->where('third_party_id',$company->id)->orWhere('company_id',$company->id);
-        })->whereIn('status',[6])->whereIn('company_job_recruit_id', $recruitIds)->get();
+        })->whereIn('status',[7])->whereIn('company_job_recruit_id', $recruitIds)->get();
         $waitEntryData->load('job');
         $waitEntryData->load('resume');
         $waitEntryData->load('recruit');
