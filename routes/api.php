@@ -225,6 +225,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //第三方添加简历
     $router->post('/user/resumes', 'API\UserResumesController@store');
+    $router->post('/user/resumes/upload', 'API\UserResumesController@upload');
+
     //更新简历
     $router->post('/user/resumes/{id}', 'API\UserResumesController@update');
 

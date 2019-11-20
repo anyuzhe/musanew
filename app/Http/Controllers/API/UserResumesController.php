@@ -35,6 +35,25 @@ class UserResumesController extends ApiBaseCommonController
       ['hope_job_text','like'],
     ];
 
+
+    protected $fileSuffixes = [
+        'bin',
+        'msg',
+        'doc',
+        'ppt',
+        'pptx',
+        'htm',
+        'html',
+        'mht',
+        'png',
+        'jpg',
+        'jpeg',
+        'docx',
+        'pdf',
+        'rtf',
+        'txt',
+        'text',
+    ];
     public function __construct(Request $request, ResumesRepository $resumesRepository,RecruitResumesRepository $recruitResumesRepository)
     {
         parent::__construct($request);
@@ -243,6 +262,96 @@ class UserResumesController extends ApiBaseCommonController
         $obj = Resume::find($id);
         if($obj && $obj->user_id != $this->getUser()->id){
             return '不能编辑不是自己的简历';
+        }
+    }
+
+    public function upload(Request $request)
+    {
+        $fullFilename = null;
+        $slug = 'resumes';
+        $file = $request->file('file');
+        if(!$file){
+            return responseZK(9999,null,'没有上传文件');
+        }
+
+        $path = $slug.'/'.date('F').date('Y').'/';
+
+        $filename = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension());
+        $filename_counter = 1;
+
+        // Make sure the filename does not exist, if it does make sure to add a number to the end 1, 2, 3, etc...
+        while (Storage::disk(config('voyager.storage.disk'))->exists($path.$filename.'.'.$file->getClientOriginalExtension())) {
+            $filename = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension()).(string) ($filename_counter++);
+        }
+
+        $fullPath = $path.$filename.'.'.$file->getClientOriginalExtension();
+
+        $ext = $file->guessClientExtension();
+
+        if (!in_array($ext, $this->fileSuffixes)) {
+            return responseZK(9999,null,'不正确的上传格式');
+        }
+
+        $_content = file_get_contents($file->getRealPath());
+        // move uploaded file from temp to uploads directory
+        if (Storage::disk(config('voyager.storage.disk'))->put($fullPath, $_content, 'public')) {
+            $fullFilename = $fullPath;
+//            $res = [
+//                'path'=>$fullFilename,
+//                'full_path'=>Voyager::image($fullFilename),
+//            ];
+            //保存简历完毕
+
+            //解析简历
+            $data = [
+                'filename'=>$filename.'.'.$file->getClientOriginalExtension(),
+//                'filename'=>$filename,
+                'content'=>base64_encode($_content),
+                'need_avatar'=>0
+            ];
+            $headers = [
+                'X-API-KEY: '.config('app.BELLO-API-KEY')
+            ];
+            $url = "http://47.92.100.9/api/resume/parse";
+//            $url = "https://www.belloai.com/v2/open/resume/parse";
+            $res = http_post_json($url, json_encode($data, 256) ,$headers);
+            if(isset($res[1])){
+                $res_array = json_decode($res[1], true);
+            }else{
+                $res_array = null;
+            }
+            if($res[0]=='200' && $res_array && $res_array['status']['code']==200){
+                $array = $res_array['result'];
+                if($request->get('is_test')){
+//                    $e = $this->resumeRepository->getAreaByText($array['basics']['current_location']);
+//                    dd($e);
+                    dump($data);
+                    dd($res_array);
+                }
+                $obj = $this->resumeRepository->saveDataForBelloData($array);
+                $obj->resume_file_path = '/storage/'.$fullPath;
+                $obj->resume_file_name = $filename.'.'.$file->getClientOriginalExtension();
+
+
+                $user_id = $this->getUser()->id;
+                $obj->creator_id = $user_id;
+                $obj->user_id = $user_id;
+                $obj->type = 2;
+                $obj->is_personal = 1;
+
+                $obj->save();
+                $skills = $obj->skills->toArray();
+
+                $this->resumeRepository->handleNewSkill(Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->first(), $skills);
+                $this->resumeRepository->mixResumes($obj, $this->resumeRepository->getBaseResume());
+
+                $this->_after_find($obj);
+                return responseZK(0,$obj);
+            }else{
+                return responseZK(9999,null,'简历解析出错');
+            }
+        } else {
+            return responseZK(9999,null,'保存出错');
         }
     }
 }
