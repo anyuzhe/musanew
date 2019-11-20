@@ -230,7 +230,6 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //更新简历
     $router->post('/user/resumes/{id}', 'API\UserResumesController@update');
 
-
     //------------首页相关接口-------------------
     //可投简历列表
     $router->get('/user/resumes/used', 'API\UserResumesController@usedList');

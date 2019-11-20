@@ -331,6 +331,7 @@ class UserResumesController extends ApiBaseCommonController
                 $obj = $this->resumeRepository->saveDataForBelloData($array);
                 $obj->resume_file_path = '/storage/'.$fullPath;
                 $obj->resume_file_name = $filename.'.'.$file->getClientOriginalExtension();
+                $obj->resume_name = $filename;
 
 
                 $user_id = $this->getUser()->id;
