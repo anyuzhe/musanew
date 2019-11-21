@@ -226,7 +226,7 @@ class RecruitResumesRepository
         }
     }
 
-    public function addFieldText(&$data)
+    public function addFieldText(&$data, $isPerSon=false)
     {
         switch ($data->status){
             case -5:
@@ -245,7 +245,10 @@ class RecruitResumesRepository
                 $data->status_str = '简历不匹配';
                 break;
             case 1:
-                $data->status_str = '简历投递';
+                if($isPerSon)
+                    $data->status_str = '等待反馈';
+                else
+                    $data->status_str = '简历投递';
                 break;
             case 2:
                 $data->status_str = '邀请面试';
