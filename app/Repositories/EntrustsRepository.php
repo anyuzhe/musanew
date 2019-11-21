@@ -62,6 +62,9 @@ class EntrustsRepository
         }else{
             $_status = $recruit_status;
         }
+
+        if($recruit_status==4)
+            $_status = -1;
         return $_status;
     }
 
@@ -132,6 +135,8 @@ class EntrustsRepository
                 $status_text = '未知状态';
                 break;
         }
+        if($recruit->status==4)
+            $recruit_status = '结束招聘';
         return $status_text;
     }
 
