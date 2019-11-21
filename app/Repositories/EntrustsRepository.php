@@ -135,8 +135,8 @@ class EntrustsRepository
                 $status_text = '未知状态';
                 break;
         }
-        if($recruit->status==4)
-            $recruit_status = '结束招聘';
+        if($recruit_status==4)
+            $status_text = '结束招聘';
         return $status_text;
     }
 
