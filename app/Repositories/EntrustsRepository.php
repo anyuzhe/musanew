@@ -64,7 +64,7 @@ class EntrustsRepository
         }
 
         if($recruit_status==4)
-            $_status = -1;
+            $_status = 4;
         return $_status;
     }
 
