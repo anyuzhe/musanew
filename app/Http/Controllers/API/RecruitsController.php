@@ -254,6 +254,13 @@ class RecruitsController extends ApiBaseCommonController
                 return $this->apiReturnJson(9999);
 
             checkAuthByCompany($obj,true);
+
+            foreach ($obj->entrusts as $entrust) {
+                $entrust->status = -1;
+                $entrust->end_at = date('Y-m-d H:i:s');
+                $entrust->save();
+                app()->build(RecruitRepository::class)->generateEndLog($obj, $entrust);
+            }
             $obj->status = 4;
             $obj->end_at = date('Y-m-d H:i:s');
             $obj->save();
