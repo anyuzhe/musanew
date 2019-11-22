@@ -15,10 +15,12 @@ use App\Models\Area;
 use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Moodle\CourseCategory;
+use App\Models\Recruit;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
 use App\Models\ResumeEducation;
 use App\Repositories\EntrustsRepository;
+use App\Repositories\RecruitRepository;
 use App\Repositories\ResumesRepository;
 use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
@@ -32,6 +34,17 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $recruits = Recruit::where('status', 4)->get();
+    foreach ($recruits as $recruit) {
+        foreach ($recruit->entrusts as $entrust) {
+            if($entrust->status!=-1){
+                $entrust->status = -1;
+                $entrust->end_at = $recruit->end_at;
+                $entrust->save();
+                app()->build(RecruitRepository::class)->generateEndLog($recruit, $entrust);
+            }
+        }
+    }
 //    dd(preg_match('/^(\w*(?=\w*\d)(?=\w*[A-Za-z])\w*){6,16}$/', '2123_!@1231'));
     dd(preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&^*()_+=-])[A-Za-z\d$@$!%*#?&^*()_+=-]{8,16}$/', 'a233221'));
 //    dd(preg_match('/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,16}/', '2123!ddddddA1'));
