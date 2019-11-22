@@ -6,6 +6,7 @@ use App\Mail\RecruitResumeLogEmail;
 use App\Models\Area;
 use App\Models\CompanyResume;
 use App\Models\DataMapOption;
+use App\Models\Entrust;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
@@ -92,6 +93,8 @@ class RecruitResumesRepository
                     $log->text =  $LOGIN_USER->info->realname." 投递简历";
                 }
             }
+
+            $this->companyRelevanceResume($recruitResume->resume_id, $recruitResume->company_id, $recruitResume->recruit, $recruitResume->entrust);
         }elseif($status==2){
             $recruitResume->interview_at = $otherData;
             $log->text =  '邀请面试-'.$otherData;
@@ -191,27 +194,32 @@ class RecruitResumesRepository
             $resume->company_id = $entrust->third_party_id;
             $resume->assignment_id = $entrust->company_id;
 
-            //往需求方添加人才库关联
-            $_has = CompanyResume::where('company_id', $entrust->company_id)->where('resume_id', $resume->id)->where('type', 1)->first();
-            if(!$_has){
-                CompanyResume::create([
-                   'company_id'=>$entrust->company_id,
-                   'resume_id'=>$resume->id,
-                   'type'=>1,
-                   'source_type'=>1,
-                   'source_recruit_id'=>$recruit->id,
-                   'source_entrust_id'=>$entrust->id,
-                   'source_job_id'=>$recruit->job->id,
-                   'source_company_id'=>$entrust->company_id,
-                   'creator_id'=>TokenRepository::getUser()->id,
-                ]);
-            }
+            $this->companyRelevanceResume($resume->id, $entrust->company_id, $recruit, $entrust);
         }else{
             $resume->company_id = $recruit->company_id;
         }
         $resume->company_id = $recruit->company_id;
         $resume->in_job = 1;
         $resume->save();
+    }
+
+    public function companyRelevanceResume($resume_id, $company_id, Recruit $recruit=null, Entrust $entrust=null)
+    {
+        //往需求方添加人才库关联
+        $_has = CompanyResume::where('company_id', $company_id)->where('resume_id', $resume_id)->where('type', 1)->first();
+        if(!$_has){
+            CompanyResume::create([
+                'company_id'=>$entrust?$entrust->company_id:null,
+                'resume_id'=>$resume_id,
+                'type'=>1,
+                'source_type'=>1,
+                'source_recruit_id'=>$recruit?$recruit->id:null,
+                'source_entrust_id'=>$entrust?$entrust->id:null,
+                'source_job_id'=>$recruit?$recruit->job->id:null,
+                'source_company_id'=>$entrust?$entrust->company_id:null,
+                'creator_id'=>TokenRepository::getUser()->id,
+            ]);
+        }
     }
 
     public function minusNewResumeHandle(RecruitResume $recruitResume)
