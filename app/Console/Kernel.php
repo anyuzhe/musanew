@@ -47,6 +47,7 @@ class Kernel extends ConsoleKernel
 //            $recruitResumeLogs=RecruitResumeLog::all();
 //            $recruitResumeHasIds=[];
             $recruits = [];
+            $entrusts = [];
             foreach ($recruitResumeLogs as $recruitResumeLog) {
                 $recruitResumeLog->is_send_email = 1;
                 $recruitResumeLog->save();
@@ -56,29 +57,55 @@ class Kernel extends ConsoleKernel
                 $recruitResume = $recruitResumeLog->recruitResume;
                 //给负责人发送邮件通知
                 $recruit = $recruitResume->recruit;
-                if($recruit->leading_id){
-                    $leading = User::find($recruit->leading_id);
-                }else{
-                    $leading = null;
-                }
-                if($leading && $leading->email){
-                    $recruitResume->leading = $leading;
-                    if(!isset($recruits[$recruit->id])){
-                        $recruit->count = 0;
-                        $recruit->resumes = [];
-                        $recruits[$recruit->id] = $recruit;
+                $entrust = $recruitResume->entrust;
+                if(!$entrust){
+                    if($recruit->leading_id){
+                        $leading = User::find($recruit->leading_id);
+                    }else{
+                        $leading = null;
                     }
-                    $resume = $recruitResume->resume;
-                    $resume->recruit_resume_id = $recruitResume->id;
-                    $resumes = $recruits[$recruit->id]->resumes;
-                    $resumes[] = $resume;
-                    $recruits[$recruit->id]->resumes = $resumes;
-                    $recruit->count++;
+                    if($leading && $leading->email){
+                        if(!isset($recruits[$recruit->id])){
+                            $recruit->count = 0;
+                            $recruit->resumes = [];
+                            $recruits[$recruit->id] = $recruit;
+                        }
+                        $resume = $recruitResume->resume;
+                        $resume->recruit_resume_id = $recruitResume->id;
+                        $resumes = $recruits[$recruit->id]->resumes;
+                        $resumes[] = $resume;
+                        $recruits[$recruit->id]->resumes = $resumes;
+                        $recruit->count++;
+                    }
+                }else{
+                    if($entrust->leading_id){
+                        $leading = User::find($entrust->leading_id);
+                    }else{
+                        $leading = null;
+                    }
+                    if($leading && $leading->email){
+                        if(!isset($entrust[$entrust->id])){
+                            $entrust->count = 0;
+                            $entrust->resumes = [];
+                            $entrusts[$entrust->id] = $entrust;
+                        }
+                        $resume = $recruitResume->resume;
+                        $resume->recruit_resume_id = $recruitResume->id;
+                        $resumes = $entrusts[$entrust->id]->resumes;
+                        $resumes[] = $resume;
+                        $entrusts[$entrust->id]->resumes = $resumes;
+                        $entrust->count++;
+                    }
+
                 }
             }
             foreach ($recruits as $recruit) {
 //                Mail::to("68067348@qq.com")->send(new RecruitResumeUntreatedEmail($recruit, $recruit->resumes));
-                Mail::to($recruit->leading->email)->send(new RecruitResumeUntreatedEmail($recruit, $recruit->count));
+                Mail::to($recruit->leading->email)->send(new RecruitResumeUntreatedEmail($recruit, $recruit->resumes));
+            }
+            foreach ($entrusts as $entrust) {
+//                Mail::to("68067348@qq.com")->send(new RecruitResumeUntreatedEmail($recruit, $recruit->resumes));
+                Mail::to($entrust->leading->email)->send(new RecruitResumeUntreatedEmail($entrust->recruit, $entrust->resumes));
             }
         })->everyMinute();
     }

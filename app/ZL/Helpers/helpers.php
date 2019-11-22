@@ -643,8 +643,7 @@ function sendLogsEmail($logs)
                     }
                 }
             }
-        }
-        if(!$entrust || ($entrust->leading_id!=$recruit->leading_id)){
+        }else{
             if($recruit->leading_id && $recruit->leading_id!=$LOGIN_USER->id && $leading = \App\Models\User::find($recruit->leading_id)){
                 if($leading->email){
                     try {
@@ -654,6 +653,16 @@ function sendLogsEmail($logs)
                 }
             }
         }
+//        if(!$entrust || ($entrust->leading_id!=$recruit->leading_id)){
+//            if($recruit->leading_id && $recruit->leading_id!=$LOGIN_USER->id && $leading = \App\Models\User::find($recruit->leading_id)){
+//                if($leading->email){
+//                    try {
+//                        \Illuminate\Support\Facades\Mail::to($leading->email)->send(new \App\Mail\RecruitResumeLogEmail($logs));
+//                    } catch (Exception $e) {
+//                    }
+//                }
+//            }
+//        }
     }
 }
 
