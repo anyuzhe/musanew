@@ -135,6 +135,7 @@ class RecruitsController extends ApiBaseCommonController
         $recruits->load('leading');
         $recruits->load('entrusts');
 
+        $leadIds = [];
         foreach ($recruits as $recruit) {
             foreach ($recruit->entrusts as $entrust) {
                 $leadIds[] = $entrust->leading_id;
@@ -147,7 +148,6 @@ class RecruitsController extends ApiBaseCommonController
         foreach ($recruits as $recruit) {
             $job_ids[] = $recruit['job']['id'];
         }
-        $leadIds = [];
         $leads = UserBasicInfo::whereIn('user_id', $leadIds)->get()->keyBy('user_id')->toArray();
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
         foreach ($recruits as &$recruit) {
