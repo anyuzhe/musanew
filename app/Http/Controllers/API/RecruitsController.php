@@ -136,8 +136,8 @@ class RecruitsController extends ApiBaseCommonController
         $recruits->load('entrusts');
 
         foreach ($recruits as $recruit) {
-            if($recruit->entrust){
-                $leadIds[] = $recruit->entrust->leading_id;
+            foreach ($recruit->entrusts as $entrust) {
+                $leadIds[] = $entrust->leading_id;
             }
         }
         $entrustRes = app()->build(EntrustsRepository::class);
@@ -151,10 +151,12 @@ class RecruitsController extends ApiBaseCommonController
         $leads = UserBasicInfo::whereIn('user_id', $leadIds)->get()->keyBy('user_id')->toArray();
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
         foreach ($recruits as &$recruit) {
-            if(isset($recruit['entrust']) && isset($leads[$recruit['entrust']['leading_id']])){
-                $recruit['entrust']['leading'] = $leads[$recruit['entrust']['leading_id']];
-            }else{
-                $recruit['entrust']['leading'] = null;
+            foreach ($recruit['entrusts'] as &$entrust) {
+                if(isset($leads[$entrust['leading_id']])){
+                    $entrust['leading'] = $leads[$entrust['leading_id']];
+                }else{
+                    $entrust['leading'] = null;
+                }
             }
             $recruit['job'] = $jobs[$recruit['job']['id']];
             $recruit['residue_num'] = $recruit['need_num'] - $recruit['done_num'] - $recruit['wait_entry_num'];
