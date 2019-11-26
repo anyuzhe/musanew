@@ -70,7 +70,7 @@ class LogServiceProvider extends ServiceProvider
 
     public function checkLeading($model, $match)
     {
-        if($match[1]=='App\Models\Recruit' && in_array($match[1], ['created', 'updated'])){
+        if($match[2]=='App\Models\Recruit' && in_array($match[1], ['created', 'updated'])){
             $leading = $model->leading;
             if($match[1]=='created'){
                 $model->leading_id = 0;
@@ -79,7 +79,7 @@ class LogServiceProvider extends ServiceProvider
                 $model->leading_id = $model->getOriginal('leading_id');
                 sendLeadingEmail($model,null, $leading);
             }
-        }elseif($match[1]=='App\Models\Entrust' && in_array($match[1], ['created', 'updated'])){
+        }elseif($match[2]=='App\Models\Entrust' && in_array($match[1], ['created', 'updated'])){
             $leading = $model->leading;
             if($match[1]=='created'){
                 $model->leading_id = 0;

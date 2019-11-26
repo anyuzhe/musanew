@@ -36,8 +36,9 @@ Route::get('/', function () {
 Route::get('/test', function () {
 //    dd(!in_array('updated', ['created', 'updated', 'deleted']));
     $recruit = Recruit::where('id', 1)->first();
-    $recruit->is_public = 1;
-    $recruit->save();
+//    $recruit->update(['modifier_id'=>3]);
+//    $recruit->modifier_id = 1;
+//    $recruit->save();
     die;
     $recruits = Recruit::where('status', 4)->get();
     foreach ($recruits as $recruit) {

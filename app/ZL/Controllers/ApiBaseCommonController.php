@@ -231,7 +231,12 @@ class ApiBaseCommonController extends CommonController
 
         if(!env('APP_DEBUG')) {
             try {
-                $ok = $model->where('id', '=', $id)->update($request->only($only));
+                $obj = $model->find($id);
+                if($obj){
+                    $ok = $obj->update($request->only($only));
+                }else{
+                    return responseZK(9999, null, '保存出错');
+                }
             } catch (\Exception $e) {
                 app('db')->rollBack();
                 return responseZK(9999, null, '保存出错');
