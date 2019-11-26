@@ -93,7 +93,6 @@ class RecruitResumesRepository
                     $log->text =  $LOGIN_USER->info->realname." 投递简历";
                 }
             }
-
             $this->companyRelevanceResume($recruitResume->resume_id, $recruitResume->company_id, $recruitResume->recruit, $recruitResume->entrust);
         }elseif($status==2){
             $recruitResume->interview_at = $otherData;
@@ -209,7 +208,7 @@ class RecruitResumesRepository
         $_has = CompanyResume::where('company_id', $company_id)->where('resume_id', $resume_id)->where('type', 1)->first();
         if(!$_has){
             CompanyResume::create([
-                'company_id'=>$entrust?$entrust->company_id:null,
+                'company_id'=>$company_id,
                 'resume_id'=>$resume_id,
                 'type'=>1,
                 'source_type'=>1,

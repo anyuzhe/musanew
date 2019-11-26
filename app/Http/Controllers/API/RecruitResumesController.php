@@ -163,7 +163,7 @@ class RecruitResumesController extends ApiBaseCommonController
 
         $job_ids = $list->pluck('job_id')->toArray();
         foreach ($list as &$v) {
-            $this->recruitResumesRepository->addFieldText($v);
+            $this->recruitResumesRepository->addFieldText($v, true);
         }
 
 
