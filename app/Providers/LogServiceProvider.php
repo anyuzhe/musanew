@@ -1,6 +1,8 @@
 <?php
 namespace App\Providers;
 use App\Models\ModelLog;
+use App\Repositories\TokenRepository;
+use App\ZL\Moodle\TokenHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -28,8 +30,9 @@ class LogServiceProvider extends ServiceProvider
             if (!in_array($match[1], ['created', 'updated', 'deleted'])) {
                 return;
             }
+            $user = TokenRepository::getUser();
             // only record the admin operation.
-            if (!Auth::guard('admin')->check()) {
+            if (!$user) {
                 return;
             }
             $model = $data[0];
@@ -46,10 +49,9 @@ class LogServiceProvider extends ServiceProvider
                     'new' => $model->getAttributes()[$key]
                 ];
             }
-            $admin = Auth::guard('admin')->user();
             // You can create the table with your situation
             ModelLog::query()->create([
-                'admin_id' => $admin->id,
+                'admin_id' => $user->id,
                 'url' => request()->fullUrl(),
                 'action' => $match[1], // updated created deleted
                 'ip' => request()->getClientIp(),
