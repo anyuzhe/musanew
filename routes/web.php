@@ -34,6 +34,10 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $recruit = Recruit::where('id', 1)->first();
+    $recruit->is_public = 0;
+    $recruit->save();
+    die;
     $recruits = Recruit::where('status', 4)->get();
     foreach ($recruits as $recruit) {
         foreach ($recruit->entrusts as $entrust) {

@@ -15,16 +15,17 @@ class LogServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        //"eloquent.updated: App\Models\Recruit"
         Event::listen('eloquent.*', function ($eventName, $data) {
             if (preg_match('/eloquent\.(.+):\s(.+)/', $eventName, $match) === 0) {
                 return;
             }
             /** $match @val array
-            array (
-            0 => 'eloquent.booting: App\\Models\\Groupon',
-            1 => 'booting',
-            2 => 'App\\Models\\Groupon',
-            )
+            array:3 [▼
+            0 => "eloquent.updated: App\Models\Recruit"
+            1 => "updated"
+            2 => "App\Models\Recruit"
+            ]
              */
             // only record when 'created', 'updated', 'deleted'
             if (!in_array($match[1], ['created', 'updated', 'deleted'])) {
@@ -32,9 +33,10 @@ class LogServiceProvider extends ServiceProvider
             }
             $user = TokenRepository::getUser();
             // only record the admin operation.
-            if (!$user) {
-                return;
-            }
+//            if (!$user) {
+//                return;
+//            }
+
             $model = $data[0];
             $class = get_class($model);
             $diff = array_diff_assoc($model->getOriginal(), $model->getAttributes());
@@ -51,7 +53,7 @@ class LogServiceProvider extends ServiceProvider
             }
             // You can create the table with your situation
             ModelLog::query()->create([
-                'admin_id' => $user->id,
+                'admin_id' => $user?$user->id:null,
                 'url' => request()->fullUrl(),
                 'action' => $match[1], // updated created deleted
                 'ip' => request()->getClientIp(),
