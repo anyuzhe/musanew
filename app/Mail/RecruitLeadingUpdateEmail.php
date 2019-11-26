@@ -18,7 +18,7 @@ class RecruitLeadingUpdateEmail extends Mailable
     protected $recruit;
     protected $entrust;
 
-    public function __construct(Recruit $recruit, Entrust $entrust)
+    public function __construct(Recruit $recruit=null, Entrust $entrust=null)
     {
         $this->recruit = $recruit;
         $this->entrust = $entrust;
@@ -42,7 +42,7 @@ class RecruitLeadingUpdateEmail extends Mailable
         $this->subject = "您成为了{$job->name}职位招聘的负责人";
         $content_text_array = [];
         $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail/?id={$recruit->id}&recruit_id={$entrust_id}&activeType={$activeType}";
-        $content_text_array[] = "您成为了<a href=\"$url\">{$job->name}职位招聘的负责人 请注意查看招聘信息";
+        $content_text_array[] = "您成为了<a href=\"$url\">{$job->name}</a>职位招聘的负责人 请注意查看招聘信息";
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);
     }

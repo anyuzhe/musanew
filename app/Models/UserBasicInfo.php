@@ -32,4 +32,9 @@ class UserBasicInfo extends Model
         'self_evaluation',
         'avatar',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
 }

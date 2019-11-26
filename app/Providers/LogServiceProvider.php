@@ -83,10 +83,10 @@ class LogServiceProvider extends ServiceProvider
             $leading = $model->leading;
             if($match[1]=='created'){
                 $model->leading_id = 0;
-                sendLeadingEmail($model,null, $leading);
+                sendLeadingEmail(null,$model, $leading);
             }else{
                 $model->leading_id = $model->getOriginal('leading_id');
-                sendLeadingEmail($model,null, $leading);
+                sendLeadingEmail(null,$model, $leading);
             }
         }
     }

@@ -670,6 +670,9 @@ function sendLeadingEmail($recruit, $entrust, $user)
 {
     if(!$user)
         return;
+
+    if($user->user_id)
+        $user = $user->user;
     global $LOGIN_USER;
     //给负责人发送邮件通知
     if($entrust){
@@ -682,10 +685,11 @@ function sendLeadingEmail($recruit, $entrust, $user)
             }
         }
     }else{
+//        if($recruit->leading_id!=$user->id){
         if($recruit->leading_id!=$user->id && $user->id!=$LOGIN_USER->id){
             if($user->email){
                 try {
-                    \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\RecruitResumeLogEmail($recruit, $entrust));
+                    \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\RecruitLeadingUpdateEmail($recruit, $entrust));
                 } catch (Exception $e) {
                 }
             }
