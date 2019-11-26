@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Entrust;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\Resume;
@@ -15,12 +16,12 @@ class RecruitLeadingUpdateEmail extends Mailable
     use Queueable, SerializesModels;
 
     protected $recruit;
-    protected $resumes;
+    protected $entrust;
 
-    public function __construct(Recruit $recruit, $user)
+    public function __construct(Recruit $recruit, Entrust $entrust)
     {
         $this->recruit = $recruit;
-        $this->resumes = $resumes;
+        $this->entrust = $entrust;
     }
 
     /**
@@ -30,31 +31,18 @@ class RecruitLeadingUpdateEmail extends Mailable
      */
     public function build()
     {
-        $recruit = $this->recruit;
-        $job = $recruit->job;
-        $this->subject = "{$job->name}招聘未即使处理";
-        $content_text_array = [];
-        $str = '';
-        $str .= "您招聘的{$job->name}有";
-        foreach ($this->resumes as $resume) {
-            //查找重复
-            $resumeIds = Resume::where('name', $resume->name)->where('id','!=',$resume->id)->pluck('id')->toArray();
-            $has = RecruitResume::whereIn('resume_id', $resumeIds)->where('company_job_recruit_id', $recruit->id)->first();
-            if($has){
-                $has_text = '<span style="color: red">(可能是重复简历)</span>';
-            }else{
-                $has_text = '';
-            }
-            $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$resume->recruit_resume_id}&showChart=1";
-            $str .= "<a href=\"$url\">{$resume->name}</a>$has_text, ";
+        if($this->recruit){
+            $recruit = $this->recruit;
+        }else{
+            $recruit = $this->entrust->recruit;
         }
-        $str = substr($str,0,strlen($str)-2);
-        $count = count($this->resumes);
-        $str .= " 共计{$count}份简历未即使处理，请及时查看";
-        $content_text_array[] = $str;
-        $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
-        $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
-//        $content_text_array[] = '<br/>';
+        $entrust_id = $this->entrust?$this->entrust->id:0;
+        $activeType = $entrust_id?1:2;
+        $job = $recruit->job;
+        $this->subject = "您成为了{$job->name}职位招聘的负责人";
+        $content_text_array = [];
+        $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail/?id={$recruit->id}&recruit_id={$entrust_id}&activeType={$activeType}";
+        $content_text_array[] = "您成为了<a href=\"$url\">{$job->name}职位招聘的负责人 请注意查看招聘信息";
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);
     }

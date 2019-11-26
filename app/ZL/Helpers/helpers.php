@@ -666,6 +666,33 @@ function sendLogsEmail($logs)
     }
 }
 
+function sendLeadingEmail($recruit, $entrust, $user)
+{
+    if(!$user)
+        return;
+    global $LOGIN_USER;
+    //给负责人发送邮件通知
+    if($entrust){
+        if($entrust->leading_id!=$user->id && $user->id!=$LOGIN_USER->id){
+            if($user->email){
+                try {
+                    \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\RecruitLeadingUpdateEmail($recruit, $entrust));
+                } catch (Exception $e) {
+                }
+            }
+        }
+    }else{
+        if($recruit->leading_id!=$user->id && $user->id!=$LOGIN_USER->id){
+            if($user->email){
+                try {
+                    \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\RecruitResumeLogEmail($recruit, $entrust));
+                } catch (Exception $e) {
+                }
+            }
+        }
+    }
+}
+
 //文件输出浏览器下载
 function upload($path, $pdfName)
 {

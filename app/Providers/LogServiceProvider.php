@@ -43,6 +43,8 @@ class LogServiceProvider extends ServiceProvider
             $diff = array_diff_assoc($model->getOriginal(), $model->getAttributes());
             $keys = array_keys($diff);
             $data = [];
+
+            $this->checkLeading($model, $match);
             foreach ($keys as $key) {
                 if ($key === 'updated_at') {
                     continue;
@@ -64,5 +66,28 @@ class LogServiceProvider extends ServiceProvider
                 'created_at' => now(),
             ]);
         });
+    }
+
+    public function checkLeading($model, $match)
+    {
+        if($match[1]=='App\Models\Recruit' && in_array($match[1], ['created', 'updated'])){
+            $leading = $model->leading;
+            if($match[1]=='created'){
+                $model->leading_id = 0;
+                sendLeadingEmail($model,null, $leading);
+            }else{
+                $model->leading_id = $model->getOriginal('leading_id');
+                sendLeadingEmail($model,null, $leading);
+            }
+        }elseif($match[1]=='App\Models\Entrust' && in_array($match[1], ['created', 'updated'])){
+            $leading = $model->leading;
+            if($match[1]=='created'){
+                $model->leading_id = 0;
+                sendLeadingEmail($model,null, $leading);
+            }else{
+                $model->leading_id = $model->getOriginal('leading_id');
+                sendLeadingEmail($model,null, $leading);
+            }
+        }
     }
 }
