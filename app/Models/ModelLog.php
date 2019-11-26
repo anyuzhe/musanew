@@ -10,5 +10,12 @@ class ModelLog extends Model
     public $timestamps = false;
     protected $connection = 'musa';
     public $fillable = [
+        'user_id',
+        'url',
+        'action',
+        'ip',
+        'model_id',
+        'model_type',
+        'data',
     ];
 }

@@ -16,6 +16,7 @@ class CreateModelLogsTable extends Migration
         Schema::connection('musa')->create('model_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('model_id')->nullable();
             $table->text('url')->nullable();
             $table->string('action', 64)->nullable();
             $table->string('ip', 64)->nullable();

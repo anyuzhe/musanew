@@ -17,7 +17,7 @@ class LogServiceProvider extends ServiceProvider
     {
         //"eloquent.updated: App\Models\Recruit"
         Event::listen('eloquent.*', function ($eventName, $data) {
-            if (preg_match('/eloquent\.(.+):\s(.+)/', $eventName, $match) === 0) {
+            if (preg_match('/eloquent\.(.+):\s(.+)/', $eventName, $match) === 0 || $match[2]=='App\Models\ModelLog') {
                 return;
             }
             /** $match @val array
@@ -29,6 +29,7 @@ class LogServiceProvider extends ServiceProvider
              */
             // only record when 'created', 'updated', 'deleted'
             if (!in_array($match[1], ['created', 'updated', 'deleted'])) {
+//                dump($match[1]);
                 return;
             }
             $user = TokenRepository::getUser();
@@ -52,14 +53,14 @@ class LogServiceProvider extends ServiceProvider
                 ];
             }
             // You can create the table with your situation
-            ModelLog::query()->create([
-                'admin_id' => $user?$user->id:null,
+            ModelLog::create([
+                'user_id' => $user?$user->id:null,
                 'url' => request()->fullUrl(),
                 'action' => $match[1], // updated created deleted
                 'ip' => request()->getClientIp(),
                 'model_id' => $model->id,
                 'model_type' => $class,
-                'data' => $data,
+                'data' => json_encode($data, 256),
                 'created_at' => now(),
             ]);
         });
