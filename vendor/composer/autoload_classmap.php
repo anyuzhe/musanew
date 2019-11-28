@@ -9,6 +9,7 @@ return array(
     'App\\Console\\Commands\\ClearData' => $baseDir . '/app/Console/Commands/ClearData.php',
     'App\\Console\\Commands\\ClearRecruitData' => $baseDir . '/app/Console/Commands/ClearRecruitData.php',
     'App\\Console\\Commands\\ExcelTest' => $baseDir . '/app/Console/Commands/ExcelTest.php',
+    'App\\Console\\Commands\\FixData' => $baseDir . '/app/Console/Commands/FixData.php',
     'App\\Console\\Commands\\TestDBSchema' => $baseDir . '/app/Console/Commands/TestDBSchema.php',
     'App\\Console\\Commands\\TestSendEmail' => $baseDir . '/app/Console/Commands/TestSendEmail.php',
     'App\\Console\\Commands\\TestUploadResume' => $baseDir . '/app/Console/Commands/TestUploadResume.php',

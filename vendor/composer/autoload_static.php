@@ -523,6 +523,7 @@ class ComposerStaticInitc61d286e97c9702768207a264e66e1f1
         'App\\Console\\Commands\\ClearData' => __DIR__ . '/../..' . '/app/Console/Commands/ClearData.php',
         'App\\Console\\Commands\\ClearRecruitData' => __DIR__ . '/../..' . '/app/Console/Commands/ClearRecruitData.php',
         'App\\Console\\Commands\\ExcelTest' => __DIR__ . '/../..' . '/app/Console/Commands/ExcelTest.php',
+        'App\\Console\\Commands\\FixData' => __DIR__ . '/../..' . '/app/Console/Commands/FixData.php',
         'App\\Console\\Commands\\TestDBSchema' => __DIR__ . '/../..' . '/app/Console/Commands/TestDBSchema.php',
         'App\\Console\\Commands\\TestSendEmail' => __DIR__ . '/../..' . '/app/Console/Commands/TestSendEmail.php',
         'App\\Console\\Commands\\TestUploadResume' => __DIR__ . '/../..' . '/app/Console/Commands/TestUploadResume.php',
