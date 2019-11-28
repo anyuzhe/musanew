@@ -9,6 +9,7 @@ use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
+use App\Models\Skill;
 use App\Models\UserBasicInfo;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
@@ -56,10 +57,12 @@ class PublicRecruitsController extends ApiBaseCommonController
         if($text){
             $companyIds = Company::where('company_alias', 'like', "%$text%")->orWhere('company_name', 'like', "%$text%")->pluck('id')->toArray();
             $jobIds = Job::where('name', 'like', "%$text%")->pluck('id')->toArray();
-
-            $job_model = $job_model->where(function ($query)use ($companyIds, $jobIds){
+            $skillIds = Skill::where('name', 'like', "%$text%")->pluck('id')->toArray();
+            $jobSkillIds = \Illuminate\Support\Facades\DB::connection('musa')->table('job_skill')->whereIn('skill_id', $skillIds)->pluck('job_id')->unique()->toArray();
+            $job_model = $job_model->where(function ($query)use ($jobSkillIds, $companyIds, $jobIds){
                 $query->whereIn('company_id', $companyIds)
-                    ->orWhereIn('id', $jobIds);
+                    ->orWhereIn('id', $jobIds)
+                    ->orWhereIn('id', $jobSkillIds);
             });
             $searchJobIds = $job_model->pluck('id')->toArray();
 
@@ -145,7 +148,7 @@ class PublicRecruitsController extends ApiBaseCommonController
     //排序
     protected function modelGetSort(&$model)
     {
-        $model = $model->orderBy('id','desc');
+        $model = $model->orderBy('created_at','desc');
         return $model;
     }
 
