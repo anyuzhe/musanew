@@ -74,10 +74,23 @@ class UsersController extends CommonController
                 'is_personal'=>1,
                 'is_base'=>1,
                 'type'=>2,
+                'name'=>$info->realname,
                 'creator_id'=>$user->id,
                 'user_id'=>$user->id,
             ]);
         }
+
+        if(!$resume->name && $info->realname){
+            $resume->name = $info->realname;
+            $resume->save();
+
+            $otherResumes = Resume::where('user_id', $user->id)->where('is_base', 0)->where('type', 2)->get();
+            foreach ($otherResumes as $otherResume) {
+                $this->resumeRepository->mixResumes($otherResume, $resume);
+            }
+        }
+
+
         $info = $info->toArray();
         $resumeInfo = $this->resumeRepository->getData($resume)->toArray();
         $resumeInfo['resume_companies'] = $resumeInfo['companies'];

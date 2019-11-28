@@ -216,6 +216,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //修改委托
     $router->post('/company/entrusts/{id}', 'API\EntrustsController@update');
+
     //----------------个人中心-------------------------
     //简历列表
     $router->get('/user/resumes', 'API\UserResumesController@index');
