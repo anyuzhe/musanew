@@ -469,12 +469,23 @@ class ResumesRepository
                 ResumeSkill::create($_language);
             }
         }
+
         if($skills && is_array($skills)){
+            $oldSkills = Skill::all();
+            $oldSkillsData = [];
+            foreach ($oldSkills as $oldSkill) {
+                $name = strtolower($oldSkill->name);
+                if(!isset($oldSkillsData[$name])){
+                    $oldSkillsData[$name] = $oldSkill;
+                }
+            }
             foreach ($skills as $skill) {
                 $_skill = [];
                 $_skill['resume_id'] = $id;
                 $_skill['used_time'] = 0;
-                $_s = Skill::where('name',$skill['skill_name'])->first();
+                $_s = null;
+                if(isset($oldSkillsData[strtolower($skill['skill_name'])]))
+                    $_s = $oldSkillsData[strtolower($skill['skill_name'])];
                 if(!$_s){
                     $_s = Skill::create([
                         'name'=>$skill['skill_name'],
