@@ -39,7 +39,7 @@ class DumpUser extends Command
     {
         $users = \App\Models\User::all();
         foreach ($users as $user) {
-            $this->info("username:{$user->username}, email:{$user->email}");
+            $this->info("id:{$user->id}, username:{$user->username}, email:{$user->email}");
         }
     }
 }
