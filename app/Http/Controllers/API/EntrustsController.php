@@ -36,6 +36,7 @@ class EntrustsController extends ApiBaseCommonController
         $end_at = $request->get('end_at');
         $leading_id = $request->get('leading_id');
         $third_party_id = $request->get('third_party_id');
+        $demand_side_id = $request->get('demand_side_id');
         $recruit_search_status = $request->get('recruit_search_status');
         if($job_id){
             $model = $model->where('job_id', $job_id);
@@ -63,6 +64,9 @@ class EntrustsController extends ApiBaseCommonController
         }
         if($third_party_id){
             $model = $model->where('third_party_id', $third_party_id);
+        }
+        if($demand_side_id){
+            $model = $model->where('company_id', $demand_side_id);
         }
 
         if($recruit_search_status){
