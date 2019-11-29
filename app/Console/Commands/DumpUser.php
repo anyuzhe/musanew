@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\User;
 use Illuminate\Console\Command;
 
 class DumpUser extends Command
@@ -38,7 +37,7 @@ class DumpUser extends Command
      */
     public function handle()
     {
-        $users = User::all();
+        $users = \App\Models\User::all();
         foreach ($users as $user) {
             $this->info("username:{$user->username}, email:{$user->email}");
         }
