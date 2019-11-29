@@ -82,6 +82,9 @@ class EntrustsController extends ApiBaseCommonController
                 case 5:
                     $model = $model->where('is_public', 1);
                     break;
+                case 6:
+                    $model = $model->where('is_public', 0);
+                    break;
             }
         }
 

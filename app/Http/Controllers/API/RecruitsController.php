@@ -447,6 +447,12 @@ class RecruitsController extends ApiBaseCommonController
                 case 4:
                     $model = $model->whereIn('status', [6,7]);
                     break;
+                case 5:
+                    $model = $model->where('is_public', 1);
+                    break;
+                case 6:
+                    $model = $model->where('is_public', 0);
+                    break;
             }
         }
         $model = $this->modelPipeline([

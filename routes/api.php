@@ -113,6 +113,9 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
 //合作第三方
     $router->get('/company/thirdParty', 'API\CompaniesController@thirdPartyList');
+//合作需求方
+    $router->get('/company/demandSide', 'API\CompaniesController@demandSideList');
+
 //合作第三方
     $router->get('/company/thirdParty/idName', 'API\CompaniesController@thirdPartyListIdName');
 //需求方
