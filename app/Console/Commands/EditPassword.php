@@ -44,13 +44,14 @@ class EditPassword extends Command
         $password = $this->argument('password');
 
         $user = User::where('email', $email)->first();
-        if(!$user)
+        if(!$user){
             $this->error('找不到用户');
+            die;
+        }
         define('CLI_SCRIPT', true);
         requireMoodleConfig();
 
         $userauth = get_auth_plugin($user->auth);
-        dd(2);
         if (!$userauth->user_update_password($user, $password)) {
             $this->error('error');
         }else{
