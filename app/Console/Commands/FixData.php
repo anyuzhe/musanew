@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Recruit;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
 use Illuminate\Console\Command;
@@ -63,6 +64,17 @@ class FixData extends Command
                 }
             }
             $this->info('修复技能数据成功');
+        }elseif ($type==2){
+            $recruits = Recruit::whereIn('status', [6,7])->get();
+            foreach ($recruits as $recruit) {
+                foreach ($recruit->entrusts as $entrust) {
+                    if($entrust->status!=6) {
+                        $entrust->status = 6;
+                        $entrust->pause_at = $recruit->pause_at;
+                        $entrust->save();
+                    }
+                }
+            }
         }
     }
 }

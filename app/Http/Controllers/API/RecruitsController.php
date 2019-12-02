@@ -305,21 +305,27 @@ class RecruitsController extends ApiBaseCommonController
             $entrust->status = 6;
             $entrust->pause_at = date('Y-m-d H:i:s');
             $entrust->save();
-            app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
+//            app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
         }else{
             $obj = Recruit::find($id);
             if(!$obj)
                 return $this->apiReturnJson(9999);
             checkAuthByCompany($obj);
 
-            if($obj->status==1)
+            if($obj->status==1){
                 $obj->status = 6;
-            elseif($obj->status==3)
+            }elseif($obj->status==3){
                 $obj->status = 7;
+                foreach ($obj->entrusts as $entrust) {
+                    $entrust->status = 6;
+                    $entrust->pause_at = date('Y-m-d H:i:s');
+                    $entrust->save();
+                }
+            }
 
             $obj->pause_at = date('Y-m-d H:i:s');
             $obj->save();
-            app()->build(RecruitRepository::class)->generateEndLog($obj);
+//            app()->build(RecruitRepository::class)->generateEndLog($obj);
         }
         return $this->apiReturnJson(0);
     }
@@ -359,10 +365,15 @@ class RecruitsController extends ApiBaseCommonController
             foreach ($ids as $id) {
                 $recruit = Recruit::find($id);
                 checkAuthByCompany($recruit);
-                if($recruit->status==6)
+                if($recruit->status==6){
                     $this->getModel()->where('id', $id)->update(['status'=>1]);
-                elseif($recruit->status==7)
+                }elseif($recruit->status==7){
                     $this->getModel()->where('id', $id)->update(['status'=>3]);
+                    foreach ($recruit->entrusts as $entrust) {
+                        $entrust->status = 1;
+                        $entrust->save();
+                    }
+                }
             }
 
         }
