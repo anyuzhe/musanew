@@ -175,7 +175,7 @@ class StatisticsRepository
 
     public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
     {
-        $entrustLogs = RecruitEndLog::where('third_party_id', $third_party_id)->where('company_id', $company->id)
+            $entrustLogs = RecruitEndLog::where('third_party_id', $third_party_id)->where('company_id', $company->id)
             ->where(function ($quesy)use($start_date,$end_date){
                 $quesy->where(function ($query1)use($start_date,$end_date){
                     $query1->where('start_at','>=',$start_date)->where('start_at','<=',$end_date);

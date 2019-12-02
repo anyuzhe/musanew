@@ -87,7 +87,7 @@ class RecruitsController extends ApiBaseCommonController
                     $model = $model->whereIn('status', [2,3,7,4,5]);
                     break;
                 case 2:
-                    $model = $model->whereIn('status', [1,6,4,5]);
+                    $model = $model->whereIn('status', [1,4,5]);
                     break;
                 case 3:
                     $model = $model->whereIn('status', [4,5]);
@@ -96,10 +96,10 @@ class RecruitsController extends ApiBaseCommonController
                     $model = $model->whereIn('status', [6,7]);
                     break;
                 case 5:
-                    $model = $model->where('is_public', 1);
+                    $model = $model->where('is_public', 1)->whereNotIn('status', [6,7]);
                     break;
                 case 6:
-                    $model = $model->where('is_public', 0);
+                    $model = $model->where('is_public', 0)->whereNotIn('status', [6,7]);
                     break;
             }
         }

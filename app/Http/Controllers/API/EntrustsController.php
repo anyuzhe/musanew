@@ -84,10 +84,10 @@ class EntrustsController extends ApiBaseCommonController
                     $model = $model->whereIn('status', [6,7]);
                     break;
                 case 5:
-                    $model = $model->where('is_public', 1);
+                    $model = $model->where('is_public', 1)->whereNotIn('status', [6,7]);
                     break;
                 case 6:
-                    $model = $model->where('is_public', 0);
+                    $model = $model->where('is_public', 0)->whereNotIn('status', [6,7]);
                     break;
             }
         }
