@@ -30,7 +30,7 @@ class EntrustsRepository
             if($in_recruit){
                 $model = $model->whereIn('status', [1]);
             }else{
-                $model = $model->whereIn('status', [1,2,-1]);
+                $model = $model->whereIn('status', [1,2, 6, 7,-1]);
             }
         }elseif ($type==4){
             //委托申请

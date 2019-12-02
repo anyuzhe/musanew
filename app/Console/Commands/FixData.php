@@ -75,6 +75,7 @@ class FixData extends Command
                     }
                 }
             }
+            $this->info('修复暂停数据成功');
         }
     }
 }
