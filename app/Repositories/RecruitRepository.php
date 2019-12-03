@@ -34,7 +34,7 @@ class RecruitRepository
         $entrustHas = [];
         $leading = $recruit->leading;
         if($entrust){
-            $step1 = Entrust::where('leading_id',$leading->user_id)->where('id','!=',$entrust->id)->where('status', 1)->get();
+            $step1 = Entrust::where('leading_id',$leading->user_id)->where('id','!=',$entrust->id)->where('status', 1)->where('is_public', 1)->get();
             if($step1->count()>0){
                 foreach ($step1 as $s1) {
                     $data[] = [
@@ -48,7 +48,7 @@ class RecruitRepository
             }
         }else{
 //            $step1 = Recruit::where('leading_id',$leading->user_id)->where('status', 1)->get();
-            $step1 = Recruit::where('leading_id',$leading->user_id)->where('id','!=',$recruit->id)->where('status', 1)->get();
+            $step1 = Recruit::where('leading_id',$leading->user_id)->where('id','!=',$recruit->id)->where('status', 1)->where('is_public', 1)->get();
             if($step1->count()>0){
                 foreach ($step1 as $s1) {
                     $data[] = [
@@ -64,7 +64,7 @@ class RecruitRepository
         }
         if($entrust){
             $thirdParty = $entrust->thirdParty;
-            $step2 = Entrust::where('is_public', 0)->where('third_party_id', $thirdParty->id)->where('id','!=',$entrust->id)->whereNotIn('id',$entrustHas)->where('status', 1)->get();
+            $step2 = Entrust::where('is_public', 0)->where('third_party_id', $thirdParty->id)->where('id','!=',$entrust->id)->whereNotIn('id',$entrustHas)->where('status', 1)->where('is_public', 1)->get();
 
             foreach ($step2 as $s2) {
                 $data[] = [
@@ -77,7 +77,7 @@ class RecruitRepository
             }
         }else{
             $company = $recruit->company;
-            $step2 = Recruit::where('is_public', 0)->where('company_id', $company->id)->where('id','!=',$recruit->id)->whereNotIn('id',$recruitHas)->where('status', 1)->get();
+            $step2 = Recruit::where('is_public', 0)->where('company_id', $company->id)->where('id','!=',$recruit->id)->whereNotIn('id',$recruitHas)->where('status', 1)->where('is_public', 1)->get();
 
             foreach ($step2 as $s2) {
                 $data[] = [
@@ -92,7 +92,7 @@ class RecruitRepository
 
         $jobIds = Job::where('name', 'like', "%{$recruit->job->name}%")->pluck('id')->toArray();
 
-        $step3 = Recruit::where('is_public', 0)->whereIn('id', $jobIds)->where('id','!=',$recruit->id)->whereNotIn('id',$recruitHas)->where('status', 1)->get();
+        $step3 = Recruit::where('is_public', 1)->whereIn('id', $jobIds)->where('id','!=',$recruit->id)->whereNotIn('id',$recruitHas)->where('status', 1)->get();
         foreach ($step3 as $s3) {
             $data[] = [
                 'type'=>'recruit',
@@ -103,7 +103,7 @@ class RecruitRepository
                 return $data;
         }
 
-        $step4 = Recruit::where('is_public', 0)->where('id','!=',$recruit->id)->where('status', 1)->whereNotIn('id',$recruitHas)->get();
+        $step4 = Recruit::where('is_public', 1)->where('id','!=',$recruit->id)->where('status', 1)->whereNotIn('id',$recruitHas)->get();
         foreach ($step4 as $s4) {
             $data[] = [
                 'type'=>'recruit',
