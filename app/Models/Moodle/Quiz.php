@@ -11,4 +11,9 @@ class Quiz extends Model
     protected $connection = 'moodle';
     public $fillable = [
     ];
+
+    public function grades()
+    {
+        return $this->hasMany(QuizGrade::class, 'quiz');
+    }
 }

@@ -34,6 +34,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $quizzes = \App\Models\Moodle\Quiz::all();
+    $quizzes->load('gradeObj');
+    dd($quizzes);
 //    dd(!in_array('updated', ['created', 'updated', 'deleted']));
     $recruit = Recruit::where('id', 1)->first();
 //    $recruit->update(['modifier_id'=>3]);
