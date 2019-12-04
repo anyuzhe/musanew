@@ -76,12 +76,14 @@ class QuizzesController extends ApiBaseCommonController
             'filling'=>[],
             'true_false'=>[],
         ];
-        foreach ($questions as $k=>$question) {
+        foreach ($questions as $k=>&$question) {
             if ($question['qtype'] == 'random') {
                 $questionsByCate[$question['category']] = $questionsByCate[$question['category']]->shuffle();
                 $new = $questionsByCate->get($question['category'])->shift();
                 $new['old_id'] = $question['id'];
                 $questions[$k] = $new;
+            }else{
+                $question['old_id'] = null;
             }
         }
         foreach ($questions as $question) {
@@ -91,10 +93,18 @@ class QuizzesController extends ApiBaseCommonController
                 $questionsType['true_false'][] = $question;
             }if($question['qtype']=='shortanswer'){
                 $questionsType['filling'][] = $question;
-            }if($question['qtype']=='multichoice' && $question['answers'][0]['answerformat']==1){
-                $questionsType['one_choice'][] = $question;
-            }if($question['qtype']=='multichoice' && $question['answers'][0]['answerformat']==0){
-                $questionsType['multiple_choice'][] = $question;
+            }if($question['qtype']=='multichoice'){
+                $is_one = true;
+                foreach ($question['answers'] as $answer) {
+                    if(0<$answer['fraction'] && $answer['fraction']<1){
+                        $is_one = false;
+                    }
+                }
+                if($is_one){
+                    $questionsType['one_choice'][] = $question;
+                }else{
+                    $questionsType['multiple_choice'][] = $question;
+                }
             }
         }
         unset($data->slots);

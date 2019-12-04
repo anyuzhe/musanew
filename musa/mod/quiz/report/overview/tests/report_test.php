@@ -57,7 +57,7 @@ class quiz_overview_report_testcase extends advanced_testcase {
     public function test_report_sql($isdownloading) {
         global $DB;
         $this->resetAfterTest(true);
-
+        //这里是测试 测试的地方
         // Create a course and a quiz.
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
