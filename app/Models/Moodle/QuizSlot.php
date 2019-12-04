@@ -11,4 +11,9 @@ class QuizSlot extends Model
     protected $connection = 'moodle';
     public $fillable = [
     ];
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class, 'questionid');
+    }
 }

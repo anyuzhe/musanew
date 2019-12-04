@@ -16,4 +16,9 @@ class Quiz extends Model
     {
         return $this->hasMany(QuizGrade::class, 'quiz');
     }
+
+    public function slots()
+    {
+        return $this->hasMany(QuizSlot::class, 'quizid');
+    }
 }
