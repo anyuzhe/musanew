@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\CompanyAddress;
 use App\Models\Course;
 use App\Models\Entrust;
+use App\Models\Moodle\Question;
 use App\Models\Moodle\QuestionAnswer;
 use App\Models\Moodle\Quiz;
 use App\Models\Recruit;
@@ -52,13 +53,22 @@ class QuizzesController extends ApiBaseCommonController
         $slots = $data->slots->keyBy('questionid');
         $slots->load('question');
         $questions = [];
-        $questionIds = [];
+        $questionCateIds = [];
         foreach ($slots as $slot) {
             $questions[] = $slot->question;
             $questionIds[] = $slot->questionid;
+            if ($slot->question['qtype'] == 'random') {
+                $questionCateIds[] = $slot->question->category;
+            }
         }
 
-        $answers = QuestionAnswer::whereIn('question', $questionIds)->get();
+        $questions1 = Question::whereIn('category', $questionCateIds)->whereIn('qtype',[
+            'truefalse',
+            'shortanswer',
+            'multichoice',
+        ])->get();
+        $answers = QuestionAnswer::whereIn('question', array_merge($questionIds, $questions1->pluck('id')->toArray()))->get();
+        $questionsByCate = $questions1->groupBy('category');
         $answers = $answers->groupBy('question');
         $questionsType = [
             'one_choice'=>[],
@@ -66,9 +76,17 @@ class QuizzesController extends ApiBaseCommonController
             'filling'=>[],
             'true_false'=>[],
         ];
+        foreach ($questions as $k=>$question) {
+            if ($question['qtype'] == 'random') {
+                $questionsByCate[$question['category']] = $questionsByCate[$question['category']]->shuffle();
+                $new = $questionsByCate->get($question['category'])->shift();
+                $new['old_id'] = $question['id'];
+                $questions[$k] = $new;
+            }
+        }
         foreach ($questions as $question) {
             $question['answers'] = $answers[$question->id];
-            $question['grade'] = $slots->get($question->id)->maxmark;
+            $question['grade'] = $slots->get($question->old_id?$question->old_id:$question->id)->maxmark;
             if($question['qtype']=='truefalse'){
                 $questionsType['true_false'][] = $question;
             }if($question['qtype']=='shortanswer'){
