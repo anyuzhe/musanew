@@ -135,7 +135,7 @@ class QuizzesController extends ApiBaseCommonController
             $question = Question::find($answer['question_id']);
             $question_type = $answer['question_type'];
             if($question_type=='one_choice' || $question_type=='true_false'){
-                $answer = Question::find($answer['answer_id']);
+                $answer = QuestionAnswer::find($answer['answer_id']);
                 $fraction += $answer->fraction;
             }elseif($question_type=='filling'){
                 $fraction = QuestionAnswer::where('question', $question->id)->where('answer', 'like', $answer['answer_text'])->value('fraction');
@@ -173,15 +173,35 @@ class QuizzesController extends ApiBaseCommonController
         $attempt->sumgrades = $fraction;
         $attempt->save();
 //         quiz_grades
-        $quizGrade = new QuizGrade();
-        $quizGrade->quiz = $id;
-        $quizGrade->userid = $user_id;
-        $quizGrade->grade = round($quiz->grade / $quiz->sumgrades * $fraction, 2);
-        $quizGrade->timemodified = time();
-        $quizGrade->save();
+        $oldQuizGrade = QuizGrade::where('quiz', $id)->where('userid', $user_id)->first();
+//        1 最高分
+//2 平均分
+//3 第一次答题
+//4 最后一次答题
+        $grade = $quiz->grade / $quiz->sumgrades * $fraction;
+        if($quiz->grademethod==1 && $oldQuizGrade->grade>=$grade){
+        }elseif ($quiz->grademethod==2 && $oldQuizGrade){
+            $quizGrade = new QuizGrade();
+            $quizGrade->quiz = $id;
+            $quizGrade->userid = $user_id;
+            $quizGrade->grade = ($oldQuizGrade->grade+$grade)/2;
+            $quizGrade->timemodified = time();
+            $quizGrade->save();
+            $oldQuizGrade->delete();
+        }elseif ($quiz->grademethod==3 && $oldQuizGrade){
+        }else{
+            if($oldQuizGrade)
+                $oldQuizGrade->delete();
+            $quizGrade = new QuizGrade();
+            $quizGrade->quiz = $id;
+            $quizGrade->userid = $user_id;
+            $quizGrade->grade = $grade;
+            $quizGrade->timemodified = time();
+            $quizGrade->save();
+        }
         return $this->apiReturnJson(0, [
             'fraction'=>$fraction,
-            'grade'=>round($quiz->grade / $quiz->sumgrades * $fraction, 2),
+            'grade'=>round($grade, 2),
             'quiz'=>$quiz,
         ]);
     }
