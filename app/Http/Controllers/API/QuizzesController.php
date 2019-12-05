@@ -63,7 +63,6 @@ class QuizzesController extends ApiBaseCommonController
                 $questionCateIds[] = $slot->question->category;
             }
         }
-
         $questions1 = Question::whereIn('category', $questionCateIds)->whereIn('qtype',[
             'truefalse',
             'shortanswer',
@@ -88,6 +87,7 @@ class QuizzesController extends ApiBaseCommonController
                 $question['old_id'] = null;
             }
         }
+        unset($question);
         foreach ($questions as $question) {
             $question['answers'] = $answers[$question->id];
             $question['grade'] = $slots->get($question->old_id?$question->old_id:$question->id)->maxmark;
