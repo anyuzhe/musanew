@@ -131,7 +131,8 @@ class QuizzesController extends ApiBaseCommonController
 //            'multiple_choice'=>[],
 //            'filling'=>[],
 //            'true_false'=>[],
-        foreach ($answers as $answer) {
+        $layoutStr = '';
+        foreach ($answers as $k=>$answer) {
             $question = Question::find($answer['question_id']);
             $question_type = $answer['question_type'];
             if($question_type=='one_choice' || $question_type=='true_false'){
@@ -151,7 +152,9 @@ class QuizzesController extends ApiBaseCommonController
                     $fraction += $_fraction;
 //                multiple_choice
             }
+            $layoutStr .= ($k+1).',0,';
         }
+        $layoutStr = substr($layoutStr,0, strlen($layoutStr)-1);
         $user_id = $this->getUser()->id;
         $oldAttempt = QuizAttempt::where('quiz', $id)->where('userid', $user_id)->max('attempt');
 
@@ -161,7 +164,7 @@ class QuizzesController extends ApiBaseCommonController
         $attempt->userid = $user_id;
         $attempt->attempt = $oldAttempt?($oldAttempt+1):1;
         $attempt->uniqueid = QuizAttempt::max('uniqueid')+1;
-        $attempt->layout = null;
+        $attempt->layout = $layoutStr;
         $attempt->currentpage = 1;
         $attempt->preview = 0;
         $attempt->state = 'finished';
