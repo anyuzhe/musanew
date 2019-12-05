@@ -10,6 +10,8 @@ use App\Models\Entrust;
 use App\Models\Moodle\Question;
 use App\Models\Moodle\QuestionAnswer;
 use App\Models\Moodle\Quiz;
+use App\Models\Moodle\QuizAttempt;
+use App\Models\Moodle\QuizGrade;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\Skill;
@@ -150,6 +152,33 @@ class QuizzesController extends ApiBaseCommonController
 //                multiple_choice
             }
         }
+        $user_id = $this->getUser()->id;
+        $oldAttempt = QuizAttempt::where('quiz', $id)->where('userid', $user_id)->max('attempt');
+
+//       quiz_attempts
+        $attempt = new QuizAttempt();
+        $attempt->quiz = $id;
+        $attempt->userid = $user_id;
+        $attempt->attempt = $oldAttempt?($oldAttempt+1):1;
+        $attempt->uniqueid = QuizAttempt::max('uniqueid')+1;
+        $attempt->layout = null;
+        $attempt->currentpage = 1;
+        $attempt->preview = 0;
+        $attempt->state = 'finished';
+        $attempt->timestart = time();
+        $attempt->timefinish = time();
+        $attempt->timemodified = time();
+        $attempt->timemodifiedoffline = 0;
+        $attempt->timecheckstate = null;
+        $attempt->sumgrades = $fraction;
+        $attempt->save();
+//         quiz_grades
+        $quizGrade = new QuizGrade();
+        $quizGrade->quiz = $id;
+        $quizGrade->userid = $user_id;
+        $quizGrade->grade = round($quiz->grade / $quiz->sumgrades * $fraction, 2);
+        $quizGrade->timemodified = time();
+        $quizGrade->save();
         return $this->apiReturnJson(0, [
             'fraction'=>$fraction,
             'grade'=>round($quiz->grade / $quiz->sumgrades * $fraction, 2),
