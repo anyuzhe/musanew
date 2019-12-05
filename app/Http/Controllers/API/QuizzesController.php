@@ -118,4 +118,42 @@ class QuizzesController extends ApiBaseCommonController
             $model = $model->where('course', $course_id);
         }
     }
+
+    public function submit($id)
+    {
+        $answers = $this->request->get('answers');
+        $quiz = Quiz::find($id);
+        $fraction = 0;
+
+//        'one_choice'=>[],
+//            'multiple_choice'=>[],
+//            'filling'=>[],
+//            'true_false'=>[],
+        foreach ($answers as $answer) {
+            $question = Question::find($answer['question_id']);
+            $question_type = $answer['question_type'];
+            if($question_type=='one_choice' || $question_type=='true_false'){
+                $answer = Question::find($answer['answer_id']);
+                $fraction += $answer->fraction;
+            }elseif($question_type=='filling'){
+                $fraction = QuestionAnswer::where('question', $question->id)->where('answer', 'like', $answer['answer_text'])->value('fraction');
+                if($fraction)
+                    $fraction += $fraction;
+            }elseif ($question_type=='multiple_choice'){
+                $_fraction = 0;
+                $answerIds = is_array($answer['answer_id'])?$answer['answer_id']:[$answer['answer_id']];
+                foreach ($answerIds as $answerId) {
+                    $_fraction += Question::where('id', $answerId)->value('fraction');
+                }
+                if($_fraction>0)
+                    $fraction += $_fraction;
+//                multiple_choice
+            }
+        }
+        return $this->apiReturnJson(0, [
+            'fraction'=>$fraction,
+            'grade'=>round($quiz->grade / $quiz->sumgrades * $fraction, 2),
+            'quiz'=>$quiz,
+        ]);
+    }
 }

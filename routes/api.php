@@ -90,6 +90,7 @@ $router->get('/public/recruits/detail', 'API\PublicRecruitsController@detail');
 //测验 列表
 $router->get('/quizzes', 'API\QuizzesController@index');
 $router->get('/quizzes/{id}', 'API\QuizzesController@show');
+$router->post('/quizzes/submit/answers/{id}', 'API\QuizzesController@submit');
 
 //简历上传
 $router->post('/company/resume/upload', 'API\EntrustResumesController@upload');
