@@ -313,4 +313,20 @@ class EntrustsController extends ApiBaseCommonController
             return $this->apiReturnJson(9999);
         }
     }
+
+    public function thirdPartyJobListIdName()
+    {
+        $company = $this->getCurrentCompany();
+        $jobIds = Entrust::where('third_party_id', $company->id)->pluck('job_id')->toArray();
+        $data = Job::whereIn('id',$jobIds)->get();
+        $arr = [];
+        foreach ($data as $key=>$item) {
+            $_arr = [];
+            $_arr['id'] = $item->id;
+            $_arr['name'] = $item->name;
+            $_arr['code'] = $item->code;
+            $arr[] = $_arr;
+        }
+        return $this->apiReturnJson(0, $arr);
+    }
 }

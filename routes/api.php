@@ -100,6 +100,8 @@ $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
 
+    $router->get('/company/thirdParty/jobs/idName', 'API\EntrustsController@thirdPartyJobListIdName');
+
 //职位列表
     $router->get('/company/jobs', 'API\JobsController@index');
     $router->get('/company/jobs/{id}', 'API\JobsController@show');
