@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\CompanyAddress;
 use App\Models\Course;
 use App\Models\Entrust;
+use App\Models\Moodle\GradeItem;
 use App\Models\Moodle\Question;
 use App\Models\Moodle\QuestionAnswer;
 use App\Models\Moodle\Quiz;
@@ -111,6 +112,13 @@ class QuizzesController extends ApiBaseCommonController
         }
         unset($data->slots);
         $data->questions = $questionsType;
+
+        $gradepass = GradeItem::where('itemmodule', 'quiz')->where('iteminstance', $data->id)->value('gradepass');
+        if($gradepass)
+            $data->grade_pass = $gradepass;
+        else
+            $data->grade_pass = null;
+
     }
 
     public function authLimit(&$model)
