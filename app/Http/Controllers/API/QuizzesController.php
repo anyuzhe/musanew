@@ -13,6 +13,7 @@ use App\Models\Moodle\QuestionAnswer;
 use App\Models\Moodle\Quiz;
 use App\Models\Moodle\QuizAttempt;
 use App\Models\Moodle\QuizGrade;
+use App\Models\Moodle\QuizSlot;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\Skill;
@@ -143,22 +144,27 @@ class QuizzesController extends ApiBaseCommonController
         foreach ($answers as $k=>$answer) {
             $question = Question::find($answer['question_id']);
             $question_type = $answer['question_type'];
+            $_fraction = 0;
             if($question_type=='one_choice' || $question_type=='true_false'){
                 $answer = QuestionAnswer::find($answer['answer_id']);
-                $fraction += $answer->fraction;
+                $_fraction = $answer->fraction;
             }elseif($question_type=='filling'){
                 $fraction = QuestionAnswer::where('question', $question->id)->where('answer', 'like', $answer['answer_text'])->value('fraction');
                 if($fraction)
-                    $fraction += $fraction;
+                    $_fraction = $fraction;
             }elseif ($question_type=='multiple_choice'){
-                $_fraction = 0;
                 $answerIds = is_array($answer['answer_id'])?$answer['answer_id']:[$answer['answer_id']];
                 foreach ($answerIds as $answerId) {
                     $_fraction += QuestionAnswer::where('id', $answerId)->value('fraction');
                 }
-                if($_fraction>0)
-                    $fraction += $_fraction;
 //                multiple_choice
+            }
+            if($_fraction>0){
+                $maxmark = QuizSlot::where('quizid', $id)->where('questionid', isset($answer['question_old_id'])?$answer['question_old_id']:$answer['question_id'])->value('maxmark');
+                if($maxmark && $question->defaultmark!=$maxmark){
+                    $_fraction = $_fraction*$maxmark/$question->defaultmark;
+                }
+                $fraction += $_fraction;
             }
             $layoutStr .= ($k+1).',0,';
         }
