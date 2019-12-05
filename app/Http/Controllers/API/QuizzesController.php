@@ -145,7 +145,7 @@ class QuizzesController extends ApiBaseCommonController
                 $_fraction = 0;
                 $answerIds = is_array($answer['answer_id'])?$answer['answer_id']:[$answer['answer_id']];
                 foreach ($answerIds as $answerId) {
-                    $_fraction += Question::where('id', $answerId)->value('fraction');
+                    $_fraction += QuestionAnswer::where('id', $answerId)->value('fraction');
                 }
                 if($_fraction>0)
                     $fraction += $_fraction;
