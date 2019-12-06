@@ -196,24 +196,23 @@ class QuizzesController extends ApiBaseCommonController
 //3 第一次答题
 //4 最后一次答题
         $grade = $quiz->grade / $quiz->sumgrades * $fraction;
-        if($quiz->grademethod==1 && $oldQuizGrade->grade>=$grade){
+
+        $quizGrade = new QuizGrade();
+        $quizGrade->quiz = $id;
+        $quizGrade->userid = $user_id;
+        $quizGrade->grade = $grade;
+        $quizGrade->timemodified = time();
+        if(!$oldQuizGrade){
+            $quizGrade->save();
+        }elseif($quiz->grademethod==1 && $oldQuizGrade->grade>=$grade){
         }elseif ($quiz->grademethod==2 && $oldQuizGrade){
-            $quizGrade = new QuizGrade();
-            $quizGrade->quiz = $id;
-            $quizGrade->userid = $user_id;
             $quizGrade->grade = ($oldQuizGrade->grade+$grade)/2;
-            $quizGrade->timemodified = time();
             $quizGrade->save();
             $oldQuizGrade->delete();
         }elseif ($quiz->grademethod==3 && $oldQuizGrade){
         }else{
             if($oldQuizGrade)
                 $oldQuizGrade->delete();
-            $quizGrade = new QuizGrade();
-            $quizGrade->quiz = $id;
-            $quizGrade->userid = $user_id;
-            $quizGrade->grade = $grade;
-            $quizGrade->timemodified = time();
             $quizGrade->save();
         }
         return $this->apiReturnJson(0, [
