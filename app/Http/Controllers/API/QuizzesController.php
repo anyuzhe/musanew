@@ -65,7 +65,7 @@ class QuizzesController extends ApiBaseCommonController
                 $questionCateIds[] = $slot->question->category;
             }
         }
-        $questions1 = Question::whereIn('category', $questionCateIds)->whereIn('qtype',[
+        $questions1 = Question::whereIn('category', $questionCateIds)->whereNotIn('id', $questionIds)->whereIn('qtype',[
             'truefalse',
             'shortanswer',
             'multichoice',

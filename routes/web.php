@@ -34,6 +34,11 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    if(0.232>'0.33'){
+        dd(1);
+    }else{
+        dd(0);
+    }
     $quizzes = \App\Models\Moodle\Quiz::all();
     $quizzes->load('gradeObj');
     dd($quizzes);
