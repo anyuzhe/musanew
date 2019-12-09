@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class ChangePemissionsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('pemissions', function (Blueprint $table) {
+            $table->integer('is_show')->default(1)->change();
+            $table->string('name', 191)->nullable()->change();
+            $table->string('front_key', 191)->nullable()->change();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('pemissions', function (Blueprint $table) {
+            //
+        });
+    }
+}

@@ -260,6 +260,12 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/user/recruitResumes', 'API\RecruitResumesController@userRecruitList');
 
 });
+
+$router->post('/admin/new/login', 'API\Admin\LoginController@login');
+
+$router->group(['middleware' => 'admin.api'], function () use ($router) {
+
+});
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
 $router->get('/area/tree', 'API\AreasController@getTree');

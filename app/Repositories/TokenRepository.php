@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\CompanyUser;
 use App\Models\ExternalToken;
+use App\User;
 
 class TokenRepository
 {
@@ -82,5 +83,19 @@ class TokenRepository
         if(!$LOGIN_USER)
             $LOGIN_USER = $tokenModel->user;
         return $tokenModel;
+    }
+
+    public static function getAdmin()
+    {
+        global $LOGIN_ADMIN;
+        if(!$LOGIN_ADMIN){
+            $token = TokenRepository::getToken();
+            if(!$token)
+                return null;
+            $LOGIN_ADMIN = User::where('remember_token', $token)->first();
+            return $LOGIN_ADMIN;
+        }else{
+            return $LOGIN_ADMIN;
+        }
     }
 }
