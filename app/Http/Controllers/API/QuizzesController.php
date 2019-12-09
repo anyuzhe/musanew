@@ -146,8 +146,8 @@ class QuizzesController extends ApiBaseCommonController
             $question_type = $answer['question_type'];
             $_fraction = 0;
             if($question_type=='one_choice' || $question_type=='true_false'){
-                $answer = QuestionAnswer::find($answer['answer_id']);
-                $_fraction = $answer->fraction;
+                $answerObj = QuestionAnswer::find($answer['answer_id']);
+                $_fraction = $answerObj->fraction;
             }elseif($question_type=='filling'){
                 $fraction = QuestionAnswer::where('question', $question->id)->where('answer', 'like', $answer['answer_text'])->value('fraction');
                 if($fraction)
@@ -161,12 +161,6 @@ class QuizzesController extends ApiBaseCommonController
             }
             if($_fraction>0){
                 $maxmark = QuizSlot::where('quizid', $id)->where('questionid', isset($answer['question_old_id'])?$answer['question_old_id']:$answer['question_id'])->first();
-                dump($answer);
-                dump(isset($answer['question_old_id'])?$answer['question_old_id']:$answer['question_id']);
-                dump($id);
-                dump($_fraction);
-                dump($question->defaultmark);
-                dd($maxmark);
                 if($maxmark && $question->defaultmark!=$maxmark){
                     $_fraction = $_fraction*$maxmark/$question->defaultmark;
                 }
