@@ -161,7 +161,7 @@ class QuizzesController extends ApiBaseCommonController
             }
             if($_fraction>0){
                 $maxmark = QuizSlot::where('quizid', $id)->where('questionid', isset($answer['question_old_id'])?$answer['question_old_id']:$answer['question_id'])->first();
-                dump($answer['question_id']);
+                dump($answer);
                 dump(isset($answer['question_old_id'])?$answer['question_old_id']:$answer['question_id']);
                 dump($id);
                 dump($_fraction);
