@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Admin;
 
-use App\Http\Controllers\API\CommonController;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\Course;
@@ -20,15 +19,25 @@ use Illuminate\Support\Facades\Log;
 
 class UsersController extends CommonController
 {
-    protected $resumeRepository;
-    protected $recruitResumesRepository;
 
     public function __construct(Request $request)
     {
         parent::__construct($request);
     }
 
+    public function authList()
+    {
+        $admin = $this->getAdmin();
+        return $this->apiReturnJson(0, [
+            'info'=>$admin,
+            'menu_list'=>$admin->getFrontMenuList(),
+            'permissions'=>$admin->permissions()->pluck('front_key')->unique()->toArray(),
+        ]);
+    }
+
     public function info()
     {
+        $admin = $this->getAdmin();
+        return $this->apiReturnJson(0,$admin);
     }
 }

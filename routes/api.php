@@ -264,7 +264,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 $router->post('/admin/new/login', 'API\Admin\LoginController@login');
 
 $router->group(['middleware' => 'admin.api'], function () use ($router) {
-
+    $router->get('/admin/info', 'API\Admin\UsersController@info');
+    $router->get('/admin/auth/list', 'API\Admin\UsersController@authList');
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表

@@ -16,14 +16,14 @@ class CreateFrontMenuItemsTable extends Migration
         Schema::create('front_menu_items', function (Blueprint $table) {
 
             $table->increments('id');
-            $table->unsignedInteger('menu_id')->nullable();
+            $table->integer('menu_id')->default(1);
             $table->string('title');
-            $table->string('url');
-            $table->string('target')->default('_self');
-            $table->string('icon_class')->nullable();
-            $table->string('color')->nullable();
+            $table->string('url')->nullable();
+            $table->integer('type')->default(1);
+            $table->string('icon')->nullable();
+            $table->string('auth_key')->nullable();
             $table->integer('parent_id')->nullable();
-            $table->integer('order');
+            $table->integer('order')->default(99);
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangePemissionsTable extends Migration
+class ChangePermissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class ChangePemissionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('pemissions', function (Blueprint $table) {
-            $table->integer('is_show')->default(1)->change();
-            $table->string('name', 191)->nullable()->change();
-            $table->string('front_key', 191)->nullable()->change();
+        Schema::table('permissions', function (Blueprint $table) {
+            $table->integer('is_show')->default(1);
+            $table->string('name', 191)->nullable();
+            $table->string('front_key', 191)->nullable();
         });
     }
 
@@ -27,7 +27,7 @@ class ChangePemissionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('pemissions', function (Blueprint $table) {
+        Schema::table('permissions', function (Blueprint $table) {
             //
         });
     }
