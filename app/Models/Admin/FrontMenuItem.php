@@ -20,4 +20,5 @@ class FrontMenuItem extends Model
         return $this->hasMany(FrontMenuItem::class, 'parent_id');
 //            ->with('children');
     }
+
 }

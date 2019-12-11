@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Admin;
 
-use App\Http\Controllers\API\CommonController;
 use App\Models\ExternalToken;
 use App\Models\PasswordFindCode;
 use App\User;

@@ -31,7 +31,7 @@ class UsersController extends CommonController
         return $this->apiReturnJson(0, [
             'info'=>$admin,
             'menu_list'=>$admin->getFrontMenuList(),
-            'permissions'=>$admin->permissions()->pluck('front_key')->unique()->toArray(),
+            'permissions'=>$admin->permissions()->pluck('front_key')->unique()->values()->toArray(),
         ]);
     }
 

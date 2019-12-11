@@ -10,6 +10,7 @@ use App\Models\Entrust;
 use App\Models\Moodle\GradeItem;
 use App\Models\Moodle\Question;
 use App\Models\Moodle\QuestionAnswer;
+use App\Models\Moodle\QuestionUsage;
 use App\Models\Moodle\Quiz;
 use App\Models\Moodle\QuizAttempt;
 use App\Models\Moodle\QuizGrade;
@@ -172,12 +173,19 @@ class QuizzesController extends ApiBaseCommonController
         $user_id = $this->getUser()->id;
         $oldAttempt = QuizAttempt::where('quiz', $id)->where('userid', $user_id)->max('attempt');
 
+
+        $qu = QuestionUsage::create([
+            'contextid'=>170,
+            'component'=>'mod_quiz',
+            'preferredbehaviour'=>'deferredfeedback',
+        ]);
 //       quiz_attempts
         $attempt = new QuizAttempt();
         $attempt->quiz = $id;
         $attempt->userid = $user_id;
         $attempt->attempt = $oldAttempt?($oldAttempt+1):1;
-        $attempt->uniqueid = QuizAttempt::max('uniqueid')+1;
+        $attempt->uniqueid = $qu->id;
+//        $attempt->uniqueid = QuizAttempt::max('uniqueid')+1;
         $attempt->layout = $layoutStr;
         $attempt->currentpage = 1;
         $attempt->preview = 0;

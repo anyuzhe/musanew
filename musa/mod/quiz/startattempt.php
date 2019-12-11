@@ -107,7 +107,6 @@ if ($currentattemptid) {
         redirect($quizobj->attempt_url($currentattemptid, $page));
     }
 }
-
 $attempt = quiz_prepare_and_start_new_attempt($quizobj, $attemptnumber, $lastattempt);
 
 // Redirect to the attempt page.

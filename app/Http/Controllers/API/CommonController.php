@@ -64,6 +64,23 @@ class CommonController extends Controller
         return TokenRepository::getCurrentCompany();
     }
 
+
+    public function getTokenText()
+    {
+        $token = $this->request->get('token');
+        if(!$token)
+            $token = $this->request->header('token');
+        if(!$token)
+            $token = $this->request->header('Token');
+
+        return $token;
+    }
+
+    public function getAdmin()
+    {
+        return TokenRepository::getAdmin();
+    }
+
     /**
      * @param $params
      * @return bool

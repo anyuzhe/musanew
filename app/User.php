@@ -54,6 +54,12 @@ class User extends \TCG\Voyager\Models\User
     {
         $type0List = FrontMenuItem::where('type', 0)->orderBy('order')->get();
         $type0List->load('children');
+        foreach ($type0List as &$item) {
+            foreach ($item->children as &$child) {
+                $child->parent_title = $item->title;
+            }
+            $item->parent_title = '';
+        }
         return $type0List;
     }
 }

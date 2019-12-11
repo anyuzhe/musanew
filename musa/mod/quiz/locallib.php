@@ -2412,7 +2412,6 @@ function quiz_prepare_and_start_new_attempt(quiz $quizobj, $attemptnumber, $last
         $attempt->timemodifiedoffline = $attempt->timemodified;
     }
     $attempt = quiz_attempt_save_started($quizobj, $quba, $attempt);
-
     $transaction->allow_commit();
 
     return $attempt;
