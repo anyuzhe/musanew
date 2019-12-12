@@ -31,6 +31,11 @@ class LoginController extends CommonController
         }
     }
 
+    public function logout()
+    {
+        return $this->apiReturnJson(0);
+    }
+
     protected function getUserByEmail($email)
     {
         $has = User::where([

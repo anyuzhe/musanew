@@ -262,6 +262,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 });
 
 $router->post('/admin/new/login', 'API\Admin\LoginController@login');
+$router->post('/admin/new/logout', 'API\Admin\LoginController@logout');
 
 $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use ($router) {
     $router->get('/info', 'API\Admin\UsersController@info');
