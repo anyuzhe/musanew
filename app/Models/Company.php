@@ -72,4 +72,14 @@ class Company extends Model
     {
         return $this->belongsTo('App\Models\Conglomerate');
     }
+
+    public function managers()
+    {
+        return $this->belongsToMany(UserBasicInfo::class, 'musa_company_user', 'company_id', 'user_id', null, 'user_id')
+            ->wherePivot('company_role_id', 1);
+    }
+    public function getManager()
+    {
+        return $this->managers()->first();
+    }
 }

@@ -267,6 +267,8 @@ $router->post('/admin/new/logout', 'API\Admin\LoginController@logout');
 $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use ($router) {
     $router->get('/info', 'API\Admin\UsersController@info');
     $router->get('/auth/list', 'API\Admin\UsersController@authList');
+    //图片上传
+    $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 
     //菜单
     $router->resource('/menus', 'API\Admin\MenusController');

@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers\API\Admin;
 
+use App\Models\Area;
 use App\Models\Company;
+use App\Models\CompanyRole;
+use App\Models\CompanyUser;
 use App\Models\Conglomerate;
+use App\Models\UserBasicInfo;
+use App\Repositories\CompaniesRepository;
+use App\User;
 use App\ZL\Controllers\ApiBaseCommonController;
 
 class CompaniesController extends ApiBaseCommonController
@@ -32,13 +38,55 @@ class CompaniesController extends ApiBaseCommonController
 
     public function _after_get(&$data)
     {
+        $data->load('addresses');
+        $data->load('industry');
         $data->load('conglomerate');
+        $data->load('thirdParty');
+        foreach ($data as &$company) {
+            getOptionsText($company);
+            $company->full_logo = getPicFullUrl($company->logo);
+            foreach ($company->addresses as &$v) {
+                $v->area = [$v->province_id,$v->city_id,$v->district_id];
+                $v->area_text = Area::where('id', $v->province_id)->value('cname').
+                    Area::where('id', $v->city_id)->value('cname').
+                    Area::where('id', $v->district_id)->value('cname');
+            }
+
+            $company->is_demand_side = count($company->thirdParty)>0?1:0;
+            $_manager = $company->getManager();
+            if($_manager){
+                $company->manager = $_manager;
+                $company->manager->email = $_manager->user->email;
+            }else{
+                $company->manager = null;
+            }
+        }
         return $data;
     }
 
-    public function _after_find(&$data)
+    public function _after_find(&$company)
     {
-        $data->conglomerate;
+        $company->addresses;
+        foreach ($company->addresses as &$v) {
+            $v->area = [$v->province_id,$v->city_id,$v->district_id];
+            $v->area_text = Area::where('id', $v->province_id)->value('cname').
+                Area::where('id', $v->city_id)->value('cname').
+                Area::where('id', $v->district_id)->value('cname');
+        }
+        $company->full_logo = getPicFullUrl($company->logo);
+        $company->industry;
+        $company->conglomerate;
+        $company->thirdParty;
+        $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
+        getOptionsText($company);
+        $company->is_demand_side = count($company->thirdParty)>0?1:0;
+        $_manager = $company->getManager();
+        if($_manager){
+            $company->manager = $_manager;
+            $company->manager->email = $_manager->user->email;
+        }else{
+            $company->manager = null;
+        }
     }
 
 
