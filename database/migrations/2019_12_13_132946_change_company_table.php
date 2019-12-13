@@ -14,6 +14,7 @@ class ChangeCompanyTable extends Migration
     public function up()
     {
         Schema::connection('musa')->table('company', function (Blueprint $table) {
+            $table->string('company_code')->nullable()->change();
             $table->integer('status')->default(1);
             $table->string('contact_number')->nullable();
             $table->string('site')->nullable();

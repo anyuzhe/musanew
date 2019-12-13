@@ -30,7 +30,6 @@ class CompaniesController extends ApiBaseCommonController
         return $this->apiReturnJson(0);
     }
 
-
     public function afterUpdate($id, $data)
     {
         return $this->apiReturnJson(0);
