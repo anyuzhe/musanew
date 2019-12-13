@@ -265,8 +265,8 @@ $router->post('/admin/new/login', 'API\Admin\LoginController@login');
 $router->post('/admin/new/logout', 'API\Admin\LoginController@logout');
 
 $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use ($router) {
-    $router->get('/info', 'API\Admin\UsersController@info');
-    $router->get('/auth/list', 'API\Admin\UsersController@authList');
+    $router->get('/info', 'API\Admin\AdminsController@info');
+    $router->get('/auth/list', 'API\Admin\AdminsController@authList');
     //图片上传
     $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 
@@ -276,6 +276,8 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     $router->resource('/conglomerates', 'API\Admin\ConglomeratesController');
     //公司
     $router->resource('/companies', 'API\Admin\CompaniesController');
+    //用户
+    $router->resource('/users', 'API\Admin\UsersController');
     //技能
     $router->resource('/skills', 'API\Admin\SkillsController');
     //技能分类

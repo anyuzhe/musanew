@@ -11,10 +11,9 @@ use App\Models\UserBasicInfo;
 
 class UserRepository
 {
-    public function getInfo()
+    public function getInfo($user)
     {
-
-        $user = $this->getUser();
+        $resumeRepository = app()->build(ResumesRepository::class);
         $info = $user->info;
         if(!$info)
             $info = UserBasicInfo::create(['user_id'=>$user->id]);
@@ -37,7 +36,8 @@ class UserRepository
                 $r->save();
             }
         }
-        $this->requireMoodleConfig();
+        requireMoodleConfig();
+
         foreach ($info->companies as &$company) {
             $company->logo_url = getPicFullUrl($company->logo);
             $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
@@ -69,16 +69,16 @@ class UserRepository
 
             $otherResumes = Resume::where('user_id', $user->id)->where('is_base', 0)->where('type', 2)->get();
             foreach ($otherResumes as $otherResume) {
-                $this->resumeRepository->mixResumes($otherResume, $resume);
+                $resumeRepository->mixResumes($otherResume, $resume);
             }
         }
 
 
         $info = $info->toArray();
-        $resumeInfo = $this->resumeRepository->getData($resume)->toArray();
+        $resumeInfo = $resumeRepository->getData($resume)->toArray();
         $resumeInfo['resume_companies'] = $resumeInfo['companies'];
         unset($resumeInfo['companies']);
         $info = array_merge($info, $resumeInfo);
-        return $this->apiReturnJson(0, $info);
+        return $info;
     }
 }

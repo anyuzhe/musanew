@@ -22,11 +22,12 @@ class CompaniesController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
-
+        $model = $model->where('status', 1);
     }
 
     public function afterStore($obj, $data)
     {
+        app()->build(CompaniesRepository::class)->handleManger($obj, $data['']);
         return $this->apiReturnJson(0);
     }
 
@@ -89,11 +90,11 @@ class CompaniesController extends ApiBaseCommonController
     }
 
 
-//    public function destroy($id)
-//    {
-//        $model = $this->getModel()->find($id);
-//        $model->status = -1;
-//        $model->save();
-//        return responseZK(0);
-//    }
+    public function destroy($id)
+    {
+        $model = $this->getModel()->find($id);
+        $model->status = -1;
+        $model->save();
+        return responseZK(0);
+    }
 }

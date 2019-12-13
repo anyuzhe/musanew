@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\CompanyAddress;
 use App\Models\CompanyDepartment;
+use App\Models\User;
 
 class CompaniesRepository
 {
@@ -119,5 +120,10 @@ class CompaniesRepository
             }
             CompanyDepartment::where('company_id', $company_id)->whereNotIn('id', $departments_ids)->delete();
         }
+    }
+
+    public function handleManger($company, $email)
+    {
+        $user = User::where('email', $email)->first();
     }
 }
