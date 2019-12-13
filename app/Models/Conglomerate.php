@@ -14,4 +14,9 @@ class Conglomerate extends Model
     public $fillable = [
         'name',
     ];
+
+    public function companies()
+    {
+        return $this->hasMany(Company::class);
+    }
 }

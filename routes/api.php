@@ -267,7 +267,17 @@ $router->post('/admin/new/logout', 'API\Admin\LoginController@logout');
 $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use ($router) {
     $router->get('/info', 'API\Admin\UsersController@info');
     $router->get('/auth/list', 'API\Admin\UsersController@authList');
+
+    //菜单
     $router->resource('/menus', 'API\Admin\MenusController');
+    //集团
+    $router->resource('/conglomerates', 'API\Admin\ConglomeratesController');
+    //公司
+    $router->resource('/companies', 'API\Admin\CompaniesController');
+    //技能
+    $router->resource('/skills', 'API\Admin\SkillsController');
+    //技能分类
+    $router->resource('/skillCategories', 'API\Admin\skillCategoriesController');
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
