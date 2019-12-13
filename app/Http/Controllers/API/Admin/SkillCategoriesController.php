@@ -13,7 +13,7 @@ class SkillCategoriesController extends ApiBaseCommonController
     protected $model_name = SkillCategoryController::class;
     public $search_field_array = [
 //        ['xxx','like'],
-//        ['xxx','='],
+        ['pid','='],
     ];
 
     public function authLimit(&$model)
