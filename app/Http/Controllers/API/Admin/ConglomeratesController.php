@@ -47,6 +47,7 @@ class ConglomeratesController extends ApiBaseCommonController
     public function afterUpdate($id, $data)
     {
         $conglomerate = Conglomerate::find($id);
+        Company::where('conglomerate_id', $id)->update(['conglomerate_id'=>null]);
         if(isset($data['company_ids']) && is_array($data['company_ids'])){
             foreach ($data['company_ids'] as $company_id) {
                 $company = Company::find($company_id);
