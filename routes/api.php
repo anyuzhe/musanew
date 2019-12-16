@@ -284,7 +284,7 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     $router->resource('/skillCategories', 'API\Admin\skillCategoriesController');
 
     //获取技能树列表
-        $router->get('/skills/tree', 'API\SkillsController@getTree');
+    $router->get('/skills/tree', 'API\SkillsController@getTree');
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表

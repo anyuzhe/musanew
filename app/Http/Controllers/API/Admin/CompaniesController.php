@@ -25,6 +25,19 @@ class CompaniesController extends ApiBaseCommonController
         $model = $model->where('status', 1);
     }
 
+    public function beforeStore($data)
+    {
+        $oldId = Conglomerate::max('id');
+        $oldYear = substr($oldId, 0, 4);
+        if($oldId && $oldYear==date('Y') && strlen($oldId)==8){
+            $newId = $oldId + 1;
+        }else{
+            $newId = date('Y').'0001';
+        }
+        $data['id'] = $newId;
+        return $data;
+    }
+
     public function afterStore($obj, $data)
     {
         app()->build(CompaniesRepository::class)->handleManger($obj, $data['']);

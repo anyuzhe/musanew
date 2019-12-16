@@ -13,6 +13,7 @@
 
 use App\Models\Area;
 use App\Models\Company;
+use App\Models\Conglomerate;
 use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Moodle\CourseCategory;
@@ -35,6 +36,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $oldId = Conglomerate::max('id');
+    dd(strlen($oldId));
     dd(Company::find(1)->manager());
     if(0.232>'0.33'){
         dd(1);

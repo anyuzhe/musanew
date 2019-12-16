@@ -31,6 +31,18 @@ class ConglomeratesController extends ApiBaseCommonController
         return $this->apiReturnJson(0);
     }
 
+    public function beforeStore($data)
+    {
+        $oldId = Conglomerate::max('id');
+        $oldYear = substr($oldId, 0, 4);
+        if($oldId && $oldYear==date('Y') && strlen($oldId)==7){
+            $newId = $oldId + 1;
+        }else{
+            $newId = date('Y').'001';
+        }
+        $data['id'] = $newId;
+        return $data;
+    }
 
     public function afterUpdate($id, $data)
     {

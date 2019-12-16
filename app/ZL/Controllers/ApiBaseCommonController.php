@@ -75,21 +75,32 @@ class ApiBaseCommonController extends CommonController
         }
 
         app('db')->beginTransaction();
+        $requestData = $request->all();
+        if(method_exists($this,'beforeStore')) {
+            try {
+                $res = $this->beforeStore($requestData);
+                if($res)
+                    $requestData = $res;
+            } catch (\Exception $e) {
+                app('db')->rollBack();
+                return responseZK(9999, null, $e->getMessage());
+            }
+        }
         //添加数据
         if(!env('APP_DEBUG')){
             try {
-                $obj = $model->create($request->all());
+                $obj = $model->create($requestData);
             } catch (\Exception $e) {
                 app('db')->rollBack();
                 return responseZK(9999,null,'保存出错');
             }
         }else{
-            $obj = $model->create($request->all());
+            $obj = $model->create($requestData);
         }
         if($obj){
             if(method_exists($this,'afterStore')){
                 try {
-                    $res = $this->afterStore($obj,$request->all());
+                    $res = $this->afterStore($obj,$requestData);
                 } catch (\Exception $e) {
                     app('db')->rollBack();
                     return responseZK(9999,null,$e->getMessage());
