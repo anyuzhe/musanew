@@ -294,6 +294,8 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
 //外包的招聘列表
     $router->get('/recruits/outsource', 'API\Admin\RecruitsController@outsourceList');
     $router->get('/recruits/{id}', 'API\Admin\RecruitsController@show');
+    $router->put('/recruits/{id}', 'API\Admin\RecruitsController@update');
+    $router->put('/entrust/{id}', 'API\Admin\EntrustsController@update');
 
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试

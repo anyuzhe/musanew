@@ -52,6 +52,7 @@ class RecruitsController extends ApiBaseCommonController
         $end_at = $request->get('end_at');
         $leading_id = $request->get('leading_id');
         $third_party_id = $request->get('third_party_id');
+        $company_id = $request->get('company_id');
         $recruit_search_status = $request->get('recruit_search_status');
         if($job_id){
             $model = $model->where('job_id', $job_id);
@@ -68,6 +69,9 @@ class RecruitsController extends ApiBaseCommonController
         }
         if($leading_id){
             $model = $model->where('leading_id', $leading_id);
+        }
+        if($company_id){
+            $model = $model->where('company_id', $company_id);
         }
         if($start_at && !$end_at){
             $model = $model->where('created_at', '>=' ,$start_at);
@@ -210,33 +214,7 @@ class RecruitsController extends ApiBaseCommonController
 
     public function afterUpdate($id, $data)
     {
-        if(isset($data['leading_id'])){
-            Entrust::where('company_job_recruit_id', $id)->update(['leading_id'=>$data['leading_id']]);
-        }
         return $this->apiReturnJson(0);
-    }
-
-    public function checkUpdate($id,$request)
-    {
-        $obj = Recruit::find($id);
-        checkAuthByCompany($obj);
-        $need_num = $request->get('need_num');
-        if ($need_num<($obj->done_num + $obj->wait_entry_num)){
-            return '需求人数必须大于或等于已存在的完成人数和待入职人数';
-        }
-        if($obj->done_num>=$need_num){
-            //如果是委托 就不改成结束状态
-//            if($obj->status==1 || $obj->status==6)
-            $obj->status = 5;
-            foreach ($obj->entrusts as $_entrust) {
-                $_entrust->status = 2;
-                $_entrust->end_at = date('Y-m-d H:i:s');
-                $_entrust->save();
-            }
-
-            $obj->end_at = date('Y-m-d H:i:s');
-            $obj->save();
-        }
     }
 
     public function finish()
@@ -391,15 +369,15 @@ class RecruitsController extends ApiBaseCommonController
     {
 
         $model = $this->getModel();
-
-        $company = $this->getCurrentCompany();
-        if ($company) {
-            //委托了的招聘
-            $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-            $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,6,7])->whereIn('id', $has_entrust_ids);
-        }else{
-            $model = $model->where('id', 0);
-        }
+//
+//        $company = $this->getCurrentCompany();
+//        if ($company) {
+//            //委托了的招聘
+//            $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+//            $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,6,7])->whereIn('id', $has_entrust_ids);
+//        }else{
+//            $model = $model->where('id', 0);
+//        }
         //筛选
 
         $job_id = $request->get('job_id');

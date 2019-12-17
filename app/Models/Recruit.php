@@ -15,6 +15,9 @@ class Recruit extends Model
         'leading_id',
         'is_public',
         'modifier_id',
+        'creator_id',
+        'created_at',
+        'end_at',
     ];
 
     public function job()
