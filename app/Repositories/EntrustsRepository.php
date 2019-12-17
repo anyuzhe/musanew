@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class EntrustsRepository
 {
-    public function getModelByType($type, $company, $in_recruit=null, $resume_id=null, $model=null)
+    public function getModelByType($type, $company=null, $in_recruit=null, $resume_id=null, $model=null)
     {
         if(!$model)
             $model = new Entrust();
@@ -19,14 +19,16 @@ class EntrustsRepository
         }
         if($type==2){
             //外包出去的
-            $model = $model->where('company_id', $company->id);
+            if($company)
+                $model = $model->where('company_id', $company->id);
             $model = $model->where('status', '!=', '-2');
             if($in_recruit){
                 $model = $model->whereIn('status', [1]);
             }
         }elseif ($type==3){
             //作为外包公司
-            $model = $model->where('third_party_id', $company->id);
+            if($company)
+                $model = $model->where('third_party_id', $company->id);
             if($in_recruit){
                 $model = $model->whereIn('status', [1]);
             }else{
@@ -34,7 +36,8 @@ class EntrustsRepository
             }
         }elseif ($type==4){
             //委托申请
-            $model = $model->whereIn('status', [0])->where('third_party_id', $company->id);
+            if($company)
+                $model = $model->whereIn('status', [0])->where('third_party_id', $company->id);
         }
         return $model;
     }

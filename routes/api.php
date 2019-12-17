@@ -285,6 +285,16 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
 
     //获取技能树列表
     $router->get('/skills/tree', 'API\SkillsController@getTree');
+
+
+//招聘列表
+    $router->get('/recruits/type/1', 'API\Admin\RecruitsController@index');
+    $router->get('/recruits/type/{type}', 'API\Admin\EntrustsController@index');
+    $router->get('/entrust/{id}', 'API\Admin\EntrustsController@show');
+//外包的招聘列表
+    $router->get('/recruits/outsource', 'API\Admin\RecruitsController@outsourceList');
+    $router->get('/recruits/{id}', 'API\Admin\RecruitsController@show');
+
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
