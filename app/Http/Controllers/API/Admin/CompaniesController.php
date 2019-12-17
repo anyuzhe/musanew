@@ -27,7 +27,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function beforeStore($data)
     {
-        $oldId = Conglomerate::max('id');
+        $oldId = Company::max('id');
         $oldYear = substr($oldId, 0, 4);
         if($oldId && $oldYear==date('Y') && strlen($oldId)==8){
             $newId = $oldId + 1;
@@ -40,7 +40,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function afterStore($obj, $data)
     {
-        app()->build(CompaniesRepository::class)->handleManger($obj, $data['']);
+        app()->build(CompaniesRepository::class)->handleManger($obj, $data['manager_email']);
         return $this->apiReturnJson(0);
     }
 
