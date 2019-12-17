@@ -16,6 +16,7 @@ use App\Models\Company;
 use App\Models\Conglomerate;
 use App\Models\Course;
 use App\Models\Entrust;
+use App\Models\Job;
 use App\Models\Moodle\CourseCategory;
 use App\Models\Recruit;
 use App\Models\RecruitResumeLog;
@@ -36,6 +37,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $j = Job::find(18);
+    dd($j->necessarySkills);
     $oldId = Conglomerate::max('id');
     dd(strlen($oldId));
     dd(Company::find(1)->manager());

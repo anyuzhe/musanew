@@ -541,7 +541,9 @@ class CompaniesController extends ApiBaseCommonController
 
     public function thirdPartyStatistics()
     {
-        
+        $company_id = $this->request->get('company_id', $this->getCurrentCompany()->id);
+        $third_party_id = $this->request->get('third_party_id');
+        $job_id = $this->request->get('job_id');
     }
 
     public function resumeRelationSet()
