@@ -139,8 +139,8 @@ class JobsController extends ApiBaseCommonController
         $job->save();
 
         $skills = isset($data['skills'])?$data['skills']:null;
-        $necessarySkills = isset($data['necessary_skills'])?$data['skills']:null;
-        $optionalSkills = isset($data['optional_skills'])?$data['skills']:null;
+        $necessarySkills = isset($data['necessary_skills'])?$data['necessary_skills']:null;
+        $optionalSkills = isset($data['optional_skills'])?$data['optional_skills']:null;
         $tests = isset($data['tests'])?$data['tests']:null;
 
         if(is_array($skills)){
@@ -208,8 +208,8 @@ class JobsController extends ApiBaseCommonController
     public function afterUpdate($id, $data)
     {
         $skills = isset($data['skills'])?$data['skills']:null;
-        $necessarySkills = isset($data['necessary_skills'])?$data['skills']:null;
-        $optionalSkills = isset($data['optional_skills'])?$data['skills']:null;
+        $necessarySkills = isset($data['necessary_skills'])?$data['necessary_skills']:null;
+        $optionalSkills = isset($data['optional_skills'])?$data['optional_skills']:null;
         $tests = isset($data['tests'])?$data['tests']:null;
 
         $job = Job::find($id);

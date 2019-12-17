@@ -539,6 +539,11 @@ class CompaniesController extends ApiBaseCommonController
         $excelHelper->dumpExcel(array_values($res['title']),$res['data'],'数据',"{$start_date}-{$end_date} {$company->company_alias}职位招聘数据");
     }
 
+    public function thirdPartyStatistics()
+    {
+        
+    }
+
     public function resumeRelationSet()
     {
         $company_id = $this->request->get('company_id', $this->getCurrentCompany()->id);

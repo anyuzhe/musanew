@@ -217,7 +217,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/count/statistics/{type}', 'API\CompaniesController@countStatistics');
     $router->get('/company/data/statistics/{type}', 'API\CompaniesController@dataStatistics');
     $router->get('/company/data/statistics/detail/{type}', 'API\CompaniesController@dataStatisticsDetail');
-
+    $router->get('/company/thirdParty/statistics', 'API\CompaniesController@thirdPartyStatistics');
     //收藏和拉黑简历
     $router->any('/company/resume/relation', 'API\CompaniesController@resumeRelationSet');
     //企业部门
