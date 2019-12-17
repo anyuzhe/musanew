@@ -139,6 +139,8 @@ class JobsController extends ApiBaseCommonController
         $job->save();
 
         $skills = isset($data['skills'])?$data['skills']:null;
+        $necessarySkills = isset($data['necessary_skills'])?$data['skills']:null;
+        $optionalSkills = isset($data['optional_skills'])?$data['skills']:null;
         $tests = isset($data['tests'])?$data['tests']:null;
 
         if(is_array($skills)){
@@ -154,6 +156,36 @@ class JobsController extends ApiBaseCommonController
                 }
             }
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
+        }
+        if(is_array($necessarySkills)){
+            $skill_ids = [];
+            foreach ($necessarySkills as $skill) {
+                $skill['job_id'] = $id;
+                $skill['type'] = 1;
+                if(isset($skill['id']) && $skill['id']){
+                    $skill_ids[] = $skill['id'];
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                }else{
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                    $skill_ids[] = $_id;
+                }
+            }
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 1)->whereNotIn('id', $skill_ids)->delete();
+        }
+        if(is_array($optionalSkills)){
+            $skill_ids = [];
+            foreach ($optionalSkills as $skill) {
+                $skill['job_id'] = $id;
+                $skill['type'] = 2;
+                if(isset($skill['id']) && $skill['id']){
+                    $skill_ids[] = $skill['id'];
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                }else{
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                    $skill_ids[] = $_id;
+                }
+            }
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 2)->whereNotIn('id', $skill_ids)->delete();
         }
         if(is_array($tests)){
             $test_ids = [];
@@ -176,6 +208,8 @@ class JobsController extends ApiBaseCommonController
     public function afterUpdate($id, $data)
     {
         $skills = isset($data['skills'])?$data['skills']:null;
+        $necessarySkills = isset($data['necessary_skills'])?$data['skills']:null;
+        $optionalSkills = isset($data['optional_skills'])?$data['skills']:null;
         $tests = isset($data['tests'])?$data['tests']:null;
 
         $job = Job::find($id);
@@ -203,6 +237,37 @@ class JobsController extends ApiBaseCommonController
                 }
             }
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
+        }
+
+        if(is_array($necessarySkills)){
+            $skill_ids = [];
+            foreach ($necessarySkills as $skill) {
+                $skill['job_id'] = $id;
+                $skill['type'] = 1;
+                if(isset($skill['id']) && $skill['id']){
+                    $skill_ids[] = $skill['id'];
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                }else{
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                    $skill_ids[] = $_id;
+                }
+            }
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 1)->whereNotIn('id', $skill_ids)->delete();
+        }
+        if(is_array($optionalSkills)){
+            $skill_ids = [];
+            foreach ($optionalSkills as $skill) {
+                $skill['job_id'] = $id;
+                $skill['type'] = 2;
+                if(isset($skill['id']) && $skill['id']){
+                    $skill_ids[] = $skill['id'];
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                }else{
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                    $skill_ids[] = $_id;
+                }
+            }
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 2)->whereNotIn('id', $skill_ids)->delete();
         }
         if(is_array($tests)){
             $test_ids = [];

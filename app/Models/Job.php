@@ -46,7 +46,17 @@ class Job extends Model
 
     public function skills()
     {
-            return $this->belongsToMany('App\Models\Skill', 'job_skill','job_id','skill_id')->withPivot('used_time', 'skill_level');;
+        return $this->belongsToMany('App\Models\Skill', 'job_skill','job_id','skill_id')->withPivot('used_time', 'skill_level');
+    }
+
+    public function necessarySkills()
+    {
+        return $this->belongsToMany('App\Models\ResumeSkill', 'job_skill','job_id','skill_id')->wherePivot('type', 1)->withPivot('used_time', 'skill_level');
+    }
+
+    public function optionalSkills()
+    {
+        return $this->belongsToMany('App\Models\ResumeSkill', 'job_skill','job_id','skill_id')->wherePivot('type', 2)->withPivot('used_time', 'skill_level');
     }
 
     public function company()

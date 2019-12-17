@@ -17,6 +17,7 @@ return array(
     'App\\Console\\Commands\\TestUploadResume' => $baseDir . '/app/Console/Commands/TestUploadResume.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Http\\Controllers\\API\\Admin\\AdminsController' => $baseDir . '/app/Http/Controllers/API/Admin/AdminsController.php',
     'App\\Http\\Controllers\\API\\Admin\\CommonController' => $baseDir . '/app/Http/Controllers/API/Admin/CommonController.php',
     'App\\Http\\Controllers\\API\\Admin\\CompaniesController' => $baseDir . '/app/Http/Controllers/API/Admin/CompaniesController.php',
     'App\\Http\\Controllers\\API\\Admin\\ConglomeratesController' => $baseDir . '/app/Http/Controllers/API/Admin/ConglomeratesController.php',

@@ -12,6 +12,8 @@ class JobsRepository
     {
         $data->load('department');
         $data->load('skills');
+        $data->load('necessarySkills');
+        $data->load('optionalSkills');
         $data->load('address');
         $data->load('sourceCompany');
         $area_ids = [];
@@ -47,6 +49,19 @@ class JobsRepository
                 $skill->used_time = $skill->pivot->used_time;
                 getOptionsText($skill);
             }
+            unset($skill);
+            foreach ($v->necessarySkills as &$skill) {
+                $skill->skill_level = $skill->pivot->skill_level;
+                $skill->used_time = $skill->pivot->used_time;
+                getOptionsText($skill);
+            }
+            unset($skill);
+            foreach ($v->optionalSkills as &$skill) {
+                $skill->skill_level = $skill->pivot->skill_level;
+                $skill->used_time = $skill->pivot->used_time;
+                getOptionsText($skill);
+            }
+            unset($skill);
         }
         $data->load('tests');
         return $data;
@@ -55,6 +70,8 @@ class JobsRepository
     {
         $data->department;
         $data->skills;
+        $data->necessarySkills;
+        $data->optionalSkills;
         $data->tests;
         $data->address;
         $data->sourceCompany;
@@ -71,6 +88,19 @@ class JobsRepository
             $skill->used_time = $skill->pivot->used_time;
             getOptionsText($skill);
         }
+        unset($skill);
+        foreach ($data->necessarySkills as &$skill) {
+            $skill->skill_level = $skill->pivot->skill_level;
+            $skill->used_time = $skill->pivot->used_time;
+            getOptionsText($skill);
+        }
+        unset($skill);
+        foreach ($data->optionalSkills as &$skill) {
+            $skill->skill_level = $skill->pivot->skill_level;
+            $skill->used_time = $skill->pivot->used_time;
+            getOptionsText($skill);
+        }
+        unset($skill);
         if($data->address){
             $areas = Area::whereIn('id', [$data->address->province_id, $data->address->city_id, $data->address->district_id])->get()->keyBy('id')->toArray();
             $data->address->province_text = isset($areas[$data->address->province_id])?$areas[$data->address->province_id]['cname']:'';
