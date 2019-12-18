@@ -24,6 +24,7 @@ class Company extends Model
         'logo',
         'description',
         'conglomerate_id',
+        'id',
     ];
 
     public function thirdParty()

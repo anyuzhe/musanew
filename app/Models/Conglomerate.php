@@ -13,6 +13,7 @@ class Conglomerate extends Model
 
     public $fillable = [
         'name',
+        'id',
     ];
 
     public function companies()
