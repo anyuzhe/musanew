@@ -297,11 +297,12 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     $router->put('/recruits/{id}', 'API\Admin\RecruitsController@update');
     $router->put('/entrust/{id}', 'API\Admin\EntrustsController@update');
 
-
     //招聘下的-简历列表
     $router->any('/recruit/resumes', 'API\Admin\RecruitResumesController@index');
     //招聘下的-简历详情
     $router->get('/recruit/resumes/{id}', 'API\Admin\RecruitResumesController@show');
+    $router->put('/recruit/resumes/{id}', 'API\Admin\RecruitResumesController@update');
+    //招聘下的-简历修改
 
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试

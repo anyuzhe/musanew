@@ -119,8 +119,9 @@ class RecruitResumesRepository
             $recruit->wait_entry_num++;
             $recruit->save();
         }elseif($status==8){
-            $log->text =  '成功入职';
-            $recruitResume->formal_entry_at = $otherData?$otherData:date('Y-m-d H:i:s');
+            $_time = $otherData?$otherData:date('Y-m-d H:i:s');
+            $log->text =  '成功入职-'.$_time;
+            $recruitResume->formal_entry_at = $_time;
             $this->hiredEntryHandle($recruitResume);
         }elseif($status==-1){
             $log->text =  '简历不匹配';
