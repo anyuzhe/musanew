@@ -131,6 +131,7 @@ class RecruitsController extends ApiBaseCommonController
         $recruits->load('job');
         $recruits->load('leading');
         $recruits->load('entrusts');
+        $recruits->load('company');
 
         $leadIds = [];
         foreach ($recruits as $recruit) {
@@ -166,6 +167,7 @@ class RecruitsController extends ApiBaseCommonController
     public function _after_find(&$data)
     {
         $data->leading;
+        $data->company;
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
@@ -175,11 +177,6 @@ class RecruitsController extends ApiBaseCommonController
                 $data->new_resume_num = $entrust->new_resume_num;
                 $data->created_at = $entrust->created_at;
             }
-        }
-        if($data->company_id==$this->getCurrentCompany()->id){
-            $data->is_party = 1;
-        }else{
-            $data->is_party = 0;
         }
         $data->job = app()->build(JobsRepository::class)->getData($data->job);
 

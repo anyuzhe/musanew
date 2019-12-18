@@ -161,6 +161,11 @@ class EntrustsController extends ApiBaseCommonController
         $data->recruit->residue_num = $data->recruit->residue_num>0?$data->recruit->residue_num:0;
     }
 
+    public function afterUpdate($id, $data)
+    {
+        return $this->apiReturnJson(0);
+    }
+
     public function applyEntrust()
     {
         $company_job_recruit_id = $this->request->get('company_job_recruit_id');
