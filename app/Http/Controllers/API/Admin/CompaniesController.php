@@ -110,4 +110,33 @@ class CompaniesController extends ApiBaseCommonController
         $model->save();
         return responseZK(0);
     }
+
+
+    public function getUsers($id)
+    {
+        $company_id = $id;
+        $companyUsers = CompanyUser::where('company_id', $company_id)->get();
+        $userIds = $companyUsers->pluck('user_id')->toArray();
+        $roleIds = $companyUsers->pluck('company_role_id')->toArray();
+        $users = \App\Models\User::whereIn('id', $userIds)->get();
+        $users->load('info');
+        $users = $users->keyBy('id')->toArray();
+        $roles = CompanyRole::whereIn('id', $roleIds)->get()->keyBy('id')->toArray();
+        $data = [];
+        foreach ($companyUsers as $companyUser) {
+            $user = $users[$companyUser->user_id];
+            if(isset($roles[$companyUser->company_role_id]))
+                $role = $roles[$companyUser->company_role_id];
+            else
+                $role = null;
+            $info = $user['info'];
+            $data[] = [
+                'id'=>$user['id'],
+                'name'=>$info?$info['realname']:'无姓名',
+                'role_name'=>$role?$role['name']:'无角色',
+            ];
+        }
+        return $this->apiReturnJson(0,$data);
+    }
+
 }
