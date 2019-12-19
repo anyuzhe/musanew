@@ -506,28 +506,15 @@ class ResumesRepository
                 if(isset($skill['skill_level'])){
                     $_skill_level_str = $skill['skill_level'];
                 }
-                switch ($_skill_level_str){
-                    case '了解':
-                        $_skill_level = 1;
-                        break;
-                    case '掌握':
-                        $_skill_level = 1;
-                        break;
-                    case '良好':
-                        $_skill_level = 2;
-                        break;
-                    case '擅长':
-                        $_skill_level = 2;
-                        break;
-                    case '熟悉':
-                        $_skill_level = 3;
-                        break;
-                    case '熟练':
-                        $_skill_level = 3;
-                        break;
-                    case '精通':
-                        $_skill_level = 4;
-                        break;
+
+                if(in_array($_skill_level_str, $skillLevelStr1)){
+                    $_skill_level = 1;
+                }elseif(in_array($_skill_level_str, $skillLevelStr2)){
+                    $_skill_level = 2;
+                }elseif(in_array($_skill_level_str, $skillLevelStr3)){
+                    $_skill_level = 3;
+                }elseif(in_array($_skill_level_str, $skillLevelStr4)){
+                    $_skill_level = 4;
                 }
                 $_skill['level'] = $_skill_level;
                 $_skill['skill_level'] = $_skill_level;
