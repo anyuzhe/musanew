@@ -162,12 +162,13 @@ class EntrustsController extends ApiBaseCommonController
 
     public function afterUpdate($id, $data)
     {
-        $recruit = $data->recruit;
-        if(strtotime($data->created_at) < strtotime($recruit->created_at)){
-            $recruit->created_at = $data->created_at;
+        $entrust = Entrust::find($id);
+        $recruit = $entrust->recruit;
+        if(strtotime($data['created_at']) < strtotime($recruit->created_at)){
+            $recruit->created_at = $data['created_at'];
         }
-        if(strtotime($data->end_at) > strtotime($recruit->end_at)){
-            $recruit->end_at = $data->end_at;
+        if(strtotime($data['end_at']) > strtotime($recruit->end_at)){
+            $recruit->end_at = $data['end_at'];
         }
 
         $recruit->save();
