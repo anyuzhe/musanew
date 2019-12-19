@@ -38,6 +38,7 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    dd(in_array(0,[0,1]));
     $recruits = Recruit::all();
     foreach ($recruits as $recruit) {
         $count = RecruitResume::where('company_job_recruit_id', $recruit->id)->count();

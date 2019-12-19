@@ -430,6 +430,18 @@ class ResumesRepository
                 ResumeProject::create($_project);
             }
         }
+        $skillLevelStr1 = [
+            '能够','能','理解','有','使用过','会','了解'
+        ];
+        $skillLevelStr2 = [
+            '良好','熟练','掌握','熟练','熟知','熟悉','掌握','具有','具备'
+        ];
+        $skillLevelStr3 = [
+            '较强','较好','较为丰富','精通','热爱','敏锐','擅长','扎实','富有','坚实','出色','优秀','丰富','fuent','流利'
+        ];
+        $skillLevelStr4 = [
+            '深度理解','深刻理解','深刻','深入理解','深入了解','强烈卓越'
+        ];
         if($languages && is_array($languages)){
             foreach ($languages as $language) {
                 $_language = [];
@@ -451,21 +463,14 @@ class ResumesRepository
                 }elseif(isset($language['read_and_write'])){
                     $_language_level_str = $language['read_and_write'];
                 }
-                switch ($_language_level_str){
-                    case '一般':
-                        $_language_level = 1;
-                        break;
-                    case '掌握':
-                    case '良好':
-                        $_language_level = 2;
-                        break;
-                    case '擅长':
-                    case '熟练':
-                        $_language_level = 3;
-                        break;
-                    case '精通':
-                        $_language_level = 4;
-                        break;
+                if(in_array($_language_level_str, $skillLevelStr1)){
+                    $_language_level = 1;
+                }elseif(in_array($_language_level_str, $skillLevelStr2)){
+                    $_language_level = 2;
+                }elseif(in_array($_language_level_str, $skillLevelStr3)){
+                    $_language_level = 3;
+                }elseif(in_array($_language_level_str, $skillLevelStr4)){
+                    $_language_level = 4;
                 }
                 $_language['level'] = $_language_level;
                 ResumeSkill::create($_language);
