@@ -455,9 +455,11 @@ class ResumesRepository
                     case '一般':
                         $_language_level = 1;
                         break;
+                    case '掌握':
                     case '良好':
                         $_language_level = 2;
                         break;
+                    case '擅长':
                     case '熟练':
                         $_language_level = 3;
                         break;

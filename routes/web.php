@@ -19,6 +19,7 @@ use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Moodle\CourseCategory;
 use App\Models\Recruit;
+use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
 use App\Models\ResumeEducation;
@@ -37,6 +38,17 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $recruits = Recruit::all();
+    foreach ($recruits as $recruit) {
+        $count = RecruitResume::where('company_job_recruit_id', $recruit->id)->count();
+
+        $c = $count - $recruit->resume_num;
+        if($recruit->resume_num!=$count){
+            $recruit->resume_num = $count;
+            $recruit->new_resume_num += $c;
+            $recruit->save();
+        }
+    }
     $j = Job::find(18);
     dd($j->necessarySkills);
     $oldId = Conglomerate::max('id');

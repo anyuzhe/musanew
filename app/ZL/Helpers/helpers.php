@@ -733,7 +733,7 @@ function getEducationValue($str)
         return 2;
     }elseif($str=='大专' or $str=='专科'){
         return 1;
-    }elseif($str=='研究生' or $str=='硕士'){
+    }elseif($str=='研究生' or $str=='硕士' or $str=='硕士研究生'){
         return 3;
     }elseif($str=='博士' or $str=='博士后'){
         return 4;
