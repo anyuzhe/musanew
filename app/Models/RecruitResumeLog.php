@@ -21,6 +21,7 @@ class RecruitResumeLog extends Model
         'recruit_id',
         'entrust_id',
         'user_id',
+        'created_at',
     ];
 
     /**

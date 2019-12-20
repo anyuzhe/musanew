@@ -106,29 +106,22 @@ class RecruitResumesController extends ApiBaseCommonController
         $recruitResume = RecruitResume::find($id);
         if(isset($data['logs']) && is_array($data['logs'])){
             foreach ($data['logs'] as $log) {
+                $logObj = RecruitResumeLog::find($log['id']);
+                $logObj->fill($log);
                 if($log['status']==2){
-                    $logObj = RecruitResumeLog::find($log['id']);
                     $logObj->text =  '邀请面试-'.$log['other_data'];
-                    $logObj->save();
                 }elseif($log['status']==3){
-                    $logObj = RecruitResumeLog::find($log['id']);
                     $logObj->text =  '修改面试时间-'.$log['other_data'];
-                    $logObj->save();
                 }elseif($log['status']==5){
-                    $logObj = RecruitResumeLog::find($log['id']);
                     $logObj->text =  '再次邀请面试-'.$log['other_data'];
-                    $logObj->save();
                 }elseif($log['status']==7){
-                    $logObj = RecruitResumeLog::find($log['id']);
                     $logObj->text =  '录用-计划入职时间:'.$log['other_data'];
-                    $logObj->save();
                 }elseif($log['status']==8){
-                    $logObj = RecruitResumeLog::find($log['id']);
                     $logObj->text =  '成功入职-'.$log['other_data'];
-                    $logObj->save();
                     $recruitResume->formal_entry_at = $log['other_data'];
                     $recruitResume->save();
                 }
+                $logObj->save();
             }
         }
         return $this->apiReturnJson(0);
