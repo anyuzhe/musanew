@@ -302,6 +302,7 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     //招聘下的-简历详情
     $router->get('/recruit/resumes/{id}', 'API\Admin\RecruitResumesController@show');
     $router->put('/recruit/resumes/{id}', 'API\Admin\RecruitResumesController@update');
+    $router->put('/recruit/resumes/log/{id}', 'API\Admin\RecruitResumesController@updateLog');
     //招聘下的-简历修改
     $router->get('/company/{id}/users', 'API\Admin\CompaniesController@getUsers');
 });
