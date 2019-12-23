@@ -106,7 +106,9 @@ class RecruitResumesController extends ApiBaseCommonController
         $log = $request->all();
         $logObj = RecruitResumeLog::find($id);
         $logObj->fill($log);
-        $recruitResume = $logObj->recruit;
+        $recruitResume = $logObj->recruitResume;
+        if(!isset($log['status']))
+            $log['status'] = $logObj->status;
         if($log['status']==2){
             $logObj->text =  '邀请面试-'.$log['other_data'];
         }elseif($log['status']==3){
