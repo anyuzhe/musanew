@@ -16,7 +16,13 @@ class ConglomeratesController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
-
+        $text = $this->request->get('text');
+        if($text){
+            $conglomerateIds =  Company::where('company_name', 'like',"%$text%")->orWhere('company_alias', 'like',"%$text%")->pluck('conglomerate_id')->unique()->toArray();
+            $model = $model->where(function ($query) use ($text, $conglomerateIds) {
+                $query->where('name', 'like', "%$text%")->orWhere('id', 'like', "%$text%")->orWhereIn('id', $conglomerateIds);
+            });
+        }
     }
 
     public function afterStore($obj, $data)

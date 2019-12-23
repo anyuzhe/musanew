@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Admin;
 
+use App\Models\Company;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\Course;
@@ -37,6 +38,17 @@ class UsersController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
+        $text = $this->request->get('text');
+        if($text){
+            $companyIds = Company::where('company_name', 'like', "%$text%")->orWhere('company_alias', 'like', "%$text%")->pluck('id')->unique()->toArray();
+            $userIds = DB::connection('musa')->table('company_user')->whereIn('company_id', $companyIds)->pluck('user_id')->unique()->toArray();
+            $userIds1 = UserBasicInfo::where('realname', 'like', "%$text%")->pluck('user_id');
+            $userIds1 = $userIds1->merge($userIds);
+            $userIds = $userIds1->toArray();
+            $model = $model->where(function ($query) use ($text, $userIds) {
+                $query->whereIn('id', $userIds)->orWhere('email', 'like', "%$text%")->orWhere('id', 'like', "%$text%");
+            });
+        }
         $model = $model->where('deleted', 0);
     }
 

@@ -23,6 +23,12 @@ class CompaniesController extends ApiBaseCommonController
     public function authLimit(&$model)
     {
         $model = $model->where('status', 1);
+
+        $text = $this->request->get('text');
+        if($text) {
+            $companyIds = Company::where('company_name', 'like', "%$text%")->orWhere('company_alias', 'like', "%$text%")->orWhere('id', 'like', "%$text%")->pluck('id')->unique()->toArray();
+            $model = $model->whereIn('id', $companyIds);
+        }
     }
 
     public function beforeStore($data)
