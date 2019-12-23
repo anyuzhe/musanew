@@ -126,9 +126,9 @@ class RecruitResumesController extends ApiBaseCommonController
         }elseif($log['status']==8){
             $logObj->text =  '成功入职-'.$log['other_data'];
             $recruitResume->formal_entry_at = $log['other_data'];
-            $recruitResume->save();
         }
         $logObj->save();
+        $recruitResume->save();
         return $this->apiReturnJson(0, $logObj);
     }
 
