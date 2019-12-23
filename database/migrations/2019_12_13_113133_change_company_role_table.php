@@ -15,6 +15,7 @@ class ChangeCompanyRoleTable extends Migration
     {
         Schema::connection('musa')->table('company_role', function (Blueprint $table) {
             $table->integer('company_id')->nullable();
+            $table->string('remark')->nullable();
         });
     }
 
