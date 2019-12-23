@@ -13,6 +13,8 @@ class User extends Model
         'confirmed',
         'firstname',
         'lastname',
+        'deleted',
+        'suspended',
     ];
 
 
