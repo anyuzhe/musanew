@@ -37,7 +37,7 @@ class UsersController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
-
+        $model = $model->where('deleted', 0);
     }
 
     public function tree()
