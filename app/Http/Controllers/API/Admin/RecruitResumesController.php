@@ -109,7 +109,13 @@ class RecruitResumesController extends ApiBaseCommonController
         $recruitResume = $logObj->recruitResume;
         if(!isset($log['status']))
             $log['status'] = $logObj->status;
-        if($log['status']==2){
+
+        if($log['status']==1){
+            if(isset($log['user_id']) && $log['user_id'])
+                $recruitResume->creator_id = $log['user_id'];
+            if(isset($log['created_at']) && $log['created_at'])
+                $recruitResume->created_at = $log['created_at'];
+        }elseif($log['status']==2){
             $logObj->text =  '邀请面试-'.$log['other_data'];
         }elseif($log['status']==3){
             $logObj->text =  '修改面试时间-'.$log['other_data'];
