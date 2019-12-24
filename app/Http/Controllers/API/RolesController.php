@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\CompanyRole;
+use App\Repositories\UserRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Support\Facades\Cache;
@@ -23,12 +24,17 @@ class RolesController extends ApiBaseCommonController
 
     public function _after_get(&$data)
     {
-        $data->load('permissions');
+        $userRepository = app()->build(UserRepository::class);
+        foreach ($data as &$v) {
+            $v->users = $userRepository->getUsersByRoleId($v->id);
+        }
         return $data;
     }
 
     public function _after_find(&$data)
     {
+        $userRepository = app()->build(UserRepository::class);
+        $data->users = $userRepository->getUsersByRoleId($data->id);
         $data->permissions;
     }
 }

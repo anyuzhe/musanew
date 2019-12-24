@@ -81,4 +81,12 @@ class UserRepository
         $info = array_merge($info, $resumeInfo);
         return $info;
     }
+
+    public function getUsersByRoleId($role_id)
+    {
+        $userIds = CompanyUser::where('company_role_id', $role_id)->pluck('user_id')->toArray();
+        $users = User::whereIn('id', $userIds);
+        $users->load('info');
+        return $users;
+    }
 }

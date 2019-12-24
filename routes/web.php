@@ -13,6 +13,7 @@
 
 use App\Models\Area;
 use App\Models\Company;
+use App\Models\CompanyRole;
 use App\Models\Conglomerate;
 use App\Models\Course;
 use App\Models\Entrust;
@@ -38,6 +39,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $t = CompanyRole::find(3);
+    dd($t->users);
     dd(in_array(0,[0,1]));
     $recruits = Recruit::all();
     foreach ($recruits as $recruit) {

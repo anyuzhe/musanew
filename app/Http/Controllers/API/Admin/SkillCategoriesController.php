@@ -6,11 +6,12 @@ use App\Http\Controllers\Voyager\Custom\SkillCategoryController;
 use App\Models\Company;
 use App\Models\Conglomerate;
 use App\Models\Skill;
+use App\Models\SkillCategory;
 use App\ZL\Controllers\ApiBaseCommonController;
 
 class SkillCategoriesController extends ApiBaseCommonController
 {
-    protected $model_name = SkillCategoryController::class;
+    protected $model_name = SkillCategory::class;
     public $search_field_array = [
 //        ['xxx','like'],
         ['pid','='],

@@ -8,7 +8,7 @@ class CompanyRole extends Model
     protected $table = 'company_role';
 
     protected $connection = 'musa';
-    
+
     public $fillable = [
         'name',
         'alias',
