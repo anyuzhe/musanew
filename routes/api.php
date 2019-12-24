@@ -287,7 +287,7 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     //技能
     $router->resource('/skills', 'API\Admin\SkillsController');
     //技能分类
-    $router->resource('/skillCategories', 'API\Admin\skillCategoriesController');
+    $router->resource('/skillCategories', 'API\Admin\SkillCategoriesController');
 
 
 //招聘列表
