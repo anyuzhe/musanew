@@ -8,7 +8,7 @@ class SkillCategory extends Model
 {
     protected $table = 'skills_category';
     protected $connection = 'musa';
-    protected $timestamps = false;
+    public $timestamps = false;
     public $fillable = [
         'category_name'
     ];
