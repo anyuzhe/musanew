@@ -280,13 +280,14 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     $router->resource('/companies', 'API\Admin\CompaniesController');
     //用户
     $router->resource('/users', 'API\Admin\UsersController');
+
+    //获取技能树列表
+    $router->get('/skills/tree', 'API\SkillsController@getTree');
+    
     //技能
     $router->resource('/skills', 'API\Admin\SkillsController');
     //技能分类
     $router->resource('/skillCategories', 'API\Admin\skillCategoriesController');
-
-    //获取技能树列表
-    $router->get('/skills/tree', 'API\SkillsController@getTree');
 
 
 //招聘列表
