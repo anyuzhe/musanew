@@ -24,12 +24,26 @@ class SkillCategoriesController extends ApiBaseCommonController
 
     public function afterStore($obj, $data)
     {
+        $parent = $obj->parent;
+        if($parent){
+            $obj->level = $parent->level+1;
+        }else{
+            $obj->level = 1;
+        }
+        $obj->save();
         return $this->apiReturnJson(0);
     }
 
 
     public function afterUpdate($id, $data)
     {
+        $parent = $data->parent;
+        if($parent){
+            $data->level = $parent->level+1;
+        }else{
+            $data->level = 1;
+        }
+        $data->save();
         return $this->apiReturnJson(0);
     }
 
