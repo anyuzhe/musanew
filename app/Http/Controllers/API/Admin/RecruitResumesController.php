@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Models\CompanyResume;
+use App\Models\CompanyRole;
+use App\Models\CompanyUser;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
@@ -196,5 +198,34 @@ class RecruitResumesController extends ApiBaseCommonController
 
         return $this->apiReturnJson(0, $recruits,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
 //        return responseZK(1,$list,'',['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
+    }
+
+
+
+    public function getUsers($id)
+    {
+        $recruitResumes = RecruitResume::find($id);
+        $companyUsers = CompanyUser::whereIn('company_id', [$recruitResumes->company_id, $recruitResumes->third_party_id])->get();
+        $userIds = $companyUsers->pluck('user_id')->unique()->toArray();
+        $roleIds = $companyUsers->pluck('company_role_id')->toArray();
+        $users = \App\Models\User::whereIn('id', $userIds)->get();
+        $users->load('info');
+        $users = $users->keyBy('id')->toArray();
+        $roles = CompanyRole::whereIn('id', $roleIds)->get()->keyBy('id')->toArray();
+        $data = [];
+        foreach ($companyUsers as $companyUser) {
+            $user = $users[$companyUser->user_id];
+            if(isset($roles[$companyUser->company_role_id]))
+                $role = $roles[$companyUser->company_role_id];
+            else
+                $role = null;
+            $info = $user['info'];
+            $data[] = [
+                'id'=>$user['id'],
+                'name'=>$info?$info['realname']:'无姓名',
+                'role_name'=>$role?$role['name']:'无角色',
+            ];
+        }
+        return $this->apiReturnJson(0,$data);
     }
 }
