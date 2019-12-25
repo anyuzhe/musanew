@@ -26,6 +26,8 @@ class Company extends Model
         'conglomerate_id',
         'id',
         'is_third_party',
+        'is_demand_side',
+        'suspended',
     ];
 
     public function thirdParty()

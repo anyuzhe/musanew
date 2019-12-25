@@ -52,6 +52,17 @@ class CompaniesController extends ApiBaseCommonController
 
     public function afterStore($obj, $data)
     {
+        if(isset($data['natures']) && is_array($data['natures'])){
+            foreach ($data['natures'] as $v) {
+                if($v=='is_third_party'){
+                    $obj->is_third_party = 1;
+                }
+                if($v=='is_demand_side'){
+                    $obj->is_demand_side = 1;
+                }
+            }
+        }
+        $obj->save();
         app()->build(CompaniesRepository::class)->handleManger($obj, $data['manager_email']);
         return $this->apiReturnJson(0);
     }
@@ -63,10 +74,13 @@ class CompaniesController extends ApiBaseCommonController
             foreach ($data['natures'] as $v) {
                 if($v=='is_third_party'){
                     $obj->is_third_party = 1;
-                    $obj->save();
+                }
+                if($v=='is_demand_side'){
+                    $obj->is_demand_side = 1;
                 }
             }
         }
+        $obj->save();
         return $this->apiReturnJson(0);
     }
 
@@ -121,6 +135,13 @@ class CompaniesController extends ApiBaseCommonController
         }else{
             $company->manager = null;
         }
+        $company->natures = [];
+        if($company->is_demand_side){
+            $company->natures[] = 'is_demand_side';
+        };
+        if($company->is_third_party){
+            $company->natures[] = 'is_third_party';
+        };
     }
 
 
