@@ -39,6 +39,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $user = \App\Models\User::find(75);
+    $has = $user->companies()->where('company_id',1)->first();
+    dd($has);
     $obj = new stdClass();
     $data['natures'] = ['is_third_party', 'is_demand_side'];
     if(isset($data['natures']) && is_array($data['natures'])){

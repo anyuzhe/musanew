@@ -4,7 +4,9 @@ namespace App\Repositories;
 
 use App\Models\CompanyAddress;
 use App\Models\CompanyDepartment;
+use App\Models\CompanyRole;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class CompaniesRepository
 {
@@ -125,5 +127,13 @@ class CompaniesRepository
     public function handleManger($company, $email)
     {
         $user = User::where('email', $email)->first();
+        if($user){
+            $has = $user->companies()->where('company_id', $company->id)->first();
+            if($has){
+                DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => 1]);
+            }else{
+                $user->companies()->attach($company->id, ['company_role_id' => 1]);
+            }
+        }
     }
 }
