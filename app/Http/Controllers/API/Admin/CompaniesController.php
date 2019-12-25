@@ -53,14 +53,17 @@ class CompaniesController extends ApiBaseCommonController
     public function afterStore($obj, $data)
     {
         if(isset($data['natures']) && is_array($data['natures'])){
+            $is_third_party = 0;
+            $is_demand_side = 0;
             foreach ($data['natures'] as $v) {
                 if($v=='is_third_party'){
-                    $obj->is_third_party = 1;
-                }
-                if($v=='is_demand_side'){
-                    $obj->is_demand_side = 1;
+                    $is_third_party = 1;
+                }elseif($v=='is_demand_side'){
+                    $is_demand_side = 1;
                 }
             }
+            $obj->is_third_party = $is_third_party;
+            $obj->is_demand_side = $is_demand_side;
         }
         $obj->save();
         app()->build(CompaniesRepository::class)->handleManger($obj, $data['manager_email']);
@@ -71,14 +74,18 @@ class CompaniesController extends ApiBaseCommonController
     {
         $obj = $this->getModel()->find($id);
         if(isset($data['natures']) && is_array($data['natures'])){
+            $is_third_party = 0;
+            $is_demand_side = 0;
             foreach ($data['natures'] as $v) {
                 if($v=='is_third_party'){
-                    $obj->is_third_party = 1;
+                    $is_third_party = 1;
                 }
                 if($v=='is_demand_side'){
-                    $obj->is_demand_side = 1;
+                    $is_demand_side = 1;
                 }
             }
+            $obj->is_third_party = $is_third_party;
+            $obj->is_demand_side = $is_demand_side;
         }
         $obj->save();
         return $this->apiReturnJson(0);
