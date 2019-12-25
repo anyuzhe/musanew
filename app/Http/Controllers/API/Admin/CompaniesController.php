@@ -41,6 +41,12 @@ class CompaniesController extends ApiBaseCommonController
             $newId = date('Y').'0001';
         }
         $data['id'] = $newId;
+        if(isset($data['natures']) && is_array($data['natures'])){
+            foreach ($data['natures'] as $v) {
+                if($v=='is_third_party')
+                    $data['is_third_party'] = 1;
+            }
+        }
         return $data;
     }
 
@@ -52,6 +58,15 @@ class CompaniesController extends ApiBaseCommonController
 
     public function afterUpdate($id, $data)
     {
+        $obj = $this->getModel()->find($id);
+        if(isset($data['natures']) && is_array($data['natures'])){
+            foreach ($data['natures'] as $v) {
+                if($v=='is_third_party'){
+                    $obj->is_third_party = 1;
+                    $obj->save();
+                }
+            }
+        }
         return $this->apiReturnJson(0);
     }
 

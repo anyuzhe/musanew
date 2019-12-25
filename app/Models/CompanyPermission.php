@@ -8,7 +8,11 @@ class CompanyPermission extends Model
     protected $table = 'company_permissions';
 
     protected $connection = 'musa';
-    
+
     public $fillable = [
+        'key',
+        'display_name',
+        'pid',
+        'level',
     ];
 }
