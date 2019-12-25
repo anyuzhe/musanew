@@ -115,6 +115,7 @@ class EntrustsController extends ApiBaseCommonController
         $entrusts->load('job');
         $entrusts->load('recruit');
         $entrusts->load('leading');
+        $entrusts->load('creator');
         $entrusts->load('company');
         $entrusts->load('thirdParty');
 
@@ -155,6 +156,7 @@ class EntrustsController extends ApiBaseCommonController
         $data->company;
         $data->thirdParty;
         $data->leading;
+        $data->creator;
         $data->job = app()->build(JobsRepository::class)->getData($data->job);
         $data->recruit->residue_num = $data->recruit->need_num - $data->recruit->done_num - $data->recruit->wait_entry_num;
         $data->recruit->residue_num = $data->recruit->residue_num>0?$data->recruit->residue_num:0;

@@ -130,6 +130,7 @@ class RecruitsController extends ApiBaseCommonController
     {
         $recruits->load('job');
         $recruits->load('leading');
+        $recruits->load('creator');
         $recruits->load('entrusts');
         $recruits->load('company');
 
@@ -167,6 +168,7 @@ class RecruitsController extends ApiBaseCommonController
     public function _after_find(&$data)
     {
         $data->leading;
+        $data->creator;
         $data->company;
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){

@@ -46,4 +46,15 @@ class Recruit extends Model
         //status 状态 -2 拒绝  -1 取消 0申请中 1正常 2完成
         return $this->hasMany('App\Models\Entrust', 'company_job_recruit_id');
     }
+
+    public function creator()
+    {
+        return $this->hasOneThrough(
+            'App\Models\UserBasicInfo',
+            'App\Models\User',
+            'id',
+            'user_id',
+            'creator_id'
+        );
+    }
 }

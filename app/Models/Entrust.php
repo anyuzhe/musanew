@@ -56,4 +56,15 @@ class Entrust extends Model
             'leading_id'
         );
     }
+
+    public function creator()
+    {
+        return $this->hasOneThrough(
+            'App\Models\UserBasicInfo',
+            'App\Models\User',
+            'id',
+            'user_id',
+            'creator_id'
+        );
+    }
 }
