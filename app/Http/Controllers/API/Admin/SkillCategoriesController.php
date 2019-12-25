@@ -37,6 +37,7 @@ class SkillCategoriesController extends ApiBaseCommonController
 
     public function afterUpdate($id, $data)
     {
+        $data = SkillCategory::find($id);
         $parent = $data->parent;
         if($parent){
             $data->level = $parent->level+1;
