@@ -49,7 +49,7 @@ class UsersController extends ApiBaseCommonController
                 $query->whereIn('id', $userIds)->orWhere('email', 'like', "%$text%")->orWhere('id', 'like', "%$text%");
             });
         }
-        $model = $model->where('deleted', 0);
+        $model = $model->where('deleted', 0)->whereIn('id', UserBasicInfo::pluck('user_id')->toArray());
     }
 
     public function tree()
