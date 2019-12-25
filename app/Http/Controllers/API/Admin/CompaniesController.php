@@ -59,7 +59,7 @@ class CompaniesController extends ApiBaseCommonController
             $obj->is_third_party = $is_third_party;
             $obj->is_demand_side = $is_demand_side;
         }
-        $obj->sve();
+        $obj->save();
         app()->build(CompaniesRepository::class)->handleManger($obj, $data['manager_email']);
         return $this->apiReturnJson(0);
     }

@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Company;
+use App\Models\CompanyAddress;
+use App\Models\CompanyDepartment;
 use App\Models\CompanyResume;
 use App\Models\Entrust;
 use App\Models\Job;
@@ -72,5 +75,12 @@ class ClearData extends Command
         ResumeSkill::truncate();
         ResumeTrain::truncate();
         CompanyResume::truncate();
+
+        //公司信息
+        Company::truncate();
+        CompanyAddress::truncate();
+        CompanyDepartment::truncate();
+        DB::connection('musa')->table('company_relationship')->truncate();
+        DB::connection('musa')->table('company_relationship_log')->truncate();
     }
 }
