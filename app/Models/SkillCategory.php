@@ -10,7 +10,8 @@ class SkillCategory extends Model
     protected $connection = 'musa';
     public $timestamps = false;
     public $fillable = [
-        'category_name'
+        'category_name',
+        'pid',
     ];
 
     public function parent()
