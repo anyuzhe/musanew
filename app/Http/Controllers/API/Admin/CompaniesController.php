@@ -17,7 +17,9 @@ class CompaniesController extends ApiBaseCommonController
     protected $model_name = Company::class;
     public $search_field_array = [
 //        ['xxx','like'],
-//        ['xxx','='],
+        ['is_third_party','='],
+        ['is_demand_side','='],
+        ['suspended','='],
     ];
 
     public function authLimit(&$model)
