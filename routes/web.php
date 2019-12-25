@@ -39,6 +39,22 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $obj = new stdClass();
+    $data['natures'] = ['is_third_party', 'is_demand_side'];
+    if(isset($data['natures']) && is_array($data['natures'])){
+        $is_third_party = 0;
+        $is_demand_side = 0;
+        foreach ($data['natures'] as $v) {
+            if($v=='is_third_party'){
+                $is_third_party = 1;
+            }elseif($v=='is_demand_side'){
+                $is_demand_side = 1;
+            }
+        }
+        $obj->is_third_party = $is_third_party;
+        $obj->is_demand_side = $is_demand_side;
+    }
+    dd($obj);
     $t = CompanyRole::find(3);
     dd($t->users);
     dd(in_array(0,[0,1]));

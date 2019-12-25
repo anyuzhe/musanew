@@ -41,12 +41,6 @@ class CompaniesController extends ApiBaseCommonController
             $newId = date('Y').'0001';
         }
         $data['id'] = $newId;
-        if(isset($data['natures']) && is_array($data['natures'])){
-            foreach ($data['natures'] as $v) {
-                if($v=='is_third_party')
-                    $data['is_third_party'] = 1;
-            }
-        }
         return $data;
     }
 
@@ -65,7 +59,7 @@ class CompaniesController extends ApiBaseCommonController
             $obj->is_third_party = $is_third_party;
             $obj->is_demand_side = $is_demand_side;
         }
-        $obj->save();
+        $obj->sve();
         app()->build(CompaniesRepository::class)->handleManger($obj, $data['manager_email']);
         return $this->apiReturnJson(0);
     }
@@ -79,8 +73,7 @@ class CompaniesController extends ApiBaseCommonController
             foreach ($data['natures'] as $v) {
                 if($v=='is_third_party'){
                     $is_third_party = 1;
-                }
-                if($v=='is_demand_side'){
+                }elseif($v=='is_demand_side'){
                     $is_demand_side = 1;
                 }
             }
@@ -142,13 +135,14 @@ class CompaniesController extends ApiBaseCommonController
         }else{
             $company->manager = null;
         }
-        $company->natures = [];
+        $natures = [];
         if($company->is_demand_side){
-            $company->natures[] = 'is_demand_side';
+            $natures[] = 'is_demand_side';
         };
         if($company->is_third_party){
-            $company->natures[] = 'is_third_party';
+            $natures[] = 'is_third_party';
         };
+        $company->natures = $natures;
     }
 
 
