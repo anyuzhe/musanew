@@ -70,7 +70,6 @@ class CompaniesController extends ApiBaseCommonController
         if(isset($data['natures']) && is_array($data['natures'])){
             $is_third_party = 0;
             $is_demand_side = 0;
-            dump($data['natures']);
             foreach ($data['natures'] as $v) {
                 if($v=='is_third_party'){
                     $is_third_party = 1;
@@ -78,7 +77,6 @@ class CompaniesController extends ApiBaseCommonController
                     $is_demand_side = 1;
                 }
             }
-            dd($is_demand_side);
             $obj->is_third_party = $is_third_party;
             $obj->is_demand_side = $is_demand_side;
         }
@@ -102,7 +100,7 @@ class CompaniesController extends ApiBaseCommonController
                     Area::where('id', $v->district_id)->value('cname');
             }
 
-            $company->is_demand_side = count($company->thirdParty)>0?1:0;
+//            $company->is_demand_side = count($company->thirdParty)>0?1:0;
             $_manager = $company->getManager();
             if($_manager){
                 $company->manager = $_manager;
@@ -129,7 +127,7 @@ class CompaniesController extends ApiBaseCommonController
         $company->thirdParty;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
         getOptionsText($company);
-        $company->is_demand_side = count($company->thirdParty)>0?1:0;
+//        $company->is_demand_side = count($company->thirdParty)>0?1:0;
         $_manager = $company->getManager();
         if($_manager){
             $company->manager = $_manager;
