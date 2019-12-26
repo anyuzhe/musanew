@@ -62,7 +62,7 @@ class UsersController extends CommonController
 
         unset($company);
         if($info->current_company){
-            $info->current_company->is_demand_side = count($info->current_company->thirdParty)>0?1:0;
+//            $info->current_company->is_demand_side = count($info->current_company->thirdParty)>0?1:0;
             $info->current_company->logo_url = getPicFullUrl($info->current_company->logo);
             $info->current_company->role_name = CompanyRole::find($info->current_company->pivot->company_role_id)->name;
         }
