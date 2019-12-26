@@ -92,7 +92,7 @@ class RecruitResumesController extends ApiBaseCommonController
     {
         $data->thirdParty;
         $data->company;
-        $data->company->logo_url = getPicFullUrl($data->company->logo);
+        $data->company->logo_url = getCompanyLogo($data->company->logo);
         $this->recruitResumesRepository->addFieldText($data);
         $data->resume = app()->build(ResumesRepository::class)->getData($data->resume);
         $data->logs->load('creatorInfo');

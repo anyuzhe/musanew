@@ -81,7 +81,7 @@ class CompaniesController extends ApiBaseCommonController
             $v->ourJobCount = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->count();;
             $v->currentRecruitCount = $_current_need_count?$_current_need_count:0;
 
-            $v->logo_url = getPicFullUrl($v->logo);
+            $v->logo_url = getCompanyLogo($v->logo);
         }
         unset($v);
 
@@ -166,7 +166,7 @@ class CompaniesController extends ApiBaseCommonController
                 continue;
             }
 
-            $v->logo_url = getPicFullUrl($v->logo);
+            $v->logo_url = getCompanyLogo($v->logo);
 
             $entrusts->load('job');
             $entrusts->load('recruit');
@@ -220,7 +220,7 @@ class CompaniesController extends ApiBaseCommonController
                 Area::where('id', $v->city_id)->value('cname').
                 Area::where('id', $v->district_id)->value('cname');
         }
-        $company->full_logo = getPicFullUrl($company->logo);
+        $company->full_logo = getCompanyLogo($company->logo);
         $company->industry;
         $company->conglomerate;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
@@ -263,7 +263,7 @@ class CompaniesController extends ApiBaseCommonController
                 Area::where('id', $v->city_id)->value('cname').
                 Area::where('id', $v->district_id)->value('cname');
         }
-        $company->full_logo = getPicFullUrl($company->logo);
+        $company->full_logo = getCompanyLogo($company->logo);
         $company->industry;
         $company->conglomerate;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);

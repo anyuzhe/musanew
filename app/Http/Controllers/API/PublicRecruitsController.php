@@ -182,7 +182,7 @@ class PublicRecruitsController extends ApiBaseCommonController
             if($entrust){
                 $entrust->leading;
                 $recruit = $entrust->recruit;
-                $entrust->thirdParty->logo_url = getPicFullUrl($entrust->thirdParty->logo);
+                $entrust->thirdParty->logo_url = getCompanyLogo($entrust->thirdParty->logo);
             }
         }elseif($recruit_id){
             $recruit = Recruit::find($recruit_id);
@@ -191,7 +191,7 @@ class PublicRecruitsController extends ApiBaseCommonController
             return $this->apiReturnJson(9999,null,'缺少数据');
 
 
-        $recruit->company->logo_url = getPicFullUrl($recruit->company->logo);
+        $recruit->company->logo_url = getCompanyLogo($recruit->company->logo);
 
         if($recruit->leading && $recruit->leading['avatar']){
             $recruit->leading['avatar_url'] = getPicFullUrl($recruit['leading']['avatar']);

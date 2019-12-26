@@ -525,6 +525,14 @@ function getPicFullUrl($url){
     }
 }
 
+function getCompanyLogo($logo){
+    if($logo)
+        $full_logo = getPicFullUrl($logo);
+    else
+        $full_logo = env('APP_URL').'/static/pic/musa_logo.png';
+    return $full_logo;
+}
+
 function getOptionsText(&$model){
     global $options;
     if(!$options){

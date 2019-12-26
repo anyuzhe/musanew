@@ -94,7 +94,7 @@ class CompaniesController extends ApiBaseCommonController
         $data->load('thirdParty');
         foreach ($data as &$company) {
             getOptionsText($company);
-            $company->full_logo = getPicFullUrl($company->logo);
+            $company->full_logo = getCompanyLogo($company->logo);
             foreach ($company->addresses as &$v) {
                 $v->area = [$v->province_id,$v->city_id,$v->district_id];
                 $v->area_text = Area::where('id', $v->province_id)->value('cname').
@@ -123,7 +123,7 @@ class CompaniesController extends ApiBaseCommonController
                 Area::where('id', $v->city_id)->value('cname').
                 Area::where('id', $v->district_id)->value('cname');
         }
-        $company->full_logo = getPicFullUrl($company->logo);
+        $company->full_logo = getCompanyLogo($company->logo);
         $company->industry;
         $company->conglomerate;
         $company->thirdParty;
