@@ -741,6 +741,17 @@ function getEducationValue($str)
     return 0;
 }
 
+function moreTime($at1, $at2)
+{
+    if(!is_int($at1))
+        $at1 = strtotime($at1);
+    if(!is_int($at2))
+        $at2 = strtotime($at2);
+    return $at1 > $at2;
+}
+
+
+
 function getObjRelationBelongsTo(&$list, $relationName, $model, $fieldName, $id='id')
 {
     $ids = [];

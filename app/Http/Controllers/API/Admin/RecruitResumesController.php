@@ -56,13 +56,14 @@ class RecruitResumesController extends ApiBaseCommonController
         $data->load('resume');
         $data->load('thirdParty');
         $data->load('company');
+        $data->load('logs');
 
         //已被其他公司录用 查询简历id
         $_resumeIds = $data->pluck('resume_id')->toArray();
         $_recruitResumeIds = $data->pluck('id')->toArray();
         $_resumeHireIds = RecruitResume::whereIn('resume_id', $_resumeIds)->whereNotIn('id',$_recruitResumeIds)->where('status','>=',7)
             ->pluck('resume_id')->toArray();
-
+        $recruit = null;
         foreach ($data as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
             $this->recruitResumesRepository->addFieldText($v);
@@ -72,8 +73,25 @@ class RecruitResumesController extends ApiBaseCommonController
             }else{
                 $v->is_other_hired = 0;
             }
+            if(!$recruit)
+                $recruit = $v->recruit;
+            $v->has_time_error = !$this->checkError($v, $recruit)?1:0;
         }
         return $data;
+    }
+
+    protected function checkError($data, $recruit)
+    {
+        $recruit_created_at = $recruit->created_at;
+        if(!moreTime($data->created_at, $recruit_created_at))
+            return false;
+        foreach ($data->logs as $log) {
+            if(!moreTime($log->created_at, $recruit_created_at))
+                return false;
+            if(in_array($log->status,[2,3,5,7,8]) && $log->other_data && !moreTime($log->other_data, $recruit_created_at))
+                return false;
+        }
+        return true;
     }
 
     public function _after_find(&$data)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\User;
 use App\ZL\ResponseLayout;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -64,10 +65,10 @@ class VoyagerAuthController extends Controller
         $credentials = $this->credentials($request);
 
         if ($this->guard()->attempt($credentials, $request->has('remember'))) {
-            $request->session()->regenerate();
+//            $request->session()->regenerate();
 
             $this->clearLoginAttempts($request);
-            return ResponseLayout::apply(0,['url'=>url('/admin')]);
+            return ResponseLayout::apply(0,['url'=>env('APP_FRONT_URL').'/admin?token='.User::where('email',$request->get('email'))->value('remember_token')]);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
