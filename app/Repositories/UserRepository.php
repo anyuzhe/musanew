@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 
+use App\Models\Area;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\Resume;
@@ -88,5 +89,28 @@ class UserRepository
         $users = User::whereIn('id', $userIds);
         $users->load('info');
         return $users;
+    }
+
+    public function getListData($list)
+    {
+        $area_ids = [];
+        foreach ($list as $v) {
+            $area_ids[] = $v->permanent_province_id;
+            $area_ids[] = $v->permanent_city_id;
+            $area_ids[] = $v->permanent_district_id;
+            $area_ids[] = $v->residence_province_id;
+            $area_ids[] = $v->residence_city_id;
+            $area_ids[] = $v->residence_district_id;
+        }
+        $areas = Area::whereIn('id', $area_ids)->get()->keyBy('id')->toArray();
+        foreach ($list as &$v) {
+            $v->permanent_province_text = isset($areas[$v->permanent_province_id]) ? $areas[$v->permanent_province_id]['cname'] : '';
+            $v->permanent_city_text = isset($areas[$v->permanent_city_id]) ? $areas[$v->permanent_city_id]['cname'] : '';
+            $v->permanent_district_text = isset($areas[$v->permanent_district_id]) ? $areas[$v->permanent_district_id]['cname'] : '';
+            $v->residence_province_text = isset($areas[$v->residence_province_id]) ? $areas[$v->residence_province_id]['cname'] : '';
+            $v->residence_city_text = isset($areas[$v->residence_city_id]) ? $areas[$v->residence_city_id]['cname'] : '';
+            $v->residence_district_text = isset($areas[$v->residence_district_id]) ? $areas[$v->residence_district_id]['cname'] : '';
+        }
+        return $list;
     }
 }

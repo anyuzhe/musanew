@@ -97,6 +97,7 @@ class UsersController extends ApiBaseCommonController
         foreach ($data as &$v) {
             $v->info = $this->userRepository->getInfo($v);
         }
+        $data = $this->userRepository->getListData($data);
         return $data;
     }
 

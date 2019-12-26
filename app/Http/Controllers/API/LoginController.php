@@ -40,6 +40,9 @@ class LoginController extends CommonController
 
         $res = validate_internal_user_password($user, $password);
         if($res){
+            if($user->suspended){
+                return $this->apiReturnJson('9999',null,'你的账号已被禁用');
+            }
             $token = TokenHelper::generateNewTokenForUser($user);
             ExternalToken::where('id', $token->id)->update(['lastaccess'=>time()]);
             User::where('id', $user->id)->update([
