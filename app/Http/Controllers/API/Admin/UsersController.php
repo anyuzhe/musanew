@@ -94,16 +94,22 @@ class UsersController extends ApiBaseCommonController
     public function _after_get(&$data)
     {
         $data->load('info');
+        $infos = [];
         foreach ($data as &$v) {
-            $v->info = $this->userRepository->getInfo($v);
+            $infos[] = $this->userRepository->getInfo($v);
         }
-        $data = $this->userRepository->getListInfoData($data);
-        return $data;
+        $newData = $data->toArray();
+        foreach ($newData as $k=>&$newDatum) {
+            $newDatum['info'] = $infos[$k];
+        }
+        return $newData;
     }
 
     public function _after_find(&$data)
     {
-        $data->info = $this->userRepository->getInfo($data);
+        $info = $this->userRepository->getInfo($data);
+        $data = $data->toArray();
+        $data['info'] = $info;
     }
 
 
