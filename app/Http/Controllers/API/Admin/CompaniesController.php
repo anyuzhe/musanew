@@ -33,6 +33,23 @@ class CompaniesController extends ApiBaseCommonController
         }
     }
 
+    public function checkUpdate($id,$data)
+    {
+        if(Company::where('company_alias',$data->get('company_alias'))->where('id','!=', $id)->first()){
+            return '该企业简称已经存在';
+        }
+        else
+            return null;
+    }
+
+    public function checkStore($data)
+    {
+        if(Company::where('company_alias',$data->get('company_alias'))->first())
+            return '该企业简称已经存在';
+        else
+            return null;
+    }
+
     public function beforeStore($data)
     {
         $oldId = Company::max('id');
