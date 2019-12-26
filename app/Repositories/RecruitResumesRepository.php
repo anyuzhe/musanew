@@ -56,7 +56,7 @@ class RecruitResumesRepository
         return null;
     }
 
-    public function generateLog(RecruitResume $recruitResume, $status, $company, $otherData='', $type=1)
+    public function generateLog(RecruitResume $recruitResume, $status, $company, $otherData='', $type=1,$interviewer=null)
     {
         //    -5 录用之后未到岗
         //    -4 面试通过但不合适
@@ -82,6 +82,8 @@ class RecruitResumesRepository
         $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
         $log->company_job_recruit_entrust_id = $recruitResume->company_job_recruit_entrust_id;
         $log->job_id = $recruitResume->job_id;
+        if($interviewer)
+            $otherData .=  " 面试官: $interviewer";
         $log->other_data = $otherData;
         if($status==1){
             if($type==1){

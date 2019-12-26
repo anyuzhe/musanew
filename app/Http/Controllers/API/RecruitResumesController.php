@@ -120,6 +120,7 @@ class RecruitResumesController extends ApiBaseCommonController
     public function resumeFlow()
     {
         $feedback = $this->request->get('feedback');
+        $interviewer = $this->request->get('interviewer');
         $date = $this->request->get('date');
         $id = $this->request->get('id');
         $status = $this->request->get('status');
