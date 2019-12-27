@@ -23,7 +23,7 @@ class Quiz extends Model
         return $this->hasMany(QuizSlot::class, 'quizid');
     }
 
-    public function course()
+    public function courseObj()
     {
         return $this->belongsTo(Course::class, 'course');
     }

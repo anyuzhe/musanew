@@ -39,6 +39,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $q = \App\Models\Moodle\Quiz::find(12);
+    dd($q->courseObj);
     $text = "<p>假设A类有如下定义，设a是A类的一个实例，下列语句调用哪个是错误的？（  ）</p>
 <p><img src=\"@@PLUGINFILE@@/musa_logo.png\" alt=\"\" width=\"1905\" height=\"1296\" /><img src=\"@@PLUGINFILE@@/favicon.jpg\" alt=\"\" width=\"36\" height=\"32\" /></p>";
     dump($text);
