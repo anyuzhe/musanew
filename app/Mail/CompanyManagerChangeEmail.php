@@ -33,6 +33,7 @@ class CompanyManagerChangeEmail extends Mailable
     {
         $user = $this->user;
         $company = $this->company;
+        $this->subject = "加入{$company->company_name}企业的邮件提醒";
         /**
          * XXXXXX公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息。
          * XXXXXX公司邀请您成为企业管理员，请点击下方链接登录musa平台注册账号。

@@ -28,6 +28,7 @@ class CompanyUserChangeEmail extends Mailable
      */
     public function build()
     {
+        $this->subject = "加入企业的邮件提醒";
         /**
          XXXXXX公司邀请您加入，请尽快登录musa平台填写基础信息。
          欢迎您加入XXXXXXXXX(公司名称）
