@@ -821,7 +821,7 @@ function questionPicReplace($question, $quiz)
                         $_src = $match[1][$k];
                         $_file_arr = explode('/', $_src);
                         $_file = $_file_arr[count($_file_arr)-1];
-                        $url = $CFG->wwwroot."/pluginfile.php/{$context->id}/question/questiontext/{$attempt->id}/{$attempt->variant}/{$attempt->questionid}/{$_file}";
+                        $url = $CFG->wwwroot."/pluginfile.php/{$context->id}/question/questiontext/{$attempt->questionusageid}/{$attempt->variant}/{$attempt->questionid}/{$_file}";
                         if($url){
                             $text = str_replace($_src, $url, $text);
                         }
