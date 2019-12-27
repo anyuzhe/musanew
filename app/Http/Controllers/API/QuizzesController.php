@@ -94,6 +94,7 @@ class QuizzesController extends ApiBaseCommonController
         foreach ($questions as $question) {
             $question['answers'] = $answers[$question->id];
             $question['grade'] = $slots->get($question->old_id?$question->old_id:$question->id)->maxmark;
+            $question['questiontext'] = questionPicReplace($question, $data);
             if($question['qtype']=='truefalse'){
                 $questionsType['true_false'][] = $question;
             }if($question['qtype']=='shortanswer'){

@@ -39,6 +39,30 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $text = "<p>假设A类有如下定义，设a是A类的一个实例，下列语句调用哪个是错误的？（  ）</p>
+<p><img src=\"@@PLUGINFILE@@/musa_logo.png\" alt=\"\" width=\"1905\" height=\"1296\" /><img src=\"@@PLUGINFILE@@/favicon.jpg\" alt=\"\" width=\"36\" height=\"32\" /></p>";
+    dump($text);
+    $pattern="/<img.*?src=[\'|\"](.*?)[\'|\"].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.jpeg|\.png]))[\'|\"].*?[\/]?>/";
+    preg_match_all($pattern,$text,$match);
+    dd($match);
+    if(isset($match[1])){
+        foreach ($match[1] as $k=>$v) {
+            $_full = $match[0][$k];
+            $_true_url = $match[3][$k];
+            if(strstr($v,'data:image')!==false){
+                $cat = str_replace($_full,'', $text);
+                continue;
+            }
+            $url = $this->getPicture($_true_url,'topic');
+            if($url){
+                $_img = "<p><img src=\"{$url}\" width=\"100%\" /></p>";
+
+                $cat = str_replace($_full,$_img, $cat);
+            }
+        }
+    }
+
+    dd($s);
     $r = RecruitResume::find(1);
     $r->updated_at = '2019-12-26 16:33:52';
     $r->save();die;

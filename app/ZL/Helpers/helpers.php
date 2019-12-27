@@ -1,6 +1,7 @@
 <?php
 
 use App\Repositories\TokenRepository;
+use Illuminate\Support\Facades\DB;
 
 if (! function_exists('sendVerifyCode')) {
     function sendVerifyCode($mobile,$mobile_code) {
@@ -796,7 +797,23 @@ function checkAuthByUser($recruit)
     }
 }
 
-function questionPicReplace($text)
+function questionPicReplace($question, $quiz)
 {
+    $course = $quiz->course;
+    $module = DB::connection('moodle')->table('course_modules')->where('course', $course->id)->orderBy('id', 'desc')->first();
+    if($module){
+        $context = DB::connection('moodle')->table('context')->where('contextlevel', 70)->where('instanceid', $module->id)
+            ->orderBy('id', 'desc')->first();
+        if($context){
+            $attempt = DB::connection('moodle')->table('question_attempts')->where('questionid', $question->id)->orderBy('id', 'desc')->first();
+            if($attempt){
+//                http://39.100.105.180/pluginfile.php/168/question/questiontext/380/1/505/musa_logo.png
+                $text = $question->questiontext;
+
+            }
+        }
+    }
+
     str_replace();
+    return '';
 }
