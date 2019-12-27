@@ -2,6 +2,7 @@
 
 namespace App\Models\Moodle;
 
+use App\Models\Course;
 use Illuminate\Database\Eloquent\Model;
 
 class Quiz extends Model
@@ -20,5 +21,10 @@ class Quiz extends Model
     public function slots()
     {
         return $this->hasMany(QuizSlot::class, 'quizid');
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course');
     }
 }
