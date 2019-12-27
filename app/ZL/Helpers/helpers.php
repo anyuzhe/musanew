@@ -800,7 +800,7 @@ function checkAuthByUser($recruit)
 function questionPicReplace($question, $quiz)
 {
     $course = $quiz->courseObj;
-    $module = DB::connection('moodle')->table('course_modules')->where('course', $course->id)->orderBy('id', 'desc')->first();
+    $module = DB::connection('moodle')->table('course_modules')->where('course', $course->id)->where('instance', $quiz->id)->orderBy('id', 'desc')->first();
     requireMoodleConfig();
     $text = $question->questiontext;
 
