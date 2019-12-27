@@ -42,25 +42,23 @@ Route::get('/test', function () {
     $text = "<p>假设A类有如下定义，设a是A类的一个实例，下列语句调用哪个是错误的？（  ）</p>
 <p><img src=\"@@PLUGINFILE@@/musa_logo.png\" alt=\"\" width=\"1905\" height=\"1296\" /><img src=\"@@PLUGINFILE@@/favicon.jpg\" alt=\"\" width=\"36\" height=\"32\" /></p>";
     dump($text);
-    $pattern="/<img.*?src=[\'|\"](.*?)[\'|\"].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.jpeg|\.png]))[\'|\"].*?[\/]?>/";
+    $pattern="/<img.*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.jpeg|\.png]))[\'|\"].*?[\/]?>/";
     preg_match_all($pattern,$text,$match);
-    dd($match);
     if(isset($match[1])){
         foreach ($match[1] as $k=>$v) {
             $_full = $match[0][$k];
-            $_true_url = $match[3][$k];
-            if(strstr($v,'data:image')!==false){
-                $cat = str_replace($_full,'', $text);
-                continue;
-            }
+            $_src = $match[1][$k];
+            $_file_arr = explode('/', $_src);
+            $_file = $_file_arr[count($_file_arr)-1];
+            dd($_file);
             $url = $this->getPicture($_true_url,'topic');
             if($url){
-                $_img = "<p><img src=\"{$url}\" width=\"100%\" /></p>";
 
-                $cat = str_replace($_full,$_img, $cat);
+                $text = str_replace($_src, $url, $text);
             }
         }
     }
+    dd($match);
 
     dd($s);
     $r = RecruitResume::find(1);

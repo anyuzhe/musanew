@@ -801,6 +801,10 @@ function questionPicReplace($question, $quiz)
 {
     $course = $quiz->course;
     $module = DB::connection('moodle')->table('course_modules')->where('course', $course->id)->orderBy('id', 'desc')->first();
+    requireMoodleConfig();
+    $text = $question->questiontext;
+
+    global $CFG;
     if($module){
         $context = DB::connection('moodle')->table('context')->where('contextlevel', 70)->where('instanceid', $module->id)
             ->orderBy('id', 'desc')->first();
@@ -808,12 +812,24 @@ function questionPicReplace($question, $quiz)
             $attempt = DB::connection('moodle')->table('question_attempts')->where('questionid', $question->id)->orderBy('id', 'desc')->first();
             if($attempt){
 //                http://39.100.105.180/pluginfile.php/168/question/questiontext/380/1/505/musa_logo.png
-                $text = $question->questiontext;
 
+                $pattern="/<img.*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.jpeg|\.png]))[\'|\"].*?[\/]?>/";
+                preg_match_all($pattern,$text,$match);
+                if(isset($match[1])){
+                    foreach ($match[1] as $k=>$v) {
+//                        $_full = $match[0][$k];
+                        $_src = $match[1][$k];
+                        $_file_arr = explode('/', $_src);
+                        $_file = $_file_arr[count($_file_arr)-1];
+                        $url = $CFG->wwwroot."/pluginfile.php/{$context->id}/question/questiontext/{$attempt->id}/{$attempt->variant}/{$attempt->questionid}/{$_file}";
+                        if($url){
+                            $text = str_replace($_src, $url, $text);
+                        }
+                    }
+                }
             }
         }
     }
 
-    str_replace();
-    return '';
+    return $text;
 }
