@@ -39,6 +39,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $r = RecruitResume::find(1);
+    $r->updated_at = '2019-12-26 16:33:52';
+    $r->save();die;
     $user = \App\Models\User::find(75);
     $has = $user->companies()->where('company_id',1)->first();
     dd($has);

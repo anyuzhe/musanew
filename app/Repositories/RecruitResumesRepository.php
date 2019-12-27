@@ -382,4 +382,16 @@ class RecruitResumesRepository
         $score = (int)($education_score*0.2 + $working_years_score*0.1 + $skills_score*0.7);
         return compact('score', 'education_score', 'working_years_score', 'skills_data', 'skills_score');
     }
+
+    public function handleUpdateAt($recruitResume)
+    {
+        $updateAt = null;
+        foreach ($recruitResume->logs as $log) {
+            if(!$updateAt || moreTime($log->created_at, $updateAt)){
+                $updateAt = $log->created_at;
+            }
+        }
+        $recruitResume->updated_at = $updateAt;
+        $recruitResume->save();
+    }
 }

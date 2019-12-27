@@ -149,6 +149,7 @@ class RecruitResumesController extends ApiBaseCommonController
         }
         $logObj->save();
         $recruitResume->save();
+        $this->recruitResumesRepository->handleUpdateAt($recruitResume);
         return $this->apiReturnJson(0, $logObj);
     }
 
@@ -245,5 +246,12 @@ class RecruitResumesController extends ApiBaseCommonController
             ];
         }
         return $this->apiReturnJson(0,$data);
+    }
+
+    public function afterUpdate($id,$data)
+    {
+        $obj = $this->getModel()->find($id);
+        $this->recruitResumesRepository->handleUpdateAt($obj);
+        return $this->apiReturnJson(0,$obj);
     }
 }
