@@ -1953,25 +1953,25 @@ function quiz_question_pluginfile($course, $context, $component,
     require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
     $attemptobj = quiz_attempt::create_from_usage_id($qubaid);
-    require_login($attemptobj->get_course(), false, $attemptobj->get_cm());
-
-    if ($attemptobj->is_own_attempt() && !$attemptobj->is_finished()) {
-        // In the middle of an attempt.
-        if (!$attemptobj->is_preview_user()) {
-            $attemptobj->require_capability('mod/quiz:attempt');
-        }
-        $isreviewing = false;
-
-    } else {
-        // Reviewing an attempt.
-        $attemptobj->check_review_capability();
-        $isreviewing = true;
-    }
-
-    if (!$attemptobj->check_file_access($slot, $isreviewing, $context->id,
-            $component, $filearea, $args, $forcedownload)) {
-        send_file_not_found();
-    }
+//    require_login($attemptobj->get_course(), false, $attemptobj->get_cm());
+//
+//    if ($attemptobj->is_own_attempt() && !$attemptobj->is_finished()) {
+//        // In the middle of an attempt.
+//        if (!$attemptobj->is_preview_user()) {
+//            $attemptobj->require_capability('mod/quiz:attempt');
+//        }
+//        $isreviewing = false;
+//
+//    } else {
+//        // Reviewing an attempt.
+//        $attemptobj->check_review_capability();
+//        $isreviewing = true;
+//    }
+//
+//    if (!$attemptobj->check_file_access($slot, $isreviewing, $context->id,
+//            $component, $filearea, $args, $forcedownload)) {
+//        send_file_not_found();
+//    }
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);

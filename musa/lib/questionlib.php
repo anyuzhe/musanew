@@ -2081,7 +2081,6 @@ function question_rewrite_question_preview_urls($text, $questionid,
  */
 function question_pluginfile($course, $context, $component, $filearea, $args, $forcedownload, array $options=array()) {
     global $DB, $CFG;
-
     // Special case, sending a question bank export.
     if ($filearea === 'export') {
         list($context, $course, $cm) = get_context_info_array($context->id);
