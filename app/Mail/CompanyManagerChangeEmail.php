@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\ExternalToken;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\Resume;
@@ -40,8 +41,9 @@ class CompanyManagerChangeEmail extends Mailable
         if($user->confirmed){
             $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息";
         }else{
+            $token = ExternalToken::where('userid', $user->id)->first();
             $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请点击下方链接登录musa平台注册账号";
-            $content_text_array[] = '';
+            $content_text_array[] = "<a href='".env('APP_FRONT_URL')."/managerRegister?token={$token->token}"."'>点击激活</a>";
         }
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);
