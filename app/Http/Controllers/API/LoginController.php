@@ -9,6 +9,7 @@ use App\Models\UserBasicInfo;
 use App\Repositories\TokenRepository;
 use App\ZL\Moodle\EmailHelper;
 use App\ZL\Moodle\TokenHelper;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends CommonController
 {
@@ -166,6 +167,9 @@ class LoginController extends CommonController
 
             PasswordFindCode::where('id', $codeHas->id)->update(['status'=>1]);
 
+            $oldUser = User::where('confirmed', 0)->where('email', $user->email)->first();
+            DB::connection('musa')->table('company_user')->where('user_id', $oldUser->id)->update(['user_id' => $user->id]);
+
             return $this->apiReturnJson(0, $user);
         }catch (\Exception $e) {
             $message = $e->getMessage();
@@ -224,6 +228,11 @@ class LoginController extends CommonController
         $user = TokenRepository::getUser();
         if(!$user) {
             return $this->apiReturnJson('9998');
+        }
+        $oldUser = User::where('confirmed', 1)->where('email', $user->email)->first();
+
+        if($oldUser){
+            return $this->apiReturnJson('9999',null,'该邮箱已经注册');
         }
         if($user->confirmed){
             return $this->apiReturnJson('9999',null,'账号已经激活过了');
