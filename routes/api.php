@@ -263,6 +263,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->resource('/roles', 'API\RolesController');
 });
 
+$router->any('/user/activate', 'API\LoginController@activate');
+
 $router->post('/admin/new/login', 'API\Admin\LoginController@login');
 $router->post('/admin/new/logout', 'API\Admin\LoginController@logout');
 

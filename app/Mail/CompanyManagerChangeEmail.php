@@ -30,11 +30,19 @@ class CompanyManagerChangeEmail extends Mailable
      */
     public function build()
     {
+        $user = $this->user;
+        $company = $this->company;
         /**
          * XXXXXX公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息。
          * XXXXXX公司邀请您成为企业管理员，请点击下方链接登录musa平台注册账号。
         **/
         $content_text_array = ["尊敬的用户您好!"];
+        if($user->confirmed){
+            $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息";
+        }else{
+            $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请点击下方链接登录musa平台注册账号";
+            $content_text_array[] = '';
+        }
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);
     }

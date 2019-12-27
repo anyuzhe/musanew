@@ -134,6 +134,13 @@ class CompaniesRepository
             }else{
                 $user->companies()->attach($company->id, ['company_role_id' => 1]);
             }
+
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
+        }else{
+            $userRe = app()->build(UserRepository::class);
+            $user = $userRe->generateInviteUser($email);
+            $user->companies()->attach($company->id, ['company_role_id' => 1, 'is_current'=>1]);
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
         }
     }
 }

@@ -6,6 +6,7 @@ use App\Models\ExternalToken;
 use App\Models\PasswordFindCode;
 use App\Models\User;
 use App\Models\UserBasicInfo;
+use App\Repositories\TokenRepository;
 use App\ZL\Moodle\EmailHelper;
 use App\ZL\Moodle\TokenHelper;
 
@@ -214,6 +215,32 @@ class LoginController extends CommonController
             user_add_password_history($user->id, $password);
             PasswordFindCode::where('id', $codeHas->id)->update(['status'=>1]);
             return $this->apiReturnJson('0',null,'密码修改成功');
+        }
+    }
+
+    public function activate()
+    {
+        $password = $this->request->get('password');
+        $user = TokenRepository::getUser();
+        if(!$user) {
+            return $this->apiReturnJson('9998');
+        }
+        $checkPwd = $this->checkPassword($password);
+        if(!$checkPwd){
+            return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符(@$!%*#?&^*()_+=-)');
+        }
+        //修改密码
+        $this->requireMoodleConfig();
+
+        $userauth = get_auth_plugin($user->auth);
+        if (!$userauth->user_update_password($user, $password)) {
+            return $this->apiReturnJson('9999');
+        }else{
+            require_once($this->getMoodleRoot().'/user/lib.php');
+            global $CFG;
+            $CFG->passwordreuselimit = 10;
+            user_add_password_history($user->id, $password);
+            return $this->apiReturnJson('0',null,'激活成功');
         }
     }
 
