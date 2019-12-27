@@ -231,6 +231,8 @@ class LoginController extends CommonController
         }
         //修改密码
         $this->requireMoodleConfig();
+        $user->confirmed = 1;
+        $user->save();
 
         $userauth = get_auth_plugin($user->auth);
         if (!$userauth->user_update_password($user, $password)) {

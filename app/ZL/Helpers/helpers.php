@@ -795,3 +795,8 @@ function checkAuthByUser($recruit)
         throw new \Exception("非法越权操作!");
     }
 }
+
+function questionPicReplace($text)
+{
+    str_replace();
+}
