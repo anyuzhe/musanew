@@ -206,6 +206,8 @@ class CompaniesController extends ApiBaseCommonController
                 'id'=>$user['id'],
                 'name'=>$info?$info['realname']:'无姓名',
                 'role_name'=>$role?$role['name']:'无角色',
+                'confirmed'=>$user['confirmed'],
+                'email'=>$user['email'],
             ];
         }
         return $this->apiReturnJson(0,$data);
