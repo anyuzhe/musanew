@@ -29,6 +29,7 @@ use App\Repositories\RecruitRepository;
 use App\Repositories\ResumesRepository;
 use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
+use App\Repositories\UserRepository;
 use App\User;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,6 +40,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $user = \App\Models\User::find(111);
+    dd(app()->build(UserRepository::class)->checkCurrentCompany($user));
     $user = \App\Models\User::find(55);
     dd($user->companies()->where('is_current', 1)->first()->pivot);
     $q = \App\Models\Moodle\Quiz::find(12);

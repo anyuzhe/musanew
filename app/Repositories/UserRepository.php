@@ -208,13 +208,13 @@ class UserRepository
     {
         $hasLack = false;
         foreach ($user->companies as $company) {
-            if(!$company->company_alias || !$company->contact_name || !$company->phone || !$company->industry_id || !$company->company_scale)
+            if(!$company->company_alias || !$company->contact_name || !$company->contact_phone || !$company->industry_id || !$company->company_scale)
                 $hasLack = true;
             if($company->addresses->count()==0)
                 $hasLack = true;
             if($hasLack){
                 $this->getCurrentCompany($user, $company);
-                return;
+                return $company;
             }
         }
     }
