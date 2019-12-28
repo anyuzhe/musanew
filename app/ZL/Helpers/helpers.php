@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\CompanyRole;
+use App\Models\CompanyUser;
 use App\Repositories\TokenRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -832,4 +834,20 @@ function questionPicReplace($question, $quiz)
     }
 
     return $text;
+}
+
+function getCompanyRoleName($company, $user=null)
+{
+    if(isset($company->pivot)){
+        $company_role_id = $company->pivot->company_role_id;
+    }else{
+        $company_role_id = CompanyUser::where('user_id', $user->id)->where('company_id', $company->id)->value('company_role_id');
+    }
+    if($company_role_id){
+        $role = CompanyRole::find($company_role_id);
+    }
+    if(isset($role))
+        return $role->name;
+    else
+        return '';
 }

@@ -39,6 +39,8 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $user = \App\Models\User::find(55);
+    dd($user->companies()->where('is_current', 1)->first()->pivot);
     $q = \App\Models\Moodle\Quiz::find(12);
     dd($q->courseObj);
     $text = "<p>假设A类有如下定义，设a是A类的一个实例，下列语句调用哪个是错误的？（  ）</p>

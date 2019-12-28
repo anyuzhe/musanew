@@ -7,6 +7,7 @@ use App\Models\PasswordFindCode;
 use App\Models\User;
 use App\Models\UserBasicInfo;
 use App\Repositories\TokenRepository;
+use App\Repositories\UserRepository;
 use App\ZL\Moodle\EmailHelper;
 use App\ZL\Moodle\TokenHelper;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +51,8 @@ class LoginController extends CommonController
             User::where('id', $user->id)->update([
                 'lastaccess'=>time(),
             ]);
-
+            ##自动切换到 企业信息没有填写完毕的企业;
+            app()->build(UserRepository::class)->checkCurrentCompany($user);
             return $this->apiReturnJson(0, ['token'=>$token->token]);
         }else{
             return $this->apiReturnJson('2001');

@@ -178,4 +178,44 @@ class UserRepository
 //            return true;
 //        }
     }
+
+    public function getCurrentCompany($user, $current_company=null)
+    {
+        if(!$current_company)
+            $current_company = $user->companies()->where('is_current', 1)->first();
+        if(!$current_company){
+            $current_company = $user->companies->first();
+            if($current_company){
+                $current_company->is_current = 1;
+                $r = CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->first();
+                $r->is_current = 1;
+                $r->save();
+            }
+        }
+
+        if($current_company){
+//            $info->current_company->is_demand_side = count($info->current_company->thirdParty)>0?1:0;
+            $current_company->logo_url = getCompanyLogo($current_company->logo);
+            $current_company->role_name = getCompanyRoleName($current_company, $user);
+
+            CompanyUser::where('user_id',$user->id)->update('is_current', 0);
+            CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->update('is_current', 1);
+        }
+        return $current_company;
+    }
+
+    public function checkCurrentCompany($user)
+    {
+        $hasLack = false;
+        foreach ($user->companies as $company) {
+            if(!$company->company_alias || !$company->contact_name || !$company->phone || !$company->industry_id || !$company->company_scale)
+                $hasLack = true;
+            if($company->addresses->count()==0)
+                $hasLack = true;
+            if($hasLack){
+                $this->getCurrentCompany($user, $company);
+                return;
+            }
+        }
+    }
 }
