@@ -198,8 +198,8 @@ class UserRepository
             $current_company->logo_url = getCompanyLogo($current_company->logo);
             $current_company->role_name = getCompanyRoleName($current_company, $user);
 
-            CompanyUser::where('user_id',$user->id)->update(['is_current', 0]);
-            CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->update(['is_current', 1]);
+            CompanyUser::where('user_id',$user->id)->update(['is_current'=>0]);
+            CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->update(['is_current'=>1]);
         }
         return $current_company;
     }
