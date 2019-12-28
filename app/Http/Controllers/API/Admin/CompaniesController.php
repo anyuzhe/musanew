@@ -27,6 +27,10 @@ class CompaniesController extends ApiBaseCommonController
         $model = $model->where('status', 1);
 
         $text = $this->request->get('text');
+        $exclude_id = $this->request->get('exclude_id');
+        if($exclude_id){
+            $model = $model->where('id','!=',$exclude_id);
+        }
         if($text) {
             $companyIds = Company::where('company_name', 'like', "%$text%")->orWhere('company_alias', 'like', "%$text%")->orWhere('id', 'like', "%$text%")->pluck('id')->unique()->toArray();
             $model = $model->whereIn('id', $companyIds);
@@ -79,6 +83,9 @@ class CompaniesController extends ApiBaseCommonController
             $obj->is_demand_side = $is_demand_side;
         }
         $obj->save();
+        if(isset($data['third_partys']) && is_array($data['third_partys'])){
+            $obj->thirdParty()->sync($data['third_partys']);
+        }
         app()->build(CompaniesRepository::class)->handleManger($obj, $data['manager_email']);
         return $this->apiReturnJson(0);
     }
@@ -100,6 +107,9 @@ class CompaniesController extends ApiBaseCommonController
             $obj->is_demand_side = $is_demand_side;
         }
         $obj->save();
+        if(isset($data['third_partys']) && is_array($data['third_partys'])){
+            $obj->thirdParty()->sync($data['third_partys']);
+        }
         return $this->apiReturnJson(0);
     }
 
