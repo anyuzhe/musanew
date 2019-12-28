@@ -259,8 +259,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //个人招聘信息列表
     $router->get('/user/recruitResumes', 'API\RecruitResumesController@userRecruitList');
 
-//    //角色管理
-//    $router->resource('/roles', 'API\RolesController');
+    //角色管理
+    $router->resource('company/roles', 'API\RolesController');
 });
 
 //角色管理

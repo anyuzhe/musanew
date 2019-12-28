@@ -13,6 +13,7 @@ class CompanyRole extends Model
         'name',
         'alias',
         'sort',
+        'remark',
     ];
 
 //
