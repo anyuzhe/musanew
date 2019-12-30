@@ -2,6 +2,7 @@
 
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\DataMapOption;
 use App\Repositories\TokenRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -866,4 +867,43 @@ function getCompanyRole($company, $user=null)
         return $role;
     else
         return null;
+}
+
+function checkSkillsGrade($resume_skills, $job_skills)
+{
+    $skills_data = [];
+    $job_skills_count = count($job_skills);
+    $skills_score = 0;
+    //单分
+    $config_skill_score = 100/(DataMapOption::where('data_map_id',10)->count());
+    $config_skill_data = DataMapOption::where('data_map_id',10)->get()->keyBy('value')->toArray();
+    foreach ($job_skills as $job_skill) {
+        $_job_skill_name = $job_skill->name;
+        $_job_skill_id = $job_skill->pivot->skill_id;
+        $_job_skill_level = $job_skill->pivot->skill_level;
+        if(isset($resume_skills[$_job_skill_id])){
+            $resume_skill = $resume_skills[$_job_skill_id];
+            $_score = (int)(100 - ($_job_skill_level - $resume_skill['skill_level'])*$config_skill_score);
+            $skills_data[] = [
+                'skill_name'=>$_job_skill_name,
+                'job_level'=>$_job_skill_level,
+                'job_level_text'=>$config_skill_data[$_job_skill_level]['text'],
+                'resume_level'=>$resume_skill['skill_level'],
+                'resume_level_text'=>$config_skill_data[$resume_skill['skill_level']]['text'],
+                'sroce'=>$_score,
+            ];
+            $skills_score += (int)($_score/$job_skills_count);
+        }else{
+            $skills_score += 0;
+            $skills_data[] = [
+                'skill_name'=>$_job_skill_name,
+                'job_level'=>$_job_skill_level,
+                'job_level_text'=>$config_skill_data[$_job_skill_level]['text'],
+                'resume_level'=>0,
+                'resume_level_text'=>'无',
+                'sroce'=>0,
+            ];
+        }
+    }
+    return [$skills_score, $skills_data];
 }

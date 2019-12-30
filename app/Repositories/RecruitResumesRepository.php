@@ -328,6 +328,9 @@ class RecruitResumesRepository
         $job = $data->job;
         $resume = $data->resume;
         $company = $data->company;
+
+        $resumeGrade = CompanySettingRepository::getResumeGrade($company->id);
+        $resumeGradeArr = json_decode($resumeGrade, true);
         //学历要求
         $config_education_num = DataMapOption::where('data_map_id',7)->count()-1;
         $config_education_score = 100/$config_education_num;
@@ -365,7 +368,17 @@ class RecruitResumesRepository
         }
         //技能
         $resume_skills = $resume->skills->keyBy('skill_id')->toArray();
+        $necessarySkillsGradeArr = checkSkillsGrade($resume_skills, $job->necessarySkills);
+        $optionalSkillsGradeArr = checkSkillsGrade($resume_skills, $job->optionalSkills);
+
+        $necessary_skills_score = $necessarySkillsGradeArr[0];
+        $necessary_skills_data = $necessarySkillsGradeArr[1];
+
+        $optional_skills_score = $optionalSkillsGradeArr[0];
+        $optional_skills_data = $optionalSkillsGradeArr[1];
+
         $skills_data = [];
+        //以后无用的技能匹配代码
         $job_skills_count = count($job->skills);
         $skills_score = 0;
         //单分
@@ -399,8 +412,18 @@ class RecruitResumesRepository
                 ];
             }
         }
-        $score = (int)($education_score*0.2 + $working_years_score*0.1 + $skills_score*0.7);
-        return compact('score', 'education_score', 'working_years_score', 'skills_data', 'skills_score');
+        //以后无用的技能匹配代码
+        $skills_score = (
+            $necessary_skills_score*$resumeGradeArr['necessary_skills']/100 +
+            $optional_skills_score*$resumeGradeArr['optional_skills']/100
+        );
+        $score = (int)(
+            (
+                $education_score*$resumeGradeArr['education']/100
+                + $working_years_score*$resumeGradeArr['working_years']/100)*$resumeGradeArr['user_info']/100
+            + $skills_score*$resumeGradeArr['skills']/100
+        );
+        return compact('score', 'education_score', 'working_years_score', 'skills_data', 'necessary_skills_data', 'optional_skills_data', 'skills_score', 'resumeGradeArr');
     }
 
     public function handleUpdateAt($recruitResume)
