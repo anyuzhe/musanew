@@ -25,6 +25,7 @@ use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
 use App\Models\ResumeEducation;
+use App\Models\UserBasicInfo;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\RecruitRepository;
 use App\Repositories\ResumesRepository;
@@ -41,6 +42,11 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $us = UserBasicInfo::whereNull('realname')->get();
+    foreach ($us as $u) {
+        $u->realname = $u->user_id;
+        $u->save();
+    }
     dd(CompanyUser::whereIn('company_id', Company::where('status','!=', 1)->pluck('id'))->update(['status'=>-1]));
     $user = \App\Models\User::find(111);
     dd(app()->build(UserRepository::class)->checkCurrentCompany($user));

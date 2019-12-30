@@ -126,7 +126,7 @@ class CompaniesRepository
 
     public function handleManger($company, $email)
     {
-        $user = User::where('email', $email)->where('confirmed', 1)->first();
+        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
         if(!$user)
             $user = User::where('email', $email)->first();
         if($user){

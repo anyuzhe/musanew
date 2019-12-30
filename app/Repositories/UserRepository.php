@@ -135,7 +135,7 @@ class UserRepository
         User::where('id', $user->id)->update([
             'confirmed'=>0,
         ]);
-        UserBasicInfo::create(['user_id'=>$user->id]);
+        UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$user->id]);
         $user = User::find($user->id);
         $token = TokenHelper::getTokenForUser($user);
         $user->token = $token->token;
