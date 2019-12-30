@@ -226,6 +226,12 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //修改委托
     $router->post('/company/entrusts/{id}', 'API\EntrustsController@update');
+    //角色管理
+    $router->resource('company/roles', 'API\RolesController');
+
+    //简历匹配分数设置
+    $router->get('/company/settings/resume/grade', 'API\CompanySettingsController@getResumeGrade');
+    $router->post('/company/settings/resume/grade', 'API\CompanySettingsController@setResumeGrade');
 
     //----------------个人中心-------------------------
     //简历列表
@@ -259,9 +265,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //个人招聘信息列表
     $router->get('/user/recruitResumes', 'API\RecruitResumesController@userRecruitList');
-
-    //角色管理
-    $router->resource('company/roles', 'API\RolesController');
+    // v2.1
 });
 
 //角色管理

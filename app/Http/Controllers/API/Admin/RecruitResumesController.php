@@ -108,11 +108,6 @@ class RecruitResumesController extends ApiBaseCommonController
             }else{
                 $log->creatorInfo->avatar_url = "";
             }
-            if($log->interviewerInfo && $log->interviewerInfo->avatar){
-                $log->interviewerInfo->avatar_url = getPicFullUrl($log->interviewerInfo->avatar);
-            }else{
-                $log->interviewerInfo->avatar_url = "";
-            }
         }
         $data->matching = $this->recruitResumesRepository->matching($data);
         $data = $data->toArray();

@@ -17,7 +17,7 @@ class RecruitResumeLog extends Model
         'status',
         'resume_id',
         'company_id',
-        'interviewer_id',
+        'interviewer',
         'job_id',
         'recruit_id',
         'entrust_id',
@@ -78,16 +78,6 @@ class RecruitResumeLog extends Model
             'id',
             'user_id',
             'user_id'
-        );
-    }
-    public function interviewerInfo()
-    {
-        return $this->hasOneThrough(
-            'App\Models\UserBasicInfo',
-            'App\Models\User',
-            'id',
-            'user_id',
-            'interviewer_id'
         );
     }
 }

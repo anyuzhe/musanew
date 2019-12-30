@@ -83,7 +83,7 @@ class RecruitResumesRepository
         $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
         $log->company_job_recruit_entrust_id = $recruitResume->company_job_recruit_entrust_id;
         $log->job_id = $recruitResume->job_id;
-        $log->interviewer_id = $interviewer;
+        $log->interviewer = $interviewer;
         $log->other_data = $otherData;
         if($status==1){
             if($type==1){
