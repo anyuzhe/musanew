@@ -29,4 +29,13 @@ class CompanySettingRepository
             'company_id'=>$company_id
         ]);
     }
+
+    public static function getResumeGrade($company_id)
+    {
+        $setting = CompanySetting::where('company_id', $company_id)->where('key','resume_grade')->first();
+        if(!$setting){
+            $setting = CompanySettingRepository::getDefaultResumeGrade($company_id);
+        }
+        return $setting;
+    }
 }

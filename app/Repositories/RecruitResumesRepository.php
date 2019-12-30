@@ -327,6 +327,7 @@ class RecruitResumesRepository
     {
         $job = $data->job;
         $resume = $data->resume;
+        $company = $data->company;
         //学历要求
         $config_education_num = DataMapOption::where('data_map_id',7)->count()-1;
         $config_education_score = 100/$config_education_num;

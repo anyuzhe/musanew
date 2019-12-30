@@ -15,7 +15,6 @@ class CompanySettingsController extends CommonController
     public function getResumeGrade()
     {
         $company = $this->getCurrentCompany();
-        $company = Company::find(20190001);
         $setting = CompanySetting::where('company_id', $company->id)->where('key','resume_grade')->first();
         if(!$setting){
             $setting = CompanySettingRepository::getDefaultResumeGrade($company->id);
