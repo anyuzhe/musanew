@@ -14,6 +14,7 @@ class CompanyRole extends Model
         'alias',
         'sort',
         'remark',
+        'icon',
     ];
 
 //

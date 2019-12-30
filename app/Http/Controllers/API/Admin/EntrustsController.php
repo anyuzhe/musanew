@@ -88,6 +88,14 @@ class EntrustsController extends ApiBaseCommonController
                 case 6:
                     $model = $model->where('is_public', 0)->whereNotIn('status', [6,7]);
                     break;
+                case 7:
+                    ## 主动取消委托
+                    $model = $model->whereNotIn('status', [-3, -1]);
+                    break;
+                case 8:
+                    ## 等待外包审核
+                    $model = $model->whereNotIn('status', [0]);
+                    break;
             }
         }
 
@@ -95,7 +103,7 @@ class EntrustsController extends ApiBaseCommonController
         $resume_id = $this->request->get('resume_id', null);
         $type = $this->request->type;
 
-        if ($type) {
+        if ($type && isset($recruit_search_status) && $recruit_search_status!=8) {
             $model = app()->build(EntrustsRepository::class)->getModelByType($type, null, $in_recruit, $resume_id, $model);
         }
         return null;
