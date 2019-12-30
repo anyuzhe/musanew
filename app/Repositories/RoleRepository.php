@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Area;
 use App\Models\CompanyPermission;
+use App\Models\CompanyRolePermission;
 
 class RoleRepository
 {
@@ -35,8 +36,45 @@ class RoleRepository
         }
     }
 
-    public function savePermissions($permissions)
+    public function savePermissions($permissions, $role_id)
     {
+        $hasP = [];
+        foreach ($permissions as $permission) {
+            $parent = null;
+            if($permission->pid)
+                $parent = $permission->parent;
+            if($parent && !in_array($permission->id, $hasP)){
+                $has = CompanyRolePermission::where('company_role_id', $role_id)->where('company_permission_id', $parent->id)->first();
+                if(!$has){
+                     CompanyRolePermission::create([
+                        'company_role_id'=>$role_id,
+                        'company_permission_id'=>$parent->id,
+                    ]);
+                }
+                $hasP[] = $parent->id;
 
+                $parentt = null;
+                if($parent->pid)
+                    $parentt = $parent->parent;
+                if($parentt && !in_array($permission->id, $hasP)){
+                    $has = CompanyRolePermission::where('company_role_id', $role_id)->where('company_permission_id', $parentt->id)->first();
+                    if(!$has){
+                        CompanyRolePermission::create([
+                            'company_role_id'=>$role_id,
+                            'company_permission_id'=>$parentt->id,
+                        ]);
+                    }
+                    $hasP[] = $parentt->id;
+                }
+            }
+            $has = CompanyRolePermission::where('company_role_id', $role_id)->where('company_permission_id', $permission->id)->first();
+            if(!$has && !in_array($permission->id, $hasP)){
+                CompanyRolePermission::create([
+                    'company_role_id'=>$role_id,
+                    'company_permission_id'=>$permission->id,
+                ]);
+                $hasP[] = $permission->id;
+            }
+        }
     }
 }

@@ -15,4 +15,9 @@ class CompanyPermission extends Model
         'pid',
         'level',
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(CompanyPermission::class, 'pid');
+    }
 }
