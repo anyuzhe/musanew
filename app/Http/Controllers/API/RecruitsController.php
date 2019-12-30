@@ -93,7 +93,7 @@ class RecruitsController extends ApiBaseCommonController
                     $model = $model->whereIn('status', [4,5]);
                     break;
                 case 4:
-                    $model = $model->whereIn('status', [6,7]);
+                    $model = $model->whereIn('status', [6]);
                     break;
                 case 5:
                     $model = $model->where('is_public', 1)->whereNotIn('status', [6,7]);
@@ -112,9 +112,9 @@ class RecruitsController extends ApiBaseCommonController
             if ($company) {
 //                $model = $model->where('company_id', $company->id)->whereIn('status', [1,4]);
                 //委托了的招聘
-                $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+                $has_entrust_ids = Entrust::where('status','!=',-3)->pluck('company_job_recruit_id')->toArray();
                 $model = $model->where('company_id', $company->id)->where(function ($query)use($has_entrust_ids){
-                    $query->whereNotIn('id', $has_entrust_ids)->orWhere('status', 1);
+                    $query->whereNotIn('id', $has_entrust_ids)->orWhereIn('status', [1]);
                 });
                 if($in_recruit){
                     if($in_recruit==1){
@@ -317,6 +317,8 @@ class RecruitsController extends ApiBaseCommonController
             }elseif($obj->status==3){
                 $obj->status = 7;
                 foreach ($obj->entrusts as $entrust) {
+                    if($entrust->status!=1)
+                        continue;
                     $entrust->status = 6;
                     $entrust->pause_at = date('Y-m-d H:i:s');
                     $entrust->save();
@@ -370,6 +372,8 @@ class RecruitsController extends ApiBaseCommonController
                 }elseif($recruit->status==7){
                     $this->getModel()->where('id', $id)->update(['status'=>3]);
                     foreach ($recruit->entrusts as $entrust) {
+                        if($entrust->status != 6)
+                            continue;
                         $entrust->status = 1;
                         $entrust->save();
                     }
@@ -409,7 +413,7 @@ class RecruitsController extends ApiBaseCommonController
         if ($company) {
             //委托了的招聘
             $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-            $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,6,7])->whereIn('id', $has_entrust_ids);
+            $model = $model->where('company_id', $company->id)->whereIn('status', [2,3,4,5,7])->whereIn('id', $has_entrust_ids);
         }else{
             $model = $model->where('id', 0);
         }
@@ -462,7 +466,7 @@ class RecruitsController extends ApiBaseCommonController
                     $model = $model->whereIn('status', [4,5]);
                     break;
                 case 4:
-                    $model = $model->whereIn('status', [6,7]);
+                    $model = $model->whereIn('status', [7]);
                     break;
                 case 5:
                     $model = $model->where('is_public', 1);
