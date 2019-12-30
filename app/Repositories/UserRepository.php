@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Models\Area;
+use App\Models\CompanyPermission;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\PasswordFindCode;
@@ -197,7 +198,8 @@ class UserRepository
 //            $info->current_company->is_demand_side = count($info->current_company->thirdParty)>0?1:0;
             $current_company->logo_url = getCompanyLogo($current_company->logo);
             $current_company->role_name = getCompanyRoleName($current_company, $user);
-
+            $_role = getCompanyRole($current_company, $user);
+            $current_company->permissions = $_role->getPermissions();
             CompanyUser::where('user_id',$user->id)->update(['is_current'=>0]);
             CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->update(['is_current'=>1]);
         }
