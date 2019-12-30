@@ -90,11 +90,11 @@ class EntrustsController extends ApiBaseCommonController
                     break;
                 case 7:
                     ## 主动取消委托
-                    $model = $model->whereNotIn('status', [-3, -1]);
+                    $model = $model->whereIn('status', [-3, -1]);
                     break;
                 case 8:
                     ## 等待外包审核
-                    $model = $model->whereNotIn('status', [0]);
+                    $model = $model->whereIn('status', [0]);
                     break;
             }
         }

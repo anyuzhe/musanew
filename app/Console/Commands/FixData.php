@@ -118,7 +118,7 @@ class FixData extends Command
 
 
             $um = CompanyPermission::create([
-                'key'=>'user_manage',
+                'key'=>'recruit_user_manage',
                 'display_name'=>'人员管理',
                 'level'=>'2',
                 'pid'=>$rm->id,
@@ -395,7 +395,7 @@ class FixData extends Command
                 'pid'=>$bm->id,
             ]);
             $bm = CompanyPermission::create([
-                'key'=>'user_manage',
+                'key'=>'company_user_manage',
                 'display_name'=>'人员管理',
                 'level'=>'2',
                 'pid'=>$cm->id,
