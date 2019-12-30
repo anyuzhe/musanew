@@ -13,5 +13,11 @@ class CompanyUser extends Model
         'company_id',
         'company_role_id',
         'is_current',
+        'department_id',
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(CompanyDepartment::class, 'department_id');
+    }
 }

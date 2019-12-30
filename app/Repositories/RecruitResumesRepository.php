@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Mail\RecruitResumeLogEmail;
 use App\Models\Area;
 use App\Models\CompanyResume;
+use App\Models\CompanyUser;
 use App\Models\DataMapOption;
 use App\Models\Entrust;
 use App\Models\Recruit;
@@ -82,8 +83,7 @@ class RecruitResumesRepository
         $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
         $log->company_job_recruit_entrust_id = $recruitResume->company_job_recruit_entrust_id;
         $log->job_id = $recruitResume->job_id;
-        if($interviewer)
-            $otherData .=  " 面试官: $interviewer";
+        $log->interviewer_id = $interviewer;
         $log->other_data = $otherData;
         if($status==1){
             if($type==1){
@@ -125,6 +125,7 @@ class RecruitResumesRepository
             $log->text =  '成功入职-'.$_time;
             $recruitResume->formal_entry_at = $_time;
             $this->hiredEntryHandle($recruitResume);
+            $this->companyRelevanceUser($recruitResume->company_id, $recruitResume->user, $recruitResume->job->department_id);
         }elseif($status==-1){
             $log->text =  '简历不匹配';
             $this->minusNewResumeHandle($recruitResume);
@@ -221,6 +222,24 @@ class RecruitResumesRepository
                 'source_company_id'=>$entrust?$entrust->company_id:null,
                 'creator_id'=>TokenRepository::getUser()->id,
             ]);
+        }
+    }
+
+    public function companyRelevanceUser($company_id, $user_id, $department_id)
+    {
+        //往需求方添加人才库关联
+        $_has = CompanyUser::where('company_id', $company_id)->where('user_id', $user_id)->first();
+        if(!$_has){
+            CompanyUser::create([
+                'company_id'=>$company_id,
+                'user_id'=>$user_id,
+                'department_id'=>$department_id,
+            ]);
+        }else{
+            if($_has->department_id!=$department_id){
+                $_has->department_id;
+                $_has->save();
+            }
         }
     }
 

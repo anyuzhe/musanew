@@ -211,6 +211,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/backlog', 'API\CompaniesController@getBacklog');
 
     $router->get('/company/users', 'API\CompaniesController@getUsers');
+    $router->get('/company/users/list', 'API\CompaniesController@getUserList');
     //日历
     $router->get('/company/calendar', 'API\CompaniesController@getCalendarData');
     //数据分析

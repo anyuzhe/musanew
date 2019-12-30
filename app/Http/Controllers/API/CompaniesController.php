@@ -463,6 +463,56 @@ class CompaniesController extends ApiBaseCommonController
         return $this->apiReturnJson(0,$data);
     }
 
+    public function getUserList()
+    {
+        $pageSize = app('request')->get('pageSize',10);
+        $pagination = app('request')->get('pagination',1);
+        $department_id = app('request')->get('department_id');
+        $name = app('request')->get('name');
+
+        if($name){
+            $userIds = UserBasicInfo::where('realname','like',"%$name%")->pluck('user_id')->toArray();
+        }else{
+            $userIds = null;
+        }
+
+        $company_id = $this->request->get('company_id',$this->getCurrentCompany()->id);
+        $model = new CompanyUser();
+        if($userIds){
+            $model = $model->whereIn('user_id', $userIds);
+        }
+        if($department_id){
+            $model = $model->where('department_id', $department_id);
+        }
+        $companyUsers = $model->where('company_id', $company_id)->skip($pageSize*($pagination-1))->take($pageSize)->get();
+        $companyUsers->load('department');
+        $userIds = $companyUsers->pluck('user_id')->toArray();
+        $roleIds = $companyUsers->pluck('company_role_id')->toArray();
+        $users = User::whereIn('id', $userIds)->get();
+        $users->load('info');
+        $users = $users->keyBy('id')->toArray();
+        $roles = CompanyRole::whereIn('id', $roleIds)->get()->keyBy('id')->toArray();
+        $data = [];
+        foreach ($companyUsers as $companyUser) {
+            $user = $users[$companyUser->user_id];
+            if(isset($roles[$companyUser->company_role_id]))
+                $role = $roles[$companyUser->company_role_id];
+            else
+                $role = null;
+            $info = $user['info'];
+            $data[] = [
+              'id'=>$user['id'],
+              'name'=>$info?$info['realname']:'无姓名',
+              'role_name'=>$role?$role['name']:'无角色',
+              'email'=>$user['email'],
+              'confirmed'=>$user['confirmed'],
+              'department'=>$companyUser->department->name,
+              'avatar_url'=>getPicFullUrl($info['avatar']),
+            ];
+        }
+        return $this->apiReturnJson(0,$data);
+    }
+
     public function countStatistics()
     {
         if($this->request->type ==1){
