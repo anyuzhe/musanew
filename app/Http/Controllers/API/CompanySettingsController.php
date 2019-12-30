@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Company;
 use App\Models\CompanySetting;
 use App\Repositories\CompanySettingRepository;
 use DB;
@@ -14,6 +15,7 @@ class CompanySettingsController extends CommonController
     public function getResumeGrade()
     {
         $company = $this->getCurrentCompany();
+        $company = Company::find(20190001);
         $setting = CompanySetting::where('company_id', $company->id)->where('key','resume_grade')->first();
         if(!$setting){
             $setting = CompanySettingRepository::getDefaultResumeGrade($company->id);
@@ -23,17 +25,26 @@ class CompanySettingsController extends CommonController
 
     public function setResumeGrade(Request $request)
     {
-        $text = $request->get('user_info');
-        $text = $request->get('skills');
-        $text = $request->get('education');
-        $text = $request->get('working_years');
-        $text = $request->get('necessary_skills');
-        $text = $request->get('optional_skills');
+        $user_info = $request->get('user_info');
+        $skills = $request->get('skills');
+        $education = $request->get('education');
+        $working_years = $request->get('working_years');
+        $necessary_skills = $request->get('necessary_skills');
+        $optional_skills = $request->get('optional_skills');
         $company = $this->getCurrentCompany();
         $setting = CompanySetting::where('company_id', $company->id)->where('key','resume_grade')->first();
         if(!$setting){
             $setting = CompanySettingRepository::getDefaultResumeGrade($company->id);
         }
+        $setting->value = json_encode([
+            'user_info'=>$user_info,
+            'skills'=>$skills,
+            'education'=>$education,
+            'working_years'=>$working_years,
+            'necessary_skills'=>$necessary_skills,
+            'optional_skills'=>$optional_skills,
+            ], 256);
+        $setting->save();
         return $this->apiReturnJson(0, json_decode($setting->value, 256));
     }
 }
