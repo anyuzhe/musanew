@@ -180,6 +180,7 @@ class CompaniesController extends ApiBaseCommonController
         $model = $this->getModel()->find($id);
         $model->status = -1;
         $model->save();
+        CompanyUser::where('company_id', $model->id)->update(['status'=>-1]);
         return responseZK(0);
     }
 

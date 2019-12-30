@@ -14,6 +14,7 @@
 use App\Models\Area;
 use App\Models\Company;
 use App\Models\CompanyRole;
+use App\Models\CompanyUser;
 use App\Models\Conglomerate;
 use App\Models\Course;
 use App\Models\Entrust;
@@ -40,6 +41,7 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    dd(CompanyUser::whereIn('company_id', Company::where('status','!=', 1)->pluck('id'))->update(['status'=>-1]));
     $user = \App\Models\User::find(111);
     dd(app()->build(UserRepository::class)->checkCurrentCompany($user));
     $user = \App\Models\User::find(55);

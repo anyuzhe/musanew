@@ -29,11 +29,11 @@ class User extends Model
 
     public function companies()
     {
-        return $this->belongsToMany('App\Models\Company', 'company_user','user_id','company_id')->withPivot('company_role_id');
+        return $this->belongsToMany('App\Models\Company', 'company_user','user_id','company_id')->wherePivot('status', 1)->withPivot('company_role_id');
     }
 
     public function company()
     {
-        return $this->companies()->wherePivot('is_current', 1)->withPivot('company_role_id');
+        return $this->companies()->wherePivot('is_current', 1)->wherePivot('status', 1)->withPivot('company_role_id');
     }
 }
