@@ -423,7 +423,8 @@ class RecruitResumesRepository
                 + $working_years_score*$resumeGradeArr['working_years']/100)*$resumeGradeArr['user_info']/100
             + $skills_score*$resumeGradeArr['skills']/100
         );
-        return compact('score', 'education_score', 'working_years_score', 'skills_data', 'necessary_skills_data', 'optional_skills_data', 'skills_score', 'resumeGradeArr');
+        return compact('score', 'education_score', 'working_years_score', 'skills_data'
+            , 'necessary_skills_data', 'optional_skills_data', 'skills_score', 'necessary_skills_score', 'optional_skills_score');
     }
 
     public function handleUpdateAt($recruitResume)

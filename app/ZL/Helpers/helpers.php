@@ -2,6 +2,7 @@
 
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\CompanyUserRole;
 use App\Models\DataMapOption;
 use App\Repositories\TokenRepository;
 use Illuminate\Support\Facades\DB;
@@ -867,6 +868,13 @@ function getCompanyRole($company, $user=null)
         return $role;
     else
         return null;
+}
+
+function getCompanyRoles($company, $user=null)
+{
+    $company_role_id = CompanyUserRole::where('user_id', $user->id)->where('company_id', $company->id)->pluck('role_id');
+    $roles = CompanyRole::whereIn('id', $company_role_id)->get();
+    return $roles;
 }
 
 function checkSkillsGrade($resume_skills, $job_skills)
