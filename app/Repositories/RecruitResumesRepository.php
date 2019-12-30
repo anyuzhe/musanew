@@ -327,7 +327,7 @@ class RecruitResumesRepository
     {
         $job = $data->job;
         $resume = $data->resume;
-        $company = $data->company;
+        $company = $job->company;
 
         $resumeGrade = CompanySettingRepository::getResumeGrade($company->id);
         $resumeGradeArr = json_decode($resumeGrade, true);
