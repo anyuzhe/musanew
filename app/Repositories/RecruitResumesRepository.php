@@ -247,7 +247,8 @@ class RecruitResumesRepository
     {
         $recruit = $recruitResume->recruit;
         $entrust = $recruitResume->entrust;
-        $recruit->new_resume_num--;
+        if($recruit->new_resume_num>0)
+            $recruit->new_resume_num--;
         $recruit->save();
         if($entrust){
             $entrust->new_resume_num--;
