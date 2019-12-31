@@ -20,7 +20,7 @@ class RolesController extends ApiBaseCommonController
         if($currentCompany){
             $company_id = $currentCompany->id;
             $model = $model->where(function ($query)use($company_id){
-                $query = $query->where('id', 1)->orWhere('company',$company_id);
+                $query = $query->where('id', 1)->orWhere('company_id',$company_id);
             });
         }
     }

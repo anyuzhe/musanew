@@ -109,6 +109,7 @@ return array(
     'App\\Models\\CompanyRolePermission' => $baseDir . '/app/Models/CompanyRolePermission.php',
     'App\\Models\\CompanySetting' => $baseDir . '/app/Models/CompanySetting.php',
     'App\\Models\\CompanyUser' => $baseDir . '/app/Models/CompanyUser.php',
+    'App\\Models\\CompanyUserRole' => $baseDir . '/app/Models/CompanyUserRole.php',
     'App\\Models\\Conglomerate' => $baseDir . '/app/Models/Conglomerate.php',
     'App\\Models\\Course' => $baseDir . '/app/Models/Course.php',
     'App\\Models\\DataMap' => $baseDir . '/app/Models/DataMap.php',

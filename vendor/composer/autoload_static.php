@@ -623,6 +623,7 @@ class ComposerStaticInitc61d286e97c9702768207a264e66e1f1
         'App\\Models\\CompanyRolePermission' => __DIR__ . '/../..' . '/app/Models/CompanyRolePermission.php',
         'App\\Models\\CompanySetting' => __DIR__ . '/../..' . '/app/Models/CompanySetting.php',
         'App\\Models\\CompanyUser' => __DIR__ . '/../..' . '/app/Models/CompanyUser.php',
+        'App\\Models\\CompanyUserRole' => __DIR__ . '/../..' . '/app/Models/CompanyUserRole.php',
         'App\\Models\\Conglomerate' => __DIR__ . '/../..' . '/app/Models/Conglomerate.php',
         'App\\Models\\Course' => __DIR__ . '/../..' . '/app/Models/Course.php',
         'App\\Models\\DataMap' => __DIR__ . '/../..' . '/app/Models/DataMap.php',
