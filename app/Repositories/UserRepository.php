@@ -200,7 +200,8 @@ class UserRepository
             $current_company->role_name = getCompanyRoleName($current_company, $user);
             $_role = getCompanyRole($current_company, $user);
             $_roles = getCompanyRoles($current_company, $user);
-            $_roles->push($_role);
+            if($_role)
+                $_roles->push($_role);
             $permissions = [];
             foreach ($_roles as $role) {
                 $permissions = array_merge($permissions, $role->getPermissions()->toArray());
