@@ -17,15 +17,10 @@ class CompanyRole extends Model
         'icon',
     ];
 
-//
-//    public function users()
-//    {
-//        $userModel = Voyager::modelClass('User');
-//
-//        return $this->belongsToMany($userModel, 'user_roles')
-//            ->select(app($userModel)->getTable().'.*')
-//            ->union($this->hasMany($userModel))->getQuery();
-//    }
+    public function users()
+    {
+        return $this->belongsToMany('App\Models\UserBasicInfo','musa_company_user_role', 'user_id','role_id','id','user_id');
+    }
 
     public function permissions()
     {

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Company;
 use App\Models\CompanyRole;
+use App\Models\CompanyUser;
+use App\Models\UserBasicInfo;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -26,9 +29,32 @@ class RolesController extends ApiBaseCommonController
     }
 
 
+    //排序
+    protected function modelGetSort(&$model)
+    {
+        $sortBy = app('request')->get('sortBy',false);
+        $orderBy = app('request')->get('orderBy','asc');
+
+        $model = $model->when($sortBy, function ($query) use ($sortBy,$orderBy){
+            return $query->orderBy($sortBy,$orderBy);
+        }, function ($query) use ($orderBy){
+            return $query->orderBy('id',$orderBy);
+        });
+        return $model;
+    }
+
     public function _after_get(&$data)
     {
+        $company = $this->getCurrentCompany();
+        if(!$company)
+            $company = Company::find(20190002);
+        $data->load('users');
         foreach ($data as &$v) {
+            if($v->id==1){
+                $manager = CompanyUser::where('company_id',$company->id)->where('company_role_id', 1)->value('user_id');
+                if($manager)
+                    $v->users->push(UserBasicInfo::find($manager));
+            }
             $v->permissions_tree = RoleRepository::getTree($v);
 //            $v->users = $userRepository->getUsersByRoleId($v->id);
         }
