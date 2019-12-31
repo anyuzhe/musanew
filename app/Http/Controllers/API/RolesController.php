@@ -53,7 +53,7 @@ class RolesController extends ApiBaseCommonController
             if($v->id==1){
                 $manager = CompanyUser::where('company_id',$company->id)->where('company_role_id', 1)->value('user_id');
                 if($manager)
-                    $v->users->push(UserBasicInfo::find($manager));
+                    $v->users->push(UserBasicInfo::where('user_id',$manager)->first());
             }
             $v->permissions_tree = RoleRepository::getTree($v);
 //            $v->users = $userRepository->getUsersByRoleId($v->id);
