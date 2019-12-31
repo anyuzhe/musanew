@@ -880,7 +880,7 @@ function getCompanyRoles($company, $user=null)
 function checkSkillsGrade($resume_skills, $job_skills)
 {
     $skills_data = [];
-    $job_skills_count = count($job_skills);
+    $job_skills_count = $job_skills->count();
     $skills_score = 0;
     //单分
     $config_skill_score = 100/(DataMapOption::where('data_map_id',10)->count());
