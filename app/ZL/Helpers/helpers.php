@@ -891,7 +891,10 @@ function checkSkillsGrade($resume_skills, $job_skills)
         $_job_skill_level = $job_skill->pivot->skill_level;
         if(isset($resume_skills[$_job_skill_id])){
             $resume_skill = $resume_skills[$_job_skill_id];
-            $_score = (int)(100 - ($_job_skill_level - $resume_skill['skill_level'])*$config_skill_score);
+            if(($_job_skill_level > $resume_skill['skill_level']))
+                $_score = (int)(100 - ($_job_skill_level - $resume_skill['skill_level'])*$config_skill_score);
+            else
+                $_score = 100;
             $skills_data[] = [
                 'skill_name'=>$_job_skill_name,
                 'job_level'=>$_job_skill_level,
