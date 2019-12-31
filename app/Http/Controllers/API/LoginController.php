@@ -37,7 +37,7 @@ class LoginController extends CommonController
         $password = $this->request->get('password');
         $user = $this->getUserByEmail($email);
         if(!$user)
-            return $this->apiReturnJson('2001');
+            return $this->apiReturnJson('9999',null,'该账号不存在, 请先注册');
         //引入moodle文件
         $this->requireMoodleConfig();
 
