@@ -24,7 +24,7 @@ class CompanyRole extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(CompanyPermission::class,'company_role_permission','company_permission_id','company_role_id');
+        return $this->belongsToMany(CompanyPermission::class,'company_role_permission','company_role_id','company_permission_id');
     }
 
     public function getPermissions()
