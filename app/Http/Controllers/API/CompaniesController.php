@@ -496,14 +496,22 @@ class CompaniesController extends ApiBaseCommonController
         foreach ($companyUsers as $companyUser) {
             $user = $users[$companyUser->user_id];
             if(isset($roles[$companyUser->company_role_id]))
-                $role = $roles[$companyUser->company_role_id];
+                $_role = $roles[$companyUser->company_role_id];
             else
-                $role = null;
+                $_role = null;
+
+            $_roles = getCompanyRoles($this->getCurrentCompany(), $user);
+            if($_role)
+                $_roles->push($_role);
+            $role_names = [];
+            foreach ($_roles as $role) {
+                $role_names[] = $role['name'];
+            }
             $info = $user['info'];
             $data[] = [
               'id'=>$user['id'],
               'name'=>$info?$info['realname']:'无姓名',
-              'role_name'=>$role?$role['name']:'无角色',
+              'role_names'=>$role_names,
               'email'=>$user['email'],
               'confirmed'=>$user['confirmed'],
               'department'=>$companyUser->department->name,
