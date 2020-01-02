@@ -36,7 +36,7 @@ class RoleRepository
         }
     }
 
-    public function savePermissions($permissions, $role_id)
+    public static function savePermissions($permissions, $role_id)
     {
         $hasP = [];
         foreach ($permissions as $permission) {

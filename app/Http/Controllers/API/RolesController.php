@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Company;
+use App\Models\CompanyPermission;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\UserBasicInfo;
@@ -75,12 +76,16 @@ class RolesController extends ApiBaseCommonController
             $obj->company_id = $company_id;
             $obj->save();
         }
+        if(isset($data['permissions']))
+            RoleRepository::savePermissions(CompanyPermission::whereIn('id',$data['permissions'])->get(), $obj->id);
         return $this->apiReturnJson(0);
     }
 
     public function afterUpdate($id, $data)
     {
         $obj = $this->getModel()->find($id);
+        if(isset($data['permissions']))
+            RoleRepository::savePermissions(CompanyPermission::whereIn('id',$data['permissions'])->get(), $obj->id);
         return $this->apiReturnJson(0);
     }
     public function destroy($id)
