@@ -235,7 +235,6 @@ class ExcelHelper
             $j = 0;
 
             foreach ($v as $key=>$value) {
-
                 $excel->getActiveSheet()->setCellValue("$letter[$j]$i","$value");
 
                 $j++;

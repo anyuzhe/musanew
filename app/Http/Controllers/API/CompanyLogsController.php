@@ -8,6 +8,7 @@ use App\Models\CompanyPermission;
 use App\Models\CompanySetting;
 use App\Repositories\CompanySettingRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
+use App\ZL\ORG\Excel\ExcelHelper;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -56,5 +57,46 @@ class CompanyLogsController extends ApiBaseCommonController
             }
         }
         return $data;
+    }
+
+    public function exportExcel(Request $request)
+    {
+        if(method_exists($this,'checkIndex')) {
+            $res = $this->checkIndex($request);
+            if(is_string($res)){
+                responseZK(0,null,$res);
+            }
+        }
+        $model = $this->modelPipeline([
+            'modelGetAuthLimit',
+            'modelGetSearch',
+            'modelGetSort',
+        ]);
+        $list = $this->modelPipeline([
+            'collectionGetLoads',
+            'modelByAfterGet',
+        ],$model->get());
+        $excelHelper = new ExcelHelper();
+        $title = [
+            '用户',
+            '邮箱',
+            '操作',
+            '内容',
+            '归属模块',
+            '操作时间',
+        ];
+
+        $data = [];
+        foreach ($list as $item) {
+            $_data = [];
+            $_data[] = $item->user->realname;
+            $_data[] = $item->user->email;
+            $_data[] = $item->module_text;
+            $_data[] = $item->operation_text;
+            $_data[] = $item->content;
+            $_data[] = $item->created_at;
+            $data[] = $_data;
+        }
+        $excelHelper->dumpExcel($title,$data,'操作日志', "操作日志数据");
     }
 }
