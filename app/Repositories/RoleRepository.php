@@ -39,11 +39,13 @@ class RoleRepository
     public static function savePermissions($permissions, $role_id)
     {
         $hasP = [];
+        CompanyRolePermission::where(
+            'company_role_id',$role_id)->delete();
         foreach ($permissions as $permission) {
             $parent = null;
             if($permission->pid)
                 $parent = $permission->parent;
-            if($parent && !in_array($permission->id, $hasP)){
+            if($parent && !in_array($parent->id, $hasP)){
                 $has = CompanyRolePermission::where('company_role_id', $role_id)->where('company_permission_id', $parent->id)->first();
                 if(!$has){
                      CompanyRolePermission::create([
@@ -56,7 +58,7 @@ class RoleRepository
                 $parentt = null;
                 if($parent->pid)
                     $parentt = $parent->parent;
-                if($parentt && !in_array($permission->id, $hasP)){
+                if($parentt && !in_array($parentt->id, $hasP)){
                     $has = CompanyRolePermission::where('company_role_id', $role_id)->where('company_permission_id', $parentt->id)->first();
                     if(!$has){
                         CompanyRolePermission::create([
@@ -68,7 +70,7 @@ class RoleRepository
                 }
             }
             $has = CompanyRolePermission::where('company_role_id', $role_id)->where('company_permission_id', $permission->id)->first();
-            if(!$has && !in_array($permission->id, $hasP)){
+            if(!in_array($permission->id, $hasP) && !$has){
                 CompanyRolePermission::create([
                     'company_role_id'=>$role_id,
                     'company_permission_id'=>$permission->id,
