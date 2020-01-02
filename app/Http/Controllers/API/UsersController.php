@@ -38,7 +38,7 @@ class UsersController extends CommonController
         $user = $this->getUser();
         $info = $user->info;
         if(!$info)
-            $info = UserBasicInfo::create(['user_id'=>$user->id, 'realname'=>$user->id]);
+            $info = UserBasicInfo::create(['user_id'=>$user->id, 'realname'=>$user->id, 'email'=>$user->email]);
 
         if(!$user->firstname && $info->realname){
             $realname = $info->realname;

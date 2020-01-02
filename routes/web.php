@@ -44,13 +44,20 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    set_time_limit(0);
+    $uis = UserBasicInfo::all();
+    foreach ($uis as $ui) {
+        $ui->email = $ui->user->email;
+        $ui->save();
+    }
+    dd(1);
     $moduleArr = CompanyPermission::where('level','<',3)->get()->keyBy('key')->toArray();
     $operationArr = CompanyPermission::where('level',3)->get()->groupBy('pid')->toArray();
     foreach ($moduleArr as $item) {
         if(isset($operationArr[$item['id']])){
             foreach ($operationArr[$item['id']] as $v) {
                 CompanyLog::create([
-                    'company_id'=>24,
+                    'company_id'=>20190003,
                     'user_id'=>106,
                     'operation'=>$v['key'],
                     'content'=>'内容--test',

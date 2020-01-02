@@ -35,7 +35,7 @@ class UserHelper
             'firstname'=>$realname?substr_text($realname,0,1):'',
             'lastname'=>$realname?substr_text($realname,1, count($realname)):'',
         ]);
-        UserBasicInfo::create(['user_id'=>$user->id]);
+        UserBasicInfo::create(['user_id'=>$user->id, 'email'=>$user->email]);
         $user = User::find($user->id);
         $token = TokenHelper::getTokenForUser($user);
     }

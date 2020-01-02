@@ -20,7 +20,7 @@ class UserRepository
         $resumeRepository = app()->build(ResumesRepository::class);
         $info = $user->info;
         if(!$info)
-            $info = UserBasicInfo::create(['user_id'=>$user->id]);
+            $info = UserBasicInfo::create(['user_id'=>$user->id, 'email'=>$user->email]);
 
         if(!$user->firstname && $info->realname){
             $realname = $info->realname;
@@ -135,7 +135,7 @@ class UserRepository
         User::where('id', $user->id)->update([
             'confirmed'=>0,
         ]);
-        UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$user->id]);
+        UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$user->id, 'email'=>$user->email]);
         $user = User::find($user->id);
         $token = TokenHelper::getTokenForUser($user);
         $user->token = $token->token;
