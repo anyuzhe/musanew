@@ -347,3 +347,7 @@ $router->get('/shiyanlou/student', 'API\Shiyanlou\Controllers\StudentController@
 $router->get('/shiyanlou/user', 'API\Shiyanlou\Controllers\UserController@index');
 //实验楼 事件推送
 $router->post('/shiyanlou/webhook', 'API\Shiyanlou\Controllers\WebhookController@index');
+
+
+//操作日志
+$router->get('/test/logs', 'API\CompanyLogsController@index');

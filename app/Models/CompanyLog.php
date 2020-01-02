@@ -15,4 +15,9 @@ class CompanyLog extends Model
         'content',
         'module',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(UserBasicInfo::class, 'user_id', 'user_id');
+    }
 }

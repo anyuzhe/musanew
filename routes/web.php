@@ -13,6 +13,8 @@
 
 use App\Models\Area;
 use App\Models\Company;
+use App\Models\CompanyLog;
+use App\Models\CompanyPermission;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\Conglomerate;
@@ -42,6 +44,22 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $moduleArr = CompanyPermission::where('level','<',3)->get()->keyBy('key')->toArray();
+    $operationArr = CompanyPermission::where('level',3)->get()->groupBy('pid')->toArray();
+    foreach ($moduleArr as $item) {
+        if(isset($operationArr[$item['id']])){
+            foreach ($operationArr[$item['id']] as $v) {
+                CompanyLog::create([
+                    'company_id'=>24,
+                    'user_id'=>106,
+                    'operation'=>$v['key'],
+                    'content'=>'内容--test',
+                    'module'=>$item['key'],
+                ]);
+            }
+        }
+    }
+    dd(1);
     $us = UserBasicInfo::whereNull('realname')->get();
     foreach ($us as $u) {
         $u->realname = $u->user_id;
