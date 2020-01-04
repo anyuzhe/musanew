@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\CompanyAddress;
 use App\Models\CompanyDepartment;
 use App\Models\CompanyRole;
+use App\Models\CompanyUserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -144,5 +145,39 @@ class CompaniesRepository
             $user->companies()->attach($company->id, ['company_role_id' => 1, 'is_current'=>1]);
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
         }
+    }
+
+    public function handleUser($company, $email, $roleIds=[], $department_id=null)
+    {
+        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
+        if(!$user)
+            $user = User::where('email', $email)->first();
+        if($user){
+            $has = $user->companies()->where('company_id', $company->id)->first();
+            if($has){
+                DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['department_id' => $department_id]);
+            }else{
+                $user->companies()->attach($company->id, ['department_id' => $department_id]);
+            }
+
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
+        }else{
+            $userRe = app()->build(UserRepository::class);
+            $user = $userRe->generateInviteUser($email);
+            $user->companies()->attach($company->id, ['department_id' => $department_id, 'is_current'=>1]);
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
+        }
+        CompanyUserRole::where('company_id', $company->id)->where('user_id', $user->id)->delete();
+        foreach ($roleIds as $roleId) {
+            if($roleId){
+                CompanyUserRole::create([
+                    'company_id'=>$company->id,
+                    'user_id'=>$user->id,
+                    'role_id'=>$roleId,
+                ]);
+                DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => $roleId]);
+            }
+        }
+        return $user;
     }
 }

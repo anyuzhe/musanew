@@ -212,6 +212,9 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     $router->get('/company/users', 'API\CompaniesController@getUsers');
     $router->get('/company/users/list', 'API\CompaniesController@getUserList');
+    $router->post('/company/users', 'API\CompaniesController@storeUser');
+    $router->post('/company/users/{user_id}', 'API\CompaniesController@updateUser');
+    $router->post('/company/users/delete/{user_id}', 'API\CompaniesController@deleteUser');
     //日历
     $router->get('/company/calendar', 'API\CompaniesController@getCalendarData');
     //数据分析

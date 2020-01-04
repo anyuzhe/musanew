@@ -8,6 +8,7 @@ use App\Models\CompanyAddress;
 use App\Models\CompanyResume;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\CompanyUserRole;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
@@ -24,6 +25,7 @@ use App\Repositories\StatisticsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use App\ZL\ORG\Excel\ExcelHelper;
 use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use mod_questionnaire\question\date;
 
@@ -519,6 +521,41 @@ class CompaniesController extends ApiBaseCommonController
             ];
         }
         return $this->apiReturnJson(0,$data);
+    }
+
+    public function storeUser(Request $request)
+    {
+        $department_id = $request->get('department_id');
+        $email = $request->get('email');
+        $roles =  $request->get('roles');
+        $company = $this->getCurrentCompany();
+        $user = app()->build(CompaniesRepository::class)->handleManger($company, $email, $roles, $department_id);
+        return $this->apiReturnJson(0);
+    }
+
+    public function updateUser($user_id, Request $request)
+    {
+        $department_id = $request->get('department_id');
+        $email = $request->get('email');
+        $roles =  $request->get('roles');
+        $company = $this->getCurrentCompany();
+        $user = User::find($user_id);
+
+        if($user && $email!=$user->email){
+            if(User::where('id','!=',$user->id)->where('confirmed',1)->where('deleted',0)->first()){
+                return $this->apiReturnJson(9999, null, '该邮箱已经存在');
+            }
+        }
+        $user = app()->build(CompaniesRepository::class)->handleManger($company, $email, $roles, $department_id);
+        return $this->apiReturnJson(0);
+    }
+
+    public function deleteUser($user_id, Request $request)
+    {
+        $company = $this->getCurrentCompany();
+        CompanyUser::where('user_id', $user_id)->where('company_id', $company->id)->delete();
+        CompanyUserRole::where('user_id', $user_id)->where('company_id', $company->id)->delete();
+        return $this->apiReturnJson(0);
     }
 
     public function countStatistics()
