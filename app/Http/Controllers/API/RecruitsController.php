@@ -436,7 +436,7 @@ class RecruitsController extends ApiBaseCommonController
             }else{
                 $departmentIds = $department->children->pluck('id')->toArray();
             }
-            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck()->toArray();
+            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck('id')->toArray();
             $model = $model->whereIn('job_id', $jobIds);
         }
         if($leading_id){
