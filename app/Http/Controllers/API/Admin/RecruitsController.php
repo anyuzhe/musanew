@@ -394,7 +394,7 @@ class RecruitsController extends ApiBaseCommonController
         }
         if($department_id && !is_array($department_id)){
             $department = CompanyDepartment::find($department_id);
-            if($department->level==1){
+            if($department->level==2){
                 $departmentIds = [$department->id];
             }else{
                 $departmentIds = $department->children->pluck('id')->toArray();

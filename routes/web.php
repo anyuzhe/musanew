@@ -44,6 +44,7 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    dd(request('i'));
     set_time_limit(0);
     $uis = UserBasicInfo::all();
     foreach ($uis as $ui) {
