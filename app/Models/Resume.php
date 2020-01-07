@@ -48,6 +48,10 @@ class Resume extends Model
         'usable_range',//使用范围
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function skills()
     {
         return $this->hasMany('App\Models\ResumeSkill');

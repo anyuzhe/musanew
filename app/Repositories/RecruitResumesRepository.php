@@ -324,6 +324,30 @@ class RecruitResumesRepository
         }
     }
 
+    public function getQuizResults($data)
+    {
+        $job = $data->job;
+        $resume = $data->resume;
+        $user = $resume->user;
+        $tests = [];
+        foreach ($job->tests as $test) {
+            $quizs = [];
+            foreach ($test->quizs as $quiz) {
+                $_quiz = [
+                  'name'=>$quiz->name,
+                  'grade'=>$quiz->grades()->where('userid',$user->id)->value('grade'),
+                ];
+                $quizs[] = $_quiz;
+            }
+            $_data = [
+              'name'=>$test->shortname,
+              'quizs'=>$quizs,
+            ];
+            $tests[] = $_data;
+        }
+        return $tests;
+    }
+
     public function matching($data)
     {
         $job = $data->job;

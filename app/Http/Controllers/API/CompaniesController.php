@@ -493,20 +493,13 @@ class CompaniesController extends ApiBaseCommonController
         $users = User::whereIn('id', $userIds)->get();
         $users->load('info');
         $users = $users->keyBy('id')->toArray();
-        $roles = CompanyRole::whereIn('id', $roleIds)->get()->keyBy('id')->toArray();
         $data = [];
         foreach ($companyUsers as $companyUser) {
             $user = $users[$companyUser->user_id];
             if(!$user)
                 continue;
-            if(isset($roles[$companyUser->company_role_id]))
-                $_role = $roles[$companyUser->company_role_id];
-            else
-                $_role = null;
 
             $_roles = getCompanyRoles($this->getCurrentCompany(), $user);
-            if($_role)
-                $_roles->push($_role);
             $role_names = [];
             foreach ($_roles as $role) {
                 $role_names[] = $role['name'];

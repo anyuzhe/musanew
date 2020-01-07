@@ -169,6 +169,8 @@ class CompaniesRepository
         }
         CompanyUserRole::where('company_id', $company->id)->where('user_id', $user->id)->delete();
         foreach ($roleIds as $roleId) {
+            if($roleId==1)
+                continue;
             if($roleId){
                 CompanyUserRole::create([
                     'company_id'=>$company->id,

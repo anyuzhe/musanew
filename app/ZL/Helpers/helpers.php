@@ -882,7 +882,10 @@ function getCompanyRoles($company, $user=null)
         $company_id = $company->id;
     else
         $company_id = $company['id'];
-    $company_role_id = CompanyUserRole::where('user_id', $user_id)->where('company_id', $company_id)->pluck('role_id');
+    $company_role_id = CompanyUserRole::where('user_id', $user_id)->where('company_id', $company_id)->pluck('role_id')->toArray();
+    $role_id = CompanyUser::where('user_id', $user_id)->where('company_id', $company_id)->value('company_role_id');
+    if($role_id)
+        $company_role_id[] = $role_id;
     $roles = CompanyRole::whereIn('id', $company_role_id)->get();
     return $roles;
 }

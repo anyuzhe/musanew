@@ -371,6 +371,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 $data->recruit = $recruitResume;
 
                 $data->matching = $this->recruitResumesRepository->matching($recruitResume);
+                $data->quiz_results = $this->recruitResumesRepository->getQuizResults($recruitResume);
             }else{
                 $data->recruit = null;
             }

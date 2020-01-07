@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Moodle\Quiz;
 use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
@@ -10,4 +11,9 @@ class Course extends Model
     protected $connection = 'moodle';
     public $fillable = [
     ];
+
+    public function quizs()
+    {
+        return $this->hasMany(Quiz::class, 'course', 'id');
+    }
 }

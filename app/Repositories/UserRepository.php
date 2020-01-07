@@ -198,10 +198,7 @@ class UserRepository
 //            $info->current_company->is_demand_side = count($info->current_company->thirdParty)>0?1:0;
             $current_company->logo_url = getCompanyLogo($current_company->logo);
             $current_company->role_name = getCompanyRoleName($current_company, $user);
-            $_role = getCompanyRole($current_company, $user);
             $_roles = getCompanyRoles($current_company, $user);
-            if($_role)
-                $_roles->push($_role);
             $permissions = [];
             foreach ($_roles as $role) {
                 $permissions = array_merge($permissions, $role->getPermissions()->toArray());
