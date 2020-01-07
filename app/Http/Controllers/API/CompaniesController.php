@@ -498,10 +498,12 @@ class CompaniesController extends ApiBaseCommonController
             $user = $users[$companyUser->user_id];
             if(!$user)
                 continue;
-
+            $is_manager = 0;
             $_roles = getCompanyRoles($this->getCurrentCompany(), $user);
             $role_names = [];
             foreach ($_roles as $role) {
+                if($role['id']==1)
+                    $is_manager = 1;
                 $role_names[] = $role['name'];
             }
             $info = $user['info'];
@@ -516,6 +518,7 @@ class CompaniesController extends ApiBaseCommonController
               'email'=>$user['email'],
               'confirmed'=>$user['confirmed'],
               'department'=>$department_name,
+              'is_manager'=>$is_manager,
               'avatar_url'=>getPicFullUrl($info['avatar']),
             ];
         }
