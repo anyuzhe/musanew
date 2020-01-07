@@ -523,6 +523,8 @@ function getMoodlePICURL($logo){
 }
 
 function getPicFullUrl($url){
+    if(!$url)
+        return env('APP_URL').'/static/pic/musa_logo.png';
     if(is_numeric($url)){
         return getMoodlePICURL($url);
     }else{

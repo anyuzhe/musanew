@@ -535,7 +535,7 @@ class CompaniesController extends ApiBaseCommonController
         $email = $request->get('email');
         $roles =  $request->get('roles');
         $company = $this->getCurrentCompany();
-        $user = app()->build(CompaniesRepository::class)->handleManger($company, $email, $roles, $department_id);
+        $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
         return $this->apiReturnJson(0);
     }
 
@@ -552,7 +552,7 @@ class CompaniesController extends ApiBaseCommonController
                 return $this->apiReturnJson(9999, null, '该邮箱已经存在');
             }
         }
-        $user = app()->build(CompaniesRepository::class)->handleManger($company, $email, $roles, $department_id);
+        $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
         return $this->apiReturnJson(0);
     }
 
