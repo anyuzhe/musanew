@@ -329,13 +329,17 @@ class RecruitResumesRepository
         $job = $data->job;
         $resume = $data->resume;
         $user = $resume->user;
+        if($user)
+            $user_id = $user->id;
+        else
+            $user_id = 0;
         $tests = [];
         foreach ($job->tests as $test) {
             $quizs = [];
             foreach ($test->quizs as $quiz) {
                 $_quiz = [
                   'name'=>$quiz->name,
-                  'grade'=>$quiz->grades()->where('userid',$user->id)->value('grade'),
+                  'grade'=>$quiz->grades()->where('userid',$user_id)->value('grade'),
                 ];
                 $quizs[] = $_quiz;
             }
