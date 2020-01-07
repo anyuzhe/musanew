@@ -512,13 +512,17 @@ class CompaniesController extends ApiBaseCommonController
                 $role_names[] = $role['name'];
             }
             $info = $user['info'];
+            if($companyUser->department)
+                $department_name = $companyUser->department->name;
+            else
+                $department_name = null;
             $data[] = [
               'id'=>$user['id'],
               'name'=>$info?$info['realname']:'无姓名',
               'role_names'=>$role_names,
               'email'=>$user['email'],
               'confirmed'=>$user['confirmed'],
-              'department'=>$companyUser->department->name,
+              'department'=>$department_name,
               'avatar_url'=>getPicFullUrl($info['avatar']),
             ];
         }
