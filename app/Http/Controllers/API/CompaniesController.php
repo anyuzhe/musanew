@@ -497,6 +497,8 @@ class CompaniesController extends ApiBaseCommonController
         $data = [];
         foreach ($companyUsers as $companyUser) {
             $user = $users[$companyUser->user_id];
+            if(!$user)
+                continue;
             if(isset($roles[$companyUser->company_role_id]))
                 $_role = $roles[$companyUser->company_role_id];
             else
