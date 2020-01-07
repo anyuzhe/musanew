@@ -57,7 +57,7 @@ class RecruitsController extends ApiBaseCommonController
         if($job_id){
             $model = $model->where('job_id', $job_id);
         }
-        if($department_id){
+        if($department_id && !is_array($department_id)){
             $department = CompanyDepartment::find($department_id);
             if($department->level==1){
                 $departmentIds = [$department->id];
@@ -65,6 +65,9 @@ class RecruitsController extends ApiBaseCommonController
                 $departmentIds = $department->children->pluck('id')->toArray();
             }
             $jobIds = Job::whereIn('department_id', $departmentIds)->pluck('id')->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }elseif ($department_id && is_array($department_id)){
+            $jobIds = Job::whereIn('department_id', $department_id)->pluck('id')->toArray();
             $model = $model->whereIn('job_id', $jobIds);
         }
         if($leading_id){
@@ -389,14 +392,17 @@ class RecruitsController extends ApiBaseCommonController
         if($job_id){
             $model = $model->where('job_id', $job_id);
         }
-        if($department_id){
+        if($department_id && !is_array($department_id)){
             $department = CompanyDepartment::find($department_id);
             if($department->level==1){
                 $departmentIds = [$department->id];
             }else{
                 $departmentIds = $department->children->pluck('id')->toArray();
             }
-            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck()->toArray();
+            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck('id')->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }elseif ($department_id && is_array($department_id)){
+            $jobIds = Job::whereIn('department_id', $department_id)->pluck('id')->toArray();
             $model = $model->whereIn('job_id', $jobIds);
         }
         if($leading_id){
