@@ -518,6 +518,7 @@ class CompaniesController extends ApiBaseCommonController
               'email'=>$user['email'],
               'confirmed'=>$user['confirmed'],
               'department'=>$department_name,
+              'department_id'=>$companyUser->department_id,
               'is_manager'=>$is_manager,
               'avatar_url'=>getPicFullUrl($info['avatar']),
             ];
