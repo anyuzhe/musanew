@@ -571,12 +571,14 @@ class CompaniesController extends ApiBaseCommonController
         $info->start_work_at = $_info['start_work_at'];
         $info->entry_at = $companyUser->entry_at;
 
-        $_roles = getCompanyRoles($companyUser, $user);
+        $_roles = getCompanyRoles($company, $user);
 
         $info->address_id = $companyUser->address_id;
         if($info->address_id)
             $info->address = CompanyAddress::find($info->address_id);
 
+        $role_ids = [];
+        $role_names = [];
         foreach ($_roles as $role) {
             $role_names[] = $role['name'];
             $role_ids[] = $role['id'];
