@@ -509,17 +509,16 @@ class CompaniesController extends ApiBaseCommonController
                 $role_ids[] = $role['id'];
             }
             $info = $user['info'];
-            if($companyUser->department)
-                $department_name = $companyUser->department->name;
-            else
-                $department_name = null;
 
             if($companyUser->department && $companyUser->department->level==1){
                 $department_ids = [$companyUser->department_id];
+                $department_name = $companyUser->department->name;
             }elseif($companyUser->department && $companyUser->department->level==2){
                 $department_ids = [$companyUser->department->parent->id,$companyUser->department_id];
+                $department_name = $companyUser->department->parent->name.'-'.$companyUser->department->name;
             }else{
                 $department_ids = [];
+                $department_name = null;
             }
             $data[] = [
               'id'=>$user['id'],
