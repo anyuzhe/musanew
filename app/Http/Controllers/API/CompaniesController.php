@@ -615,7 +615,7 @@ class CompaniesController extends ApiBaseCommonController
 
         $this->userRepository->setInfo($user, $request->all());
 
-        if($user && $email!=$user->email){
+        if($user && $email &&$email!=$user->email){
             if(User::where('id','!=',$user->id)->where('confirmed',1)->where('deleted',0)->first()){
                 return $this->apiReturnJson(9999, null, '该邮箱已经存在');
             }
