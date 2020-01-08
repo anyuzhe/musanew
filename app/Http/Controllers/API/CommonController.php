@@ -15,9 +15,9 @@ class CommonController extends Controller
 {
     public $request;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->request = $request;
+        $this->request = \request();
     }
 
     public function requireMoodleConfig()

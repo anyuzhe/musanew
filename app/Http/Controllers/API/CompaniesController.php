@@ -23,6 +23,7 @@ use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\StatisticsRepository;
+use App\Repositories\UserRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use App\ZL\ORG\Excel\ExcelHelper;
 use DB;
@@ -33,6 +34,13 @@ use mod_questionnaire\question\date;
 class CompaniesController extends ApiBaseCommonController
 {
     protected $model_name = Company::class;
+    protected $userRepository;
+
+    public function __construct(Request $request, UserRepository $userRepository)
+    {
+        Parent::__construct($request);
+        $this->userRepository = $userRepository;
+    }
 
     public function thirdPartyList()
     {
@@ -542,6 +550,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function userShow($id)
     {
+        $user = User::find($id);
         $company = $this->getCurrentCompany();
         $info = UserBasicInfo::where('user_id', $id)->first();
         $companyUser = CompanyUser::where('comapny_id', $company->id)->where('user_id', $id)->first();
@@ -556,10 +565,27 @@ class CompaniesController extends ApiBaseCommonController
             $department_ids = [];
             $department_name = null;
         }
+        $_info = $this->userRepository->getInfo($user);
         $info->department_name = $department_name;
         $info->department_ids = $department_ids;
-        $info->work_years = 1;
-        $info->entry_years = 1;
+        $info->start_work_at = $_info['start_work_at'];
+        $info->entry_at = $companyUser->entry_at;
+
+        $_roles = getCompanyRoles($companyUser, $user);
+
+        $info->address_id = $companyUser->address_id;
+        if($info->address_id)
+            $info->address = CompanyAddress::find($info->address_id);
+
+        foreach ($_roles as $role) {
+            $role_names[] = $role['name'];
+            $role_ids[] = $role['id'];
+        }
+        $info->role_ids = $role_ids;
+        $info->role_names = $role_names;
+
+        $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
+        $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
         return $this->apiReturnJson(0,$info);
     }
 
