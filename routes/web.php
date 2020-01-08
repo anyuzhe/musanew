@@ -293,6 +293,7 @@ Route::get('/resume/dumpPdf/{id}', 'Admin\ResumesController@dumpPdf');
 
 Route::get('/company/data/statistics/excel/{type}', 'API\CompaniesController@dataStatisticsExcel');
 Route::get('/company/data/statistics/detail/excel/{type}', 'API\CompaniesController@dataStatisticsDetailExcel');
+Route::get('/company/thirdParty/statistics/excel', 'API\CompaniesController@thirdPartyStatisticsExcel');
 
 Route::get('/company/logs/excel', 'API\CompanyLogsController@exportExcel');
 

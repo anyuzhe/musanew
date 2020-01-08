@@ -772,8 +772,11 @@ class CompaniesController extends ApiBaseCommonController
             $model = $model->whereIn('job_id', $jobIds);
         }
         if($leading){
-            $recruitIds = Recruit::where('leading', $leading)->pluck('id');
-            $model = $model->whereIn('company_job_recruit_id', $recruitIds);
+            $recruitIds = Recruit::where('leading_id', $leading)->pluck('id');
+            $entrustIds = Entrust::where('leading_id', $leading)->pluck('id');
+            $model = $model->where(function ($query)use($recruitIds, $entrustIds){
+                $query->whereIn('company_job_recruit_id', $recruitIds)->orWhereIn('company_job_recruit_entrust_id', $entrustIds);
+            });
         }
 
         $resumeModel = new Resume();
@@ -865,7 +868,9 @@ class CompaniesController extends ApiBaseCommonController
         $list->load('resume');
         $list->load('thirdParty');
         $list->load('company');
+        $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $list->pluck('job_id'))->get())->keyBy('id')->toArray();
         foreach ($list as &$v) {
+            $v->job = $jobs[$v->job_id];
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
             $this->recruitResumesRepository->addFieldText($v);
 
@@ -877,7 +882,7 @@ class CompaniesController extends ApiBaseCommonController
             //首次面试时间
             $has_first_interview_date = $this->checkHasDateSearch('first_interview_date');
             if($has_first_interview_date){
-                $v->last_interview_feedback = RecruitResumeLog::where('company_job_recruit_resume_id', $v->id)->where('status', 4)->where('interview_count',1)->orderBy('id','desc')->value('other_data');
+                $v->first_interview_feedback = RecruitResumeLog::where('company_job_recruit_resume_id', $v->id)->where('status', 4)->where('interview_count',1)->orderBy('id','desc')->value('other_data');
             }
             //第二次面试时间
             $has_second_interview_date = $this->checkHasDateSearch('second_interview_date');
@@ -917,6 +922,129 @@ class CompaniesController extends ApiBaseCommonController
             }
         }
         return $this->apiReturnJson(0,$list,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
+    }
+
+    public function thirdPartyStatisticsExcel()
+    {
+        request()->offsetSet('pageSize',999999);
+        $res = $this->thirdPartyStatistics();
+        if($res['code']!=0){
+            return $res;
+        }
+        $list = $res['data'];
+        $title = [
+            '第三方企业名称',
+            '职位',
+            '部门',
+            '名称',
+            '状态',
+            '投递时间',
+        ];
+
+        $excelHelper = new ExcelHelper();
+        $data = [];
+        $last_interview_feedback = false;
+        $first_interview_feedback = false;
+        $second_interview_feedback = false;
+        $third_interview_feedback = false;
+        $resume_look_count = false;
+        $necessary_skills_grade = false;
+        $optional_skills_grade = false;
+        $job_test_grade = false;
+        $other_deliver_count = false;
+        $hire_count = false;
+        foreach ($list as $v) {
+            $_data = [];
+            $_data[] = $v->thirdParty?$v->thirdParty->company_alias:'';
+            $_data[] = $v->job->name;
+            $_data[] = $v->job->department->full_name;
+            $_data[] = $v->resume->name;
+            $_data[] = $v->status_str;
+            $_data[] = $v->created_at;
+            if(isset($v->last_interview_feedback)){
+                $_data[] = $v->last_interview_feedback;
+                $last_interview_feedback = true;
+            }elseif($last_interview_feedback){
+                $_data[] = '';
+            }
+            if(isset($v->first_interview_feedback)){
+                $_data[] = $v->first_interview_feedback;
+                $first_interview_feedback = true;
+            }elseif($first_interview_feedback){
+                $_data[] = '';
+            }
+            if(isset($v->second_interview_feedback)){
+                $_data[] = $v->second_interview_feedback;
+                $second_interview_feedback = true;
+            }elseif($second_interview_feedback){
+                $_data[] = '';
+            }
+            if(isset($v->third_interview_feedback)){
+                $_data[] = $v->third_interview_feedback;
+                $third_interview_feedback = true;
+            }elseif($third_interview_feedback){
+                $_data[] = '';
+            }
+            if(isset($v->resume_look_count)){
+                $_data[] = $v->resume_look_count;
+                $resume_look_count = true;
+            }elseif($resume_look_count){
+                $_data[] = '';
+            }
+            if(isset($v->necessary_skills_grade)){
+                $_data[] = $v->necessary_skills_grade;
+                $necessary_skills_grade = true;
+            }elseif($necessary_skills_grade){
+                $_data[] = '';
+            }
+            if(isset($v->optional_skills_grade)){
+                $_data[] = $v->optional_skills_grade;
+                $optional_skills_grade = true;
+            }elseif($optional_skills_grade){
+                $_data[] = '';
+            }
+            if(isset($v->job_test_grade)){
+                $_data[] = $v->job_test_grade;
+                $job_test_grade = true;
+            }elseif($job_test_grade){
+                $_data[] = '';
+            }
+            if(isset($v->other_deliver_count)){
+                $_data[] = $v->other_deliver_count;
+                $other_deliver_count = true;
+            }elseif($other_deliver_count){
+                $_data[] = '';
+            }
+            if(isset($v->hire_count)){
+                $_data[] = $v->hire_count;
+                $hire_count = true;
+            }elseif($hire_count){
+                $_data[] = '';
+            }
+            $data[] = $_data;
+        }
+
+        if($last_interview_feedback)
+            $title[] = '最后一次面试反馈';
+        if($first_interview_feedback)
+            $title[] = '第一次面试反馈';
+        if($second_interview_feedback)
+            $title[] = '第二次面试反馈';
+        if($third_interview_feedback)
+            $title[] = '第三次面试反馈';
+        if($resume_look_count)
+            $title[] = '简历阅览次数';
+        if($necessary_skills_grade)
+            $title[] = '必要技能分数';
+        if($optional_skills_grade)
+            $title[] = '选择技能分数';
+        if($job_test_grade)
+            $title[] = '职位测试分数';
+        if($other_deliver_count)
+            $title[] = '投递其他简历次数';
+        if($hire_count)
+            $title[] = '被录用次数';
+        $excelHelper->dumpExcel($title,$data,'数据分析简历数据', "数据分析简历数据");
     }
 
     public function checkHasDateSearch($timeStr)
