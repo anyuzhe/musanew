@@ -501,10 +501,12 @@ class CompaniesController extends ApiBaseCommonController
             $is_manager = 0;
             $_roles = getCompanyRoles($this->getCurrentCompany(), $user);
             $role_names = [];
+            $role_ids = [];
             foreach ($_roles as $role) {
                 if($role['id']==1)
                     $is_manager = 1;
                 $role_names[] = $role['name'];
+                $role_ids[] = $role['id'];
             }
             $info = $user['info'];
             if($companyUser->department)
@@ -515,6 +517,7 @@ class CompaniesController extends ApiBaseCommonController
               'id'=>$user['id'],
               'name'=>$info?$info['realname']:'无姓名',
               'role_names'=>$role_names,
+              'role_ids'=>$role_ids,
               'email'=>$user['email'],
               'confirmed'=>$user['confirmed'],
               'department'=>$department_name,
@@ -643,6 +646,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function thirdPartyStatistics()
     {
+        //TODO
         $company_id = $this->request->get('company_id', $this->getCurrentCompany()->id);
         $third_party_id = $this->request->get('third_party_id');
         $job_id = $this->request->get('job_id');
