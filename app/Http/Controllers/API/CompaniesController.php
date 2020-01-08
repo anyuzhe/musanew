@@ -553,7 +553,7 @@ class CompaniesController extends ApiBaseCommonController
         $user = User::find($id);
         $company = $this->getCurrentCompany();
         $info = UserBasicInfo::where('user_id', $id)->first();
-        $companyUser = CompanyUser::where('comapny_id', $company->id)->where('user_id', $id)->first();
+        $companyUser = CompanyUser::where('company_id', $company->id)->where('user_id', $id)->first();
 
         if($companyUser->department && $companyUser->department->level==1){
             $department_ids = [$companyUser->department_id];
