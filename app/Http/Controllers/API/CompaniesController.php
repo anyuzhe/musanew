@@ -620,6 +620,9 @@ class CompaniesController extends ApiBaseCommonController
                 return $this->apiReturnJson(9999, null, '该邮箱已经存在');
             }
         }
+        if(!$email){
+            $email = $user->email;
+        }
         $requestData = $request->all();
         unset($requestData['department_id']);
         $companyUser = CompanyUser::where('company_id', $company->id)->where('user_id', $user_id)->first();
