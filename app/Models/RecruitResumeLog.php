@@ -21,6 +21,8 @@ class RecruitResumeLog extends Model
         'job_id',
         'recruit_id',
         'entrust_id',
+        'interview_count',
+        'previous_id',
         'user_id',
         'created_at',
     ];

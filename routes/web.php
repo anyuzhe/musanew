@@ -44,6 +44,7 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+
     $t = new Recruit();
     $t = $t->where('id','>',1);
     dd($t->getQuery()->wheres);
