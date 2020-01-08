@@ -86,12 +86,12 @@ class UserRepository
         if($obj){
             $obj->fill($request);
             $obj->save();
-            $this->afterUpdateResume($obj->id, $request);
+            $this->afterUpdateResume($obj->id, $request, $user);
         }else{
             $obj = Resume::create($request);
             $obj->is_base = 1;
             $obj->is_personal = 1;
-            $this->afterStoreResume($obj, $request);
+            $this->afterStoreResume($obj, $request,$user);
         }
         $info = $user->info;
         $info->realname = $name;
@@ -108,10 +108,10 @@ class UserRepository
         }
     }
 
-    public function afterStoreResume($obj, $data)
+    public function afterStoreResume($obj, $data, $user)
     {
         $resumeRepository = app()->build(ResumesRepository::class);
-        $user_id = $this->getUser()->id;
+        $user_id = $user->id;
         $obj->creator_id = $user_id;
         $obj->user_id = $user_id;
         $obj->is_base = 1;
@@ -130,7 +130,7 @@ class UserRepository
         }
     }
 
-    public function afterUpdateResume($id, $data)
+    public function afterUpdateResume($id, $data, $user)
     {
         $resumeRepository = app()->build(ResumesRepository::class);
         $obj = Resume::find($id);
@@ -139,7 +139,7 @@ class UserRepository
             $obj->education = $educationValue;
         }
         $resumeRepository->saveDataForForm($obj, $data);
-        $otherResumes = Resume::where('user_id', $this->getUser()->id)->where('is_base', 0)->where('type', 2)->get();
+        $otherResumes = Resume::where('user_id', $user->id)->where('is_base', 0)->where('type', 2)->get();
         $skills = isset($data['skills'])?$data['skills']:[];
         foreach ($otherResumes as $otherResume) {
             $resumeRepository->mixResumes($otherResume, $obj);
