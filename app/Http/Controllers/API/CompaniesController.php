@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Area;
 use App\Models\Company;
 use App\Models\CompanyAddress;
+use App\Models\CompanyDepartment;
 use App\Models\CompanyResume;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
@@ -486,7 +487,9 @@ class CompaniesController extends ApiBaseCommonController
         if($department_id){
             $model = $model->where('department_id', $department_id);
         }
+        $model1 = clone $model;
         $companyUsers = $model->where('company_id', $company_id)->skip($pageSize*($pagination-1))->take($pageSize)->get();
+        $count = $model1->where('company_id', $company_id)->count();
         $companyUsers->load('department');
         $userIds = $companyUsers->pluck('user_id')->toArray();
         $roleIds = $companyUsers->pluck('company_role_id')->toArray();
@@ -534,7 +537,7 @@ class CompaniesController extends ApiBaseCommonController
               'avatar_url'=>getPicFullUrl($info['avatar']),
             ];
         }
-        return $this->apiReturnJson(0,$data);
+        return $this->apiReturnJson(0,$data,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 
     public function storeUser(Request $request)
@@ -658,6 +661,58 @@ class CompaniesController extends ApiBaseCommonController
         $company_id = $this->request->get('company_id', $this->getCurrentCompany()->id);
         $third_party_id = $this->request->get('third_party_id');
         $job_id = $this->request->get('job_id');
+        $department_id = $this->request->get('department_id');
+        $leading = $this->request->get('leading');
+        $delivery_id = $this->request->get('delivery_id');
+        $sex = $this->request->get('sex');
+        $working_years = $this->request->get('working_years');
+        $status = $this->request->get('status');
+        $education = $this->request->get('education');
+
+        $model = new RecruitResume();
+        if($third_party_id){
+            $model = $model->where('third_party_id', $third_party_id);
+        }
+        if($job_id){
+            $model = $model->where('third_party_id', $job_id);
+        }
+        if($department_id && !is_array($department_id)){
+            $department = CompanyDepartment::find($department_id);
+            if($department->level==2){
+                $departmentIds = [$department->id];
+            }else{
+                $departmentIds = $department->children->pluck('id')->toArray();
+            }
+            $jobIds = Job::whereIn('department_id', $departmentIds)->pluck('id')->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }elseif($department_id && is_array($department_id)){
+            $jobIds = Job::whereIn('department_id', $department_id)->pluck('id')->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }
+        if($leading){
+            $recruitIds = Recruit::where('leading', $leading)->pluck('id');
+            $model = $model->whereIn('company_job_recruit_id', $recruitIds);
+        }
+        if($delivery_id){
+            $recruit_resume_ids = RecruitResumeLog::where('user_id', $delivery_id)->where('status', 1)->pluck('id');
+            $model = $model->whereIn('company_job_recruit_resume_id', $recruit_resume_ids);
+        }
+    }
+
+    public function generate($model, $timeStr, $modelField=null)
+    {
+        $start_at = $this->request->get($timeStr.'_start');
+        $end_at = $this->request->get($timeStr.'_end');
+        if(!$modelField)
+            $modelField = $timeStr;
+        if($start_at && !$end_at){
+            $model = $model->where($modelField, '>=' ,$start_at);
+        }elseif (!$start_at && $end_at){
+            $model = $model->where($modelField, '<=' ,$end_at);
+        }elseif ($start_at && $end_at){
+            $model = $model->where($modelField, '>=' ,$start_at)->where($modelField, '<=' ,$end_at);
+        }
+        return $model;
     }
 
     public function resumeRelationSet()
