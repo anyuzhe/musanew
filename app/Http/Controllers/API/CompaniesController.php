@@ -23,6 +23,7 @@ use App\Repositories\CompaniesRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
+use App\Repositories\ResumesRepository;
 use App\Repositories\StatisticsRepository;
 use App\Repositories\UserRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -36,11 +37,13 @@ class CompaniesController extends ApiBaseCommonController
 {
     protected $model_name = Company::class;
     protected $userRepository;
+    protected $recruitResumesRepository;
 
-    public function __construct(Request $request, UserRepository $userRepository)
+    public function __construct(Request $request, UserRepository $userRepository, RecruitResumesRepository $recruitResumesRepository)
     {
         Parent::__construct($request);
         $this->userRepository = $userRepository;
+        $this->recruitResumesRepository = $recruitResumesRepository;
     }
 
     public function thirdPartyList()
@@ -722,7 +725,6 @@ class CompaniesController extends ApiBaseCommonController
 
     public function thirdPartyStatistics()
     {
-        //TODO
         $company_id = $this->request->get('company_id', $this->getCurrentCompany()->id);
         $third_party_id = $this->request->get('third_party_id');
         $job_id = $this->request->get('job_id');
@@ -733,6 +735,7 @@ class CompaniesController extends ApiBaseCommonController
         $working_years = $this->request->get('working_years');
         $recruit_search_status = $this->request->get('recruit_search_status');
         $education = $this->request->get('education');
+        $data_items = $this->request->get('data_items');
 
         $pageSize = app('request')->get('pageSize',10);
         $pagination = app('request')->get('pagination',1);
@@ -761,13 +764,11 @@ class CompaniesController extends ApiBaseCommonController
             $recruitIds = Recruit::where('leading', $leading)->pluck('id');
             $model = $model->whereIn('company_job_recruit_id', $recruitIds);
         }
-        if($delivery_id){
-            $recruit_resume_ids = RecruitResumeLog::where('user_id', $delivery_id)->where('status', 1)->pluck('id');
-            $model = $model->whereIn('company_job_recruit_resume_id', $recruit_resume_ids);
-        }
 
         $resumeModel = new Resume();
         $hasResumeSearch = false;
+        $resumeModel = $resumeModel->where('company_id', $company_id);
+
         if($sex){
             $resumeModel = $resumeModel->where('gender',$sex);
             $hasResumeSearch = true;
@@ -784,11 +785,64 @@ class CompaniesController extends ApiBaseCommonController
             $model = $model->whereIn('resume_id', $resumeModel->pluck('id'));
         }
 
+        $model = $this->generateDateSearch($model, 'resume_deliver_date', 'created_at');
+        $model = $this->generateDateSearch($model, 'resume_end_date', 'updated_at');
+        $model = $this->generateDateSearch($model, 'resume_entry_date', 'formal_entry_at');
+        $model = $this->generateDateSearch($model, 'last_interview_date', 'interview_at');
+
+        if($delivery_id){
+            $recruit_resume_ids = RecruitResumeLog::where('user_id', $delivery_id)->where('status', 1)->pluck('id');
+            $model = $model->whereIn('company_job_recruit_resume_id', $recruit_resume_ids);
+        }
+        //首次面试时间
+        //第二次面试时间
+        //第三次面试时间
+
+        $recruitModel = new Recruit();
+        $recruitModel = $recruitModel->where('id','>',0);
+        $recruitModel = $this->generateDateSearch($recruitModel, 'recruit_start_date', 'created_at');
+        $recruitModel = $this->generateDateSearch($recruitModel, 'recruit_end_date', 'end_at');
+        if($recruit_search_status){
+            switch ($recruit_search_status){
+                case 1:
+                    $recruitModel = $recruitModel->whereIn('status', [2,3,7,4,5]);
+                    break;
+                case 2:
+                    $recruitModel = $recruitModel->whereIn('status', [1,4,5]);
+                    break;
+                case 3:
+                    $recruitModel = $recruitModel->whereIn('status', [4,5]);
+                    break;
+                case 4:
+                    $recruitModel = $recruitModel->whereIn('status', [6]);
+                    break;
+                case 5:
+                    $recruitModel = $recruitModel->where('is_public', 1)->whereNotIn('status', [6,7]);
+                    break;
+                case 6:
+                    $recruitModel = $recruitModel->where('is_public', 0)->whereNotIn('status', [6,7]);
+                    break;
+            }
+        }
+        if(count($recruitModel->getQuery()->wheres)>1)
+            $model = $model->whereIn('company_job_recruit_id', $recruitModel->pluck('id'));
+
+        $_model = clone $model;
+        $count =$_model->count();
         $list = $model->skip($pageSize*($pagination-1))->take($pageSize)->get();
-        return $this->apiReturnJson(0,$list);
+
+        $list->load('resume');
+        $list->load('thirdParty');
+        $list->load('company');
+        //TODO $data_items 选择项
+        foreach ($list as &$v) {
+            $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
+            $this->recruitResumesRepository->addFieldText($v);
+        }
+        return $this->apiReturnJson(0,$list,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 
-    public function generate($model, $timeStr, $modelField=null)
+    public function generateDateSearch($model, $timeStr, $modelField=null)
     {
         $start_at = $this->request->get($timeStr.'_start');
         $end_at = $this->request->get($timeStr.'_end');

@@ -44,6 +44,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $t = new Recruit();
+    $t = $t->where('id','>',1);
+    dd($t->getQuery()->wheres);
     dd(request('i'));
     set_time_limit(0);
     $uis = UserBasicInfo::all();
