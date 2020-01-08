@@ -785,17 +785,31 @@ class CompaniesController extends ApiBaseCommonController
             $model = $model->whereIn('resume_id', $resumeModel->pluck('id'));
         }
 
+        if($delivery_id){
+            $recruit_resume_ids = RecruitResumeLog::where('user_id', $delivery_id)->where('status', 1)->pluck('company_job_recruit_resume_id');
+            $model = $model->whereIn('id', $recruit_resume_ids);
+        }
+
         $model = $this->generateDateSearch($model, 'resume_deliver_date', 'created_at');
         $model = $this->generateDateSearch($model, 'resume_end_date', 'updated_at');
         $model = $this->generateDateSearch($model, 'resume_entry_date', 'formal_entry_at');
+        //最后面试时间
+        $has_last_interview_date = $this->checkHasDateSearch('last_interview_date');
         $model = $this->generateDateSearch($model, 'last_interview_date', 'interview_at');
-
-        if($delivery_id){
-            $recruit_resume_ids = RecruitResumeLog::where('user_id', $delivery_id)->where('status', 1)->pluck('id');
-            $model = $model->whereIn('company_job_recruit_resume_id', $recruit_resume_ids);
-        }
         //首次面试时间
+        $has_first_interview_date = $this->checkHasDateSearch('first_interview_date');
+        if($has_first_interview_date){
+            $recruitResumeLogModel1 = RecruitResumeLog::where('status', 2);
+            $recruitResumeLogModel1 = $this->generateDateSearch($recruitResumeLogModel1, 'first_interview_date', 'other_data');
+            $model = $model->whereIn('id', $recruitResumeLogModel1->pluck('company_job_recruit_resume_id'));
+        }
         //第二次面试时间
+        $has_second_interview_date = $this->checkHasDateSearch('second_interview_date');
+        if($has_second_interview_date){
+            $recruitResumeLogModel2 = RecruitResumeLog::where('status', 5);
+            $recruitResumeLogModel2 = $this->generateDateSearch($recruitResumeLogModel2, 'second_interview_date', 'other_data');
+            $model = $model->whereIn('id', $recruitResumeLogModel2->pluck('company_job_recruit_resume_id'));
+        }
         //第三次面试时间
 
         $recruitModel = new Recruit();
@@ -842,6 +856,12 @@ class CompaniesController extends ApiBaseCommonController
         return $this->apiReturnJson(0,$list,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 
+    public function checkHasDateSearch($timeStr)
+    {
+        $start_at = $this->request->get($timeStr.'_start');
+        $end_at = $this->request->get($timeStr.'_end');
+        return $start_at || $end_at;
+    }
     public function generateDateSearch($model, $timeStr, $modelField=null)
     {
         $start_at = $this->request->get($timeStr.'_start');
