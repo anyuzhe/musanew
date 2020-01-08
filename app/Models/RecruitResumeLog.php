@@ -23,6 +23,7 @@ class RecruitResumeLog extends Model
         'entrust_id',
         'interview_count',
         'previous_id',
+        'interview_at',
         'user_id',
         'created_at',
     ];

@@ -99,10 +99,12 @@ class RecruitResumesRepository
         }elseif($status==2){
             $recruitResume->interview_at = $otherData;
             $log->text =  '邀请面试-'.$otherData;
+            $log->interview_at =  $otherData;
             $log->interview_count = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->max('interview_count')+1;
             $this->minusNewResumeHandle($recruitResume);
         }elseif($status==3){
             $recruitResume->interview_at = $otherData;
+            $log->interview_at = $otherData;
             $log->text =  '修改面试时间-'.$otherData;
         }elseif($status==4){
             if($recruitResume->status==2 || $recruitResume->status==3){
@@ -112,6 +114,7 @@ class RecruitResumesRepository
             }
         }elseif($status==5){
             $recruitResume->interview_at = $otherData;
+            $log->interview_at = $otherData;
             $log->text =  '再次邀请面试-'.$otherData;
             $log->interview_count = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->max('interview_count')+1;
         }elseif($status==6){
@@ -470,11 +473,5 @@ class RecruitResumesRepository
         }
         $recruitResume->updated_at = $updateAt;
         $recruitResume->save();
-    }
-
-//把第二次的面试log取出来
-    public function getSecondInterviewLogIds()
-    {
-//        RecruitResumeLog::where('status',5)->
     }
 }

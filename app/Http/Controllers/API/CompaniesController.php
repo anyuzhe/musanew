@@ -15,6 +15,7 @@ use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
+use App\Models\RecruitResumeLook;
 use App\Models\Resume;
 use App\Models\User;
 use App\Models\UserBasicInfo;
@@ -661,6 +662,7 @@ class CompaniesController extends ApiBaseCommonController
         }
         return $this->apiReturnJson(0,$data);
     }
+
     public function dataStatistics()
     {
         $start_date = $this->request->get('start_date',date('Y-m-01'));
@@ -808,20 +810,24 @@ class CompaniesController extends ApiBaseCommonController
         //首次面试时间
         $has_first_interview_date = $this->checkHasDateSearch('first_interview_date');
         if($has_first_interview_date){
-            $recruitResumeLogModel1 = RecruitResumeLog::where('status', 2);
-            $recruitResumeLogModel1 = $this->generateDateSearch($recruitResumeLogModel1, 'first_interview_date', 'other_data');
+            $recruitResumeLogModel1 = RecruitResumeLog::where('interview_count',1);
+            $recruitResumeLogModel1 = $this->generateDateSearch($recruitResumeLogModel1, 'first_interview_date', 'interview_at');
             $model = $model->whereIn('id', $recruitResumeLogModel1->pluck('company_job_recruit_resume_id'));
         }
         //第二次面试时间
         $has_second_interview_date = $this->checkHasDateSearch('second_interview_date');
         if($has_second_interview_date){
-            //把第二次的面试log取出来
-            RecruitResumeLog::where('status', 5);
-            $recruitResumeLogModel2 = RecruitResumeLog::where('status', 5);
-            $recruitResumeLogModel2 = $this->generateDateSearch($recruitResumeLogModel2, 'second_interview_date', 'other_data');
+            $recruitResumeLogModel2 = RecruitResumeLog::where('interview_count',2);
+            $recruitResumeLogModel2 = $this->generateDateSearch($recruitResumeLogModel2, 'second_interview_date', 'interview_at');
             $model = $model->whereIn('id', $recruitResumeLogModel2->pluck('company_job_recruit_resume_id'));
         }
         //第三次面试时间
+        $has_third_interview_date = $this->checkHasDateSearch('third_interview_date');
+        if($has_third_interview_date){
+            $recruitResumeLogModel3 = RecruitResumeLog::where('interview_count',2);
+            $recruitResumeLogModel3 = $this->generateDateSearch($recruitResumeLogModel3, 'third_interview_date', 'interview_at');
+            $model = $model->whereIn('id', $recruitResumeLogModel3->pluck('company_job_recruit_resume_id'));
+        }
 
         $recruitModel = new Recruit();
         $recruitModel = $recruitModel->where('id','>',0);
@@ -859,10 +865,56 @@ class CompaniesController extends ApiBaseCommonController
         $list->load('resume');
         $list->load('thirdParty');
         $list->load('company');
-        //TODO $data_items 选择项
         foreach ($list as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
             $this->recruitResumesRepository->addFieldText($v);
+
+            //最后面试时间
+            $has_last_interview_date = $this->checkHasDateSearch('last_interview_date');
+            if($has_last_interview_date){
+                $v->last_interview_feedback = RecruitResumeLog::where('company_job_recruit_resume_id', $v->id)->where('status', 4)->orderBy('id','desc')->value('other_data');
+            }
+            //首次面试时间
+            $has_first_interview_date = $this->checkHasDateSearch('first_interview_date');
+            if($has_first_interview_date){
+                $v->last_interview_feedback = RecruitResumeLog::where('company_job_recruit_resume_id', $v->id)->where('status', 4)->where('interview_count',1)->orderBy('id','desc')->value('other_data');
+            }
+            //第二次面试时间
+            $has_second_interview_date = $this->checkHasDateSearch('second_interview_date');
+            if($has_second_interview_date){
+                $v->second_interview_feedback = RecruitResumeLog::where('company_job_recruit_resume_id', $v->id)->where('status', 4)->where('interview_count',2)->orderBy('id','desc')->value('other_data');
+            }
+            //第三次面试时间
+            $has_third_interview_date = $this->checkHasDateSearch('third_interview_date');
+            if($has_third_interview_date){
+                $v->third_interview_feedback = RecruitResumeLog::where('company_job_recruit_resume_id', $v->id)->where('status', 4)->where('interview_count',3)->orderBy('id','desc')->value('other_data');
+            }
+
+            if(in_array('resume_look_count', $data_items)){
+                $v->resume_look_count = RecruitResumeLook::where('company_job_recruit_resume_id', $v->id)->count();
+            }
+            $gradeData = null;
+            if(in_array('necessary_skills_grade', $data_items)){
+                if(!$gradeData)
+                    $gradeData = $this->recruitResumesRepository->matching($v);
+                $v->necessary_skills_grade = $gradeData['necessary_skills_score'];
+            }
+            if(in_array('optional_skills_grade', $data_items)){
+                if(!$gradeData)
+                    $gradeData = $this->recruitResumesRepository->matching($v);
+                $v->optional_skills_grade = $gradeData['optional_skills_score'];
+            }
+            if(in_array('job_test_grade', $data_items)){
+                if(!$gradeData)
+                    $gradeData = $this->recruitResumesRepository->matching($v);
+                $v->job_test_grade = $gradeData['score'];
+            }
+            if(in_array('other_deliver_count', $data_items)){
+                $v->other_deliver_count = RecruitResume::where('resume_id', $v->resume_id)->where('id','!=',$v->id)->count();
+            }
+            if(in_array('hire_count', $data_items)){
+                $v->hire_count = RecruitResume::where('resume_id', $v->resume_id)->where('status','>=',7)->count();
+            }
         }
         return $this->apiReturnJson(0,$list,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
