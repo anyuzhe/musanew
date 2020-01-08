@@ -72,6 +72,41 @@ class UserRepository
         return $info;
     }
 
+    public function setInfo($user, $request)
+    {
+        if(isset($request['name']) && $request['name']){
+            $name = $request['name'];
+        }else{
+            $name = $request['realname'];
+        }
+        $request['name'] = $name;
+        $request['realname'] = $name;
+        $obj = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
+        if($obj){
+            $obj->fill($request);
+            $obj->save();
+            $this->afterUpdate($obj->id, $request);
+        }else{
+            $obj = Resume::create($request);
+            $obj->is_base = 1;
+            $obj->is_personal = 1;
+            $this->afterStore($obj, $request);
+        }
+        $info = $user->info;
+        $info->realname = $name;
+
+        $info->fill($request);
+        $info->save();
+
+        if(!$user->firstname && $info->realname){
+            $realname = $info->realname;
+            User::where('id', $user->id)->update([
+                'firstname'=>$realname?substr_text($realname,0,1):'',
+                'lastname'=>$realname?substr_text($realname,1, strlen($realname)):'',
+            ]);
+        }
+    }
+
     public function getUsersByRoleId($role_id)
     {
         $userIds = CompanyUser::where('company_role_id', $role_id)->pluck('user_id')->toArray();

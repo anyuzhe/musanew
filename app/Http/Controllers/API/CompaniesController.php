@@ -583,7 +583,7 @@ class CompaniesController extends ApiBaseCommonController
         }
         $info->role_ids = $role_ids;
         $info->role_names = $role_names;
-
+        $info->avatar_url = getPicFullUrl($info->avatar);
         $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
         $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
         return $this->apiReturnJson(0,$info);
@@ -604,14 +604,23 @@ class CompaniesController extends ApiBaseCommonController
         $department_id = $request->get('department_id');
         $email = $request->get('email');
         $roles =  $request->get('roles');
+        $entry_at =  $request->get('entry_at');
+        $address_id =  $request->get('address_id');
+
         $company = $this->getCurrentCompany();
         $user = User::find($user_id);
+
+        $this->userRepository->setInfo($user, $request->all());
 
         if($user && $email!=$user->email){
             if(User::where('id','!=',$user->id)->where('confirmed',1)->where('deleted',0)->first()){
                 return $this->apiReturnJson(9999, null, '该邮箱已经存在');
             }
         }
+
+        $companyUser = CompanyUser::where('company_id', $company->id)->where('user_id', $user_id)->first();
+        $companyUser->fill($request->all());
+        $companyUser->save();
         $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
         return $this->apiReturnJson(0);
     }
