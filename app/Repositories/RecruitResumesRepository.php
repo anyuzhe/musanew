@@ -467,4 +467,10 @@ class RecruitResumesRepository
         $recruitResume->updated_at = $updateAt;
         $recruitResume->save();
     }
+
+//把第二次的面试log取出来
+    public function getSecondInterviewLogIds()
+    {
+
+    }
 }

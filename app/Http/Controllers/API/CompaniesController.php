@@ -583,12 +583,16 @@ class CompaniesController extends ApiBaseCommonController
 
         $role_ids = [];
         $role_names = [];
+        $is_manager = 0;
         foreach ($_roles as $role) {
+            if($role['id']==1)
+                $is_manager = 1;
             $role_names[] = $role['name'];
             $role_ids[] = $role['id'];
         }
         $info->role_ids = $role_ids;
         $info->role_names = $role_names;
+        $info->is_manager = $is_manager;
         $info->avatar_url = getPicFullUrl($info->avatar);
         $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
         $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
@@ -601,6 +605,11 @@ class CompaniesController extends ApiBaseCommonController
         $email = $request->get('email');
         $roles =  $request->get('roles');
         $company = $this->getCurrentCompany();
+
+        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
+        if($user && CompanyUser::where('company_id', $company->id)->where('user_id',$user->id)->first()){
+            return $this->apiReturnJson(9999, null, '该用户已在企业中, 请直接修改');
+        }
         $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
         return $this->apiReturnJson(0);
     }
@@ -806,6 +815,8 @@ class CompaniesController extends ApiBaseCommonController
         //第二次面试时间
         $has_second_interview_date = $this->checkHasDateSearch('second_interview_date');
         if($has_second_interview_date){
+            //把第二次的面试log取出来
+            RecruitResumeLog::where('status', 5);
             $recruitResumeLogModel2 = RecruitResumeLog::where('status', 5);
             $recruitResumeLogModel2 = $this->generateDateSearch($recruitResumeLogModel2, 'second_interview_date', 'other_data');
             $model = $model->whereIn('id', $recruitResumeLogModel2->pluck('company_job_recruit_resume_id'));
