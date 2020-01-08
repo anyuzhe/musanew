@@ -15,6 +15,7 @@ use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
+use App\Models\Resume;
 use App\Models\User;
 use App\Models\UserBasicInfo;
 use App\Repositories\AreaRepository;
@@ -724,10 +725,13 @@ class CompaniesController extends ApiBaseCommonController
         $department_id = $this->request->get('department_id');
         $leading = $this->request->get('leading');
         $delivery_id = $this->request->get('delivery_id');
-        $sex = $this->request->get('sex');
+        $sex = $this->request->get('sex',$this->request->get('gender'));
         $working_years = $this->request->get('working_years');
-        $status = $this->request->get('status');
+        $status = $this->request->get('recruit_search_status');
         $education = $this->request->get('education');
+
+        $pageSize = app('request')->get('pageSize',10);
+        $pagination = app('request')->get('pagination',1);
 
         $model = new RecruitResume();
         if($third_party_id){
@@ -757,6 +761,27 @@ class CompaniesController extends ApiBaseCommonController
             $recruit_resume_ids = RecruitResumeLog::where('user_id', $delivery_id)->where('status', 1)->pluck('id');
             $model = $model->whereIn('company_job_recruit_resume_id', $recruit_resume_ids);
         }
+
+        $resumeModel = new Resume();
+        $hasResumeSearch = false;
+        if($sex){
+            $resumeModel = $resumeModel->where('gender',$sex);
+            $hasResumeSearch = true;
+        }
+        if($working_years){
+            $resumeModel = $resumeModel->where('working_years',$working_years);
+            $hasResumeSearch = true;
+        }
+        if($education){
+            $resumeModel = $resumeModel->where('education',$education);
+            $hasResumeSearch = true;
+        }
+        if($hasResumeSearch){
+            $model = $model->whereIn('resume_id', $resumeModel->pluck('id'));
+        }
+
+        $list = $model->skip($pageSize*($pagination-1))->take($pageSize)->get();
+        return $this->apiReturnJson(0,$list);
     }
 
     public function generate($model, $timeStr, $modelField=null)

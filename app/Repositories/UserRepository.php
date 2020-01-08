@@ -9,6 +9,7 @@ use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\PasswordFindCode;
 use App\Models\Resume;
+use App\Models\ResumeEducation;
 use App\Models\User;
 use App\Models\UserBasicInfo;
 use App\ZL\Moodle\TokenHelper;
@@ -85,12 +86,12 @@ class UserRepository
         if($obj){
             $obj->fill($request);
             $obj->save();
-            $this->afterUpdate($obj->id, $request);
+            $this->afterUpdateResume($obj->id, $request);
         }else{
             $obj = Resume::create($request);
             $obj->is_base = 1;
             $obj->is_personal = 1;
-            $this->afterStore($obj, $request);
+            $this->afterStoreResume($obj, $request);
         }
         $info = $user->info;
         $info->realname = $name;
@@ -104,6 +105,45 @@ class UserRepository
                 'firstname'=>$realname?substr_text($realname,0,1):'',
                 'lastname'=>$realname?substr_text($realname,1, strlen($realname)):'',
             ]);
+        }
+    }
+
+    public function afterStoreResume($obj, $data)
+    {
+        $resumeRepository = app()->build(ResumesRepository::class);
+        $user_id = $this->getUser()->id;
+        $obj->creator_id = $user_id;
+        $obj->user_id = $user_id;
+        $obj->is_base = 1;
+        $obj->is_personal = 1;
+        $obj->type = 2;
+        if(!$obj->education){
+            $obj->education = $resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        }
+        $obj = $resumeRepository->saveDataForForm($obj, $data);
+
+        $otherResumes = Resume::where('user_id', $user_id)->where('is_base', 0)->where('type', 2)->get();
+        $skills = isset($data['skills'])?$data['skills']:[];
+        foreach ($otherResumes as $otherResume) {
+            $resumeRepository->mixResumes($otherResume, $obj);
+            $resumeRepository->handleNewSkill($otherResume, $skills);
+        }
+    }
+
+    public function afterUpdateResume($id, $data)
+    {
+        $resumeRepository = app()->build(ResumesRepository::class);
+        $obj = Resume::find($id);
+        $educationValue = $resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        if($educationValue){
+            $obj->education = $educationValue;
+        }
+        $resumeRepository->saveDataForForm($obj, $data);
+        $otherResumes = Resume::where('user_id', $this->getUser()->id)->where('is_base', 0)->where('type', 2)->get();
+        $skills = isset($data['skills'])?$data['skills']:[];
+        foreach ($otherResumes as $otherResume) {
+            $resumeRepository->mixResumes($otherResume, $obj);
+            $resumeRepository->handleNewSkill($otherResume, $skills);
         }
     }
 
