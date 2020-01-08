@@ -513,6 +513,14 @@ class CompaniesController extends ApiBaseCommonController
                 $department_name = $companyUser->department->name;
             else
                 $department_name = null;
+
+            if($companyUser->department && $companyUser->department->level==1){
+                $department_ids = [$companyUser->department_id];
+            }elseif($companyUser->department && $companyUser->department->level==2){
+                $department_ids = [$companyUser->department->parent->id,$companyUser->department_id];
+            }else{
+                $department_ids = [];
+            }
             $data[] = [
               'id'=>$user['id'],
               'name'=>$info?$info['realname']:'无姓名',
@@ -522,6 +530,7 @@ class CompaniesController extends ApiBaseCommonController
               'confirmed'=>$user['confirmed'],
               'department'=>$department_name,
               'department_id'=>$companyUser->department_id,
+              'department_ids'=>$department_ids,
               'is_manager'=>$is_manager,
               'avatar_url'=>getPicFullUrl($info['avatar']),
             ];
