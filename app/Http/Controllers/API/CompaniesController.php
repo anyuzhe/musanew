@@ -540,6 +540,29 @@ class CompaniesController extends ApiBaseCommonController
         return $this->apiReturnJson(0,$data,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 
+    public function userShow($id)
+    {
+        $company = $this->getCurrentCompany();
+        $info = UserBasicInfo::where('user_id', $id)->first();
+        $companyUser = CompanyUser::where('comapny_id', $company->id)->where('user_id', $id)->first();
+
+        if($companyUser->department && $companyUser->department->level==1){
+            $department_ids = [$companyUser->department_id];
+            $department_name = $companyUser->department->name;
+        }elseif($companyUser->department && $companyUser->department->level==2){
+            $department_ids = [$companyUser->department->parent->id,$companyUser->department_id];
+            $department_name = $companyUser->department->parent->name.'-'.$companyUser->department->name;
+        }else{
+            $department_ids = [];
+            $department_name = null;
+        }
+        $info->department_name = $department_name;
+        $info->department_ids = $department_ids;
+        $info->work_years = 1;
+        $info->entry_years = 1;
+        return $this->apiReturnJson(0,$info);
+    }
+
     public function storeUser(Request $request)
     {
         $department_id = $request->get('department_id');

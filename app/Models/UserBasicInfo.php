@@ -12,6 +12,8 @@ class UserBasicInfo extends Model
     public $fillable = [
         'user_id',
         'email',
+        'other_email',
+        'english_name',
         'realname',
         'idcard_no',
         'idcard_photo_face',

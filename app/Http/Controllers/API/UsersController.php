@@ -36,56 +36,7 @@ class UsersController extends CommonController
     public function info()
     {
         $user = $this->getUser();
-        $info = $user->info;
-        if(!$info)
-            $info = UserBasicInfo::create(['user_id'=>$user->id, 'realname'=>$user->id, 'email'=>$user->email]);
-
-        if(!$user->firstname && $info->realname){
-            $realname = $info->realname;
-            User::where('id', $user->id)->update([
-                'firstname'=>$realname?substr_text($realname,0,1):'',
-                'lastname'=>$realname?substr_text($realname,1, strlen($realname)):'',
-            ]);
-        }
-        $info->companies = $user->companies;
-        $info->current_company =$this->usersRepository->getCurrentCompany($user);
-        $this->requireMoodleConfig();
-        foreach ($info->companies as &$company) {
-            $company->logo_url = getCompanyLogo($company->logo);
-            if(isset($company->pivot->company_role_id))
-            $company->role_name = getCompanyRoleName($company, $user);
-        }
-
-        unset($company);
-
-        $resume = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
-        if(!$resume){
-            $resume = Resume::create([
-                'is_personal'=>1,
-                'is_base'=>1,
-                'type'=>2,
-                'name'=>$info->realname,
-                'creator_id'=>$user->id,
-                'user_id'=>$user->id,
-            ]);
-        }
-
-        if(!$resume->name && $info->realname){
-            $resume->name = $info->realname;
-            $resume->save();
-
-            $otherResumes = Resume::where('user_id', $user->id)->where('is_base', 0)->where('type', 2)->get();
-            foreach ($otherResumes as $otherResume) {
-                $this->resumeRepository->mixResumes($otherResume, $resume);
-            }
-        }
-
-
-        $info = $info->toArray();
-        $resumeInfo = $this->resumeRepository->getData($resume)->toArray();
-        $resumeInfo['resume_companies'] = $resumeInfo['companies'];
-        unset($resumeInfo['companies']);
-        $info = array_merge($info, $resumeInfo);
+        $info = $this->usersRepository->getInfo($user);
         return $this->apiReturnJson(0, $info);
     }
 

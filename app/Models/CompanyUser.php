@@ -14,6 +14,7 @@ class CompanyUser extends Model
         'company_role_id',
         'is_current',
         'department_id',
+        'entry_at',
     ];
 
     public function department()

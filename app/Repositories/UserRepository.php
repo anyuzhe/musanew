@@ -30,30 +30,16 @@ class UserRepository
             ]);
         }
         $info->companies = $user->companies;
-        $info->current_company = $user->company->first();
-        if(!$info->current_company){
-            $info->current_company = $info->companies->first();
-            if($info->current_company){
-                $info->current_company->is_current = 1;
-                $r = CompanyUser::where('company_id',$info->current_company->id)->first();
-                $r->is_current = 1;
-                $r->save();
-            }
-        }
+        $info->current_company =$this->getCurrentCompany($user);
         requireMoodleConfig();
 
         foreach ($info->companies as &$company) {
             $company->logo_url = getCompanyLogo($company->logo);
-            $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
+            if(isset($company->pivot->company_role_id))
+                $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
         }
 
         unset($company);
-        if($info->current_company){
-//            $info->current_company->is_demand_side = count($info->current_company->thirdParty)>0?1:0;
-            $info->current_company->logo_url = getCompanyLogo($info->current_company->logo);
-            $info->current_company->role_name = CompanyRole::find($info->current_company->pivot->company_role_id)->name;
-        }
-
 
         $resume = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
         if(!$resume){
