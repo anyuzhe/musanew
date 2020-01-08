@@ -99,7 +99,7 @@ class RecruitResumesRepository
         }elseif($status==2){
             $recruitResume->interview_at = $otherData;
             $log->text =  '邀请面试-'.$otherData;
-            $log->interview_count = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->order('id','desc')->max('interview_count')+1;
+            $log->interview_count = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->max('interview_count')+1;
             $this->minusNewResumeHandle($recruitResume);
         }elseif($status==3){
             $recruitResume->interview_at = $otherData;
@@ -113,7 +113,7 @@ class RecruitResumesRepository
         }elseif($status==5){
             $recruitResume->interview_at = $otherData;
             $log->text =  '再次邀请面试-'.$otherData;
-            $log->interview_count = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->order('id','desc')->max('interview_count')+1;
+            $log->interview_count = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->max('interview_count')+1;
         }elseif($status==6){
             $log->text =  '面试通过:'.$otherData;
         }elseif($status==7){
@@ -140,7 +140,7 @@ class RecruitResumesRepository
         }elseif($status==-5){
             $log->text =  '录用之后未到岗';
         }
-        $previous_id = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->order('id','desc')->value('id');
+        $previous_id = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->value('id');
         $log->previous_id = $previous_id;
         $logObj = $recruitResume->logs()->save($log);
         $recruitResume->status = $status;
