@@ -16,7 +16,7 @@ class CompanyDepartment extends Model
     ];
 
     public function parent() {
-        return $this->belongsTo('App\Models\CompanyDepartment','id', 'pid');
+        return $this->belongsTo('App\Models\CompanyDepartment','pid', 'id');
     }
 
     public function children() {
