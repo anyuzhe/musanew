@@ -77,11 +77,15 @@ class UserRepository
     {
         if(isset($request['name']) && $request['name']){
             $name = $request['name'];
-        }else{
+        }elseif(isset($request['realname']) && $request['realname']){
             $name = $request['realname'];
+        }else{
+            $name = '';
         }
-        $request['name'] = $name;
-        $request['realname'] = $name;
+        if($name){
+            $request['name'] = $name;
+            $request['realname'] = $name;
+        }
         $obj = Resume::where('user_id', $user->id)->where('is_base', 1)->first();
         if($obj){
             $obj->fill($request);
