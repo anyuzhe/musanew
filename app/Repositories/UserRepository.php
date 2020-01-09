@@ -98,7 +98,8 @@ class UserRepository
             $this->afterStoreResume($obj, $request,$user);
         }
         $info = $user->info;
-        $info->realname = $name;
+        if($name)
+            $info->realname = $name;
 
         $info->fill($request);
         $info->save();
