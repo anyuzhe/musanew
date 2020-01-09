@@ -746,7 +746,7 @@ class CompaniesController extends ApiBaseCommonController
         $working_years = $this->request->get('working_years');
         $recruit_search_status = $this->request->get('recruit_search_status');
         $education = $this->request->get('education');
-        $data_items = $this->request->get('data_items');
+        $data_items = $this->request->get('data_items',[]);
 
         $pageSize = app('request')->get('pageSize',10);
         $pagination = app('request')->get('pagination',1);
