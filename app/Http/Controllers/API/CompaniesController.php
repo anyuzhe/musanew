@@ -870,9 +870,9 @@ class CompaniesController extends ApiBaseCommonController
         $list->load('resume');
         $list->load('thirdParty');
         $list->load('company');
+        $list->load('job');
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $list->pluck('job_id'))->get())->keyBy('id')->toArray();
         foreach ($list as &$v) {
-            $v->job = $jobs[$v->job_id];
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
             $this->recruitResumesRepository->addFieldText($v);
 
@@ -922,6 +922,7 @@ class CompaniesController extends ApiBaseCommonController
             if(in_array('hire_count', $data_items)){
                 $v->hire_count = RecruitResume::where('resume_id', $v->resume_id)->where('status','>=',7)->count();
             }
+            $v->job = $jobs[$v->job_id];
         }
         return $this->apiReturnJson(0,$list,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
@@ -1097,4 +1098,10 @@ class CompaniesController extends ApiBaseCommonController
         }
         return $this->apiReturnJson(0);
     }
+
+    public function changeManager(Request $request)
+    {
+        $email = $request->get('email');
+    }
 }
+
