@@ -129,7 +129,7 @@ class CompaniesRepository
     {
         $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
         if(!$user)
-            $user = User::where('email', $email)->first();
+            $user = User::where('email', $email)->where('deleted', 0)->first();
         if($user){
             $has = $user->companies()->where('company_id', $company->id)->first();
             if($has){
@@ -151,7 +151,7 @@ class CompaniesRepository
     {
         $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
         if(!$user)
-            $user = User::where('email', $email)->first();
+            $user = User::where('email', $email)->where('deleted', 0)->first();
         if($user){
             $has = $user->companies()->where('company_id', $company->id)->first();
             if($has){

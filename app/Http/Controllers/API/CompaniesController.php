@@ -608,6 +608,8 @@ class CompaniesController extends ApiBaseCommonController
         $company = $this->getCurrentCompany();
 
         $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
+        if(!$user)
+            $user = User::where('email', $email)->where('deleted', 0)->first();
         if($user && CompanyUser::where('company_id', $company->id)->where('user_id',$user->id)->first()){
             return $this->apiReturnJson(9999, null, '该用户已在企业中, 请直接修改');
         }
