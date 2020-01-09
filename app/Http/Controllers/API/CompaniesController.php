@@ -981,8 +981,8 @@ class CompaniesController extends ApiBaseCommonController
         foreach ($list as $v) {
             $_data = [];
             $_data[] = $v->thirdParty?$v->thirdParty->company_alias:'';
-            $_data[] = $v->job->name;
-            $_data[] = $v->job->department->full_name;
+            $_data[] = $v['job']['name'];
+            $_data[] = $v['job']['department']['full_name'];
             $_data[] = $v->resume->name;
             $_data[] = $v->status_str;
             $_data[] = $v->created_at;
