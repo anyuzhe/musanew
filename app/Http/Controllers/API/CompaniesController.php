@@ -759,11 +759,13 @@ class CompaniesController extends ApiBaseCommonController
         $pagination = app('request')->get('pagination',1);
 
         $model = new RecruitResume();
+
+        $model = $model->where('company_id', $company_id);
         if($third_party_id){
             $model = $model->where('third_party_id', $third_party_id);
         }
         if($job_id){
-            $model = $model->where('third_party_id', $job_id);
+            $model = $model->where('job_id', $job_id);
         }
         if($department_id && !is_array($department_id)){
             $department = CompanyDepartment::find($department_id);
@@ -788,7 +790,6 @@ class CompaniesController extends ApiBaseCommonController
 
         $resumeModel = new Resume();
         $hasResumeSearch = false;
-        $resumeModel = $resumeModel->where('company_id', $company_id);
 
         if($sex){
             $resumeModel = $resumeModel->where('gender',$sex);
@@ -1107,6 +1108,27 @@ class CompaniesController extends ApiBaseCommonController
     public function changeManager(Request $request)
     {
         $email = $request->get('email');
+        $company = $this->getCurrentCompany();
+
+        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
+        if(!$user)
+            $user = User::where('email', $email)->where('deleted', 0)->first();
+        if($user){
+            $has = $user->companies()->where('company_id', $company->id)->first();
+            if($has){
+                \Illuminate\Support\Facades\DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => 1]);
+            }else{
+                $user->companies()->attach($company->id, ['company_role_id' => 1]);
+            }
+
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
+        }else{
+            $userRe = app()->build(UserRepository::class);
+            $user = $userRe->generateInviteUser($email);
+            $user->companies()->attach($company->id, ['company_role_id' => 1, 'is_current'=>1]);
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
+        }
+        app()->build(CompaniesRepository::class)->handleManger($obj, $email);
     }
 }
 
