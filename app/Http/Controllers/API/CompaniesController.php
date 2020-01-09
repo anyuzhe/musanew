@@ -893,6 +893,7 @@ class CompaniesController extends ApiBaseCommonController
         $list->load('thirdParty');
         $list->load('company');
         $list->load('job');
+        $list->load('postman');
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $list->pluck('job_id'))->get())->keyBy('id')->toArray();
         foreach ($list as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
@@ -978,6 +979,7 @@ class CompaniesController extends ApiBaseCommonController
         $job_test_grade = false;
         $other_deliver_count = false;
         $hire_count = false;
+
         foreach ($list as $v) {
             $_data = [];
             $_data[] = $v->thirdParty?$v->thirdParty->company_alias:'';
