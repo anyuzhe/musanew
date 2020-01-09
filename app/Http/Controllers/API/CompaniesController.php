@@ -254,10 +254,15 @@ class CompaniesController extends ApiBaseCommonController
 
     public function getDepartments()
     {
+        $third_party_id = $this->request->get('third_party_id');
         $company = $this->getCurrentCompany();
-        if($company)
-            return $this->apiReturnJson(0,app()->build(CompaniesRepository::class)->getDepartmentTree($company->id));
-        else
+        if($company){
+            if($third_party_id){
+                return $this->apiReturnJson(0,app()->build(CompaniesRepository::class)->getDepartmentTreeByThirdParty($company->id, $third_party_id));
+            }else{
+                return $this->apiReturnJson(0,app()->build(CompaniesRepository::class)->getDepartmentTree($company->id));
+            }
+        }else
             return $this->apiReturnJson(9999,null,'没有当前公司');
     }
 

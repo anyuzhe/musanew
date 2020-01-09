@@ -6,6 +6,8 @@ use App\Models\CompanyAddress;
 use App\Models\CompanyDepartment;
 use App\Models\CompanyRole;
 use App\Models\CompanyUserRole;
+use App\Models\Entrust;
+use App\Models\Job;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +16,22 @@ class CompaniesRepository
     public function getDepartmentTree($company_id)
     {
         $all = CompanyDepartment::where('company_id',$company_id)->get()->toArray();
+        $data = [];
+        foreach ($all as $v) {
+            if($v['pid']==0){
+                $this->getChild($v, $all);
+                $data[] = $v;
+            }
+        }
+        return $data;
+    }
+    public function getDepartmentTreeByThirdParty($company_id, $third_party_id)
+    {
+        $job_ids = Entrust::where('third_party_id', $third_party_id)->pluck('job_id');
+        $companyDepartmentIds = Job::whereIn('id', $job_ids)->pluck('department_id');
+        $all = CompanyDepartment::where('company_id',$company_id)->where(function ($query)use($companyDepartmentIds){
+            $query->whereIn('id', $companyDepartmentIds)->orWhereIn('pid', $companyDepartmentIds);
+        })->get()->toArray();
         $data = [];
         foreach ($all as $v) {
             if($v['pid']==0){
