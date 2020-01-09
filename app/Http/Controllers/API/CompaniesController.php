@@ -1114,21 +1114,11 @@ class CompaniesController extends ApiBaseCommonController
         if(!$user)
             $user = User::where('email', $email)->where('deleted', 0)->first();
         if($user){
-            $has = $user->companies()->where('company_id', $company->id)->first();
-            if($has){
-                \Illuminate\Support\Facades\DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => 1]);
-            }else{
-                $user->companies()->attach($company->id, ['company_role_id' => 1]);
-            }
-
-            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
         }else{
-            $userRe = app()->build(UserRepository::class);
-            $user = $userRe->generateInviteUser($email);
-            $user->companies()->attach($company->id, ['company_role_id' => 1, 'is_current'=>1]);
-            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
         }
-        app()->build(CompaniesRepository::class)->handleManger($obj, $email);
+        return $this->apiReturnJson(0);
     }
 }
 

@@ -27,8 +27,14 @@ class CompaniesRepository
     }
     public function getDepartmentTreeByThirdParty($company_id, $third_party_id)
     {
-        $job_ids = Entrust::where('third_party_id', $third_party_id)->pluck('job_id');
-        $companyDepartmentIds = Job::whereIn('id', $job_ids)->pluck('department_id');
+        $job_ids = Entrust::where('third_party_id', $third_party_id)->where('company_id', $company_id)->pluck('job_id');
+        $companyDepartmentIds = Job::whereIn('id', $job_ids)->pluck('department_id')->unique();
+        foreach ($companyDepartmentIds as $companyDepartmentId) {
+            $_dep = CompanyDepartment::find($companyDepartmentId);
+            if($_dep->level==2){
+                $companyDepartmentIds->push($_dep->pid);
+            }
+        }
         $all = CompanyDepartment::where('company_id',$company_id)->where(function ($query)use($companyDepartmentIds){
             $query->whereIn('id', $companyDepartmentIds)->orWhereIn('pid', $companyDepartmentIds);
         })->get()->toArray();

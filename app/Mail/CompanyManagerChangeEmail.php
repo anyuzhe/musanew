@@ -17,11 +17,13 @@ class CompanyManagerChangeEmail extends Mailable
 
     protected $user;
     protected $company;
+    protected $need_affirm;
 
-    public function __construct($user, $company)
+    public function __construct($user, $company, $need_affirm=null)
     {
         $this->user = $user;
         $this->company = $company;
+        $this->need_affirm = $need_affirm;
     }
 
     /**
@@ -33,6 +35,7 @@ class CompanyManagerChangeEmail extends Mailable
     {
         $user = $this->user;
         $company = $this->company;
+        $need_affirm = $this->need_affirm;
         $this->subject = "加入{$company->company_name}企业的邮件提醒";
         /**
          * XXXXXX公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息。
@@ -40,7 +43,11 @@ class CompanyManagerChangeEmail extends Mailable
         **/
         $content_text_array = ["尊敬的用户您好!"];
         if($user->confirmed){
-            $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息";
+            if($need_affirm){
+
+            }else{
+                $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息";
+            }
         }else{
             $token = ExternalToken::where('userid', $user->id)->first();
             $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请点击下方链接登录musa平台注册账号";
