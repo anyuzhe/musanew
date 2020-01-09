@@ -44,7 +44,9 @@ class CompanyManagerChangeEmail extends Mailable
         $content_text_array = ["尊敬的用户您好!"];
         if($user->confirmed){
             if($need_affirm){
-
+                $token = ExternalToken::where('userid', $user->id)->first();
+                $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，确认请点击下方链接";
+                $content_text_array[] = "<a href='".env('APP_FRONT_URL')."/managerAffirm?token={$token->token}&company_id={$company->id}&company_name={$company->company_name}"."'>点击去确认</a>";
             }else{
                 $content_text_array[] = "{$company->company_name}公司邀请您成为企业管理员，请尽快登录musa平台填写企业基础信息";
             }

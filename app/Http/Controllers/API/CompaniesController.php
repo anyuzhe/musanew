@@ -1114,9 +1114,11 @@ class CompaniesController extends ApiBaseCommonController
         if(!$user)
             $user = User::where('email', $email)->where('deleted', 0)->first();
         if($user){
-            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
         }else{
-            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
+            $userRe = app()->build(UserRepository::class);
+            $user = $userRe->generateInviteUser($email);
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
         }
         return $this->apiReturnJson(0);
     }
