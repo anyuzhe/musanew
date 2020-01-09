@@ -13,10 +13,10 @@ class CreateCompanyManagerLogTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_manager_logs', function (Blueprint $table) {
+        Schema::connection('musa')->create('company_manager_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('company_id');
-            $table->integer('uew_id');
+            $table->integer('new_id');
             $table->integer('old_id');
             $table->integer('status')->default(0);
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateCompanyManagerLogTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_manager_logs');
+        Schema::connection('musa')->dropIfExists('company_manager_logs');
     }
 }

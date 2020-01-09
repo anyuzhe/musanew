@@ -206,7 +206,9 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //企业信息修改
     $router->get('/company/currentInfo', 'API\CompaniesController@getCurrentInfo');
     $router->post('/company/currentInfo', 'API\CompaniesController@updateCurrentInfo');
+    //更换企业管理员
     $router->post('/company/change/manager', 'API\CompaniesController@changeManager');
+    $router->post('/company/change/manager/affirm', 'API\CompaniesController@changeManagerAffirm');
 
     //代办事项
     $router->get('/company/backlog', 'API\CompaniesController@getBacklog');

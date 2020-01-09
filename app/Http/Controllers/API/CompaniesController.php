@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Company;
 use App\Models\CompanyAddress;
 use App\Models\CompanyDepartment;
+use App\Models\CompanyManagerLog;
 use App\Models\CompanyResume;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
@@ -1135,7 +1136,37 @@ class CompaniesController extends ApiBaseCommonController
             $user = $userRe->generateInviteUser($email);
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
         }
+        CompanyManagerLog::create([
+            'company_id'=>$company->id,
+            'new_id'=>$user->id,
+            'old_id'=>CompanyUser::where('company_id', $company->id)->where('company_role_id', 1)->value('user_id'),
+            'status'=>0,
+        ]);
         return $this->apiReturnJson(0);
+    }
+
+    public function changeManagerAffirm(Request $request)
+    {
+        $user = $this->getUser();
+        $company_id = $request->get('company_id');
+        $status = $request->get('status');
+        $company = Company::find($company_id);
+        if(!$user || !$company || !isset($status)){
+            return $this->apiReturnJson(9999,null,'参数错误');
+        }
+
+        $log = CompanyManagerLog::where('new_id', $user->id)->where('company_id', $company->id)->orderBy('id', 'desc')->first();
+        if($log->status==1){
+            return $this->apiReturnJson(9999,null,'已确认');
+        }
+        if($log->status==-1){
+            return $this->apiReturnJson(9999,null,'已取消');
+        }
+        if(time()-strtotime($log->created_at)>3600*4){
+            return $this->apiReturnJson(9999,null,'已超过4小时无法确认');
+        }
+        $log->status = 1;
+        $log->save();
     }
 }
 
