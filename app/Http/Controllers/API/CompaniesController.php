@@ -236,6 +236,21 @@ class CompaniesController extends ApiBaseCommonController
                 Area::where('id', $v->city_id)->value('cname').
                 Area::where('id', $v->district_id)->value('cname');
         }
+        if($company->province_id){
+            $company->province_text = Area::where('id', $v->province_id)->value('cname');
+        }else{
+            $company->province_text = '';
+        }
+        if($company->city_id){
+            $company->city_text = Area::where('id', $v->city_id)->value('cname');
+        }else{
+            $company->city_text = '';
+        }
+        if($company->district_id){
+            $company->district_text = Area::where('id', $v->district_id)->value('cname');
+        }else{
+            $company->district_text = '';
+        }
         $company->full_logo = getCompanyLogo($company->logo);
         $company->industry;
         $company->conglomerate;

@@ -16,10 +16,7 @@ class Company extends Model
     public $fillable = [
         'company_alias',
         'company_name',
-        'tax_no',
         'company_scale',
-        'contact_name',
-        'contact_phone',
         'industry_id',
         'logo',
         'description',
@@ -28,6 +25,15 @@ class Company extends Model
         'is_third_party',
         'is_demand_side',
         'suspended',
+        'province_id',
+        'city_id',
+        'district_id',
+        'site',
+        'deposit_bank_name',
+        'deposit_bank_account',
+        'tax_no',
+        'contact_name',
+        'contact_phone',
     ];
 
     public function thirdParty()
