@@ -1167,6 +1167,12 @@ class CompaniesController extends ApiBaseCommonController
         }
         $log->status = 1;
         $log->save();
+
+        \Illuminate\Support\Facades\DB::connection('musa')->table('company_user')->where('company_role_id', 1)->where('company_id', $company->id)->update(['company_role_id' => null]);
+        CompanyUserRole::where('user_id', $user->id)->where('company_id', $company->id)->where('role_id', 1)->delete();
+        \Illuminate\Support\Facades\DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => 1]);
+
+        return $this->apiReturnJson(0);
     }
 }
 
