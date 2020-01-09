@@ -68,7 +68,7 @@ class RecruitResume extends Model
         return $this->belongsTo('App\Models\Entrust', 'company_job_recruit_entrust_id');
     }
 
-    public function postman()
+    public function delivery()
     {
         return $this->hasOne('App\Models\UserBasicInfo','user_id', 'creator_id');
     }

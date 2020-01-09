@@ -893,7 +893,7 @@ class CompaniesController extends ApiBaseCommonController
         $list->load('thirdParty');
         $list->load('company');
         $list->load('job');
-        $list->load('postman');
+        $list->load('delivery');
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $list->pluck('job_id'))->get())->keyBy('id')->toArray();
         foreach ($list as &$v) {
             $v->resume =  app()->build(ResumesRepository::class)->getData($v->resume);
