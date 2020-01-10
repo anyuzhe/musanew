@@ -9,6 +9,7 @@ use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\RecruitResumeLog;
 use App\Models\Resume;
+use App\Models\UserBasicInfo;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
@@ -47,6 +48,29 @@ class RecruitResumesController extends ApiBaseCommonController
             });
         }
         return null;
+    }
+
+    public function personnel(Request $request)
+    {
+        $company = $this->getCurrentCompany();
+        $type = $request->get('type');
+        $third_party_id = $request->get('third_party_id');
+        if($third_party_id){
+            if($type==1){
+                $userIds = Entrust::where('company_id', $company->id)->where('third_party_id', $third_party_id)->pluck('creator_id')->unique();
+            }else{
+                $userIds = Entrust::where('company_id', $company->id)->where('third_party_id', $third_party_id)->pluck('leading_id')->unique();
+            }
+        }else{
+            if($type==1){
+                $userIds = Entrust::where('company_id', $company->id)->pluck('creator_id')->unique();
+            }else{
+                $userIds = Entrust::where('company_id', $company->id)->unique();
+            }
+
+        }
+        $users = UserBasicInfo::whereIn('user_id', $userIds)->get();
+        return $this->apiReturnJson(0, $users);
     }
 
     public function _after_get(&$data)
