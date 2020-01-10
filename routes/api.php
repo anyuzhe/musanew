@@ -98,6 +98,8 @@ $router->post('/company/resume/upload', 'API\EntrustResumesController@upload');
 //图片上传
 $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 
+$router->post('/company/change/manager/affirm', 'API\CompaniesController@changeManagerAffirm');
+
 $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
 
@@ -211,7 +213,6 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->post('/company/currentInfo', 'API\CompaniesController@updateCurrentInfo');
     //更换企业管理员
     $router->post('/company/change/manager', 'API\CompaniesController@changeManager');
-    $router->post('/company/change/manager/affirm', 'API\CompaniesController@changeManagerAffirm');
 
     //代办事项
     $router->get('/company/backlog', 'API\CompaniesController@getBacklog');
