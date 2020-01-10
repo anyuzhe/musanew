@@ -256,6 +256,7 @@ class CompaniesController extends ApiBaseCommonController
         $company->industry;
         $company->conglomerate;
         $company->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
+        $company->manager = app()->build(CompaniesRepository::class)->getManager($company->id);
         getOptionsText($company);
 //        $company->is_demand_side = count($company->thirdParty)>0?1:0;
         $role = CompanyRole::find($company->pivot->company_role_id);

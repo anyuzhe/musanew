@@ -5,14 +5,23 @@ namespace App\Repositories;
 use App\Models\CompanyAddress;
 use App\Models\CompanyDepartment;
 use App\Models\CompanyRole;
+use App\Models\CompanyUser;
 use App\Models\CompanyUserRole;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\User;
+use App\Models\UserBasicInfo;
 use Illuminate\Support\Facades\DB;
 
 class CompaniesRepository
 {
+    public function getManager($company_id)
+    {
+        $user_id = CompanyUser::where('company_id',$company_id)->where('company_role_id', 1)->value('user_id');
+        if($user_id)
+            return UserBasicInfo::where('user_id', $user_id)->first();
+        return null;
+    }
     public function getDepartmentTree($company_id)
     {
         $all = CompanyDepartment::where('company_id',$company_id)->get()->toArray();
