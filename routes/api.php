@@ -194,9 +194,12 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //招聘下的-简历列表
     $router->any('/company/recruit/resumes', 'API\RecruitResumesController@index');
 
+
+    //获取招聘简历相关人员
+    $router->get('/company/recruit/resumes/personnel', 'API\RecruitResumesController@personnel');
+
     //招聘下的-简历详情
     $router->get('/company/recruit/resumes/{id}', 'API\RecruitResumesController@show');
-
     //招聘下的-简历流程
     $router->post('/company/recruits/resumeFlow', 'API\RecruitResumesController@resumeFlow');
 
@@ -321,8 +324,6 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
 
     //招聘下的-简历列表
     $router->any('/recruit/resumes', 'API\Admin\RecruitResumesController@index');
-    //获取招聘简历相关人员
-    $router->get('/recruit/resumes/personnel', 'API\Admin\RecruitResumesController@personnel');
     //招聘下的-简历详情
     $router->get('/recruit/resumes/{id}', 'API\Admin\RecruitResumesController@show');
     $router->put('/recruit/resumes/{id}', 'API\Admin\RecruitResumesController@update');
