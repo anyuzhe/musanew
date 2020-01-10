@@ -1155,7 +1155,7 @@ class CompaniesController extends ApiBaseCommonController
     {
         $user = $this->getUser();
         if(!$user){
-            $log = CompanyManagerLog::where('token', $request->get('token'))->orderBy('id', 'desc')->first();
+            $log = CompanyManagerLog::where('token', $request->hasHeader('token'))->orderBy('id', 'desc')->first();
             if($log){
                 $user = $log->user;
             }else{
