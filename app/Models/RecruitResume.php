@@ -3,7 +3,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RecruitResume extends Model
+class
+RecruitResume extends Model
 {
     protected $table = 'company_job_recruit_resume';
 

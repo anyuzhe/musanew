@@ -57,15 +57,15 @@ class RecruitResumesController extends ApiBaseCommonController
         $third_party_id = $request->get('third_party_id');
         if($third_party_id){
             if($type==1){
-                $userIds = Entrust::where('company_id', $company->id)->where('third_party_id', $third_party_id)->pluck('creator_id')->unique();
+                $userIds = RecruitResume::where('company_id', $company->id)->where('third_party_id', $third_party_id)->pluck('creator_id')->unique();
             }else{
                 $userIds = Entrust::where('company_id', $company->id)->where('third_party_id', $third_party_id)->pluck('leading_id')->unique();
             }
         }else{
             if($type==1){
-                $userIds = Entrust::where('company_id', $company->id)->pluck('creator_id')->unique();
+                $userIds = RecruitResume::where('company_id', $company->id)->pluck('creator_id')->unique();
             }else{
-                $userIds = Entrust::where('company_id', $company->id)->unique();
+                $userIds = Recruit::where('company_id', $company->id)->pluck('leading_id')->unique();
             }
 
         }
