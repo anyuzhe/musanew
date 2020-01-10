@@ -1130,7 +1130,7 @@ class CompaniesController extends ApiBaseCommonController
         $email = $request->get('email');
         $company = $this->getCurrentCompany();
 
-        $has = CompanyManagerLog::where('company_id', $company->id)->where('status', '>=', 0)->first();
+        $has = CompanyManagerLog::where('company_id', $company->id)->where('status', '=', 0)->first();
         if($has){
             return $this->apiReturnJson(9999,null,'正在申请变更中');
         }
