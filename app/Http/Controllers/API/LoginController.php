@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Company;
+use App\Models\CompanyManagerLog;
 use App\Models\ExternalToken;
 use App\Models\PasswordFindCode;
 use App\Models\User;
@@ -256,6 +258,12 @@ class LoginController extends CommonController
             global $CFG;
             $CFG->passwordreuselimit = 10;
             user_add_password_history($user->id, $password);
+
+            $log = CompanyManagerLog::where('user_id', $user->id)->where('status',0)->orderBy('id', 'desc')->first();
+            if($log){
+                $company = Company::find($log->company_id);
+                \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
+            }
             return $this->apiReturnJson('0',null,'激活成功');
         }
     }
