@@ -1130,6 +1130,11 @@ class CompaniesController extends ApiBaseCommonController
         $email = $request->get('email');
         $company = $this->getCurrentCompany();
 
+        $has = CompanyManagerLog::where('company_id', $company->id)->where('status', '>=', 0)->first();
+        if($has){
+            return $this->apiReturnJson(9999,null,'正在申请变更中');
+        }
+
         $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
         if(!$user)
             $user = User::where('email', $email)->where('deleted', 0)->first();
@@ -1185,7 +1190,17 @@ class CompaniesController extends ApiBaseCommonController
 
         \Illuminate\Support\Facades\DB::connection('musa')->table('company_user')->where('company_role_id', 1)->where('company_id', $company->id)->update(['company_role_id' => null]);
         CompanyUserRole::where('user_id', $user->id)->where('company_id', $company->id)->where('role_id', 1)->delete();
-        \Illuminate\Support\Facades\DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => 1]);
+
+        $has = CompanyUser::where('user_id', $user->id)->where('company_id', $company->id)->first();
+        if($has){
+            \Illuminate\Support\Facades\DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => 1]);
+        }else{
+            CompanyUser::create([
+                'user_id'=>$user->id,
+                'company_id'=>$company->id,
+                'company_role_id'=>1,
+            ]);
+        }
 
         return $this->apiReturnJson(0);
     }
