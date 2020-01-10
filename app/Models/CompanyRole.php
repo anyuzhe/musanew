@@ -30,9 +30,9 @@ class CompanyRole extends Model
     public function getPermissions()
     {
         if($this->id==1){
-            return CompanyPermission::pluck('key');
+            return CompanyPermission::pluck('full_key');
         }else{
-            return $this->permissions->pluck('key');
+            return $this->permissions->pluck('full_key');
         }
     }
 }

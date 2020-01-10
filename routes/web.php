@@ -45,6 +45,13 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
 
+    $t = CompanyPermission::where('level', 3)->get();
+
+    foreach ($t as $v) {
+        $v->full_key = $v->parent->full_key.'.'.$v->key;
+        $v->save();
+    }
+    dd(1);
     $t = new Recruit();
     $t = $t->where('id','>',1);
     dd($t->getQuery()->wheres);
