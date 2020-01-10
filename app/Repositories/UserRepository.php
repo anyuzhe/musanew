@@ -269,7 +269,7 @@ class UserRepository
             foreach ($_roles as $role) {
                 $permissions = array_merge($permissions, $role->getPermissions()->toArray());
             }
-            $current_company->permissions = array_unique($permissions);
+            $current_company->permissions =array_values(array_unique($permissions));
                 CompanyUser::where('user_id',$user->id)->update(['is_current'=>0]);
             CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->update(['is_current'=>1]);
         }
