@@ -14,4 +14,9 @@ class CompanyManagerLog extends Model
         'old_id',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'new_id');
+    }
 }

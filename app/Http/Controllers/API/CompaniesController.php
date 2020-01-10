@@ -12,6 +12,7 @@ use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\CompanyUserRole;
 use App\Models\Entrust;
+use App\Models\ExternalToken;
 use App\Models\Job;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
@@ -1139,11 +1140,13 @@ class CompaniesController extends ApiBaseCommonController
             $user = $userRe->generateInviteUser($email);
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
         }
+        $token = ExternalToken::where('userid', $user->id)->first();
         CompanyManagerLog::create([
             'company_id'=>$company->id,
             'new_id'=>$user->id,
             'old_id'=>CompanyUser::where('company_id', $company->id)->where('company_role_id', 1)->value('user_id'),
             'status'=>0,
+            'token'=>$token->token,
         ]);
         return $this->apiReturnJson(0);
     }
@@ -1151,6 +1154,15 @@ class CompaniesController extends ApiBaseCommonController
     public function changeManagerAffirm(Request $request)
     {
         $user = $this->getUser();
+        if(!$user){
+            $log = CompanyManagerLog::where('token', $request->get('token'))->orderBy('id', 'desc')->first();
+            if($log){
+                $user = $log->user;
+            }else{
+                return $this->apiReturnJson(9999,null,'找不到用户');
+            }
+        }
+
         $company_id = $request->get('company_id');
         $status = $request->get('status');
         $company = Company::find($company_id);
