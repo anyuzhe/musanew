@@ -13,6 +13,7 @@ class CompanyManagerLog extends Model
         'new_id',
         'old_id',
         'status',
+        'token',
     ];
 
     public function user()
