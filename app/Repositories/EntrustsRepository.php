@@ -96,12 +96,12 @@ class EntrustsRepository
                 break;
             case 6:
                 $status_text = '暂停招聘';
-                if($status_text!=-3)
+                if($entrust_status!=-3)
                     return $status_text;
                 break;
             case 7:
                 $status_text = '暂停招聘';
-                if($status_text!=-3)
+                if($entrust_status!=-3)
                     return $status_text;
                 break;
             default:
