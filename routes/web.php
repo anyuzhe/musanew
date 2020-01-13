@@ -44,7 +44,7 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-
+    dd(CompanyRole::find(56)->users);
     $t = CompanyPermission::where('level', 3)->get();
 
     foreach ($t as $v) {

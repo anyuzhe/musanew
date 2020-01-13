@@ -19,7 +19,7 @@ class CompanyRole extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\UserBasicInfo','musa_company_user_role', 'user_id','role_id','id','user_id');
+        return $this->belongsToMany('App\Models\UserBasicInfo','musa_company_user_role', 'role_id','user_id','id','user_id');
     }
 
     public function permissions()
