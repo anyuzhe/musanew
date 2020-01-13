@@ -259,7 +259,7 @@ class LoginController extends CommonController
             $CFG->passwordreuselimit = 10;
             user_add_password_history($user->id, $password);
 
-            $log = CompanyManagerLog::where('user_id', $user->id)->where('status',0)->orderBy('id', 'desc')->first();
+            $log = CompanyManagerLog::where('new_id', $user->id)->where('status',0)->orderBy('id', 'desc')->first();
             if($log){
                 $company = Company::find($log->company_id);
                 \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
