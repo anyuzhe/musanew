@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\ClearData;
 use App\Mail\RecruitResumeLogEmail;
 use App\Mail\RecruitResumeUntreatedEmail;
+use App\Models\CompanyManagerLog;
 use App\Models\RecruitResumeLog;
 use App\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
@@ -107,6 +108,11 @@ class Kernel extends ConsoleKernel
 //                Mail::to("68067348@qq.com")->send(new RecruitResumeUntreatedEmail($recruit, $recruit->resumes));
                 Mail::to($entrust->leading->email)->send(new RecruitResumeUntreatedEmail($entrust->recruit, $entrust->resumes));
             }
+
+            //简历24小时没有操作提示---结束
+
+            //4小时没有更换管理员处理自动取消
+            CompanyManagerLog::where('created_at', '<' ,date('Y-m-d H:i:s', time()-3600*4))->where('status',0)->update(['status'=>-2]);
         })->everyMinute();
     }
 

@@ -1182,6 +1182,9 @@ class CompaniesController extends ApiBaseCommonController
         if($log->status==-1){
             return $this->apiReturnJson(9999,null,'已取消');
         }
+        if($log->status==-2){
+            return $this->apiReturnJson(9999,null,'超过4小时已经自动取消');
+        }
         if(time()-strtotime($log->created_at)>3600*4){
             return $this->apiReturnJson(9999,null,'已超过4小时无法确认');
         }
