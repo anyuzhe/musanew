@@ -233,7 +233,7 @@ class LoginController extends CommonController
         if(!$user) {
             return $this->apiReturnJson('9998');
         }
-        $oldUser = User::where('confirmed', 1)->where('email', $user->email)->first();
+        $oldUser = User::where('confirmed', 1)->where('deleted', 0)->where('email', $user->email)->first();
 
         if($oldUser){
             return $this->apiReturnJson('9999',null,'该邮箱已经注册');
