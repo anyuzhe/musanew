@@ -39,7 +39,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function checkUpdate($id,$data)
     {
-        if(Company::where('company_alias',$data->get('company_alias'))->where('id','!=', $id)->first()){
+        if(Company::where('company_alias',$data->get('company_alias'))->where('status', 1)->where('id','!=', $id)->first()){
             return '该企业简称已经存在';
         }
         else
@@ -48,7 +48,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function checkStore($data)
     {
-        if(Company::where('company_alias',$data->get('company_alias'))->where('status', 1)->first())
+        if(Company::where('company_alias',$data->get('company_alias'))->where('status', 1)->where('status', 1)->first())
             return '该企业简称已经存在';
         else
             return null;
