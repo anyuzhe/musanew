@@ -37,6 +37,13 @@ class LoginController extends CommonController
     {
         $email = $this->request->get('email');
         $password = $this->request->get('password');
+        $user1 = User::where([
+            ['deleted',0],
+            ['confirmed',0],
+            ['email',$email],
+        ])->whereIn('auth', ['manual','email'])->first();
+        if($user1)
+            return $this->apiReturnJson('9999',null,'该账号还未激活');
         $user = $this->getUserByEmail($email);
         if(!$user)
             return $this->apiReturnJson('9999',null,'该账号不存在, 请先注册');
@@ -93,7 +100,7 @@ class LoginController extends CommonController
     public function sendCodeByRegister()
     {
         $email = $this->request->get('email');
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', $email)->where('deleted', 0)->where('confirmed', 1)->first();
         if($user){
             return $this->apiReturnJson("9999", null, '该邮箱已存在');
         }
@@ -151,30 +158,61 @@ class LoginController extends CommonController
                 return $this->apiReturnJson('2002');
             }
 
-            $user->username = $user->email;
-            $user = signup_setup_new_user($user);
-            $this->userSignup($user, true);
+            $hasConfirmed = User::where([
+                ['deleted',0],
+                ['confirmed',0],
+                ['email',$user->email],
+            ])->whereIn('auth', ['manual','email'])->first();
+            if($hasConfirmed){
 
-            if(isset($user->realname))
-                $realname = $user->realname;
-            else
-                $realname = '';
-            User::where('id', $user->id)->update([
-                'confirmed'=>1,
-                'firstname'=>$realname?substr_text($realname,0,1):'',
-                'lastname'=>$realname?substr_text($realname,1, count($realname)):'',
-            ]);
-            UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$user->id, 'email'=>$user->email]);
-            $user = User::find($user->id);
-            $token = TokenHelper::getTokenForUser($user);
-            $user->token = $token->token;
+                //修改密码
+                $this->requireMoodleConfig();
+                $hasConfirmed->confirmed = 1;
+                $hasConfirmed->save();
 
-            PasswordFindCode::where('id', $codeHas->id)->update(['status'=>1]);
+                $userauth = get_auth_plugin($user->auth);
+                if (!$userauth->user_update_password($user, $password)) {
+                    return $this->apiReturnJson('9999');
+                }else {
+                    require_once($this->getMoodleRoot() . '/user/lib.php');
+                    global $CFG;
+                    $CFG->passwordreuselimit = 10;
+                    user_add_password_history($user->id, $password);
+                    $log = CompanyManagerLog::where('new_id', $user->id)->where('status',0)->orderBy('id', 'desc')->first();
+                    if($log){
+                        $company = Company::find($log->company_id);
+                        \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
+                    }
+                    return $this->apiReturnJson('0',null,'注册成功');
+                }
+            }else{
+                handleRepeatEmailRegister($user->email);
+                $user->username = $user->email;
+                $user = signup_setup_new_user($user);
+                $this->userSignup($user, true);
 
-            $oldUser = User::where('confirmed', 0)->where('email', $user->email)->first();
-            DB::connection('musa')->table('company_user')->where('user_id', $oldUser->id)->update(['user_id' => $user->id]);
+                if(isset($user->realname))
+                    $realname = $user->realname;
+                else
+                    $realname = '';
+                User::where('id', $user->id)->update([
+                    'confirmed'=>1,
+                    'firstname'=>$realname?substr_text($realname,0,1):'',
+                    'lastname'=>$realname?substr_text($realname,1, count($realname)):'',
+                ]);
+                UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$user->id, 'email'=>$user->email]);
+                $user = User::find($user->id);
+                $token = TokenHelper::getTokenForUser($user);
+                $user->token = $token->token;
 
-            return $this->apiReturnJson(0, $user);
+                PasswordFindCode::where('id', $codeHas->id)->update(['status'=>1]);
+
+                $oldUser = User::where('confirmed', 0)->where('email', $user->email)->first();
+                DB::connection('musa')->table('company_user')->where('user_id', $oldUser->id)->update(['user_id' => $user->id]);
+
+                return $this->apiReturnJson(0, $user);
+            }
+
         }catch (\Exception $e) {
             $message = $e->getMessage();
             if($message=="Tried to send you an email but failed!"){

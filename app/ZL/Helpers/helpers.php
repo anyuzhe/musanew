@@ -4,6 +4,7 @@ use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\CompanyUserRole;
 use App\Models\DataMapOption;
+use App\Models\User;
 use App\Repositories\TokenRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -1031,4 +1032,13 @@ function getYearsText($at1, $at2){
         return '不足一年';
     }
     return numToWord(floor($time/$one)).'年';
+}
+
+
+function handleRepeatEmailRegister($email){
+    if ($has = User::where('mnethostid',1)->where('username', $email)->first()){
+        $top = User::where('mnethostid',1)->where('username','like', "$email%")->orderBy('username','desc')->first();
+        $has->username = $top->username.'!';
+        $has->save();
+    }
 }
