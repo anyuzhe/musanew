@@ -643,6 +643,8 @@ class CompaniesController extends ApiBaseCommonController
     public function updateUser($user_id, Request $request)
     {
         $department_id = $request->get('department_id');
+        if(is_array($department_id) && count($department_id)>0)
+            $department_id = $department_id[count($department_id)-1];
         $email = $request->get('email');
         $roles =  $request->get('roles');
         $entry_at =  $request->get('entry_at');
