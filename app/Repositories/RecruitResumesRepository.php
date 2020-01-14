@@ -366,7 +366,7 @@ class RecruitResumesRepository
         $company = $job->company;
 
         $resumeGrade = CompanySettingRepository::getResumeGrade($company->id);
-        $resumeGradeArr = json_decode($resumeGrade->value, true);
+        $resume_score_rules = $resumeGradeArr = json_decode($resumeGrade->value, true);
         //学历要求
         $config_education_num = DataMapOption::where('data_map_id',7)->count()-1;
         $config_education_score = 100/$config_education_num;
@@ -460,7 +460,7 @@ class RecruitResumesRepository
             + $skills_score*$resumeGradeArr['skills']/100
         );
         return compact('score', 'education_score', 'working_years_score', 'skills_data'
-            , 'necessary_skills_data', 'optional_skills_data', 'skills_score', 'necessary_skills_score', 'optional_skills_score');
+            , 'necessary_skills_data', 'optional_skills_data', 'skills_score', 'necessary_skills_score', 'optional_skills_score','resume_score_rules');
     }
 
     public function handleUpdateAt($recruitResume)

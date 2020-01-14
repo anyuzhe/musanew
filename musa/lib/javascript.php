@@ -70,6 +70,7 @@ foreach ($files as $fsfile) {
     }
     $jsfiles[] = $jsfile;
 }
+var_dump($jsfiles);die;
 
 if (!$jsfiles) {
     // bad luck - no valid files
