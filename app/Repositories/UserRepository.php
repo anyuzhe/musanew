@@ -197,7 +197,7 @@ class UserRepository
         $_email = $email;
         if ($has = User::where('mnethostid',1)->where('username', $email)->first()){
             $top = User::where('mnethostid',1)->where('username','like', "$_email%")->orderBy('username','desc')->first();
-            $has->username = $top.'!';
+            $has->username = $top->username.'!';
             $has->save();
         }
         $user->username = $user->email;
