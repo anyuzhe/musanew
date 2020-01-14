@@ -44,6 +44,9 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    $userRe = app()->build(UserRepository::class);
+    $user = $userRe->generateInviteUser("68067348@qq.com");
+    dd($user);
     dd(CompanyRole::find(56)->users);
     $t = CompanyPermission::where('level', 3)->get();
 

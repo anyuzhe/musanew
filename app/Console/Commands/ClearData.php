@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\CompanyAddress;
 use App\Models\CompanyDepartment;
 use App\Models\CompanyResume;
+use App\Models\CompanySetting;
 use App\Models\CompanyUser;
 use App\Models\Conglomerate;
 use App\Models\Entrust;
@@ -84,6 +85,7 @@ class ClearData extends Command
         CompanyAddress::truncate();
         CompanyUser::truncate();
         CompanyDepartment::truncate();
+        CompanySetting::truncate();
         DB::connection('musa')->table('company_relationship')->truncate();
         DB::connection('musa')->table('company_relationship_log')->truncate();
     }

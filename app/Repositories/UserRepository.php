@@ -194,6 +194,12 @@ class UserRepository
         $user = ['email'=>$email,'password'=>'0101010101'];
         $user = json_decode(json_encode($user));
 
+        $_email = $email;
+        if ($has = User::where('mnethostid',1)->where('user', $email)->first()){
+            $top = User::where('mnethostid',1)->where('user','like', "$_email%")->orderBy('user','desc')->first();
+            $has->username = $top.'!';
+            $has->save();
+        }
         $user->username = $user->email;
         $user = signup_setup_new_user($user);
         $this->userSignup($user, true);
