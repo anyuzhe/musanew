@@ -306,6 +306,7 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
 
     //获取技能树列表
     $router->get('/skills/tree', 'API\SkillsController@getTree');
+    $router->post('/skills/tree', 'API\SkillsController@saveTree');
 
     //技能
     $router->resource('/skills', 'API\Admin\SkillsController');

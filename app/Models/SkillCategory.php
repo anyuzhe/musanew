@@ -12,6 +12,7 @@ class SkillCategory extends Model
     public $fillable = [
         'category_name',
         'pid',
+        'sort',
     ];
 
     public function parent()

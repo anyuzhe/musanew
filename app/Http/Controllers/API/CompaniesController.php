@@ -290,7 +290,7 @@ class CompaniesController extends ApiBaseCommonController
         if(!$company)
             return $this->apiReturnJson(9999,null,'没有当前公司');
 
-        if(Company::where('company_alias',$this->request->get('company_alias'))->where('id','!=', $company->id)->first()){
+        if(Company::where('company_alias',$this->request->get('company_alias'))->where('status', 1)->where('id','!=', $company->id)->first()){
             return $this->apiReturnJson(9999,null,'该企业简称已经存在');
         }
         $model = new Company();

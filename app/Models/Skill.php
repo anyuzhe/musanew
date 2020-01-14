@@ -13,5 +13,6 @@ class Skill extends Model
         'name',
         'category_l1_id',
         'category_l2_id',
+        'sort',
     ];
 }
