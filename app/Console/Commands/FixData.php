@@ -92,7 +92,7 @@ class FixData extends Command
                 'pid'=>$rm->id,
             ]);
             CompanyPermission::create([
-                'key'=>'edit_job',
+                'key'=>'add_job',
                 'display_name'=>'添加/复制职位',
                 'level'=>'3',
                 'pid'=>$jm->id,

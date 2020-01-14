@@ -201,6 +201,7 @@ class CompaniesRepository
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
         }
         CompanyUserRole::where('company_id', $company->id)->where('user_id', $user->id)->delete();
+        $has1 = DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->value('company_role_id');
         foreach ($roleIds as $roleId) {
             if($roleId==1)
                 continue;
@@ -210,7 +211,8 @@ class CompaniesRepository
                     'user_id'=>$user->id,
                     'role_id'=>$roleId,
                 ]);
-                DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => $roleId]);
+                if(!$has1)
+                    DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['company_role_id' => $roleId]);
             }
         }
         return $user;
