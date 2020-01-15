@@ -146,7 +146,7 @@ class LoginController extends CommonController
             $password = $user->password;
             $checkPwd = $this->checkPassword($password);
             if(!$checkPwd){
-                return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符(@$!%*#?&^*()_+=-)');
+                return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符');
             }
             $codeHas = PasswordFindCode::where([
                 ['type',1],
@@ -236,7 +236,7 @@ class LoginController extends CommonController
         }
         $checkPwd = $this->checkPassword($password);
         if(!$checkPwd){
-            return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符(@$!%*#?&^*()_+=-)');
+            return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符');
         }
         $codeHas = PasswordFindCode::where([
             ['user_id',$user->id],
@@ -281,7 +281,7 @@ class LoginController extends CommonController
         }
         $checkPwd = $this->checkPassword($password);
         if(!$checkPwd){
-            return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符(@$!%*#?&^*()_+=-)');
+            return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符');
         }
         //修改密码
         $this->requireMoodleConfig();
@@ -355,7 +355,11 @@ class LoginController extends CommonController
 
     public function checkPassword($password)
     {
-        $res = preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&^*()_+=-])[A-Za-z\d$@$!%*#?&^*()_+=-]{8,16}$/', $password);
+//        【·】【！】
+//
+//【@】【#】【$】【%】【^】【&】【*】【(】【)】【-】【+】【/】【.】【￥】【=】【\】【|】【{】【}】
+//【》】【《】【，】【。】【？】
+        $res = preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/])[A-Za-z\d@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/]{6,16}$/', $password);
 //        $res = preg_match('/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,16}/', $password);
 //        $res = preg_match('/^(\w*(?=\w*\d)(?=\w*[A-Za-z])\w*){6,16}$/', $password);
         return $res;

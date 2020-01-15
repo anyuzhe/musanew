@@ -524,6 +524,29 @@ class FixData extends Command
                 'pid'=>$sd->id,
             ]);
             $this->info('添加公司权限数据成功');
+
+
+            $t = CompanyPermission::where('level', 1)->get();
+
+            foreach ($t as $v) {
+                $v->full_key = $v->key;
+                $v->save();
+            }
+
+            $t = CompanyPermission::where('level', 2)->get();
+
+            foreach ($t as $v) {
+                $v->full_key = $v->parent->full_key.'.'.$v->key;
+                $v->save();
+            }
+
+            $t = CompanyPermission::where('level', 3)->get();
+
+            foreach ($t as $v) {
+                $v->full_key = $v->parent->full_key.'.'.$v->key;
+                $v->save();
+            }
+
         }elseif ($type==4){
 
             $t = CompanyPermission::where('level', 1)->get();

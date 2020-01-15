@@ -35,6 +35,7 @@ use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
 use App\Repositories\UserRepository;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
@@ -44,6 +45,139 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+//        【·】【！】
+//
+//【@】【#】【$】【%】【^】【&】【*】【(】【)】【-】【+】【/】【.】【￥】【=】【\】【|】【{】【}】
+//【》】【《】【，】【。】【？】
+    $password = '1234A!';
+    $res = preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/])[A-Za-z\d@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/]{6,16}$/', $password);
+    dd($res);
+    requireMoodleConfig();
+
+    global $CFG;
+    require_once($CFG->dirroot . '/user/editlib.php');
+    require_once($CFG->libdir . '/authlib.php');
+    require_once(getMoodleRoot().'/login/lib.php');
+    function userSignup(&$user, $notify=true, $confirmationurl = null) {
+        global $CFG, $DB, $SESSION;
+        require_once(getMoodleRoot().'/user/profile/lib.php');
+        require_once(getMoodleRoot().'/user/lib.php');
+
+        $plainpassword = $user->password;
+        $user->password = hash_internal_user_password($user->password);
+        if (empty($user->calendartype)) {
+            $user->calendartype = $CFG->calendartype;
+        }
+
+        $user->id = user_create_user($user, false, false);
+
+        user_add_password_history($user->id, $plainpassword);
+
+        // Save any custom profile field information.
+        profile_save_data($user);
+
+        // Save wantsurl against user's profile, so we can return them there upon confirmation.
+        if (!empty($SESSION->wantsurl)) {
+            set_user_preference('auth_email_wantsurl', $SESSION->wantsurl, $user);
+        }
+
+        // Trigger event.
+        \core\event\user_created::create_from_userid($user->id)->trigger();
+        ##发送确认邮箱
+//        if (! send_confirmation_email($user, $confirmationurl)) {
+//            print_error('auth_emailnoemail', 'auth_email');
+//        }
+
+//        if ($notify) {
+        return true;
+//        } else {
+//            return true;
+//        }
+    }
+//    $names = [
+//        'Jack.Qian'=>'jack-qian@163.com',
+//        'Perry.Gu'=>'perry-gu@163.com',
+//        'Aaron.Shen'=>'aaron-shen@163.com',
+//        'Robbin.Zhang'=>'robbin-zhang@163.com',
+//        'Peter.Hu'=>'peter-hu@163.com',
+//        'Paul'=>'paul@163.com',
+//        'Ye.Hui'=>'ye-hui@163.com',
+//        'Raidy.Lin'=>'raidy-lin@163.com',
+//        'Robin'=>'robin@163.com',
+//        'Bob'=>'bob@163.com',
+//        'Jenifer'=>'jenifer@163.com',
+//        'Eason'=>'eason@163.com',
+//        'Lina.Chen'=>'lina-chen@163.com',
+//    ];
+//    foreach ($names as $name=>$email) {
+//        $has = \App\Models\User::where('email', $email)->first();
+//        if($has){
+//            UserBasicInfo::where('user_id', $has->id)->update(['realname'=>$name]);
+//        }else{
+//            $user = new stdClass();
+//            $user->username = $email;
+//            $user->email = $email;
+//            $user->password = '123456';
+//            $user = signup_setup_new_user($user);
+//            userSignup($user, true);
+//            \App\Models\User::where('id', $user->id)->update([
+//                'confirmed'=>1,
+//                'firstname'=>'测',
+//                'lastname'=>'试'
+//            ]);
+//            UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$name, 'email'=>$email]);
+//            CompanyUser::create([
+//                'user_id'=>$user->id,
+//                'company_id'=>20200018,
+//                'company_role_id'=>62,
+//            ]);
+//        }
+//    }
+    $names = [
+        'lina.chen'=>'lina-chen@163.com',
+        '信必优'=>'xinbiyou@163.com',
+        '天钧华'=>'tianjunhua@163.com',
+        '罗思怀'=>'luosihuai@163.com',
+        'Alice'=>'alice@163.com',
+        '杰普'=>'jiepu@163.com',
+        '魏建国'=>'weijianguo@163.com',
+        '王雪仪'=>'wangxueyi@163.com',
+        '亿达'=>'yida@163.com',
+        '恒赢智'=>'hengyingzhi@163.com',
+        '文思'=>'wensi@163.com',
+        'Mia.Lin'=>'mia-lin@163.com',
+        '韬源'=>'taoyuan@163.com',
+        '携银'=>'xieyin@163.com',
+    ];
+    foreach ($names as $name=>$email) {
+        $has = \App\Models\User::where('email', $email)->first();
+        if($has){
+            UserBasicInfo::where('user_id', $has->id)->update(['realname'=>$name]);
+        }else{
+            $user = new stdClass();
+            $user->username = $email;
+            $user->email = $email;
+            $user->password = '123456';
+            $user = signup_setup_new_user($user);
+            userSignup($user, true);
+            \App\Models\User::where('id', $user->id)->update([
+                'confirmed'=>1,
+                'firstname'=>'测',
+                'lastname'=>'试'
+            ]);
+            UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$name, 'email'=>$email]);
+            CompanyUser::create([
+                'user_id'=>$user->id,
+                'company_id'=>20200001,
+                'company_role_id'=>61,
+            ]);
+        }
+    }
+    //20200018 62  20200001 61
+
+
+
+    dd(2);
     $userRe = app()->build(UserRepository::class);
     $user = $userRe->generateInviteUser("68067348@qq.com");
     dd($user);
