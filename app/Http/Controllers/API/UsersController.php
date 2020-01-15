@@ -82,10 +82,10 @@ class UsersController extends CommonController
 
     	$request = $this->request->all();
 
-        if(isset($request['name']) && $request['name']){
-            $name = $request['name'];
-        }else{
+        if(isset($request['realname']) && $request['realname']){
             $name = $request['realname'];
+        }else{
+            $name = $request['name'];
         }
         $request['name'] = $name;
         $request['realname'] = $name;
