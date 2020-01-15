@@ -92,26 +92,51 @@ class FixData extends Command
                 'pid'=>$rm->id,
             ]);
             CompanyPermission::create([
-                'key'=>'add_job',
-                'display_name'=>'添加/复制职位',
+                'key'=>'add_official_job',
+                'display_name'=>'添加/复制企业正式职位',
                 'level'=>'3',
                 'pid'=>$jm->id,
             ]);
             CompanyPermission::create([
-                'key'=>'edit_job',
-                'display_name'=>'编辑职位',
+                'key'=>'edit_official_job',
+                'display_name'=>'编辑企业正式职位',
                 'level'=>'3',
                 'pid'=>$jm->id,
             ]);
             CompanyPermission::create([
-                'key'=>'delete_job',
-                'display_name'=>'删除职位',
+                'key'=>'delete_official_job',
+                'display_name'=>'删除企业正式职位',
                 'level'=>'3',
                 'pid'=>$jm->id,
             ]);
             CompanyPermission::create([
-                'key'=>'show_job',
-                'display_name'=>'查看/筛查职位',
+                'key'=>'show_official_job',
+                'display_name'=>'查看/筛查企业正式职位',
+                'level'=>'3',
+                'pid'=>$jm->id,
+            ]);
+
+            CompanyPermission::create([
+                'key'=>'add_gain_job',
+                'display_name'=>'复制获取职位',
+                'level'=>'3',
+                'pid'=>$jm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'edit_gain_job',
+                'display_name'=>'编辑获取职位',
+                'level'=>'3',
+                'pid'=>$jm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'delete_gain_job',
+                'display_name'=>'删除获取职位',
+                'level'=>'3',
+                'pid'=>$jm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'show_gain_job',
+                'display_name'=>'查看/筛查获取职位',
                 'level'=>'3',
                 'pid'=>$jm->id,
             ]);
@@ -378,7 +403,7 @@ class FixData extends Command
             ]);
             CompanyPermission::create([
                 'key'=>'add_role',
-                'display_name'=>'新增',
+                'display_name'=>'新增/复制',
                 'level'=>'3',
                 'pid'=>$bm->id,
             ]);
@@ -421,6 +446,48 @@ class FixData extends Command
             CompanyPermission::create([
                 'key'=>'delete_user',
                 'display_name'=>'删除',
+                'level'=>'3',
+                'pid'=>$bm->id,
+            ]);
+            $bm = CompanyPermission::create([
+                'key'=>'resume_score_setting',
+                'display_name'=>'简历评分配置',
+                'level'=>'2',
+                'pid'=>$cm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'show_setting',
+                'display_name'=>'查看',
+                'level'=>'3',
+                'pid'=>$bm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'add_setting',
+                'display_name'=>'新增',
+                'level'=>'3',
+                'pid'=>$bm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'edit_setting',
+                'display_name'=>'编辑',
+                'level'=>'3',
+                'pid'=>$bm->id,
+            ]);
+            $bm = CompanyPermission::create([
+                'key'=>'operation_log',
+                'display_name'=>'操作日志',
+                'level'=>'2',
+                'pid'=>$cm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'show_log',
+                'display_name'=>'查看',
+                'level'=>'3',
+                'pid'=>$bm->id,
+            ]);
+            CompanyPermission::create([
+                'key'=>'excel_export',
+                'display_name'=>'excel导出',
                 'level'=>'3',
                 'pid'=>$bm->id,
             ]);

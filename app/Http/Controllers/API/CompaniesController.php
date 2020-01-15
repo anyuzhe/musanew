@@ -659,6 +659,8 @@ class CompaniesController extends ApiBaseCommonController
             if(User::where('id','!=',$user->id)->where('confirmed',1)->where('email', $user->email)->where('deleted',0)->first()){
                 return $this->apiReturnJson(9999, null, '该邮箱已经存在');
             }
+            $user->email = $email;
+            $user->save();
         }
         if(!$email){
             $email = $user->email;
