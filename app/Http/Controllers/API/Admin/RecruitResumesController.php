@@ -232,6 +232,7 @@ class RecruitResumesController extends ApiBaseCommonController
         $users = $users->keyBy('id')->toArray();
         $roles = CompanyRole::whereIn('id', $roleIds)->get()->keyBy('id')->toArray();
         $data = [];
+        $hasIds = [];
         foreach ($companyUsers as $companyUser) {
             $user = $users[$companyUser->user_id];
             if(isset($roles[$companyUser->company_role_id]))
@@ -239,11 +240,14 @@ class RecruitResumesController extends ApiBaseCommonController
             else
                 $role = null;
             $info = $user['info'];
+            if(in_array($user['id'], $hasIds))
+                continue;
             $data[] = [
                 'id'=>$user['id'],
                 'name'=>$info?$info['realname']:'无姓名',
                 'role_name'=>$role?$role['name']:'无角色',
             ];
+            $hasIds[] = $user['id'];
         }
         return $this->apiReturnJson(0,$data);
     }
