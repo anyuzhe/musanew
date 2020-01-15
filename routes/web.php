@@ -49,9 +49,9 @@ Route::get('/test', function () {
 //
 //【@】【#】【$】【%】【^】【&】【*】【(】【)】【-】【+】【/】【.】【￥】【=】【\】【|】【{】【}】
 //【》】【《】【，】【。】【？】
-    $password = '1234A!';
-    $res = preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/])[A-Za-z\d@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/]{6,16}$/', $password);
-    dd($res);
+//    $password = '1234A!';
+//    $res = preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/])[A-Za-z\d@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/]{6,16}$/', $password);
+//    dd($res);
     requireMoodleConfig();
 
     global $CFG;
@@ -94,45 +94,50 @@ Route::get('/test', function () {
 //            return true;
 //        }
     }
-//    $names = [
-//        'Jack.Qian'=>'jack-qian@163.com',
-//        'Perry.Gu'=>'perry-gu@163.com',
-//        'Aaron.Shen'=>'aaron-shen@163.com',
-//        'Robbin.Zhang'=>'robbin-zhang@163.com',
-//        'Peter.Hu'=>'peter-hu@163.com',
-//        'Paul'=>'paul@163.com',
-//        'Ye.Hui'=>'ye-hui@163.com',
-//        'Raidy.Lin'=>'raidy-lin@163.com',
-//        'Robin'=>'robin@163.com',
-//        'Bob'=>'bob@163.com',
-//        'Jenifer'=>'jenifer@163.com',
-//        'Eason'=>'eason@163.com',
-//        'Lina.Chen'=>'lina-chen@163.com',
-//    ];
-//    foreach ($names as $name=>$email) {
-//        $has = \App\Models\User::where('email', $email)->first();
-//        if($has){
-//            UserBasicInfo::where('user_id', $has->id)->update(['realname'=>$name]);
-//        }else{
-//            $user = new stdClass();
-//            $user->username = $email;
-//            $user->email = $email;
-//            $user->password = '123456';
-//            $user = signup_setup_new_user($user);
-//            userSignup($user, true);
-//            \App\Models\User::where('id', $user->id)->update([
-//                'confirmed'=>1,
-//                'firstname'=>'测',
-//                'lastname'=>'试'
-//            ]);
-//            UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$name, 'email'=>$email]);
-//            CompanyUser::create([
-//                'user_id'=>$user->id,
-//                'company_id'=>20200018,
-//                'company_role_id'=>62,
-//            ]);
-//        }
-//    }
+    $names = [
+        'Jack.Qian'=>'jack-qian@163.com',
+        'Perry.Gu'=>'perry-gu@163.com',
+        'Aaron.Shen'=>'aaron-shen@163.com',
+        'Robbin.Zhang'=>'robbin-zhang@163.com',
+        'Peter.Hu'=>'peter-hu@163.com',
+        'Paul'=>'paul@163.com',
+        'Ye.Hui'=>'ye-hui@163.com',
+        'Raidy.Lin'=>'raidy-lin@163.com',
+        'Robin'=>'robin@163.com',
+        'Bob'=>'bob@163.com',
+        'Jenifer'=>'jenifer@163.com',
+        'Eason'=>'eason@163.com',
+        'Lina.Chen'=>'lina-chen@163.com',
+    ];
+    foreach ($names as $name=>$email) {
+        $has = \App\Models\User::where('email', $email)->first();
+        if($has){
+            UserBasicInfo::where('user_id', $has->id)->update(['realname'=>$name]);
+            $user_id = $has->id;
+        }else{
+            $user = new stdClass();
+            $user->username = $email;
+            $user->email = $email;
+            $user->password = '123456';
+            $user = signup_setup_new_user($user);
+            userSignup($user, true);
+            \App\Models\User::where('id', $user->id)->update([
+                'confirmed'=>1,
+                'firstname'=>'测',
+                'lastname'=>'试'
+            ]);
+            UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$name, 'email'=>$email]);
+            $user_id = $user->id;
+        }
+        $hasC = CompanyUser::where('user_id', $user_id)->where('company_id',20200018)->first();
+        if(!$hasC)
+            CompanyUser::create([
+                'user_id'=>$user_id,
+                'company_id'=>20200018,
+                'company_role_id'=>62,
+            ]);
+    }
+
     $names = [
         'lina.chen'=>'lina-chen@163.com',
         '信必优'=>'xinbiyou@163.com',
@@ -153,6 +158,7 @@ Route::get('/test', function () {
         $has = \App\Models\User::where('email', $email)->first();
         if($has){
             UserBasicInfo::where('user_id', $has->id)->update(['realname'=>$name]);
+            $user_id = $has->id;
         }else{
             $user = new stdClass();
             $user->username = $email;
@@ -166,12 +172,15 @@ Route::get('/test', function () {
                 'lastname'=>'试'
             ]);
             UserBasicInfo::create(['user_id'=>$user->id,'realname'=>$name, 'email'=>$email]);
-            CompanyUser::create([
-                'user_id'=>$user->id,
-                'company_id'=>20200001,
-                'company_role_id'=>61,
-            ]);
+            $user_id = $user->id;
         }
+        $hasC = CompanyUser::where('user_id', $user_id)->where('company_id',20200001)->first();
+        if(!$hasC)
+            CompanyUser::create([
+                'user_id'=>$user_id,
+                'company_id'=>20200001,
+                'company_role_id'=>64,
+            ]);
     }
     //20200018 62  20200001 61
 

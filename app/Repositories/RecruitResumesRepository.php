@@ -130,7 +130,7 @@ class RecruitResumesRepository
             $log->text =  '成功入职-'.$_time;
             $recruitResume->formal_entry_at = $_time;
             $this->hiredEntryHandle($recruitResume);
-            $this->companyRelevanceUser($recruitResume->company_id, $recruitResume->user, $recruitResume->job->department_id);
+            $this->companyRelevanceUser($recruitResume->company_id, $recruitResume->user_id, $recruitResume->job->department_id);
         }elseif($status==-1){
             $log->text =  '简历不匹配';
             $this->minusNewResumeHandle($recruitResume);
@@ -234,6 +234,8 @@ class RecruitResumesRepository
 
     public function companyRelevanceUser($company_id, $user_id, $department_id)
     {
+        if(!$user_id)
+            return;
         //往需求方添加人才库关联
         $_has = CompanyUser::where('company_id', $company_id)->where('user_id', $user_id)->first();
         if(!$_has){
