@@ -191,9 +191,8 @@ class CompaniesRepository
                 DB::connection('musa')->table('company_user')->where('user_id', $user->id)->where('company_id', $company->id)->update(['department_id' => $department_id]);
             }else{
                 $user->companies()->attach($company->id, ['department_id' => $department_id]);
+                \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
             }
-
-            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
         }else{
             $userRe = app()->build(UserRepository::class);
             $user = $userRe->generateInviteUser($email);
