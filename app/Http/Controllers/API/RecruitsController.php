@@ -179,14 +179,25 @@ class RecruitsController extends ApiBaseCommonController
 
     public function _after_find(&$data)
     {
+        $entrustRes = app()->build(EntrustsRepository::class);
+
         $data->leading;
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
+//            $entrust['resume_num'] = $entrust['recruit']['resume_num'] - $acounts['total_resume_num'] + $entrust['resume_num'];
+//            $entrust['done_num'] = $entrust['recruit']['done_num'] - $acounts['total_done_num'] + $entrust['done_num'];
+//            $entrust['new_resume_num'] = $entrust['recruit']['new_resume_num'] - $acounts['total_new_resume_num'] + $entrust['new_resume_num'];
+//            $entrust['recruit']['residue_num'] = $entrust['recruit']['need_num'] - $entrust['recruit']['done_num'] - $entrust['recruit']['wait_entry_num'];
+//            $entrust['recruit']['residue_num'] = $entrust['recruit']['residue_num']>0?$entrust['recruit']['residue_num']:0;
             if($entrust){
+                $acounts = $entrustRes->getEntrustAmount($entrust);
                 $data->status = app()->build(EntrustsRepository::class)->getStatusByEntrustAndRecruit($entrust->status, $data->status);
-                $data->resume_num = $entrust->resume_num;
-                $data->new_resume_num = $entrust->new_resume_num;
+                $data->resume_num = $data->resume_num - $acounts['total_resume_num'] + $entrust->resume_num;
+                $data->done_num = $data->done_num - $acounts['total_done_num'] + $entrust->done_num;
+                $data->new_resume_num = $data->new_resume_num - $acounts['total_new_resume_num'] +  $entrust->new_resume_num;
+                $data->residue_num = $data->need_num - $data->done_num - $data->wait_entry_num;
+                $data->residue_num = $data->residue_num>0?$data->residue_num:0;
                 $data->created_at = $entrust->created_at;
             }
         }

@@ -170,6 +170,8 @@ class RecruitsController extends ApiBaseCommonController
 
     public function _after_find(&$data)
     {
+        $entrustRes = app()->build(EntrustsRepository::class);
+
         $data->leading;
         $data->creator;
         $data->company;
@@ -177,9 +179,13 @@ class RecruitsController extends ApiBaseCommonController
         if($entrust_id){
             $entrust = Entrust::find($entrust_id);
             if($entrust){
+                $acounts = $entrustRes->getEntrustAmount($entrust);
                 $data->status = app()->build(EntrustsRepository::class)->getStatusByEntrustAndRecruit($entrust->status, $data->status);
-                $data->resume_num = $entrust->resume_num;
-                $data->new_resume_num = $entrust->new_resume_num;
+                $data->resume_num = $data->resume_num - $acounts['total_resume_num'] + $entrust->resume_num;
+                $data->done_num = $data->done_num - $acounts['total_done_num'] + $entrust->done_num;
+                $data->new_resume_num = $data->new_resume_num - $acounts['total_new_resume_num'] +  $entrust->new_resume_num;
+                $data->residue_num = $data->need_num - $data->done_num - $data->wait_entry_num;
+                $data->residue_num = $data->residue_num>0?$data->residue_num:0;
                 $data->created_at = $entrust->created_at;
             }
         }
