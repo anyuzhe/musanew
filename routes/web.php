@@ -45,6 +45,16 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
+    set_time_limit(0);
+    $users = \App\Models\User::where('id',110)->get();
+    foreach ($users as $user) {
+        if($info = $user->info){
+            $info->created_at = date('Y-m-d H:i:s', $user->timecreated);
+            dd($info->created_at);
+            $info->save();
+        }
+    }
+    dd(1);
 //        【·】【！】
 //
 //【@】【#】【$】【%】【^】【&】【*】【(】【)】【-】【+】【/】【.】【￥】【=】【\】【|】【{】【}】

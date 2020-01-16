@@ -100,7 +100,9 @@ class UsersController extends ApiBaseCommonController
         }
         $newData = $data->toArray();
         foreach ($newData as $k=>&$newDatum) {
-            $newDatum['info'] = $infos[$k];
+            $_info = $infos[$k];
+            $_info['created_at'] = date('Y-m-d H:i:s', $newData['timecreated']);
+            $newDatum['info'] = $_info;
         }
         return $newData;
     }
