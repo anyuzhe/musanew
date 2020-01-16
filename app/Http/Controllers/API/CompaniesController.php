@@ -524,7 +524,7 @@ class CompaniesController extends ApiBaseCommonController
             $model = $model->where('department_id', $department_id);
         }
         $model1 = clone $model;
-        $companyUsers = $model->where('company_id', $company_id)->skip($pageSize*($pagination-1))->take($pageSize)->orderByRaw("FIELD(company_role_id, 1) asc")->get();
+        $companyUsers = $model->where('company_id', $company_id)->skip($pageSize*($pagination-1))->take($pageSize)->orderByRaw("FIELD(company_role_id, 1) desc")->get();
         $count = $model1->where('company_id', $company_id)->count();
         $companyUsers->load('department');
         $userIds = $companyUsers->pluck('user_id')->toArray();
