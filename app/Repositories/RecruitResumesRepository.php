@@ -278,7 +278,7 @@ class RecruitResumesRepository
                 $data->status_str = '面试不通过';
                 break;
             case -2:
-                $data->status_str = '面试没来';
+                $data->status_str = '放弃面试';
                 break;
             case -1:
                 $data->status_str = '简历不匹配';
