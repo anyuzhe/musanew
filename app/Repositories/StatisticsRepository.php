@@ -33,9 +33,17 @@ class StatisticsRepository
         $company_recruit_ids = RecruitResume::where('company_id', $company->id)->whereNotNull('third_party_id')->pluck('id')->toArray();
 
         $all_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->count();
-        $month_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->count();
+        $month_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->where(function ($query) use ($start_date, $end_date) {
+            $query->whereIn('status',[1,2,3,6,7])->orWhere(function ($q) use ($end_date, $start_date) {
+                $q->where('end_at','>', $start_date)->where('end_at','<=', $end_date);
+            });
+        })->count();
 //        $month_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->count();
-        $month_people_count = (int)Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->sum('need_num');
+        $month_people_count = (int)Recruit::whereIn('id', $company_job_recruit_ids)->where(function ($query) use ($start_date, $end_date) {
+            $query->whereIn('status',[1,2,3,6,7])->orWhere(function ($q) use ($end_date, $start_date) {
+                $q->where('end_at','>', $start_date)->where('end_at','<=', $end_date);
+            });
+        })->sum('need_num');
 //        $month_people_count = (int)Recruit::whereIn('id', $company_job_recruit_ids)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->sum('need_num');
 
         $month_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $company_recruit_entrust_ids)
@@ -76,10 +84,18 @@ class StatisticsRepository
 
         $all_job_count = Entrust::where('third_party_id', $company->id)->whereNotIn('status', [-2,-3,0])->count();
 
-        $month_job_count = Recruit::whereIn('id', $allRecruitIds)->whereIn('status',[1,2,3])->count();
+        $month_job_count = Recruit::whereIn('id', $allRecruitIds)->where(function ($query) use ($start_date, $end_date) {
+            $query->whereIn('status',[1,2,3,6,7])->orWhere(function ($q) use ($end_date, $start_date) {
+                $q->where('end_at','>', $start_date)->where('end_at','<=', $end_date);
+            });
+        })->count();
 //        $month_job_count = Recruit::whereIn('id', $allRecruitIds)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->count();
 //        $month_job_count = Entrust::where('third_party_id', $company->id)->whereIn('status',[0,1])->count();
-        $month_people_count = (int)Recruit::whereIn('id', $allRecruitIds)->whereIn('status',[1,2,3])->sum('need_num');
+        $month_people_count = (int)Recruit::whereIn('id', $allRecruitIds)->where(function ($query) use ($start_date, $end_date) {
+            $query->whereIn('status',[1,2,3,6,7])->orWhere(function ($q) use ($end_date, $start_date) {
+                $q->where('end_at','>', $start_date)->where('end_at','<=', $end_date);
+            });
+        })->sum('need_num');
 //        $month_people_count = (int)Recruit::whereIn('id', $allRecruitIds)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->sum('need_num');
 
         $third_party_recruit_entrust_ids = Entrust::where('third_party_id', $company->id)->pluck('id')->toArray();
