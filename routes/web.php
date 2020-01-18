@@ -46,6 +46,14 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    $es = Entrust::where('status', -1)->get();
+    foreach ($es as $e) {
+        $r = $e->recruit;
+        $r->status = 4;
+        $r->end_at = $e->end_at;
+        $r->save();
+    }
+    dd(1);
     $res = Entrust::select(DB::raw('company_job_recruit_id,SUM(done_num) as total_done_num,SUM(resume_num) as total_resume_num,SUM(new_resume_num) as total_new_resume_num'))->where('company_job_recruit_id', 9)->first()->toArray();
     dd($res);
     $users = \App\Models\User::where('id',110)->get();
