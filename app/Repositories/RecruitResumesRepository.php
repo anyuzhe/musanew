@@ -180,9 +180,9 @@ class RecruitResumesRepository
         $recruit->done_num++;
         $recruit->wait_entry_num--;
         if($recruit->done_num>=$recruit->need_num){
-            //如果是委托 就不改成结束状态
-            if(!$entrust)
-                $recruit->status = 5;
+            //如果是委托 就不改成结束状态 --后台取消了
+//            if(!$entrust)
+            $recruit->status = 5;
             foreach ($recruit->entrusts as $_entrust) {
                 $_entrust->status = 2;
                 $_entrust->end_at = date('Y-m-d H:i:s');
