@@ -28,8 +28,8 @@ class StatisticsRepository
                 });
             })->pluck('company_job_recruit_id')->toArray();
 
-        $company_recruit_entrust_ids = Entrust::where('company_id', $company->id)->whereNotIn('status', [-2,0])->pluck('id')->toArray();
-        $company_job_recruit_ids = Entrust::where('company_id', $company->id)->whereNotIn('status', [-2,0])->pluck('company_job_recruit_id')->toArray();
+        $company_recruit_entrust_ids = Entrust::where('company_id', $company->id)->whereNotIn('status', [-2,-3,0])->pluck('id')->toArray();
+        $company_job_recruit_ids = Entrust::where('company_id', $company->id)->whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
         $company_recruit_ids = RecruitResume::where('company_id', $company->id)->whereNotNull('third_party_id')->pluck('id')->toArray();
 
         $all_job_count = Recruit::whereIn('id', $company_job_recruit_ids)->count();
@@ -70,9 +70,9 @@ class StatisticsRepository
                 });
             })->pluck('company_job_recruit_id')->toArray();
 
-        $allRecruitIds = Entrust::where('third_party_id', $company->id)->whereNotIn('status', [-2,0])->pluck('company_job_recruit_id')->toArray();
+        $allRecruitIds = Entrust::where('third_party_id', $company->id)->whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
 
-        $all_job_count = Entrust::where('third_party_id', $company->id)->whereNotIn('status', [-2,0])->count();
+        $all_job_count = Entrust::where('third_party_id', $company->id)->whereNotIn('status', [-2,-3,0])->count();
 
         $month_job_count = Recruit::whereIn('id', $allRecruitIds)->whereIn('status',[1,2,3])->orWhereIn('id',$endRecruitIds)->count();
 //        $month_job_count = Entrust::where('third_party_id', $company->id)->whereIn('status',[0,1])->count();
@@ -195,7 +195,7 @@ class StatisticsRepository
                     })->orWhere(function ($query2)use($start_date,$end_date){
                         $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
                     });
-                })->whereIn('status', [1]);
+                })->whereIn('status', [-1,1,2,6]);
         })->get();
 //        dump($entrusts->toArray());
 //        $departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
@@ -299,7 +299,7 @@ class StatisticsRepository
                     })->orWhere(function ($query2)use($start_date,$end_date){
                         $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
                     });
-                })->whereIn('status', [1]);
+                })->whereIn('status', [-1,1,2,6]);
         })->get();
 //        dump($entrusts->toArray());
 //        $departments = app()->build(CompaniesRepository::class)->getDepartmentTree($company->id);
