@@ -199,7 +199,14 @@ class RecruitsController extends ApiBaseCommonController
                 $data->residue_num = $data->need_num - $data->done_num - $data->wait_entry_num;
                 $data->residue_num = $data->residue_num>0?$data->residue_num:0;
                 $data->created_at = $entrust->created_at;
+
+                $entrust->leading;
+                $data->entrust = $entrust;
+            }else{
+                $data->entrust = null;
             }
+        }else{
+            $data->entrust = null;
         }
         if($data->company_id==$this->getCurrentCompany()->id){
             $data->is_party = 1;
