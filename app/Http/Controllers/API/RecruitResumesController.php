@@ -38,8 +38,12 @@ class RecruitResumesController extends ApiBaseCommonController
     {
         $recruit_id = $this->request->get('recruit_id');
         $entrust_id = $this->request->get('entrust_id');
+        $resume_name = $this->request->get('resume_name');
         if ($recruit_id) {
             $model = $model->where('company_job_recruit_id', $recruit_id);
+        }
+        if($resume_name){
+            $model = $model->whereIn('resume_id', Resume::where('name','like',"%$resume_name%")->pluck('id'));
         }
         if ($entrust_id) {
 //            $model = $model->where('company_job_recruit_entrust_id', $entrust_id);
