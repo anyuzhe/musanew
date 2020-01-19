@@ -149,12 +149,14 @@ class StatisticsRepository
         $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //面试中
         $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        //面试通过
+        $interview_pass = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //录用
         $hire = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //入职
         $entry = $this->getCountByStatus([8], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
 
-        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry','recruit_num','recruit_people_num');
+        return compact('recommend_resume', 'invite_interview', 'interviewing', 'interview_pass', 'hire', 'entry','recruit_num','recruit_people_num');
     }
 
     public function getCompanyThirdPartyDataStatistics(Company $company,$start_date,$end_date)
@@ -187,12 +189,14 @@ class StatisticsRepository
         $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //面试中
         $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
+        //面试通过
+        $interview_pass = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //录用
         $hire = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //入职
         $entry = $this->getCountByStatus([8], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
 
-        return compact('recommend_resume', 'invite_interview', 'interviewing', 'hire', 'entry', 'thirdParties','recruit_num','recruit_people_num');
+        return compact('recommend_resume', 'invite_interview', 'interviewing', 'interview_pass', 'hire', 'entry', 'thirdParties','recruit_num','recruit_people_num');
     }
 
     public function getCompanyDataStatisticsDetail(Company $company, $third_party_id, $start_date, $end_date)
