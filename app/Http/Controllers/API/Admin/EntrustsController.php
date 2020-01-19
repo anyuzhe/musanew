@@ -130,11 +130,12 @@ class EntrustsController extends ApiBaseCommonController
         $entrustRes = app()->build(EntrustsRepository::class);
         $allAcount = $entrustRes->getEntrustsAmount($entrusts);
 
+        foreach ($entrusts as &$entrust) {
+            $job_ids[] = $entrust->job->id;
+            $entrust->recruit->leading;
+        }
         $job_ids = [];
         $entrusts = $entrusts->toArray();
-        foreach ($entrusts as $entrust) {
-            $job_ids[] = $entrust['job']['id'];
-        }
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
 
         $testres = app()->build(EntrustsRepository::class);
