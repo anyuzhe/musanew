@@ -50,15 +50,16 @@ class StatisticsRepository
             ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
         $all_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $company_recruit_entrust_ids)->count();
 
-        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
-            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
-        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
-            ->count();
+        //此 暂时改为面试人数
+        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',4)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
+            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->groupBy('company_job_recruit_resume_id')->get()->count();
+        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',4)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
+            ->groupBy('company_job_recruit_resume_id')->get()->count();
 
         $month_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
-            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->count();
+            ->where('created_at','>',date('Y-m-01'))->where('created_at','<=', $end_date)->groupBy('company_job_recruit_resume_id')->get()->count();
         $all_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $company_recruit_ids)
-            ->count();
+            ->groupBy('company_job_recruit_resume_id')->get()->count();
         return compact('all_job_count', 'month_job_count', 'month_people_count',
             'month_recommend_resume_count', 'all_recommend_resume_count','month_recommend_resume_succeed_count','all_recommend_resume_succeed_count',
             'month_recommend_resume_entry_count', 'all_recommend_resume_entry_count','companies');
@@ -104,15 +105,16 @@ class StatisticsRepository
             ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->count();
         $all_recommend_resume_count = RecruitResume::whereIn('company_job_recruit_entrust_id', $third_party_recruit_entrust_ids)->count();
 
-        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
-            ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->count();
-        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',7)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
-            ->count();
+        //此 暂时改为面试人数
+        $month_recommend_resume_succeed_count = RecruitResumeLog::where('status',4)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
+            ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->groupBy('company_job_recruit_resume_id')->get()->count();
+        $all_recommend_resume_succeed_count = RecruitResumeLog::where('status',4)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
+            ->groupBy('company_job_recruit_resume_id')->get()->count();
 
         $month_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
-            ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->count();
+            ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->groupBy('company_job_recruit_resume_id')->get()->count();
         $all_recommend_resume_entry_count = RecruitResumeLog::where('status',8)->whereIn('company_job_recruit_resume_id', $third_party_recruit_ids)
-            ->count();
+            ->groupBy('company_job_recruit_resume_id')->get()->count();
         return compact('all_job_count', 'month_job_count', 'month_people_count',
             'month_recommend_resume_count', 'all_recommend_resume_count','month_recommend_resume_succeed_count','all_recommend_resume_succeed_count',
             'month_recommend_resume_entry_count', 'all_recommend_resume_entry_count','companies');

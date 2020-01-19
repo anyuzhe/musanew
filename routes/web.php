@@ -35,6 +35,7 @@ use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
 use App\Repositories\UserRepository;
 use App\User;
+use App\ZL\ORG\Excel\ExcelHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,6 +47,32 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    $third_party_recruit_entrust_ids = Entrust::where('third_party_id', 20200001)->pluck('id')->toArray();
+    $res = RecruitResume::whereIn('company_job_recruit_entrust_id', $third_party_recruit_entrust_ids)->get();
+    $data = [];
+    $res->load('resume');
+    $res->load('job');
+    foreach ($res as $re) {
+        $_data = [];
+        $_data[] = $re->resume->name;
+        $_data[] = $re->job->name;
+        $data[] = $_data;
+//        dump($re->resume->name.'--'.$re->job->name);
+    }
+    $excelHelper = new ExcelHelper();
+    $excelHelper->dumpExcel([0,1],$data,'数据', "数据");
+    dd(1);
+    $start_date = date('Y-m-01');
+    $end_date = date('Y-m-31 23:59:59');
+    $res = RecruitResume::whereIn('company_job_recruit_entrust_id', $third_party_recruit_entrust_ids)
+        ->where('created_at','>', $start_date)->where('created_at','<=', $end_date)->get();
+    foreach ($res as $v) {
+        dump($v->job->name);
+        dump($v->resume->name);
+        dump((string)$v->created_at);
+    }
+    dd($res);
+
     $es = Entrust::where('status', -1)->get();
     foreach ($es as $e) {
         $r = $e->recruit;
