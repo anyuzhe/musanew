@@ -30,6 +30,7 @@ use App\Models\ResumeEducation;
 use App\Models\UserBasicInfo;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\RecruitRepository;
+use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
@@ -52,15 +53,18 @@ Route::get('/test', function () {
     $data = [];
     $res->load('resume');
     $res->load('job');
+    $rrs =  app()->build(RecruitResumesRepository::class);
     foreach ($res as $re) {
+        $rrs->addFieldText($re);
         $_data = [];
         $_data[] = $re->resume->name;
         $_data[] = $re->job->name;
+        $_data[] = $re->status_str;
         $data[] = $_data;
 //        dump($re->resume->name.'--'.$re->job->name);
     }
     $excelHelper = new ExcelHelper();
-    $excelHelper->dumpExcel([0,1],$data,'数据', "数据");
+    $excelHelper->dumpExcel(['名字','职位名称','招聘状态'],$data,'数据', "数据");
     dd(1);
     $start_date = date('Y-m-01');
     $end_date = date('Y-m-31 23:59:59');

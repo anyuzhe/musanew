@@ -36,9 +36,12 @@ class EntrustsController extends ApiBaseCommonController
         $leading_id = $request->get('leading_id');
         $third_party_id = $request->get('third_party_id');
         $demand_side_id = $request->get('demand_side_id');
+        $job_text = $request->get('job_text');
         $recruit_search_status = $request->get('recruit_search_status');
         if($job_id){
             $model = $model->where('job_id', $job_id);
+        }elseif ($job_text){
+            $model = $model->whereIn('job_id', Job::where('name','like',"%$job_text%")->orWhere('code','like',"%$job_text%")->pluck('id'));
         }
         if($department_id){
             $department = CompanyDepartment::find($department_id);
