@@ -517,13 +517,14 @@ class StatisticsRepository
     {
         $data = [
             'value'=>0,
-            'data'=>[]
+            'data'=>[],
         ];
 
         $_recruitResumes = RecruitResumeLog::whereIn('status',$status)->where('created_at','>',$start_date)->where('created_at','<=',$end_date)
             ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
             ->groupBy('company_job_recruit_resume_id')->get();
         $_recruitResumes->load('recruitResume');
+        $data['test'] = $_recruitResumes;
         $_data = [];
         foreach ($_recruitResumes as $recruitResume) {
             $data['value']++;

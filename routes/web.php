@@ -52,19 +52,25 @@ Route::get('/test', function () {
     $res = RecruitResume::whereIn('company_job_recruit_entrust_id', $third_party_recruit_entrust_ids)->get();
     $data = [];
     $res->load('resume');
+    $res->load('company');
+    $res->load('thirdParty');
     $res->load('job');
     $rrs =  app()->build(RecruitResumesRepository::class);
     foreach ($res as $re) {
-        $rrs->addFieldText($re);
-        $_data = [];
-        $_data[] = $re->resume->name;
-        $_data[] = $re->job->name;
-        $_data[] = $re->status_str;
-        $data[] = $_data;
+        if(in_array($re->status,[7,8])){
+            $rrs->addFieldText($re);
+            $_data = [];
+            $_data[] = $re->company->company_alias;
+            $_data[] = $re->thirdParty->company_alias;
+            $_data[] = $re->resume->name;
+            $_data[] = $re->job->name;
+            $_data[] = $re->status_str;
+            $data[] = $_data;
+        }
 //        dump($re->resume->name.'--'.$re->job->name);
     }
     $excelHelper = new ExcelHelper();
-    $excelHelper->dumpExcel(['名字','职位名称','招聘状态'],$data,'数据', "数据");
+    $excelHelper->dumpExcel(['企业','外包企业','名字','职位名称','招聘状态'],$data,'数据', "数据");
     dd(1);
     $start_date = date('Y-m-01');
     $end_date = date('Y-m-31 23:59:59');
