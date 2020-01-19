@@ -524,7 +524,7 @@ class StatisticsRepository
             ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
             ->groupBy('company_job_recruit_resume_id')->get();
         $_recruitResumes->load('recruitResume');
-        $data['test'] = $_recruitResumes;
+//        $data['test'] = $_recruitResumes;
         $_data = [];
         foreach ($_recruitResumes as $recruitResume) {
             $data['value']++;

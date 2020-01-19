@@ -65,6 +65,7 @@ Route::get('/test', function () {
             $_data[] = $re->resume->name;
             $_data[] = $re->job->name;
             $_data[] = $re->status_str;
+            $_data[] = $re->id;
             $data[] = $_data;
         }
 //        dump($re->resume->name.'--'.$re->job->name);
