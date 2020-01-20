@@ -248,7 +248,7 @@ class StatisticsRepository
                     'value'=>$this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids),//推荐简历
                     'interview_resume_num'=>$this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids),//邀请面试
                     'resume_mismatching_num'=>$this->getEntrustCountByStatus([-1], $company_job_recruit_resume_ids),//简历不匹配
-                    'give_up_interview_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//放弃面试
+                    'give_up_interview_num'=>$this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids),//放弃面试
                     'undetermined_num'=>$this->getEntrustCountByStatus([4], $company_job_recruit_resume_ids,2),//待定
                     'interview_pass_num'=>$this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids),//面试通过
                     'interview_defeated_num'=>$this->getEntrustCountByStatus([-3], $company_job_recruit_resume_ids),//面试失败
