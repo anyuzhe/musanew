@@ -40,7 +40,7 @@ class RecruitResumesRepository
         if($status==-1 && !in_array($recruitResume->status,[1])){
             return '简历不是初始状态,不能简历不匹配';
         }elseif($status==-2 && !in_array($recruitResume->status,[2,3,5])){
-            return '简历不是邀请或再次邀请面试状态,不能面试没来';
+            return '简历不是邀请或再次邀请面试状态,不能放弃面试';
         }elseif($status==-3 && !in_array($recruitResume->status,[4])){
             return '简历不是待定状态,不能面试不通过';
         }elseif($status==-4 && !in_array($recruitResume->status,[4,6])){

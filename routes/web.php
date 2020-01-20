@@ -48,6 +48,7 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    $logs = RecruitResumeLog::where('text','面试没来')->update(['text'=>'放弃面试']);dd(1);
     $third_party_recruit_entrust_ids = Entrust::where('third_party_id', 20200001)->pluck('id')->toArray();
     $res = RecruitResume::whereIn('company_job_recruit_entrust_id', $third_party_recruit_entrust_ids)->get();
     $data = [];

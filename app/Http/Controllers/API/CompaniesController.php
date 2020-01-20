@@ -783,12 +783,16 @@ class CompaniesController extends ApiBaseCommonController
 
         $model = new RecruitResume();
 
-        $model = $model->where('company_id', $company_id);
         if($third_party_id){
             $model = $model->where('third_party_id', $third_party_id);
         }
         if($demand_side_id){
             $model = $model->where('company_id', $demand_side_id);
+        }
+        if(!$third_party_id && !$demand_side_id){
+            $model = $model->where(function ($query) use ($company_id) {
+                $query->where('company_id', $company_id)->orWhere('third_party_id', $company_id);
+            });
         }
         if($job_id){
             $model = $model->where('job_id', $job_id);
