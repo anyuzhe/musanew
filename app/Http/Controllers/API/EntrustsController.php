@@ -54,8 +54,9 @@ class EntrustsController extends ApiBaseCommonController
         if($leading_id){
             $_ids1 = Recruit::where('leading_id', $leading_id)->pluck('id')->toArray();
             $_ids2 = Entrust::where('leading_id', $leading_id)->pluck('id')->toArray();
-            $_ids = array_unique(array_merge($_ids1, $_ids2));
-            $model = $model->whereIn('company_job_recruit_id', $_ids);
+            $model = $model->where(function ($query) use ($_ids2, $_ids1) {
+                $query->whereIn('company_job_recruit_id', $_ids1)->orWhereIn('id', $_ids2);
+            });
         }
         if($start_at && !$end_at){
             $model = $model->where('created_at', '>=' ,$start_at);
