@@ -56,6 +56,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'front_url' => env('APP_FRONT_URL', 'http://localhost'),
+    'resume_parse_url' => env('RESUME_PARSE_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
 

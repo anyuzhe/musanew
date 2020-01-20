@@ -78,7 +78,7 @@ class ResumesRepository
             $area_ids[] = $v->residence_district_id;
         }
         $areas = Area::whereIn('id', $area_ids)->get()->keyBy('id')->toArray();
-        $APP_URL = env('APP_URL');
+        $APP_URL = config('app.url');
         foreach ($data as &$v) {
             $v->permanent_province_text = isset($areas[$v->permanent_province_id])?$areas[$v->permanent_province_id]['cname']:'';
             $v->permanent_city_text = isset($areas[$v->permanent_city_id])?$areas[$v->permanent_city_id]['cname']:'';
@@ -176,7 +176,7 @@ class ResumesRepository
 
         $data->age = getAge($data->birthdate);
 
-        $data->resume_file_path = env('APP_URL').$data->resume_file_path;
+        $data->resume_file_path = config('app.url').$data->resume_file_path;
         if($data->avatar){
             $data->avatar_url = getPicFullUrl($data->avatar);
         }else{

@@ -41,7 +41,7 @@ class RecruitLeadingUpdateEmail extends Mailable
         $job = $recruit->job;
         $this->subject = "您成为了{$job->name}职位招聘的负责人";
         $content_text_array = [];
-        $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail/?id={$recruit->id}&recruit_id={$entrust_id}&activeType={$activeType}";
+        $url = config('app.front_url')."/company/recruitment/recruitmentDetail/?id={$recruit->id}&recruit_id={$entrust_id}&activeType={$activeType}";
         $content_text_array[] = "您成为了<a href=\"$url\">{$job->name}</a>职位招聘的负责人 请注意查看招聘信息";
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);

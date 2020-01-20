@@ -45,14 +45,14 @@ class RecruitResumeUntreatedEmail extends Mailable
             }else{
                 $has_text = '';
             }
-            $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$resume->recruit_resume_id}&showChart=1";
+            $url = config('app.front_url')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$resume->recruit_resume_id}&showChart=1";
             $str .= "<a href=\"$url\">{$resume->name}</a>$has_text, ";
         }
         $str = substr($str,0,strlen($str)-2);
         $count = count($this->resumes);
         $str .= " 共计{$count}份简历未即使处理，请及时查看";
         $content_text_array[] = $str;
-        $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
+        $url = config('app.front_url')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
         $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
 //        $content_text_array[] = '<br/>';
         return $this->view('emails.recruitResumeLogEmail')

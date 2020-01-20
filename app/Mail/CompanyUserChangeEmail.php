@@ -45,7 +45,7 @@ class CompanyUserChangeEmail extends Mailable
         }else{
             $token = ExternalToken::where('userid', $user->id)->first();
             $content_text_array[] = "{$company->company_name}公司邀请您加入，请点击下方链接登录musa平台注册账号";
-            $content_text_array[] = "<a href='".env('APP_FRONT_URL')."/managerRegister?token={$token->token}"."'>点击激活</a>";
+            $content_text_array[] = "<a href='".config('app.front_url')."/managerRegister?token={$token->token}"."'>点击激活</a>";
         }
         return $this->view('emails.recruitResumeLogEmail')
             ->with('content_text_array', $content_text_array);

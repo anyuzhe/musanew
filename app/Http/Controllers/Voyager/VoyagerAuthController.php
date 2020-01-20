@@ -68,7 +68,7 @@ class VoyagerAuthController extends Controller
 //            $request->session()->regenerate();
 
             $this->clearLoginAttempts($request);
-            return ResponseLayout::apply(0,['url'=>env('APP_FRONT_URL').'/admin/#/login?token='.User::where('email',$request->get('email'))->value('remember_token')]);
+            return ResponseLayout::apply(0,['url'=>config('app.front_url').'/admin/#/login?token='.User::where('email',$request->get('email'))->value('remember_token')]);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts

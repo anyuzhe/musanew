@@ -57,7 +57,7 @@ class RecruitResumeLogEmail extends Mailable
                 if($has){
                     $has_text = '<span style="color: red">(可能是重复简历)</span>';
                 }
-                $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$log->company_job_recruit_resume_id}&showChart=1";
+                $url = config('app.front_url')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$log->company_job_recruit_resume_id}&showChart=1";
 
                 $str .= "<a href=\"$url\">{$resume->name}</a>{$has_text}, ";
             }
@@ -66,7 +66,7 @@ class RecruitResumeLogEmail extends Mailable
             $count = count($logs);
             $str .= " 共计{$count}份新简历，请及时查看";
             $content_text_array[] = $str;
-            $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$_one->company_job_recruit_id}&activeType=1";
+            $url = config('app.front_url')."/company/recruitment/recruitmentDetail?id={$_one->company_job_recruit_id}&activeType=1";
             $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
         }else{
             $this->subject = "{$job->name}招聘有更新";
@@ -89,11 +89,11 @@ class RecruitResumeLogEmail extends Mailable
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，邀约面试时间时间从 {$old->other_data} 改成<span style='color: red'>{$log->other_data}</span> ,请知晓";
                 }elseif ($status==4){
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，完成面试，目前处于待定状态，请及时处理";
-                    $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
+                    $url = config('app.front_url')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
                     $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
                 }elseif ($status==6){
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 应聘 {$job->name}，通过面试，等待进一步确认";
-                    $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
+                    $url = config('app.front_url')."/company/recruitment/recruitmentDetail?id={$log->recruit->id}&activeType=1";
                     $content_text_array[] = "<a href=\"$url\">点击查看详情</a>";
                 }elseif ($status==7){
                     $content_text_array[] = $this->getATag($resume, $log->company_job_recruit_resume_id)." 录用 {$job->name}，将于<span style='color: red'> {$log->other_data} </span>正式入职。";
@@ -110,7 +110,7 @@ class RecruitResumeLogEmail extends Mailable
 //                $content_text_array = ["职位：$job->name", "简历：$resume->name", "更新内容：$log->text"];
 ////                if($log)
 //                    $content_text_array[] = '该姓名已有投递，可能为重复简历';
-//                $url = env('APP_FRONT_URL')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
+//                $url = config('app.front_url')."/company/recruitment/recruitmentDetail?id={$recruit->id}&activeType=1";
 //        <a href="{!! $url !!}">点击查看详情</a>
             }
         }
@@ -120,7 +120,7 @@ class RecruitResumeLogEmail extends Mailable
 
     public function getATag($resume, $company_job_recruit_resume_id)
     {
-        $url = env('APP_FRONT_URL')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$company_job_recruit_resume_id}&showChart=1";
+        $url = config('app.front_url')."/company/recruitment/resumeEdit/?id={$resume->id}&type=3&recruit_resume_id={$company_job_recruit_resume_id}&showChart=1";
         return "<a href=\"$url\">{$resume->name}</a>";
     }
 }

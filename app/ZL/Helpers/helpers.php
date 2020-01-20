@@ -525,11 +525,11 @@ function getMoodlePICURL($logo){
 
 function getPicFullUrl($url){
     if(!$url)
-        return env('APP_URL').'/static/pic/musa_logo.png';
+        return config('app.url').'/static/pic/musa_logo.png';
     if(is_numeric($url)){
         return getMoodlePICURL($url);
     }else{
-        return (env('APP_URL')?env('APP_URL'):"http://musaAdmin.musaconsult.com").'/storage/'.$url;
+        return config('app.url').'/storage/'.$url;
     }
 }
 
@@ -537,7 +537,7 @@ function getCompanyLogo($logo){
     if($logo)
         $full_logo = getPicFullUrl($logo);
     else
-        $full_logo = env('APP_URL').'/static/pic/musa_logo.png';
+        $full_logo = config('app.url').'/static/pic/musa_logo.png';
     return $full_logo;
 }
 

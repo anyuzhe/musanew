@@ -135,7 +135,7 @@ class RecruitResumesRepository
             $log->text =  '简历不匹配';
             $this->minusNewResumeHandle($recruitResume);
         }elseif($status==-2){
-            $log->text =  '面试没来';
+            $log->text =  '放弃面试';
         }elseif($status==-3){
             $log->text =  '面试不通过';
         }elseif($status==-4){

@@ -443,7 +443,7 @@ class EntrustResumesController extends ApiBaseCommonController
             $headers = [
                 'X-API-KEY: '.config('app.BELLO-API-KEY')
             ];
-            $url = env('RESUME_PARSE_URL');
+            $url = config('app.resume_parse_url');
 //            $url = "https://www.belloai.com/v2/open/resume/parse";
             $res = http_post_json($url, json_encode($data, 256) ,$headers);
             if(isset($res[1])){

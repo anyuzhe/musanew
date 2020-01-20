@@ -22,7 +22,7 @@ class VoyagerController extends Controller
         app('VoyagerAuth')->logout();
 
 //        return redirect()->route('voyager.login');
-        return redirect(env('APP_FRONT_URL').'/login');
+        return redirect(config('app.front_url').'/login');
     }
 
     public function upload(Request $request)
