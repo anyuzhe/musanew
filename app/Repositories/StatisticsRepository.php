@@ -190,7 +190,7 @@ class StatisticsRepository
         //面试中
         $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //面试通过
-        $interview_pass = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
+        $interview_pass = $this->getCountByStatus([-4,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //录用
         $hire = $this->getCountByStatus([7], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //入职
