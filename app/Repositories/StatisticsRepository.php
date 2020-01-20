@@ -148,7 +148,7 @@ class StatisticsRepository
         //邀请面试
         $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //面试中
-        $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
+        $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 3, RecruitResume::where('company_id', $company->id)->where('status',-2)->whereNotNull('third_party_id')->pluck('id')->toArray());
         //面试通过
         $interview_pass = $this->getCountByStatus([6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date);
         //录用
@@ -188,7 +188,7 @@ class StatisticsRepository
         //邀请面试
         $invite_interview = $this->getCountByStatus([2], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //面试中
-        $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
+        $interviewing = $this->getCountByStatus([2,3,4,5,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2, RecruitResume::where('third_party_id', $company->id)->where('status',-2)->pluck('id')->toArray());
         //面试通过
         $interview_pass = $this->getCountByStatus([-4,6], $companies, $company_job_recruit_resume_ids, $start_date, $end_date, 2);
         //录用
@@ -540,7 +540,7 @@ class StatisticsRepository
         return ['title'=>$title,'data'=>$excelData];
     }
 
-    protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date, $type=3)
+    protected function getCountByStatus($status, $companies, $company_job_recruit_resume_ids, $start_date, $end_date, $type=3,$not_company_job_recruit_resume_ids=[])
     {
         $data = [
             'value'=>0,
@@ -549,6 +549,7 @@ class StatisticsRepository
 
         $_recruitResumes = RecruitResumeLog::whereIn('status',$status)->where('created_at','>',$start_date)->where('created_at','<=',$end_date)
             ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
+            ->whereNotIn('company_job_recruit_resume_id', $not_company_job_recruit_resume_ids)
             ->groupBy('company_job_recruit_resume_id')->get();
         $_recruitResumes->load('recruitResume');
 //        $data['test'] = $_recruitResumes;
