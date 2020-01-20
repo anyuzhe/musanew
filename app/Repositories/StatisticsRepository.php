@@ -464,7 +464,34 @@ class StatisticsRepository
         $excelData = [];
         foreach ($data['departments'] as $department) {
             foreach ($department['child'] as $level2) {
-                foreach ($level2['data'] as $v) {
+                if(isset($level2['data']) && is_array($level2['data'])){
+                    foreach ($level2['data'] as $v) {
+                        $excelData[] = [
+                            $v['department1_name'],
+                            $v['department2_name'],
+                            $v['job_name'],
+                            $v['publish_at'],
+                            $v['recruit_days'],
+                            $v['need_num'],
+                            $v['residue_num'],
+                            $v['done_rate'],
+                            $v['recommend_resume_num'],
+                            $v['resume_mismatching_num'],
+                            $v['interview_resume_num'],
+                            $v['give_up_interview_num'],
+                            $v['undetermined_num'],
+                            $v['interview_pass_num'],
+                            $v['interview_defeated_num'],
+                            $v['interview_pass_inappropriate_num'],
+                            $v['hire_num'],
+                            $v['wait_entry_num'],
+                            $v['entry_success_num'],
+                        ];
+                    }
+                }
+            }
+            if(isset($department['data']) && is_array($department['data'])){
+                foreach ($department['data'] as $v) {
                     $excelData[] = [
                         $v['department1_name'],
                         $v['department2_name'],
@@ -487,29 +514,6 @@ class StatisticsRepository
                         $v['entry_success_num'],
                     ];
                 }
-            }
-            foreach ($department['data'] as $v) {
-                $excelData[] = [
-                    $v['department1_name'],
-                    $v['department2_name'],
-                    $v['job_name'],
-                    $v['publish_at'],
-                    $v['recruit_days'],
-                    $v['need_num'],
-                    $v['residue_num'],
-                    $v['done_rate'],
-                    $v['recommend_resume_num'],
-                    $v['resume_mismatching_num'],
-                    $v['interview_resume_num'],
-                    $v['give_up_interview_num'],
-                    $v['undetermined_num'],
-                    $v['interview_pass_num'],
-                    $v['interview_defeated_num'],
-                    $v['interview_pass_inappropriate_num'],
-                    $v['hire_num'],
-                    $v['wait_entry_num'],
-                    $v['entry_success_num'],
-                ];
             }
         }
         $title = [
