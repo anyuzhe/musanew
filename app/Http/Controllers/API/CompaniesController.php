@@ -767,6 +767,7 @@ class CompaniesController extends ApiBaseCommonController
     {
         $company_id = $this->request->get('company_id', $this->getCurrentCompany()->id);
         $third_party_id = $this->request->get('third_party_id');
+        $demand_side_id = $this->request->get('demand_side_id');
         $job_id = $this->request->get('job_id');
         $department_id = $this->request->get('department_id');
         $leading = $this->request->get('leading');
@@ -785,6 +786,9 @@ class CompaniesController extends ApiBaseCommonController
         $model = $model->where('company_id', $company_id);
         if($third_party_id){
             $model = $model->where('third_party_id', $third_party_id);
+        }
+        if($demand_side_id){
+            $model = $model->where('company_id', $demand_side_id);
         }
         if($job_id){
             $model = $model->where('job_id', $job_id);
