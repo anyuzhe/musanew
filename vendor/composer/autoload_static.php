@@ -619,6 +619,7 @@ class ComposerStaticInitc61d286e97c9702768207a264e66e1f1
         'App\\Models\\CompanyAddress' => __DIR__ . '/../..' . '/app/Models/CompanyAddress.php',
         'App\\Models\\CompanyDepartment' => __DIR__ . '/../..' . '/app/Models/CompanyDepartment.php',
         'App\\Models\\CompanyLog' => __DIR__ . '/../..' . '/app/Models/CompanyLog.php',
+        'App\\Models\\CompanyManagerLog' => __DIR__ . '/../..' . '/app/Models/CompanyManagerLog.php',
         'App\\Models\\CompanyPermission' => __DIR__ . '/../..' . '/app/Models/CompanyPermission.php',
         'App\\Models\\CompanyResume' => __DIR__ . '/../..' . '/app/Models/CompanyResume.php',
         'App\\Models\\CompanyRole' => __DIR__ . '/../..' . '/app/Models/CompanyRole.php',

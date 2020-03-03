@@ -372,7 +372,7 @@ class RecruitResumesRepository
         $resume = $data->resume;
         $company = $job->company;
 
-        $resumeGrade = CompanySettingRepository::getResumeGrade($company->id);
+        $resumeGrade = CompanySettingRepository::getResumeGrade($company->id, $job->resume_grade_setting_id);
         $resume_score_rules = $resumeGradeArr = json_decode($resumeGrade->value, true);
         //学历要求
         $config_education_num = DataMapOption::where('data_map_id',7)->count()-1;

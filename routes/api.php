@@ -244,6 +244,10 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/settings/resume/grade', 'API\CompanySettingsController@getResumeGrade');
     $router->post('/company/settings/resume/grade', 'API\CompanySettingsController@setResumeGrade');
 
+
+    //简历匹配分数设置--新
+    $router->resource('/company/resume/grade/settings', 'API\CompanyResumeGradeSettingsController');
+
     //操作日志
     $router->get('/company/logs', 'API\CompanyLogsController@index');
 

@@ -105,6 +105,7 @@ return array(
     'App\\Models\\CompanyAddress' => $baseDir . '/app/Models/CompanyAddress.php',
     'App\\Models\\CompanyDepartment' => $baseDir . '/app/Models/CompanyDepartment.php',
     'App\\Models\\CompanyLog' => $baseDir . '/app/Models/CompanyLog.php',
+    'App\\Models\\CompanyManagerLog' => $baseDir . '/app/Models/CompanyManagerLog.php',
     'App\\Models\\CompanyPermission' => $baseDir . '/app/Models/CompanyPermission.php',
     'App\\Models\\CompanyResume' => $baseDir . '/app/Models/CompanyResume.php',
     'App\\Models\\CompanyRole' => $baseDir . '/app/Models/CompanyRole.php',

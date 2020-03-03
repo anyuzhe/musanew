@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\CompanyResumeGradeSetting;
 use App\Models\CompanySetting;
 
 class CompanySettingRepository
@@ -30,8 +31,10 @@ class CompanySettingRepository
         ]);
     }
 
-    public static function getResumeGrade($company_id)
+    public static function getResumeGrade($company_id, $resume_grade_setting_id=null)
     {
+        if($resume_grade_setting_id)
+            return CompanyResumeGradeSetting::find($resume_grade_setting_id);
         $setting = CompanySetting::where('company_id', $company_id)->where('key','resume_grade')->first();
         if(!$setting){
             $setting = CompanySettingRepository::getDefaultResumeGrade($company_id);
