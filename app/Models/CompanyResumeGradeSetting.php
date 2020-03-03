@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyResumeGradeSetting extends Model
 {
-    protected $table = 'company_resume_grate_settings';
+    protected $table = 'company_resume_grade_settings';
 
     protected $connection = 'musa';
 
