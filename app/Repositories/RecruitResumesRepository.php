@@ -142,6 +142,8 @@ class RecruitResumesRepository
             $log->text =  '面试通过但不合适';
         }elseif($status==-5){
             $log->text =  '录用之后未到岗';
+        }elseif($status==-9){
+            $log->text =  '关闭需求';
         }
         $previous_id = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->value('id');
         $log->previous_id = $previous_id;
@@ -268,6 +270,9 @@ class RecruitResumesRepository
     public function addFieldText(&$data, $isPerSon=false)
     {
         switch ($data->status){
+            case -9:
+                $data->status_str = '关闭需求';
+                break;
             case -5:
                 $data->status_str = '录用之后未到岗';
                 break;

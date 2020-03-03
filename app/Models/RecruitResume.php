@@ -3,8 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class
-RecruitResume extends Model
+class RecruitResume extends Model
 {
     protected $table = 'company_job_recruit_resume';
 
@@ -26,6 +25,7 @@ RecruitResume extends Model
 
     /**
      *
+//    -9 关闭需求
 //    -5 录用之后未到岗
 //    -4 面试通过但不合适
 //    -3 面试不通过
