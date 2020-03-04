@@ -10,6 +10,7 @@ use App\Models\CompanyManagerLog;
 use App\Models\CompanyResume;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\CompanyUserPermissionScope;
 use App\Models\CompanyUserRole;
 use App\Models\Entrust;
 use App\Models\ExternalToken;
@@ -675,6 +676,24 @@ class CompaniesController extends ApiBaseCommonController
         $company = $this->getCurrentCompany();
 
         $permissions = $this->request->get('permissions');
+        foreach ($permissions as $permission) {
+            $has = CompanyUserPermissionScope::where('user_id', $user->id)->where('company_id', $company->id)->where('company_permission_id', $permission['id'])->first();
+            if($has){
+                CompanyUserPermissionScope::where('id', $has->id)->update([
+                    'type'=>$permission['type'],
+                    'department_ids'=>is_array($permission['department_ids'])?implode(',', $permission['department_ids']):$permission['department_ids'],
+                ]);
+            }else{
+                CompanyUserPermissionScope::create([
+                    'company_id'=>$company->id,
+                    'company_permission_id'=>$permission['id'],
+                    'user_id'=>$user->id,
+                    'key'=>$permission['id'].'_'.$company->id.'_'.$user->id,
+                    'type'=>$permission['type'],
+                    'department_ids'=>is_array($permission['department_ids'])?implode(',', $permission['department_ids']):$permission['department_ids'],
+                ]);
+            }
+        }
         return $this->apiReturnJson(0);
     }
 
