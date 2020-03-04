@@ -27,6 +27,7 @@ use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
+use App\Repositories\RoleRepository;
 use App\Repositories\StatisticsRepository;
 use App\Repositories\UserRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -621,6 +622,52 @@ class CompaniesController extends ApiBaseCommonController
         $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
         $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
         return $this->apiReturnJson(0,$info);
+    }
+
+
+    public function getUserPermissionScope($id)
+    {
+        $user = User::find($id);
+        $company = $this->getCurrentCompany();
+        $info = UserBasicInfo::where('user_id', $id)->first();
+        $companyUser = CompanyUser::where('company_id', $company->id)->where('user_id', $id)->first();
+
+        if($companyUser->department && $companyUser->department->level==1){
+            $department_ids = [$companyUser->department_id];
+            $department_name = $companyUser->department->name;
+        }elseif($companyUser->department && $companyUser->department->level==2){
+            $department_ids = [$companyUser->department->parent->id,$companyUser->department_id];
+            $department_name = $companyUser->department->parent->name.'-'.$companyUser->department->name;
+        }else{
+            $department_ids = [];
+            $department_name = null;
+        }
+        $_info = $this->userRepository->getInfo($user);
+        $info->department_name = $department_name;
+        $info->department_ids = $department_ids;
+        $info->start_work_at = $_info['start_work_at'];
+        $info->entry_at = $companyUser->entry_at;
+
+        $_roles = getCompanyRoles($company, $user);
+
+        $info->address_id = $companyUser->address_id;
+        if($info->address_id)
+            $info->address = CompanyAddress::find($info->address_id);
+
+        $role_ids = [];
+        $role_names = [];
+        $is_manager = 0;
+        foreach ($_roles as $role) {
+            if($role['id']==1)
+                $is_manager = 1;
+            $role_names[] = $role['name'];
+            $role_ids[] = $role['id'];
+        }
+
+        $permissions_tree = RoleRepository::getTreeByRoles($_roles);
+        $permissions_tree = RoleRepository::getScopeByTree($permissions_tree, $company->id, $user->id);
+
+        return $this->apiReturnJson(0, $permissions_tree);
     }
 
     public function storeUser(Request $request)

@@ -32,6 +32,7 @@ use App\Repositories\EntrustsRepository;
 use App\Repositories\RecruitRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
+use App\Repositories\RoleRepository;
 use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
 use App\Repositories\UserRepository;
@@ -48,6 +49,15 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+
+    $user = \App\Models\User::find(55);
+    $company = Company::find(20200014);
+    $_roles = getCompanyRoles($company, $user);
+    $permissions_tree = RoleRepository::getTreeByRoles($_roles);
+    $permissions_tree = RoleRepository::getScopeByTree($permissions_tree, 20200014, 55);
+    dd($permissions_tree);
+
+
     $logs = RecruitResumeLog::where('text','面试没来')->update(['text'=>'放弃面试']);dd(1);
     $third_party_recruit_entrust_ids = Entrust::where('third_party_id', 20200001)->pluck('id')->toArray();
     $res = RecruitResume::whereIn('company_job_recruit_entrust_id', $third_party_recruit_entrust_ids)->get();

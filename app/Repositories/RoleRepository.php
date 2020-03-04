@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Area;
+use App\Models\CompanyDepartment;
 use App\Models\CompanyPermission;
 use App\Models\CompanyRolePermission;
+use App\Models\CompanyUserPermissionScope;
 
 class RoleRepository
 {
@@ -22,6 +24,54 @@ class RoleRepository
             }
         }
         return $data;
+    }
+
+    public static function getTreeByRoles($roles)
+    {
+        $all = collect();
+        foreach ($roles as $role) {
+            if($role->id==1){
+                $all = CompanyPermission::all();
+                break;
+            }else{
+                $all = $all->merge($role->permissions);
+            }
+        }
+        $all = $all->keyBy('id')->toArray();
+        $data = [];
+        foreach ($all as $v) {
+            if($v['pid']==0){
+                self::getChild($v, $all);
+                $data[] = $v;
+            }
+        }
+        return $data;
+    }
+
+    public static function getScopeByTree($permissions, $company_id, $user_id)
+    {
+        global $Department_data;
+        global $Scope_data;
+        if(!$Department_data)
+            $Department_data = CompanyDepartment::where('company_id', $company_id)->get()->keyBy('id');
+        if(!$Scope_data)
+            $Scope_data = CompanyUserPermissionScope::where('company_id', $company_id)->where('user_id', $user_id)->get()->keyBy('key');
+
+        foreach ($permissions as &$permission) {
+            if(isset($permission['children']) && count($permission['children'])>0){
+                $permission['scope'] = null;
+                $permission['children'] = self::getScopeByTree($permission['children'], $company_id, $user_id);
+            }else{
+                $_scope = $Scope_data->get($permission['id'].'_'.$company_id.'_'.$user_id);
+                if($_scope->type!=1 && $_scope->department_ids){
+                    $_scope->departments = CompanyDepartment::whereIn('id', explode(',', $_scope->department_ids))->get();
+                }else{
+                    $_scope->departments = [];
+                }
+                $permission['scope'] = $_scope;
+            }
+        }
+        return $permissions;
     }
 
     protected static  function getChild(&$v, $all)
