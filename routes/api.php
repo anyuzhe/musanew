@@ -221,6 +221,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/users/list', 'API\CompaniesController@getUserList');
     $router->get('/company/users/{id}', 'API\CompaniesController@userShow');
     $router->get('/company/users/{id}/permission/scope', 'API\CompaniesController@getUserPermissionScope');
+    $router->post('/company/users/{id}/permission/scope', 'API\CompaniesController@setUserPermissionScope');
     $router->post('/company/users', 'API\CompaniesController@storeUser');
     $router->post('/company/users/{user_id}', 'API\CompaniesController@updateUser');
     $router->post('/company/users/delete/{user_id}', 'API\CompaniesController@deleteUser');

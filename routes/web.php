@@ -49,7 +49,6 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
-
     $user = \App\Models\User::find(55);
     $company = Company::find(20200014);
     $_roles = getCompanyRoles($company, $user);

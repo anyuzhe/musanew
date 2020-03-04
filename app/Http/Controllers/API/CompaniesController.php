@@ -624,7 +624,6 @@ class CompaniesController extends ApiBaseCommonController
         return $this->apiReturnJson(0,$info);
     }
 
-
     public function getUserPermissionScope($id)
     {
         $user = User::find($id);
@@ -668,6 +667,15 @@ class CompaniesController extends ApiBaseCommonController
         $permissions_tree = RoleRepository::getScopeByTree($permissions_tree, $company->id, $user->id);
 
         return $this->apiReturnJson(0, $permissions_tree);
+    }
+
+    public function setUserPermissionScope($id)
+    {
+        $user = User::find($id);
+        $company = $this->getCurrentCompany();
+
+        $permissions = $this->request->get('permissions');
+        return $this->apiReturnJson(0);
     }
 
     public function storeUser(Request $request)

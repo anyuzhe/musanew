@@ -18,4 +18,9 @@ class CompanyUserPermissionScope extends Model
         'department_ids',
         'user_ids',
     ];
+
+//type
+//1全部
+//2所在的一级部门
+//3所在的二级部门
 }

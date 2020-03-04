@@ -97,14 +97,16 @@ class CompanyResumeGradeSettingsController extends ApiBaseCommonController
         $working_years = $request->get('working_years');
         $necessary_skills = $request->get('necessary_skills');
         $optional_skills = $request->get('optional_skills');
-        $setting->value = json_encode([
-            'user_info'=>$user_info,
-            'skills'=>$skills,
-            'education'=>$education,
-            'working_years'=>$working_years,
-            'necessary_skills'=>$necessary_skills,
-            'optional_skills'=>$optional_skills,
-        ], 256);
+        if($user_info || $skills || $education || $working_years || $necessary_skills || $optional_skills){
+            $setting->value = json_encode([
+                'user_info'=>$user_info,
+                'skills'=>$skills,
+                'education'=>$education,
+                'working_years'=>$working_years,
+                'necessary_skills'=>$necessary_skills,
+                'optional_skills'=>$optional_skills,
+            ], 256);
+        }
         $setting->save();
         return $this->apiReturnJson(0);
     }
