@@ -249,7 +249,9 @@ class JobsController extends ApiBaseCommonController
         if(is_array($necessarySkills)){
             $editText.= ', 必要技能改为:';
             $skill_ids = [];
+            $hasF = false;
             foreach ($necessarySkills as $skill) {
+                $hasF = true;
                 $skill['job_id'] = $id;
                 $skill['type'] = 1;
                 if(isset($skill['id']) && $skill['id']){
@@ -260,16 +262,21 @@ class JobsController extends ApiBaseCommonController
                     $skill_ids[] = $_id;
                 }
                 $_s = Skill::find($skill['skill_id']);
-                $editText.= $_s->name." {$skillLevelArr->get($skill['level'])}, ";
+                    $editText.= $_s->name." {$skillLevelArr->get($skill['skill_level'])}, ";
             }
-            $editText = substr($editText,0,strlen($editText)-2);
+            if($hasF)
+                $editText = substr($editText,0,strlen($editText)-2);
+            else
+                $editText.= '空';
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 1)->whereNotIn('id', $skill_ids)->delete();
         }
 
         if(is_array($optionalSkills)){
             $skill_ids = [];
             $editText.= ', 选择技能改为:';
+            $hasF = false;
             foreach ($optionalSkills as $skill) {
+                $hasF = true;
                 $skill['job_id'] = $id;
                 $skill['type'] = 2;
                 if(isset($skill['id']) && $skill['id']){
@@ -279,9 +286,12 @@ class JobsController extends ApiBaseCommonController
                     $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
                     $skill_ids[] = $_id;
                 }
-                $editText.= $_s->name." {$skillLevelArr->get($skill['level'])}, ";
+                $editText.= $_s->name." {$skillLevelArr->get($skill['skill_level'])}, ";
             }
-            $editText = substr($editText,0,strlen($editText)-2);
+            if($hasF)
+                $editText = substr($editText,0,strlen($editText)-2);
+            else
+                $editText.= '空';
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 2)->whereNotIn('id', $skill_ids)->delete();
         }
 

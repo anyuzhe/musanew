@@ -243,7 +243,8 @@ class ApiBaseCommonController extends CommonController
         try {
             $obj = $model->find($id);
             if($obj){
-                $ok = $obj->update($request->only($only));
+                $obj->fill($request->only($only));
+                $ok = $obj->save();
             }else{
                 return responseZK(9999, null, '保存出错');
             }
