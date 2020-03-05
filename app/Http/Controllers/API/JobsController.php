@@ -91,6 +91,10 @@ class JobsController extends ApiBaseCommonController
         if ($user) {
             $company = $this->getCurrentCompany();
             if ($company) {
+                $depIds = getPermissionScope($company->id, $user->id, 6);
+                if($depIds && is_array($depIds)){
+                    $model = $model->whereIn('department_id', $depIds);
+                }
                 $model = $model->where('company_id', $company->id);
             }else{
                 $model = $model->where('id', 0);

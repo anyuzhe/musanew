@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CompanyDepartment;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\CompanyUserRole;
@@ -1040,5 +1041,52 @@ function handleRepeatEmailRegister($email){
         $top = User::where('mnethostid',1)->where('username','like', "$email%")->orderBy('username','desc')->first();
         $has->username = $top->username.'!';
         $has->save();
+    }
+}
+
+function getPermissionScope($company_id, $user_id, $permission_id)
+{
+    global $CompanyUser;
+    global $CurrentDepartment;
+    global $Department_data1;
+    global $Department_data2;
+    if(!$CompanyUser){
+        $CompanyUser = CompanyUser::where('company_id', $company_id)->where('user_id', $user_id)->first();
+    }
+    if(!$CurrentDepartment && $CompanyUser->department_id){
+        $CurrentDepartment = CompanyDepartment::find($CompanyUser->department_id);
+    }
+    $obj = \App\Models\CompanyUserPermissionScope::where('key', "{$permission_id}_{$company_id}_{$user_id}")->first();
+    if(!$obj || $obj->type==1){
+        return null;
+    }elseif ($obj->type=2){
+        if(!$Department_data1){
+            if($CurrentDepartment && $CurrentDepartment->level==1){
+                $Department_data1 = array_merge([$CurrentDepartment->id], $CurrentDepartment->children->pluck('id')->toArray());
+            }elseif($CurrentDepartment && $CurrentDepartment->level==2){
+                $parentDep = $CurrentDepartment->parent;
+                $Department_data1 = array_merge([$parentDep->id], $parentDep->children->pluck('id')->toArray());
+            }elseif (!$CurrentDepartment){
+                $Department_data1 = [];
+            }
+        }
+        if($obj->department_ids){
+            return array_merge($Department_data1, explode(',', $obj->department_ids));
+        }
+        return $Department_data1;
+    }elseif ($obj->type=3){
+        if(!$Department_data2){
+            if($CurrentDepartment && $CurrentDepartment->level==1){
+                $Department_data2 = array_merge([$CurrentDepartment->id], $CurrentDepartment->children->pluck('id')->toArray());
+            }elseif($CurrentDepartment && $CurrentDepartment->level==2){
+                $Department_data2 = [$CurrentDepartment->id];
+            }elseif (!$CurrentDepartment){
+                $Department_data2 = [];
+            }
+        }
+        if($obj->department_ids){
+            return array_merge($Department_data2, explode(',', $obj->department_ids));
+        }
+        return $Department_data2;
     }
 }

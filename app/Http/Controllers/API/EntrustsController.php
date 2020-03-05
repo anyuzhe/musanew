@@ -103,6 +103,14 @@ class EntrustsController extends ApiBaseCommonController
         if ($user && $type) {
             $company = $this->getCurrentCompany();
             $model = app()->build(EntrustsRepository::class)->getModelByType($type, $company, $in_recruit, $resume_id, $model);
+            if($type==2){
+                $depIds = getPermissionScope($company->id, $user->id, 20);
+                if($depIds && is_array($depIds)){
+                    $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
+                    $model = $model->whereIn('job_id', $jobIds);
+                }
+            }elseif ($type==3){
+            }
         }
         return null;
     }

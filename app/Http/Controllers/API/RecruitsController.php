@@ -119,6 +119,12 @@ class RecruitsController extends ApiBaseCommonController
                 $model = $model->where('company_id', $company->id)->where(function ($query)use($has_entrust_ids){
                     $query->whereNotIn('id', $has_entrust_ids)->orWhereIn('status', [1]);
                 });
+
+                $depIds = getPermissionScope($company->id, $user->id, 19);
+                if($depIds && is_array($depIds)){
+                    $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
+                    $model = $model->whereIn('job_id', $jobIds);
+                }
                 if($in_recruit){
                     if($in_recruit==1){
                         $model = $model->whereIn('status', [1]);
@@ -464,6 +470,12 @@ class RecruitsController extends ApiBaseCommonController
             $model = $model->whereIn('job_id', $jobIds);
         }elseif ($department_id && is_array($department_id)){
             $jobIds = Job::whereIn('department_id', $department_id)->pluck('id')->toArray();
+            $model = $model->whereIn('job_id', $jobIds);
+        }
+
+        $depIds = getPermissionScope($company->id, $this->getUser()->id, 20);
+        if($depIds && is_array($depIds)){
+            $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
             $model = $model->whereIn('job_id', $jobIds);
         }
         if($leading_id){
