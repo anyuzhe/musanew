@@ -36,8 +36,8 @@ class CompanyLogRepository
         $text = '';
         $diff = array_diff_assoc($obj->getOriginal(), $obj->getAttributes());
         foreach ($diff as $key=>$value) {
-            $_v1 = self::getOptionsText($value);
-            $_v2 = self::getOptionsText($obj->{$key});
+            $_v1 = self::getOptionsText($key, $value);
+            $_v2 = self::getOptionsText($key, $obj->{$key});
             $text.= self::translation($key).": {$_v1} 修改成 {$_v2}, ";
         }
         return substr($text,0,strlen($text)-2);
