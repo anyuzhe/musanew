@@ -101,21 +101,21 @@ class JobsController extends ApiBaseCommonController
 
     public function _after_get(&$data)
     {
-        CompanyLogRepository::addLog('job_manage','show_job',"查看职位列表 第".request('pagination', 1)."页");
+        CompanyLogRepository::addLog('job_manage','show_official_job',"查看职位列表 第".request('pagination', 1)."页");
         return app()->build(JobsRepository::class)->getListData($data);
     }
 
     public function _after_find(&$data)
     {
         $data = app()->build(JobsRepository::class)->getData($data);
-        CompanyLogRepository::addLog('job_manage','show_job',"查看职位 $data->name 详情");
+        CompanyLogRepository::addLog('job_manage','show_official_job',"查看职位 $data->name 详情");
     }
 
     public function afterStore($job, $data)
     {
         $id = $job->id;
         $job->creator_id = $this->getUser()->id;
-        CompanyLogRepository::addLog('job_manage','add_job',"添加职位 $job->name");
+        CompanyLogRepository::addLog('job_manage','add_official_job',"添加职位 $job->name");
 
         if(!$job->company_id){
             $job->company_id = $this->getCurrentCompany()->id;
@@ -313,7 +313,7 @@ class JobsController extends ApiBaseCommonController
             if($hasF)
                 $editText.= ', 测试修改为: '.implode(',', Course::whereIn('id',app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->pluck('course_id'))->pluck('shortname')->toArray());
         }
-        CompanyLogRepository::addLog('job_manage','edit_job', $editText);
+        CompanyLogRepository::addLog('job_manage','edit_official_job', $editText);
 
         return $this->apiReturnJson(0);
     }
@@ -340,6 +340,7 @@ class JobsController extends ApiBaseCommonController
         }
         $has = $this->checkDestroy($model);
         if(!$has){
+            CompanyLogRepository::addLog('job_manage','delete_official_job',"删除职位 $model->name ");
             $model->status = -1;
             $model->save();
             return responseZK(0);
@@ -353,7 +354,6 @@ class JobsController extends ApiBaseCommonController
         $model = $this->getModel()->find($id);
         $has = $this->checkDestroy($model);
         if(!$has){
-            CompanyLogRepository::addLog('job_manage','delete_job',"删除职位 $model->name ");
             return responseZK(0);
         }else{
             return responseZK(9999, null,$has);
