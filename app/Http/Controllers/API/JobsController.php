@@ -4,8 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Models\CompanyDepartment;
 use App\Models\Course;
+use App\Models\DataMapOption;
 use App\Models\Recruit;
 use App\Models\Resume;
+use App\Models\Skill;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\SkillsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -98,18 +101,21 @@ class JobsController extends ApiBaseCommonController
 
     public function _after_get(&$data)
     {
+        CompanyLogRepository::addLog('job_manage','show_job',"查看职位列表 第".request('pagination', 1)."页");
         return app()->build(JobsRepository::class)->getListData($data);
     }
 
     public function _after_find(&$data)
     {
         $data = app()->build(JobsRepository::class)->getData($data);
+        CompanyLogRepository::addLog('job_manage','show_job',"查看职位 $data->name 详情");
     }
 
     public function afterStore($job, $data)
     {
         $id = $job->id;
         $job->creator_id = $this->getUser()->id;
+        CompanyLogRepository::addLog('job_manage','add_job',"添加职位 $job->name");
 
         if(!$job->company_id){
             $job->company_id = $this->getCurrentCompany()->id;
@@ -205,8 +211,9 @@ class JobsController extends ApiBaseCommonController
         return $this->apiReturnJson(0);
     }
 
-    public function afterUpdate($id, $data)
+    public function afterUpdate($id, $data, $job)
     {
+        $editText = CompanyLogRepository::getDiffText($job);
         $skills = isset($data['skills'])?$data['skills']:null;
         $necessarySkills = isset($data['necessary_skills'])?$data['necessary_skills']:null;
         $optionalSkills = isset($data['optional_skills'])?$data['optional_skills']:null;
@@ -223,7 +230,7 @@ class JobsController extends ApiBaseCommonController
 //        }
         $job->modifier_id = $this->getUser()->id;
         $job->save();
-
+        $skillLevelArr = DataMapOption::where('data_map_id',10)->get()->keyBy('value');
         if(is_array($skills)){
             $skill_ids = [];
             foreach ($skills as $skill) {
@@ -240,6 +247,7 @@ class JobsController extends ApiBaseCommonController
         }
 
         if(is_array($necessarySkills)){
+            $editText.= ', 必要技能改为:';
             $skill_ids = [];
             foreach ($necessarySkills as $skill) {
                 $skill['job_id'] = $id;
@@ -251,11 +259,16 @@ class JobsController extends ApiBaseCommonController
                     $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
                     $skill_ids[] = $_id;
                 }
+                $_s = Skill::find($skill['skill_id']);
+                $editText.= $_s->name." {$skillLevelArr->get($skill['level'])}, ";
             }
+            $editText = substr($editText,0,strlen($editText)-2);
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 1)->whereNotIn('id', $skill_ids)->delete();
         }
+
         if(is_array($optionalSkills)){
             $skill_ids = [];
+            $editText.= ', 选择技能改为:';
             foreach ($optionalSkills as $skill) {
                 $skill['job_id'] = $id;
                 $skill['type'] = 2;
@@ -266,9 +279,12 @@ class JobsController extends ApiBaseCommonController
                     $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
                     $skill_ids[] = $_id;
                 }
+                $editText.= $_s->name." {$skillLevelArr->get($skill['level'])}, ";
             }
+            $editText = substr($editText,0,strlen($editText)-2);
             app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 2)->whereNotIn('id', $skill_ids)->delete();
         }
+
         if(is_array($tests)){
             $test_ids = [];
             foreach ($tests as $test) {
@@ -282,7 +298,10 @@ class JobsController extends ApiBaseCommonController
                 }
             }
             app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
+            $editText.= ', 测试修改为: '.implode(',', Course::whereIn('in',app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->pluck('course_id'))->pluck('shortname')->toArray());
         }
+        CompanyLogRepository::addLog('job_manage','edit_job', $editText);
+
         return $this->apiReturnJson(0);
     }
 
@@ -321,6 +340,7 @@ class JobsController extends ApiBaseCommonController
         $model = $this->getModel()->find($id);
         $has = $this->checkDestroy($model);
         if(!$has){
+            CompanyLogRepository::addLog('job_manage','delete_job',"删除职位 $model->name ");
             return responseZK(0);
         }else{
             return responseZK(9999, null,$has);

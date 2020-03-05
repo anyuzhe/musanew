@@ -28,6 +28,7 @@ use App\Models\RecruitResumeLog;
 use App\Models\Resume;
 use App\Models\ResumeEducation;
 use App\Models\UserBasicInfo;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\RecruitRepository;
 use App\Repositories\RecruitResumesRepository;
@@ -49,6 +50,10 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    $job = Job::find(1);
+    $job->name=22;
+    $job->code=33;
+    dd(CompanyLogRepository::getDiffText($job));
     $user = \App\Models\User::find(55);
     $company = Company::find(20200014);
     $_roles = getCompanyRoles($company, $user);
