@@ -244,6 +244,7 @@ class ApiBaseCommonController extends CommonController
             $obj = $model->find($id);
             if($obj){
                 $obj->fill($request->only($only));
+                $old = clone $obj;
                 $ok = $obj->save();
             }else{
                 return responseZK(9999, null, '保存出错');
@@ -259,7 +260,7 @@ class ApiBaseCommonController extends CommonController
         if($ok){
             if(method_exists($this,'afterUpdate')){
                 try {
-                    $res = $this->afterUpdate($id, $request->all(), $obj);
+                    $res = $this->afterUpdate($id, $request->all(), $old);
                 } catch (\Exception $e) {
                     app('db')->rollBack();
 //                    throw $e;
