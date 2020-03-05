@@ -311,7 +311,7 @@ class JobsController extends ApiBaseCommonController
             }
             app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
             if($hasF)
-                $editText.= ', 测试修改为: '.implode(',', Course::whereIn('in',app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->pluck('course_id'))->pluck('shortname')->toArray());
+                $editText.= ', 测试修改为: '.implode(',', Course::whereIn('id',app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->pluck('course_id'))->pluck('shortname')->toArray());
         }
         CompanyLogRepository::addLog('job_manage','edit_job', $editText);
 
