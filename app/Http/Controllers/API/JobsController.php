@@ -262,7 +262,7 @@ class JobsController extends ApiBaseCommonController
                     $skill_ids[] = $_id;
                 }
                 $_s = Skill::find($skill['skill_id']);
-                    $editText.= $_s->name." {$skillLevelArr->get($skill['skill_level'])}, ";
+                $editText.= $_s->name." {$skillLevelArr->get($skill['skill_level'])->text}, ";
             }
             if($hasF)
                 $editText = substr($editText,0,strlen($editText)-2);
@@ -286,7 +286,7 @@ class JobsController extends ApiBaseCommonController
                     $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
                     $skill_ids[] = $_id;
                 }
-                $editText.= $_s->name." {$skillLevelArr->get($skill['skill_level'])}, ";
+                $editText.= $_s->name." {$skillLevelArr->get($skill['skill_level'])->text}, ";
             }
             if($hasF)
                 $editText = substr($editText,0,strlen($editText)-2);
@@ -297,7 +297,9 @@ class JobsController extends ApiBaseCommonController
 
         if(is_array($tests)){
             $test_ids = [];
+            $hasF = false;
             foreach ($tests as $test) {
+                $hasF = true;
                 $test['job_id'] = $id;
                 if(isset($test['id']) && $test['id']){
                     $test_ids[] = $test['id'];
@@ -308,7 +310,8 @@ class JobsController extends ApiBaseCommonController
                 }
             }
             app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
-            $editText.= ', 测试修改为: '.implode(',', Course::whereIn('in',app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->pluck('course_id'))->pluck('shortname')->toArray());
+            if($hasF)
+                $editText.= ', 测试修改为: '.implode(',', Course::whereIn('in',app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->pluck('course_id'))->pluck('shortname')->toArray());
         }
         CompanyLogRepository::addLog('job_manage','edit_job', $editText);
 
