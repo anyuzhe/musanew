@@ -146,7 +146,7 @@ class LoginController extends CommonController
             $password = $user->password;
             $checkPwd = $this->checkPassword($password);
             if(!$checkPwd){
-                return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符');
+                return $this->apiReturnJson('9999',null,'密码要求必须是6-16位字符，至少包含字母、数字和特殊符号');
             }
             $codeHas = PasswordFindCode::where([
                 ['type',1],
@@ -236,7 +236,7 @@ class LoginController extends CommonController
         }
         $checkPwd = $this->checkPassword($password);
         if(!$checkPwd){
-            return $this->apiReturnJson('9999',null,'密码必须是6-16位字符，至少1个字母，1个数字和1个特殊字符');
+            return $this->apiReturnJson('9999',null,'密码要求必须是6-16位字符，至少包含字母、数字和特殊符号');
         }
         $codeHas = PasswordFindCode::where([
             ['user_id',$user->id],
