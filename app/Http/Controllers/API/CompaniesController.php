@@ -688,7 +688,7 @@ class CompaniesController extends ApiBaseCommonController
                     'company_id'=>$company->id,
                     'company_permission_id'=>$permission['permission_id'],
                     'user_id'=>$user->id,
-                    'key'=>$permission['id'].'_'.$company->id.'_'.$user->id,
+                    'key'=>$permission['permission_id'].'_'.$company->id.'_'.$user->id,
                     'type'=>$permission['type'],
                     'department_ids'=>is_array($permission['department_ids'])?implode(',', $permission['department_ids']):$permission['department_ids'],
                 ]);
