@@ -7,9 +7,11 @@ use App\Models\CompanyDepartment;
 use App\Models\Entrust;
 use App\Models\Job;
 use App\Models\Recruit;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
+use Illuminate\Http\Request;
 
 class EntrustsController extends ApiBaseCommonController
 {
@@ -194,6 +196,150 @@ class EntrustsController extends ApiBaseCommonController
             $new->save();
             $recruit = $new;
         }
+
+        $recruit->status = 2;
+        $recruit->save();
+        $third_party_ids = $this->request->get('third_party_ids');
+        $thirdPartyIds = $this->getCurrentCompany()->thirdParty->pluck('id')->toArray();
+        if(is_array($third_party_ids)){
+            foreach ($third_party_ids as $third_party_id) {
+                if(in_array($third_party_id, $thirdPartyIds)){
+                    Entrust::create([
+                        'is_public'=>$recruit->is_public,
+                        'job_id'=>$recruit->job_id,
+                        'leading_id'=>$recruit->leading_id,
+                        'company_id'=>$recruit->company_id,
+                        'third_party_id'=>$third_party_id,
+                        'company_job_recruit_id'=>$recruit->id,
+                        'done_num'=>0,
+                        'resume_num'=>0,
+                        'new_resume_num'=>0,
+                        'status'=>0,
+                        'creator_id'=>$this->getUser()->id,
+                    ]);
+                }
+            }
+        }
+        return $this->apiReturnJson(0);
+    }
+
+    public function subcontract(Request $request)
+    {
+        $data = $request->all();
+        $job = new Job();
+        $job->fill($data);
+        $id = $job->id;
+        $job->creator_id = $this->getUser()->id;
+
+        if(!$job->company_id){
+            $job->company_id = $this->getCurrentCompany()->id;
+        }
+        if($job->source_recruit_id){
+            $_recruit = Recruit::find($job->source_recruit_id);
+            if($_recruit) {
+                $job->source_job_id = $_recruit->job->id;
+                $job->source_company_id = $_recruit->company->id;
+            }
+        }
+        if($job->source_job_id){
+            $_job = Job::find($job->source_job_id);
+            if($_job) {
+                $job->source_company_id = $_job->company->id;
+            }
+        }
+//
+//        if(isset($data['area']) && is_array($data['area'])){
+//            if(isset($data['area'][0]))
+//                $job->province_id = $data['area'][0];
+//            if(isset($data['area'][1]))
+//                $job->city_id = $data['area'][1];
+//            if(isset($data['area'][2]))
+//                $job->district_id = $data['area'][2];
+//        }
+        $job->save();
+
+        $skills = isset($data['skills'])?$data['skills']:null;
+        $necessarySkills = isset($data['necessary_skills'])?$data['necessary_skills']:null;
+        $optionalSkills = isset($data['optional_skills'])?$data['optional_skills']:null;
+        $tests = isset($data['tests'])?$data['tests']:null;
+
+        if(is_array($skills)){
+            $skill_ids = [];
+            foreach ($skills as $skill) {
+                $skill['job_id'] = $id;
+                if(isset($skill['id']) && $skill['id']){
+                    $skill_ids[] = $skill['id'];
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                }else{
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                    $skill_ids[] = $_id;
+                }
+            }
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->whereNotIn('id', $skill_ids)->delete();
+        }
+        if(is_array($necessarySkills)){
+            $skill_ids = [];
+            foreach ($necessarySkills as $skill) {
+                $skill['job_id'] = $id;
+                $skill['type'] = 1;
+                if(isset($skill['id']) && $skill['id']){
+                    $skill_ids[] = $skill['id'];
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                }else{
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                    $skill_ids[] = $_id;
+                }
+            }
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 1)->whereNotIn('id', $skill_ids)->delete();
+        }
+        if(is_array($optionalSkills)){
+            $skill_ids = [];
+            foreach ($optionalSkills as $skill) {
+                $skill['job_id'] = $id;
+                $skill['type'] = 2;
+                if(isset($skill['id']) && $skill['id']){
+                    $skill_ids[] = $skill['id'];
+                    app('db')->connection('musa')->table('job_skill')->where('id', $skill['id'])->update($skill);
+                }else{
+                    $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                    $skill_ids[] = $_id;
+                }
+            }
+            app('db')->connection('musa')->table('job_skill')->where('job_id', $id)->where('type', 2)->whereNotIn('id', $skill_ids)->delete();
+        }
+        if(is_array($tests)){
+            $test_ids = [];
+            foreach ($tests as $test) {
+                $test['job_id'] = $id;
+                if(isset($test['id']) && $test['id']){
+                    $test_ids[] = $test['id'];
+                    app('db')->connection('moodle')->table('job_test')->where('id', $test['id'])->update($test);
+                }else{
+                    $test['job_id'] = $id;
+                    $_id = app('db')->connection('moodle')->table('job_test')->insertGetId($test);
+                    $test_ids[] = $_id;
+                }
+            }
+            app('db')->connection('moodle')->table('job_test')->where('job_id', $id)->whereNotIn('id', $test_ids)->delete();
+        }
+
+        $entrust_id = $this->request->get('entrust_id');
+
+        $entrust = Entrust::find($entrust_id);
+        $recruit = $entrust->recruit;
+
+        $new = Recruit::create($recruit->toArray());
+
+        $new->company_id = $this->getCurrentCompany()->id;
+        $new->job_id = $job->id;
+        $new->creator_id = $this->getUser()->id;
+        $new->true_created_at = date('Y-m-d H:i:s');
+        $new->wait_entry_num = 0;
+        $new->done_num = 0;
+        $new->resume_num = 0;
+        $new->new_resume_num = 0;
+        $new->save();
+        $recruit = $new;
 
         $recruit->status = 2;
         $recruit->save();

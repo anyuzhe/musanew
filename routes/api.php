@@ -158,6 +158,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->post('/company/recruits/start', 'API\RecruitsController@start');
     //招聘职位提交申请给第三方
     $router->post('/company/entrusts/applyEntrust', 'API\EntrustsController@applyEntrust');
+    //第三方转包
+    $router->post('/company/entrusts/subcontract', 'API\EntrustsController@subcontract');
     //招聘职位提交申请给第三方-取消
     $router->post('/company/entrusts/cancel', 'API\EntrustsController@cancelEntrust');
     //第三方转交给需求方
