@@ -686,7 +686,7 @@ class CompaniesController extends ApiBaseCommonController
             }else{
                 CompanyUserPermissionScope::create([
                     'company_id'=>$company->id,
-                    'company_permission_id'=>$permission['id'],
+                    'company_permission_id'=>$permission['permission_id'],
                     'user_id'=>$user->id,
                     'key'=>$permission['id'].'_'.$company->id.'_'.$user->id,
                     'type'=>$permission['type'],
