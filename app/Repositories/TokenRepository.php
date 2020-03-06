@@ -8,7 +8,7 @@ use App\User;
 
 class TokenRepository
 {
-    protected static $auto_continue = true;
+    protected static $auto_continue = false;
     protected static $auto_continue_time = 28800;
 
     public static function getToken()

@@ -7,7 +7,7 @@ use App\Models\User;
 
 class TokenHelper
 {
-    static public $tokenduration = 43200;
+    static public $tokenduration =  2592000;
 
     static function getTokenForUser(User $user) {
 
