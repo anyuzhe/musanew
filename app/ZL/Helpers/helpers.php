@@ -1020,6 +1020,8 @@ function numToWord($num)
 
 }
 function getYearsText($at1, $at2){
+    if(!$at1)
+        return '';
     if(!is_int($at1))
         $at1 = strtotime($at1);
     if(!is_int($at2))
