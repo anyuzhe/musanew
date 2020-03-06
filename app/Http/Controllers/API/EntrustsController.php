@@ -332,6 +332,8 @@ class EntrustsController extends ApiBaseCommonController
 
         $new->company_id = $this->getCurrentCompany()->id;
         $new->job_id = $job->id;
+        $new->is_public = $data['is_public'];
+        $new->leading_id = $data['leading_id'];
         $new->creator_id = $this->getUser()->id;
         $new->true_created_at = date('Y-m-d H:i:s');
         $new->wait_entry_num = 0;
