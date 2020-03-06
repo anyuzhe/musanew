@@ -677,7 +677,7 @@ class CompaniesController extends ApiBaseCommonController
 
         $permissions = $this->request->get('scopes');
         foreach ($permissions as $permission) {
-            $has = CompanyUserPermissionScope::where('user_id', $user->id)->where('company_id', $company->id)->where('company_permission_id', $permission['id'])->first();
+            $has = CompanyUserPermissionScope::where('user_id', $user->id)->where('company_id', $company->id)->where('company_permission_id', $permission['permission_id'])->first();
             if($has){
                 CompanyUserPermissionScope::where('id', $has->id)->update([
                     'type'=>$permission['type'],
