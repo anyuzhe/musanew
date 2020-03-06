@@ -34,6 +34,7 @@ class PublicRecruitsController extends ApiBaseCommonController
         $working_years = $this->request->get('working_years', null);
         $city = $this->request->get('city', null);
         $text = $this->request->get('text', null);
+        $salary_search_type = $this->request->get('salary_search_type', 0);
 
         $job_model = new Job();
         if($educational_requirements){
@@ -49,6 +50,65 @@ class PublicRecruitsController extends ApiBaseCommonController
             $areaIds = Area::where('fname','like',"%$city%")->where('level', 2)->pluck('id')->toArray();
             $addressIds = CompanyAddress::whereIn('city_id', $areaIds)->pluck('id')->toArray();
             $job_model = $job_model->whereIn('address_id', $addressIds);
+        }
+        if($salary_search_type > 0){
+            if($salary_search_type==1){
+                $job_model = $job_model->where(function ($query){
+                    $query->where('salary_min', '<=' , 3000)->orWhere('salary_max', '<=' ,3000);
+                });
+            }elseif($salary_search_type==2){
+                $job_model = $job_model->where(function ($query){
+                    $query->where(function ($query1){
+                        $query1->where('salary_min', '>=' , 3000)->where('salary_min', '<=' ,5000);
+                    })->orWhere(function ($query2){
+                        $query2->where('salary_max', '>=' , 3000)->where('salary_max', '<=' ,5000);
+                    });
+                });
+            }elseif($salary_search_type==3){
+                $job_model = $job_model->where(function ($query){
+                    $query->where(function ($query1){
+                        $query1->where('salary_min', '>=' , 5000)->where('salary_min', '<=' ,10000);
+                    })->orWhere(function ($query2){
+                        $query2->where('salary_max', '>=' , 5000)->where('salary_max', '<=' ,10000);
+                    });
+                });
+            }elseif($salary_search_type==4){
+                $job_model = $job_model->where(function ($query){
+                    $query->where(function ($query1){
+                        $query1->where('salary_min', '>=' , 10000)->where('salary_min', '<=' ,15000);
+                    })->orWhere(function ($query2){
+                        $query2->where('salary_max', '>=' , 10000)->where('salary_max', '<=' ,15000);
+                    });
+                });
+            }elseif($salary_search_type==5){
+                $job_model = $job_model->where(function ($query){
+                    $query->where(function ($query1){
+                        $query1->where('salary_min', '>=' , 15000)->where('salary_min', '<=' ,20000);
+                    })->orWhere(function ($query2){
+                        $query2->where('salary_max', '>=' , 15000)->where('salary_max', '<=' ,20000);
+                    });
+                });
+            }elseif($salary_search_type==6){
+                $job_model = $job_model->where(function ($query){
+                    $query->where(function ($query1){
+                        $query1->where('salary_min', '>=' , 20000)->where('salary_min', '<=' ,30000);
+                    })->orWhere(function ($query2){
+                        $query2->where('salary_max', '>=' , 20000)->where('salary_max', '<=' ,30000);
+                    });
+                });
+            }elseif($salary_search_type==7){
+                $job_model = $job_model->where(function ($query){
+                    $query->where(function ($query1){
+                        $query1->where('salary_min', '>=' , 30000)->where('salary_min', '<=' ,50000);
+                    })->orWhere(function ($query2){
+                        $query2->where('salary_max', '>=' , 30000)->where('salary_max', '<=' ,50000);
+                    });
+                });
+            }elseif($salary_search_type==8){
+                $job_model = $job_model->where(function ($query){
+                    $query->where('salary_min', '>=' , 50000)->orWhere('salary_max', '>=' ,50000);
+                });
+            }
         }
         $searchPublicJobIds = $job_model->pluck('id')->toArray();
 
