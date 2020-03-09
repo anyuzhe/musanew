@@ -14,6 +14,7 @@ use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
+use App\ZL\ORG\Musa\Log\RecruitLogHelper;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
@@ -257,7 +258,7 @@ class RecruitsController extends ApiBaseCommonController
 
     public function afterUpdate($id, $data, $obj)
     {
-        $editText = CompanyLogRepository::getDiffText($obj);
+        $editText = CompanyLogRepository::getDiffText($obj, RecruitLogHelper::class);
 
         CompanyLogRepository::addLog('recruit_user_manage','edit_recruit',$editText);
 
