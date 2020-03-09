@@ -39,8 +39,8 @@ class CompanyLogRepository
             $_v1 = self::getOptionsText($key, $value);
             $_v2 = self::getOptionsText($key, $obj->{$key});
             if($classMap){
-                $_v1 = $classMap::changeValue($_v1);
-                $_v2 = $classMap::changeValue($_v2);
+                $_v1 = $classMap::changeValue($key, $_v1);
+                $_v2 = $classMap::changeValue($key, $_v2);
             }
             $text.= self::translation($key).": {$_v1} 修改成 {$_v2}, ";
         }
