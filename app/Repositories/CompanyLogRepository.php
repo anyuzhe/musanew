@@ -96,5 +96,8 @@ class CompanyLogRepository
       'resume'=>'简历',
       'grade'=>'分数',
       'setting'=>'设置',
+      'need'=>'需要',
+      'num'=>'数量',
+      'public'=>'公开',
     ];
 }

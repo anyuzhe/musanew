@@ -9,6 +9,7 @@ use App\Models\Entrust;
 use App\Models\Recruit;
 use App\Models\RecruitResume;
 use App\Models\UserBasicInfo;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitRepository;
@@ -44,7 +45,6 @@ class RecruitsController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
-
         //筛选
         $request = $this->request;
         $job_id = $request->get('job_id');
@@ -238,6 +238,10 @@ class RecruitsController extends ApiBaseCommonController
         $obj->creator_id = $this->getUser()->id;
         $obj->true_created_at = $obj->created_at;
         $obj->save();
+        $text = "添加招聘 ".$obj->job->name;
+        $text .= ", 负责人:".$obj->leading->name;
+        CompanyLogRepository::addLog('recruit_manage','add_recruit',$text);
+
         return $this->apiReturnJson(0);
     }
 
@@ -250,8 +254,12 @@ class RecruitsController extends ApiBaseCommonController
         return $model;
     }
 
-    public function afterUpdate($id, $data)
+    public function afterUpdate($id, $data, $obj)
     {
+        $editText = CompanyLogRepository::getDiffText($obj);
+
+        CompanyLogRepository::addLog('recruit_manage','edit_recruit',$editText);
+
         if(isset($data['leading_id'])){
             Entrust::where('company_job_recruit_id', $id)->update(['leading_id'=>$data['leading_id']]);
         }
