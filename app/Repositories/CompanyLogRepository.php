@@ -31,13 +31,17 @@ class CompanyLogRepository
         return $text;
     }
 
-    public static function getDiffText($obj)
+    public static function getDiffText($obj, $classMap=null)
     {
         $text = '';
         $diff = array_diff_assoc($obj->getOriginal(), $obj->getAttributes());
         foreach ($diff as $key=>$value) {
             $_v1 = self::getOptionsText($key, $value);
             $_v2 = self::getOptionsText($key, $obj->{$key});
+            if($classMap){
+                $_v1 = $classMap::changeValue($_v1);
+                $_v2 = $classMap::changeValue($_v2);
+            }
             $text.= self::translation($key).": {$_v1} 修改成 {$_v2}, ";
         }
         return substr($text,0,strlen($text)-2);
@@ -71,6 +75,12 @@ class CompanyLogRepository
             if(isset($_ops[$value])){
                 return $_ops[$value]['text'];
             }
+        }
+        if($value===false){
+            return '否';
+        }
+        if($value===true){
+            return '是';
         }
         return $value;
     }
