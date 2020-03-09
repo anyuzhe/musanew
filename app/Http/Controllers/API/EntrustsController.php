@@ -111,7 +111,6 @@ class EntrustsController extends ApiBaseCommonController
                     $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
                     $model = $model->whereIn('job_id', $jobIds);
                 }
-            }elseif ($type==3){
             }
         }
         return null;
@@ -159,6 +158,15 @@ class EntrustsController extends ApiBaseCommonController
             $entrust['recruit']['residue_num'] = $entrust['recruit']['need_num'] - $entrust['recruit']['done_num'] - $entrust['recruit']['wait_entry_num'];
             $entrust['recruit']['residue_num'] = $entrust['recruit']['residue_num']>0?$entrust['recruit']['residue_num']:0;
         }
+
+        $type = $this->request->type;
+        if($type==2) {
+            CompanyLogRepository::addLog('recruit_user_manage','show_outsourcing_employee',"查看/筛查外包员工职位 第".request('pagination', 1)."页");
+        }elseif($type==3){
+            CompanyLogRepository::addLog('recruit_user_manage','show_demand',"查看/筛查需求管理 第".request('pagination', 1)."页");
+        }elseif($type==4){
+            CompanyLogRepository::addLog('entrust_manage','show_entrust',"查看委托申请 第".request('pagination', 1)."页");
+        }
         return $entrusts;
     }
 
@@ -201,6 +209,7 @@ class EntrustsController extends ApiBaseCommonController
         $recruit->save();
         $third_party_ids = $this->request->get('third_party_ids');
         $thirdPartyIds = $this->getCurrentCompany()->thirdParty->pluck('id')->toArray();
+        $text = $recruit->job->name." 发起委托:";
         if(is_array($third_party_ids)){
             foreach ($third_party_ids as $third_party_id) {
                 if(in_array($third_party_id, $thirdPartyIds)){
@@ -217,9 +226,12 @@ class EntrustsController extends ApiBaseCommonController
                         'status'=>0,
                         'creator_id'=>$this->getUser()->id,
                     ]);
+                    $text.= ' '. Company::find($third_party_id)->company_alias;
                 }
             }
         }
+        CompanyLogRepository::addLog('recruit_user_manage','add_entrust', $text);
+
         return $this->apiReturnJson(0);
     }
 

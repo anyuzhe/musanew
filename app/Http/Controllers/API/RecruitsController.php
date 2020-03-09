@@ -181,6 +181,8 @@ class RecruitsController extends ApiBaseCommonController
             $recruit['residue_num'] = $recruit['residue_num']>0?$recruit['residue_num']:0;
             $recruit['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($recruit);
         }
+        CompanyLogRepository::addLog('recruit_user_manage','show_regular_employee',"查看/筛查企业正式招聘 第".request('pagination', 1)."页");
+
         return $recruits;
     }
 
@@ -308,6 +310,9 @@ class RecruitsController extends ApiBaseCommonController
             $entrust->end_at = date('Y-m-d H:i:s');
             $entrust->save();
             app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
+
+            $text = "结束委托 ".$entrust->job->name;
+            CompanyLogRepository::addLog('recruit_user_manage','end_recruit', $text);
         }else{
             $obj = Recruit::find($id);
             if(!$obj)
@@ -326,6 +331,9 @@ class RecruitsController extends ApiBaseCommonController
             $obj->end_at = date('Y-m-d H:i:s');
             $obj->save();
             app()->build(RecruitRepository::class)->generateEndLog($obj);
+
+            $text = "结束招聘 ".$obj->job->name;
+            CompanyLogRepository::addLog('recruit_user_manage','end_recruit', $text);
         }
         return $this->apiReturnJson(0);
     }
@@ -345,6 +353,8 @@ class RecruitsController extends ApiBaseCommonController
             $entrust->status = 6;
             $entrust->pause_at = date('Y-m-d H:i:s');
             $entrust->save();
+            $text = "暂停委托 ".$entrust->job->name;
+            CompanyLogRepository::addLog('recruit_user_manage','pause_recruit', $text);
 //            app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
         }else{
             $obj = Recruit::find($id);
@@ -367,6 +377,8 @@ class RecruitsController extends ApiBaseCommonController
 
             $obj->pause_at = date('Y-m-d H:i:s');
             $obj->save();
+            $text = "暂停招聘 ".$obj->job->name;
+            CompanyLogRepository::addLog('recruit_user_manage','pause_recruit', $text);
 //            app()->build(RecruitRepository::class)->generateEndLog($obj);
         }
         return $this->apiReturnJson(0);

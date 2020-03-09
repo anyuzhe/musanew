@@ -110,5 +110,6 @@ class CompanyLogRepository
       'num'=>'数量',
       'public'=>'公开',
       'leading'=>'负责人',
+      'id'=>'',
     ];
 }

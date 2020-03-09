@@ -23,5 +23,7 @@ class RecruitLogHelper
             else
                 return '否';
         }
+
+        return $value;
     }
 }

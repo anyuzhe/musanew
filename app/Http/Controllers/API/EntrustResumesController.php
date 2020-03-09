@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Company;
 use App\Models\CompanyResume;
 use App\Models\Entrust;
 use App\Models\Recruit;
@@ -10,6 +11,7 @@ use App\Models\RecruitResumeLog;
 use App\Models\Resume;
 use App\Models\ResumeAttachment;
 use App\Models\ResumeSkill;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -152,6 +154,9 @@ class EntrustResumesController extends ApiBaseCommonController
         $company->resumes()->attach($id);
         $this->resumeRepository->saveDataForForm($obj, $data);
         $this->resumeRepository->companyAddHandle($obj, $data);
+
+        CompanyLogRepository::addLog('job_manage','send_resume',"添加简历 $obj->name");
+
         return $this->apiReturnJson(0);
     }
 
@@ -193,8 +198,12 @@ class EntrustResumesController extends ApiBaseCommonController
 
         app('db')->beginTransaction();
         $logs = [];
+
+        $text = $recruit->job->name." 推送简历:";
+
         foreach ($ids as $id) {
             $resume = Resume::find($id);
+            $text.= ' '. $resume->name;
 
             if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $id)->where('type',3)->first()){
                 return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
@@ -245,6 +254,8 @@ class EntrustResumesController extends ApiBaseCommonController
         }
         sendLogsEmail($logs);
         app('db')->commit();
+
+        CompanyLogRepository::addLog('recruit_user_manage','send_resume', $text);
         return $this->apiReturnJson(0,$logs);
     }
 
@@ -259,6 +270,7 @@ class EntrustResumesController extends ApiBaseCommonController
             return $this->apiReturnJson(9999, null, '缺少简历信息');
         }
 
+        $text = $resume->name." 推送职位:";
         app('db')->beginTransaction();
         if($recruit_ids && is_array($recruit_ids)){
             $logs = [];
@@ -279,6 +291,7 @@ class EntrustResumesController extends ApiBaseCommonController
                     app('db')->rollBack();
                     return $this->apiReturnJson(9999, null, $resume->name.'已投递，无法重复添加');
                 }
+                $text.= ' '. $recruit->job->name;
 
                 $recruitResume = RecruitResume::create([
                     'company_id'=>$recruit->company_id,
@@ -308,6 +321,7 @@ class EntrustResumesController extends ApiBaseCommonController
                     return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
                 }
 
+                $text.= ' '. $entrust->job->name;
                 $has = RecruitResume::where('company_job_recruit_id', $recruit->id)
                     ->where('resume_id', $resume_id)
                     ->where('company_job_recruit_entrust_id', $entrust_id)->first();
@@ -352,6 +366,8 @@ class EntrustResumesController extends ApiBaseCommonController
         }
 
         app('db')->commit();
+        CompanyLogRepository::addLog('recruit_user_manage','send_resume', $text);
+
         return $this->apiReturnJson(0,$logs);
     }
 
