@@ -239,8 +239,9 @@ class RecruitsController extends ApiBaseCommonController
         $obj->true_created_at = $obj->created_at;
         $obj->save();
         $text = "添加招聘 ".$obj->job->name;
-        $text .= ", 负责人:".$obj->leading->name;
-        CompanyLogRepository::addLog('recruit_manage','add_recruit',$text);
+        $text .= ", 负责人:".$obj->leading->realname;
+        $text .= ", 人数:".$obj->need_num;
+        CompanyLogRepository::addLog('recruit_user_manage','add_recruit',$text);
 
         return $this->apiReturnJson(0);
     }
@@ -258,7 +259,7 @@ class RecruitsController extends ApiBaseCommonController
     {
         $editText = CompanyLogRepository::getDiffText($obj);
 
-        CompanyLogRepository::addLog('recruit_manage','edit_recruit',$editText);
+        CompanyLogRepository::addLog('recruit_user_manage','edit_recruit',$editText);
 
         if(isset($data['leading_id'])){
             Entrust::where('company_job_recruit_id', $id)->update(['leading_id'=>$data['leading_id']]);

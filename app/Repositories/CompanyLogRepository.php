@@ -99,5 +99,6 @@ class CompanyLogRepository
       'need'=>'需要',
       'num'=>'数量',
       'public'=>'公开',
+      'leading'=>'负责人',
     ];
 }
