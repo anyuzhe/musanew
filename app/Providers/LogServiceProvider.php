@@ -40,6 +40,7 @@ class LogServiceProvider extends ServiceProvider
 
             $model = $data[0];
             $class = get_class($model);
+            dd($model);
             $diff = array_diff_assoc($model->getOriginal(), $model->getAttributes());
             $keys = array_keys($diff);
             $data = [];
