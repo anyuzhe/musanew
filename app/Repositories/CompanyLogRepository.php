@@ -33,7 +33,6 @@ class CompanyLogRepository
 
     public static function getDiffText($obj, $classMap=null)
     {
-        dd($obj);
         $text = '';
         $diff = array_diff_assoc($obj->getOriginal(), $obj->getAttributes());
         foreach ($diff as $key=>$value) {
