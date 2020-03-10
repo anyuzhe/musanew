@@ -34,7 +34,7 @@ class CompanyLogRepository
     public static function getDiffText($obj, $classMap=null)
     {
         $text = '';
-        $diff = array_diff_assoc($obj->getOriginal(), $obj->getAttributes());
+        $diff = array_diff_assoc($obj->getAttributes(), $obj->getOriginal());
         foreach ($diff as $key=>$value) {
             $_v1 = self::getOptionsText($key, $value);
             $_v2 = self::getOptionsText($key, $obj->{$key});
