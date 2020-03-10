@@ -154,6 +154,9 @@ class RecruitResumesRepository
         if($logObj->status!=1){
             sendLogsEmail([$logObj]);
         }
+
+        CompanyLogRepository::addLog('recruit_user_manage','handle_resume',$recruitResume->job->name.' '.$recruitResume->resume->name." 简历状态设为".$log->text);
+
         return $logObj;
     }
 

@@ -189,6 +189,7 @@ class RecruitsController extends ApiBaseCommonController
     public function _after_find(&$data)
     {
         $entrustRes = app()->build(EntrustsRepository::class);
+        CompanyLogRepository::addLog('job_manage','show_official_job',"查看职位 $data->name 招聘详情");
 
         $data->leading;
         $entrust_id = $this->request->get('entrust_id');

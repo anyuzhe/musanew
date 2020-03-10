@@ -436,6 +436,8 @@ class EntrustsController extends ApiBaseCommonController
                 $entrust->status = 1;
                 $entrust->save();
             }
+            CompanyLogRepository::addLog('entrust_manage','agree_entrust', '同意 '.$recruit->company->company_alias.' '.$entrust->job->name);
+
         }
         return $this->apiReturnJson(0);
     }
@@ -462,6 +464,7 @@ class EntrustsController extends ApiBaseCommonController
                 $entrust->status = -2;
                 $entrust->save();
             }
+            CompanyLogRepository::addLog('entrust_manage','agree_entrust', '拒绝 '.$recruit->company->company_alias.' '.$entrust->job->name);
         }
         return $this->apiReturnJson(0);
     }
