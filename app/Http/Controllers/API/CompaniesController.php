@@ -1245,6 +1245,10 @@ class CompaniesController extends ApiBaseCommonController
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
         }
         $token = ExternalToken::where('userid', $user->id)->first();
+
+        $editText = "管理员更换为:$email-".UserBasicInfo::where('user_id', $user->id)->value('realname');
+        CompanyLogRepository::addLog('basics_manage','edit_manager', $editText);
+
         CompanyManagerLog::create([
             'company_id'=>$company->id,
             'new_id'=>$user->id,

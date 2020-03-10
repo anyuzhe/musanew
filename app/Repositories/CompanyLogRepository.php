@@ -50,7 +50,7 @@ class CompanyLogRepository
     public static function translation($str)
     {
         if(isset(self::$translationData[$str])){
-            return $str;
+            return self::$translationData[$str];
         }
         $text = '';
         $strArr = explode('_',$str);
