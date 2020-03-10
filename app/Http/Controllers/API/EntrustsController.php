@@ -209,7 +209,7 @@ class EntrustsController extends ApiBaseCommonController
         $recruit->save();
         $third_party_ids = $this->request->get('third_party_ids');
         $thirdPartyIds = $this->getCurrentCompany()->thirdParty->pluck('id')->toArray();
-        $text = $recruit->job->name." 发起委托:";
+        $text = $recruit->job->name." 发起委托给:";
         if(is_array($third_party_ids)){
             foreach ($third_party_ids as $third_party_id) {
                 if(in_array($third_party_id, $thirdPartyIds)){

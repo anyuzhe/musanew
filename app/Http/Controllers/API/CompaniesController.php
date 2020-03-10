@@ -24,6 +24,7 @@ use App\Models\User;
 use App\Models\UserBasicInfo;
 use App\Repositories\AreaRepository;
 use App\Repositories\CompaniesRepository;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitResumesRepository;
@@ -233,6 +234,9 @@ class CompaniesController extends ApiBaseCommonController
     public function getCurrentInfo()
     {
         $company = $this->getCurrentCompany();
+
+        CompanyLogRepository::addLog('basics_manage','show_basics', '查看企业信息');
+
         $company->addresses;
         foreach ($company->addresses as &$v) {
             $v->area = [$v->province_id,$v->city_id,$v->district_id];
@@ -289,6 +293,7 @@ class CompaniesController extends ApiBaseCommonController
     public function updateCurrentInfo()
     {
         $company = $this->getCurrentCompany();
+
         if(!$company)
             return $this->apiReturnJson(9999,null,'没有当前公司');
 
@@ -296,7 +301,15 @@ class CompaniesController extends ApiBaseCommonController
             return $this->apiReturnJson(9999,null,'该企业简称已经存在');
         }
         $model = new Company();
-        $model->where('id', '=', $company->id)->update($this->request->only($model->fillable));
+
+        $company->fill($this->request->only($model->fillable));
+        $editText = CompanyLogRepository::getDiffText($company);
+
+        CompanyLogRepository::addLog('basics_manage','edit_basics', $editText);
+//        $editText = CompanyLogRepository::getDiffText($obj, RecruitLogHelper::class);
+
+        $company->save();
+
         app()->build(CompaniesRepository::class)->saveAddressesAndDepartments($this->request->get('addresses'),
             $this->request->get('departments'),$company->id);
 

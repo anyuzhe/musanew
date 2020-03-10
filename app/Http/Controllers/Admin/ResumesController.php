@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RecruitResume;
 use App\Models\Resume;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use Illuminate\Support\Collection;
@@ -41,6 +42,7 @@ class ResumesController extends Controller
 //            dump($job_descs);
         }
 //        dd($data);
+        CompanyLogRepository::addLog('resume_manage','export_resume',"导出简历 ".$data['name']);
 
         return view('resume', ['data'=>$data, 'matching'=>$matching]);
     }

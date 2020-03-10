@@ -15,6 +15,7 @@ use App\Repositories\CompanyLogRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
+use App\ZL\ORG\Musa\Log\RecruitLogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -155,18 +156,23 @@ class EntrustResumesController extends ApiBaseCommonController
         $this->resumeRepository->saveDataForForm($obj, $data);
         $this->resumeRepository->companyAddHandle($obj, $data);
 
-        CompanyLogRepository::addLog('job_manage','send_resume',"添加简历 $obj->name");
+        CompanyLogRepository::addLog('resume_manage','add_resume',"添加简历 $obj->name");
 
         return $this->apiReturnJson(0);
     }
 
-    public function afterUpdate($id, $data)
+    public function afterUpdate($id, $data, $resume)
     {
         $obj = Resume::find($id);
 //        $company = $this->getCurrentCompany();
 //        $company->resumes()->attach($id);
 
         $this->resumeRepository->saveDataForForm($obj, $data);
+
+        $editText = CompanyLogRepository::getDiffText($obj);
+//        $editText = CompanyLogRepository::getDiffText($obj, RecruitLogHelper::class);
+
+        CompanyLogRepository::addLog('recruit_user_manage','update_resume',$editText);
         return $this->apiReturnJson(0);
     }
 
@@ -373,6 +379,17 @@ class EntrustResumesController extends ApiBaseCommonController
 
     public function _after_get(&$data)
     {
+
+        $in_job = $this->request->get('in_job');
+        $in_blacklist = $this->request->get('in_blacklist',0);
+        if($in_blacklist){
+            CompanyLogRepository::addLog('resume_manage','show_blacklist_resume',"查看/筛选黑名单 第".request('pagination', 1)."页");
+        }elseif($in_job || is_numeric($in_job)){
+            CompanyLogRepository::addLog('resume_manage','show_entry_resume',"查看/筛选入职成功简历 第".request('pagination', 1)."页");
+        }else{
+            CompanyLogRepository::addLog('resume_manage','show_resume',"查看/筛选简历中心 第".request('pagination', 1)."页");
+        }
+
         return app()->build(ResumesRepository::class)->getListData($data, $this->getCurrentCompany());
     }
 
@@ -409,6 +426,8 @@ class EntrustResumesController extends ApiBaseCommonController
         $model = Resume::find($id);
         $model->status = -1;
         $model->save();
+        CompanyLogRepository::addLog('resume_manage','delete_resume',"删除简历 ".$model->name);
+
         return responseZK(0);
     }
 
@@ -490,6 +509,8 @@ class EntrustResumesController extends ApiBaseCommonController
 
                 $this->resumeRepository->companyAddHandle($obj, $request->all());
 
+                CompanyLogRepository::addLog('resume_manage','add_resume',"导入简历 ".$obj->name);
+
                 $this->_after_find($obj);
                 return responseZK(0,$obj);
             }else{
@@ -545,6 +566,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 'file_name'=>$filename.'.'.$file->getClientOriginalExtension(),
                 'creator_id'=>$this->getUser()->id,
             ]);
+            CompanyLogRepository::addLog('resume_manage','upload_accessory',"简历:".$resume->name.' 附件:'.$obj->file_name);
 
             return responseZK(0,$obj);
         } else {

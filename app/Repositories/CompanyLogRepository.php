@@ -49,6 +49,9 @@ class CompanyLogRepository
 
     public static function translation($str)
     {
+        if(isset(self::$translationData[$str])){
+            return $str;
+        }
         $text = '';
         $strArr = explode('_',$str);
         foreach ($strArr as $item) {
@@ -111,5 +114,39 @@ class CompanyLogRepository
       'public'=>'公开',
       'leading'=>'负责人',
       'id'=>'',
+
+        //resume
+        'start'=>'开始',
+        'at'=>'时间',
+        'workplace'=>'期望工作地点',
+        'job'=>'求职',
+        'hope'=>'期望',
+        'intro'=>'个人评价',
+        'phone'=>'手机',
+        'married'=>'结婚',
+        'gender'=>'性别',
+        'birthdate'=>'生日',
+        'avatar'=>'头像',
+
+        //company
+        'company'=>'公司',
+        'alias'=>'简称',
+        'scale'=>'规模',
+        'industry'=>'行业',
+        'conglomerate'=>'集团',
+        'third'=>'第三',
+        'party'=>'方',
+        'demand'=>'需求',
+        'side'=>'方',
+        'suspended'=>'暂停',
+        'province'=>'省',
+        'city'=>'市',
+        'district'=>'区',
+        'site'=>'地址',
+        'deposit'=>'开户',
+        'bank'=>'银行',
+        'tax_no'=>'税号',
+        'account'=>'账号',
+        'contact'=>'联系人',
     ];
 }
