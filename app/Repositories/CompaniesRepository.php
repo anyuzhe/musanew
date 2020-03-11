@@ -107,6 +107,8 @@ class CompaniesRepository
             }
 //            CompanyAddress::where('company_id', $company_id)->whereNotIn('id', $addresses_ids)->delete();//真删除
             CompanyAddress::where('company_id', $company_id)->whereNotIn('id', $addresses_ids)->update(['company_id'=>null]);//假删除
+            CompanyLogRepository::addLog('basics_manage','edit_basics', '修改地址信息');
+
         }
         if($departments && is_array($departments)){
             $departments_ids = [];
@@ -155,6 +157,7 @@ class CompaniesRepository
                 }
             }
             CompanyDepartment::where('company_id', $company_id)->whereNotIn('id', $departments_ids)->delete();
+            CompanyLogRepository::addLog('basics_manage','edit_basics', '修改部门信息');
         }
     }
 

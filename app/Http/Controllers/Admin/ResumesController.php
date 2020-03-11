@@ -42,7 +42,6 @@ class ResumesController extends Controller
 //            dump($job_descs);
         }
 //        dd($data);
-        CompanyLogRepository::addLog('resume_manage','export_resume',"导出简历 ".$data['name']);
 
         return view('resume', ['data'=>$data, 'matching'=>$matching]);
     }
@@ -75,6 +74,8 @@ class ResumesController extends Controller
         } else {
             shell_exec("/usr/local/bin/wkhtmltopdf $html $path"); // linux  wkhtmltopdf 调用
         }
+        CompanyLogRepository::addLog('resume_manage','export_resume',"导出简历 ".$resume->name);
+
         upload($path, $resume->name.'的简历.pdf');
     }
 }

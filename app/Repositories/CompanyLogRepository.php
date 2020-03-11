@@ -8,9 +8,15 @@ class CompanyLogRepository
 {
     public static function addLog($module, $operation, $content)
     {
+        $company = TokenRepository::getCurrentCompany();
+        $user = TokenRepository::getUser();
+        if(!$company)
+            return null;
+        if(!$user)
+            return null;
         CompanyLog::create([
-            'company_id'=>TokenRepository::getCurrentCompany()->id,
-            'user_id'=>TokenRepository::getUser()->id,
+            'company_id'=>$company->id,
+            'user_id'=>$user->id,
             'operation'=>$operation,
             'content'=>$content,
             'module'=>$module,

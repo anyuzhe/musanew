@@ -588,6 +588,7 @@ class CompaniesController extends ApiBaseCommonController
               'avatar_url'=>getPicFullUrl($info['avatar']),
             ];
         }
+        CompanyLogRepository::addLog('company_user_manage','show_user',"查看企业人员列表 第".request('pagination', 1)."页");
         return $this->apiReturnJson(0,$data,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 
@@ -635,6 +636,9 @@ class CompaniesController extends ApiBaseCommonController
         $info->avatar_url = getPicFullUrl($info->avatar);
         $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
         $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
+
+        CompanyLogRepository::addLog('company_user_manage','show_user',"查看详情 $info->realname");
+
         return $this->apiReturnJson(0,$info);
     }
 
@@ -724,6 +728,9 @@ class CompaniesController extends ApiBaseCommonController
             return $this->apiReturnJson(9999, null, '该用户已在企业中, 请直接修改');
         }
         $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
+
+        CompanyLogRepository::addLog('company_user_manage','add_user',"新增企业人员 $email");
+
         return $this->apiReturnJson(0);
     }
 
@@ -758,14 +765,20 @@ class CompaniesController extends ApiBaseCommonController
         $companyUser->fill($requestData);
         $companyUser->save();
         $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
+
+        CompanyLogRepository::addLog('company_user_manage','edit_user',"编辑企业人员 $email");
         return $this->apiReturnJson(0);
     }
 
     public function deleteUser($user_id, Request $request)
     {
+        $user = User::find($user_id);
+        CompanyLogRepository::addLog('company_user_manage','delete_user',"删除企业人员 $user->email");
+
         $company = $this->getCurrentCompany();
         CompanyUser::where('user_id', $user_id)->where('company_id', $company->id)->delete();
         CompanyUserRole::where('user_id', $user_id)->where('company_id', $company->id)->delete();
+
         return $this->apiReturnJson(0);
     }
 
@@ -1048,6 +1061,9 @@ class CompaniesController extends ApiBaseCommonController
             }
             $v->job = $jobs[$v->job_id];
         }
+
+        CompanyLogRepository::addLog('data_analysis','third_party_analysis',"查看第三方选择数据统计");
+
         return $this->apiReturnJson(0,$list,null,['count'=>$count,'pageSize'=>$pageSize,'pagination'=>$pagination]);
     }
 

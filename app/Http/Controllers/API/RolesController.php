@@ -7,6 +7,7 @@ use App\Models\CompanyPermission;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\UserBasicInfo;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
@@ -59,6 +60,8 @@ class RolesController extends ApiBaseCommonController
             $v->permissions_tree = RoleRepository::getTree($v);
 //            $v->users = $userRepository->getUsersByRoleId($v->id);
         }
+        CompanyLogRepository::addLog('role_manage','show_role',"查看角色列表 第".request('pagination', 1)."页");
+
         return $data;
     }
 
@@ -78,20 +81,28 @@ class RolesController extends ApiBaseCommonController
         }
         if(isset($data['permissions']))
             RoleRepository::savePermissions(CompanyPermission::whereIn('id',$data['permissions'])->get(), $obj->id);
+
+        CompanyLogRepository::addLog('role_manage','add_role',"添加角色 $obj->name");
         return $this->apiReturnJson(0);
     }
 
-    public function afterUpdate($id, $data)
+    public function afterUpdate($id, $data, $role)
     {
         $obj = $this->getModel()->find($id);
         if(isset($data['permissions']))
             RoleRepository::savePermissions(CompanyPermission::whereIn('id',$data['permissions'])->get(), $obj->id);
+
+        $editText = CompanyLogRepository::getDiffText($role);
+        CompanyLogRepository::addLog('role_manage','edit_role', $editText);
+
         return $this->apiReturnJson(0);
     }
     public function destroy($id)
     {
         $model = $this->getModel()->find($id);
         if($model->id!=1){
+            CompanyLogRepository::addLog('role_manage','delete_role',"删除职位 $model->name ");
+
             $model->delete();
             return responseZK(0);
         }else{
