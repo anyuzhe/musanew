@@ -47,12 +47,20 @@ class CompanyLogsController extends ApiBaseCommonController
         $data->load('user');
         $moduleArr = CompanyPermission::where('level','<',3)->get()->keyBy('key')->toArray();
         $operationArr = CompanyPermission::where('level',3)->get()->groupBy('pid')->toArray();
+        $operationArr2 = CompanyPermission::where('level',2)->get()->groupBy('pid')->toArray();
         foreach ($data as &$v) {
             if(isset($moduleArr[$v['module']])){
                 $v->module_text = $moduleArr[$v['module']]['display_name'];
-                foreach ($operationArr[$moduleArr[$v['module']]['id']] as $item) {
-                    if($item['key']==$v['operation'])
-                        $v->operation_text = $item['display_name'];
+                if(isset($operationArr[$moduleArr[$v['module']]['id']])){
+                    foreach ($operationArr[$moduleArr[$v['module']]['id']] as $item) {
+                        if($item['key']==$v['operation'])
+                            $v->operation_text = $item['display_name'];
+                    }
+                }elseif (isset($operationArr2[$moduleArr[$v['module']]['id']])){
+                    foreach ($operationArr2[$moduleArr[$v['module']]['id']] as $item) {
+                        if($item['key']==$v['operation'])
+                            $v->operation_text = $item['display_name'];
+                    }
                 }
             }
         }

@@ -801,8 +801,12 @@ class CompaniesController extends ApiBaseCommonController
         if(!$end_date)
             $end_date = date('Y-m-d 23:59:59');
         if($this->request->type ==1){
+            CompanyLogRepository::addLog('data_analysis','third_party_analysis',"查看第三方数据统计");
+
             $data = app()->build(StatisticsRepository::class)->getCompanyDataStatistics($this->getCurrentCompany(),$start_date,$end_date);
         }else{
+            CompanyLogRepository::addLog('data_analysis','third_party_analysis',"查看需求方数据统计");
+
             $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatistics($this->getCurrentCompany(),$start_date,$end_date);
         }
         return $this->apiReturnJson(0,$data);
@@ -854,8 +858,10 @@ class CompaniesController extends ApiBaseCommonController
             $end_date = date('Y-m-d 23:59:59');
         $company = Company::find($company_id);
         if($this->request->type ==1){
+
             $data = app()->build(StatisticsRepository::class)->getCompanyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
         }else{
+
             $data = app()->build(StatisticsRepository::class)->getCompanyThirdPartyDataStatisticsDetail($this->getCurrentCompany(), $company_id,$start_date,$end_date);
         }
         $res = app()->build(StatisticsRepository::class)->getExcelDetailData($data);
