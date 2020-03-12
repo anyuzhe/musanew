@@ -240,7 +240,6 @@ class EntrustsController extends ApiBaseCommonController
         $data = $request->all();
         $job = new Job();
         $job->fill($data);
-        $id = $job->id;
         $job->creator_id = $this->getUser()->id;
 
         if(!$job->company_id){
@@ -269,6 +268,7 @@ class EntrustsController extends ApiBaseCommonController
 //                $job->district_id = $data['area'][2];
 //        }
         $job->save();
+        $id = $job->id;
 
         $skills = isset($data['skills'])?$data['skills']:null;
         $necessarySkills = isset($data['necessary_skills'])?$data['necessary_skills']:null;
