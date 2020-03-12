@@ -89,4 +89,9 @@ class Job extends Model
     {
         return 'Y-m-d H:i:s';
     }
+
+    public function resumeGradeSetting()
+    {
+        return $this->belongsTo('App\Models\CompanyResumeGradeSetting', 'resume_grade_setting_id');
+    }
 }

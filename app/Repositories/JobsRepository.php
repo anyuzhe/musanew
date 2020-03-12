@@ -16,6 +16,7 @@ class JobsRepository
         $data->load('optionalSkills');
         $data->load('address');
         $data->load('sourceCompany');
+        $data->load('resumeGradeSetting');
         $area_ids = [];
         $depIds = [];
         foreach ($data as $v) {
@@ -75,6 +76,7 @@ class JobsRepository
         $data->tests;
         $data->address;
         $data->sourceCompany;
+        $data->resumeGradeSetting;
         getOptionsText($data);
         if($data->department){
             if($data->department->parent){
