@@ -119,7 +119,7 @@ class EntrustsController extends ApiBaseCommonController
     //列表排序
     protected function modelGetSort(&$model)
     {
-        $model = $model->orderByRaw("FIELD(status, 2, 0,1) desc")->orderBy('updated_at', 'desc');
+        $model = $model->orderByRaw("FIELD(status, 6, 0,1) desc")->orderBy('updated_at', 'desc');
 //        $model = $model->orderByRaw("FIELD(status, 1, 0, 2, -1, -2, -3)")->orderBy('updated_at', 'desc');
 //        $model = $model->orderByRaw("FIELD(status, ?)", [1,0,2,-1,-2])->orderBy('created_at', 'desc');
         return $model;
