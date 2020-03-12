@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Company;
 use App\Models\CompanyResumeGradeSetting;
 use App\Models\CompanySetting;
+use App\Repositories\CompanyLogRepository;
 use App\Repositories\CompanySettingRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
@@ -22,6 +23,7 @@ class CompanyResumeGradeSettingsController extends ApiBaseCommonController
     {
         $company = $this->getCurrentCompany();
         $model = $model->where('company_id', $company->id);
+        $model = $model->where('status', 1);
         $has = CompanyResumeGradeSetting::where('company_id', $company->id)->count();
         if(!$has){
 //        user_info 个人信息
@@ -51,6 +53,8 @@ class CompanyResumeGradeSettingsController extends ApiBaseCommonController
 
     public function _after_get(&$settings)
     {
+        CompanyLogRepository::addLog('recruit_manage','resume_grade_setting_manage',"查看简历评分设置列表 第".request('pagination', 1)."页");
+
         foreach ($settings as &$setting) {
             $setting->value = json_decode($setting->value, 256);
         }
@@ -60,6 +64,7 @@ class CompanyResumeGradeSettingsController extends ApiBaseCommonController
 
     public function _after_find(&$data)
     {
+
         $data->value = json_decode($data->value, 256);
     }
 
@@ -82,6 +87,7 @@ class CompanyResumeGradeSettingsController extends ApiBaseCommonController
             'optional_skills'=>$optional_skills,
         ], 256);
         $setting->save();
+        CompanyLogRepository::addLog('recruit_manage','resume_grade_setting_manage',"新增 ". $setting->name);
 
         return $this->apiReturnJson(0);
     }
@@ -108,6 +114,18 @@ class CompanyResumeGradeSettingsController extends ApiBaseCommonController
             ], 256);
         }
         $setting->save();
+        CompanyLogRepository::addLog('recruit_manage','resume_grade_setting_manage',"修改 ". $setting->name);
+
         return $this->apiReturnJson(0);
+    }
+
+    public function destroy($id)
+    {
+        $model = $this->getModel();
+        $model->status = 0;
+        $model->save();
+        CompanyLogRepository::addLog('recruit_manage','resume_grade_setting_manage',"删除 ". $model->name);
+
+        return responseZK(0);
     }
 }

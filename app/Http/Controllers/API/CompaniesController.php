@@ -711,6 +711,8 @@ class CompaniesController extends ApiBaseCommonController
                 ]);
             }
         }
+        CompanyLogRepository::addLog('company_user_manage','edit_user',"设置 ". $user->info->realname. '权限范围');
+
         return $this->apiReturnJson(0);
     }
 
