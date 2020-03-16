@@ -192,7 +192,7 @@ class RecruitResumesRepository
                 $_entrust->status = 2;
                 $_entrust->end_at = date('Y-m-d H:i:s');
                 $_entrust->save();
-                $recruitRepository->generateEndLog($entrust->recruit, $_entrust);
+                $recruitRepository->generateEndLog($_entrust->recruit, $_entrust);
             }
 
             $recruit->end_at = date('Y-m-d H:i:s');

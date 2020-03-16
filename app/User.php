@@ -27,8 +27,7 @@ class User extends \TCG\Voyager\Models\User
      * @var array
      */
     protected $hidden = [
-        'password', '
-        ',
+        'password', 'remember_token',
     ];
 
     /**

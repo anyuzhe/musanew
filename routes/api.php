@@ -297,12 +297,15 @@ $router->any('/user/activate', 'API\LoginController@activate');
 $router->post('/admin/new/login', 'API\Admin\LoginController@login');
 $router->post('/admin/new/logout', 'API\Admin\LoginController@logout');
 
+$router->resource('/admins', 'API\Admin\AdminsController');
 $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use ($router) {
     $router->get('/info', 'API\Admin\AdminsController@info');
     $router->get('/auth/list', 'API\Admin\AdminsController@authList');
     //图片上传
     $router->post('/upload', 'Voyager\VoyagerController@uploadNew');
 
+    //管理员
+    $router->resource('/admins', 'API\Admin\AdminsController');
     //菜单
     $router->resource('/menus', 'API\Admin\MenusController');
     //集团
