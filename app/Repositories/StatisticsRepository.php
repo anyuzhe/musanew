@@ -435,6 +435,7 @@ class StatisticsRepository
         getCompanyArray($companyArray,$data,'recommend_resume');
         getCompanyArray($companyArray,$data,'invite_interview');
         getCompanyArray($companyArray,$data,'interviewing');
+        getCompanyArray($companyArray,$data,'interview_pass');
         getCompanyArray($companyArray,$data,'hire');
         getCompanyArray($companyArray,$data,'entry');
         $title = [''];
@@ -449,6 +450,8 @@ class StatisticsRepository
         getRowData($data['invite_interview']['data'],$companyArray,$invite_interview);
         $interviewing = ['面试中'];
         getRowData($data['interviewing']['data'],$companyArray,$interviewing);
+        $interview_pass = ['面试通过'];
+        getRowData($data['interviewing']['data'],$companyArray,$interview_pass);
         $hire = ['录用'];
         getRowData($data['hire']['data'],$companyArray,$hire);
         $entry = ['入职'];
