@@ -102,6 +102,7 @@ class CompaniesController extends ApiBaseCommonController
             $v->ourJobCount = Recruit::whereIn('id', Entrust::where('third_party_id',$v->id)->where('company_id',$company->id)->whereNotIn('status', [0,-2])->pluck('company_job_recruit_id')->toArray())->count();;
             $v->currentRecruitCount = $_current_need_count?$_current_need_count:0;
 
+            $v->departments = app()->build(CompaniesRepository::class)->getDepartmentTree($v->id);
             $v->logo_url = getCompanyLogo($v->logo);
         }
         unset($v);
