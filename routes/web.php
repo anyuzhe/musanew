@@ -50,6 +50,7 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    dd(TCG\Voyager\Models\Role::all());
     $job = Job::find(1);
     $job->name=22;
     $job->code=33;

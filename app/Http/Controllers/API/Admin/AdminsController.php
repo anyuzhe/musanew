@@ -21,7 +21,9 @@ use Illuminate\Support\Facades\Log;
 class AdminsController extends ApiBaseCommonController
 {
     protected $model_name = \App\User::class;
-
+    protected $search_field_array = [
+      ['name','like']
+    ];
     public function __construct(Request $request)
     {
         parent::__construct($request);

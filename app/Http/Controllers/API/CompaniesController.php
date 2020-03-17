@@ -830,7 +830,7 @@ class CompaniesController extends ApiBaseCommonController
         }
         $res = app()->build(StatisticsRepository::class)->getExcelData($data);
         $excelHelper = new ExcelHelper();
-        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],'数据', "{$start_date}-{$end_date}招聘数据");
+        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],'数据', "{$start_date}-{$end_date}招聘");
     }
 
     public function dataStatisticsDetail()

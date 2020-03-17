@@ -306,6 +306,7 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
 
     //管理员
     $router->resource('/admins', 'API\Admin\AdminsController');
+    $router->resource('/roles', 'API\Admin\RolesController');
     //菜单
     $router->resource('/menus', 'API\Admin\MenusController');
     //集团
