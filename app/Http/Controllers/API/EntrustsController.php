@@ -342,10 +342,15 @@ class EntrustsController extends ApiBaseCommonController
 
         $new = Recruit::create($recruit->toArray());
 
+        if(isset($data['leading_id']) && $data['leading_id']){
+            $leading_id = $data['leading_id'];
+        }else{
+            $leading_id = $entrust->leading_id;
+        }
         $new->company_id = $this->getCurrentCompany()->id;
         $new->job_id = $job->id;
         $new->is_public = $data['is_public'];
-        $new->leading_id = $data['leading_id'];
+        $new->leading_id = $leading_id;
         $new->creator_id = $this->getUser()->id;
         $new->true_created_at = date('Y-m-d H:i:s');
         $new->wait_entry_num = 0;
