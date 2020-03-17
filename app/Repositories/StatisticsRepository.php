@@ -457,7 +457,7 @@ class StatisticsRepository
         $entry = ['入职'];
         getRowData($data['entry']['data'],$companyArray,$entry);
         $excelData = [
-            $recommend_resume,$invite_interview,$interviewing,$hire,$entry
+            $recommend_resume,$invite_interview,$interviewing,$interview_pass,$hire,$entry
         ];
         return ['title'=>$title,'data'=>$excelData];
     }
