@@ -115,7 +115,11 @@
     </tr>
     <tr class="subTr">
         <td>最高学历</td>
-        <td>{!! $data['education_text'] !!}</td>
+        @if(isset($data['education_text']))
+            <td>{!! $data['education_text'] !!}</td>
+        @else
+            <td></td>
+        @endif
         <td>期望职位</td>
         <td colspan="2">{!! $data['hope_job_text'] !!}</td>
     </tr>
