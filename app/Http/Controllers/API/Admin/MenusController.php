@@ -21,6 +21,6 @@ class MenusController extends ApiBaseCommonController
     public function index(Request $request)
     {
         $admin = $this->getAdmin();
-        return $this->apiReturnJson(0, $admin->getFrontMenuList());
+        return $this->apiReturnJson(0, $admin->getAllFrontMenuList());
     }
 }

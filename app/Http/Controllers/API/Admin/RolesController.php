@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Admin;
 
+use App\Models\Admin\Role;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
 use App\Models\Course;
@@ -17,7 +18,6 @@ use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use TCG\Voyager\Models\Role;
 
 class RolesController extends ApiBaseCommonController
 {
@@ -38,6 +38,21 @@ class RolesController extends ApiBaseCommonController
 
     public function _after_find(&$data)
     {
+        $data->menu_ids = $data->frontMenus->flatten()->pluck('id')->unique()->toArray();
+    }
 
+
+    public function afterStore($obj, $data)
+    {
+        $menu_ids = $this->request->get('menu_ids');
+        $obj->frontMenus()->sync($menu_ids);
+        return $this->apiReturnJson(0);
+    }
+
+    public function afterUpdate($id, $data, $obj)
+    {
+        $menu_ids = $this->request->get('menu_ids');
+        $obj->frontMenus()->sync($menu_ids);
+        return $this->apiReturnJson(0);
     }
 }

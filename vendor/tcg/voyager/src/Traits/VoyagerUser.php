@@ -2,6 +2,7 @@
 
 namespace TCG\Voyager\Traits;
 
+use App\Models\Admin\Role;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use TCG\Voyager\Facades\Voyager;
 
@@ -15,7 +16,7 @@ trait VoyagerUser
      */
     public function role()
     {
-        return $this->belongsTo(Voyager::modelClass('Role'));
+        return $this->belongsTo(Role::class);
     }
 
     /**
@@ -23,7 +24,7 @@ trait VoyagerUser
      */
     public function roles()
     {
-        return $this->belongsToMany(Voyager::modelClass('Role'), 'user_roles');
+        return $this->belongsToMany(Role::class, 'user_roles');
     }
 
     /**
@@ -32,8 +33,16 @@ trait VoyagerUser
     public function roles_all()
     {
         $this->loadRolesRelations();
-
-        return collect([$this->role])->merge($this->roles);
+        if($this->role){
+            foreach ($this->roles as $role) {
+                if($this->role->id==$role->id){
+                    return $this->roles;
+                }
+            }
+            return collect([$this->role])->merge($this->roles);
+        }else{
+            return $this->roles;
+        }
     }
 
     /**

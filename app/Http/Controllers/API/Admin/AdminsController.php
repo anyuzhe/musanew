@@ -35,7 +35,7 @@ class AdminsController extends ApiBaseCommonController
         return $this->apiReturnJson(0, [
             'info'=>$admin,
             'menu_list'=>$admin->getFrontMenuList(),
-            'permissions'=>$admin->permissions()->pluck('front_key')->unique()->values()->toArray(),
+            'permissions'=>$admin->frontPermissions(),
         ]);
     }
 
@@ -49,6 +49,7 @@ class AdminsController extends ApiBaseCommonController
         }
         foreach ($data as &$v) {
             $v->roles =$v->roles_all;
+            $v->role_names = implode(', ', $v->roles_all->pluck('display_name')->toArray());
             unset($v->roles_all);
         }
         return $data;
@@ -56,6 +57,7 @@ class AdminsController extends ApiBaseCommonController
 
     public function _after_find(&$data)
     {
+        $data->role_ids = $data->roles_all()->pluck('id')->toArray();
         $_data = $data->toArray();
         $_data['roles'] = $data->roles_all();
         unset($_data['settings']);
@@ -66,5 +68,19 @@ class AdminsController extends ApiBaseCommonController
     {
         $admin = $this->getAdmin();
         return $this->apiReturnJson(0,$admin);
+    }
+
+    public function afterStore($obj, $data)
+    {
+        $role_ids = $this->request->get('role_ids');
+        $obj->roles()->sync($role_ids);
+        return $this->apiReturnJson(0);
+    }
+
+    public function afterUpdate($id, $data, $obj)
+    {
+        $role_ids = $this->request->get('role_ids');
+        $obj->roles()->sync($role_ids);
+        return $this->apiReturnJson(0);
     }
 }
