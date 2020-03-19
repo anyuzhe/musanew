@@ -62,7 +62,12 @@ class SkillsRepository
         foreach ($tree as &$item) {
             $item['sort'] = $level1_sort;
             if(isset($item['id'])){
-                SkillCategory::where('id',$item['id'])->update($item);
+                SkillCategory::where('id',$item['id'])->update([
+                        'category_name'=>$item['category_name'],
+                        'pid'=>$item['pid'],
+                        'sort'=>$item['sort'],
+                        'level'=>$item['level'],
+                    ]);
                 $has_cate_ids[] = $item['id'];
                 $itemObj = null;
             }else{
@@ -78,7 +83,12 @@ class SkillsRepository
                     $level2['sort'] = $level2_sort;
                     $level2['pid'] = $pid;
                     if(isset($level2['id'])){
-                        SkillCategory::where('id',$level2['id'])->update($level2);
+                        SkillCategory::where('id',$level2['id'])->update([
+                            'category_name'=>$level2['category_name'],
+                            'pid'=>$level2['pid'],
+                            'sort'=>$level2['sort'],
+                            'level'=>$level2['level'],
+                        ]);
                         $item2Obj = null;
                         $has_cate_ids[] = $level2['id'];
                     }else{
@@ -96,7 +106,12 @@ class SkillsRepository
                             $skill['category_l1_id'] = $pid;
                             $skill['category_l2_id'] = $p2id;
                             if(isset($skill['id'])){
-                                Skill::where('id',$skill['id'])->update($skill);
+                                Skill::where('id',$skill['id'])->update([
+                                    'name'=>$skill['name'],
+                                    'category_l1_id'=>$skill['category_l1_id'],
+                                    'sort'=>$skill['sort'],
+                                    'category_l2_id'=>$skill['category_l2_id'],
+                                ]);
                                 $has_skill_ids[] = $skill['id'];
                             }else{
                                 $skillObj = Skill::create($skill);
