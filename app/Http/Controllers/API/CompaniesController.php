@@ -235,6 +235,8 @@ class CompaniesController extends ApiBaseCommonController
     public function getCurrentInfo()
     {
         $company = $this->getCurrentCompany();
+        if(!$company)
+            return $this->apiReturnJson(9999,null,'没有当前公司');
 
         CompanyLogRepository::addLog('basics_manage','show_basics', '查看企业信息');
 
