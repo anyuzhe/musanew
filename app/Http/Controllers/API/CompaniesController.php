@@ -830,7 +830,7 @@ class CompaniesController extends ApiBaseCommonController
         }
         $res = app()->build(StatisticsRepository::class)->getExcelData($data);
         $excelHelper = new ExcelHelper();
-        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],'数据', "{$start_date}-{$end_date}招聘");
+        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],"{$start_date}-{$end_date}招聘", "{$start_date}-{$end_date}招聘");
     }
 
     public function dataStatisticsDetail()
@@ -869,7 +869,7 @@ class CompaniesController extends ApiBaseCommonController
         }
         $res = app()->build(StatisticsRepository::class)->getExcelDetailData($data);
         $excelHelper = new ExcelHelper();
-        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],'数据',"{$start_date}-{$end_date} {$company->company_alias}职位招聘数据");
+        $excelHelper->dumpExcel(array_values($res['title']),$res['data'],"{$start_date}-{$end_date} {$company->company_alias}职位招聘数据","{$start_date}-{$end_date} {$company->company_alias}职位招聘数据");
     }
 
     public function thirdPartyStatistics()
