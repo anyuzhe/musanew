@@ -17,7 +17,6 @@ class CompanyResumeGradeSettingsController extends ApiBaseCommonController
 {
     protected $model_name = CompanyResumeGradeSetting::class;
     protected $search_field_array = [
-      ['status','=']
     ];
     public function authLimit(&$model)
     {
