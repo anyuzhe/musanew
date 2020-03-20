@@ -180,6 +180,10 @@ class CompaniesController extends ApiBaseCommonController
         $company->roles = CompanyRole::where('id','>',1)->where(function ($query)use($company){
             $query->where('company_id', $company->id)->orWhereNull('company_id');
         })->get();
+        $company->roles = CompanyRole::where('company_id', $company->id)->get();
+//        $company->roles = CompanyRole::where('id','>',1)->where(function ($query)use($company){
+//            $query->where('company_id', $company->id)->orWhereNull('company_id');
+//        })->get();
     }
 
 
