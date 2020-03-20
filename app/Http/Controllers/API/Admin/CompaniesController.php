@@ -177,6 +177,9 @@ class CompaniesController extends ApiBaseCommonController
             $natures[] = 'is_third_party';
         };
         $company->natures = $natures;
+        $company->roles = CompanyRole::where('id','>',1)->where(function ($query)use($company){
+            $query->where('company_id', $company->id)->orWhereNull('company_id');
+        })->get();
     }
 
 
