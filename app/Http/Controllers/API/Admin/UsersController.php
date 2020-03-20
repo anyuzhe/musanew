@@ -114,12 +114,11 @@ class UsersController extends ApiBaseCommonController
         $data['info'] = $info;
     }
 
-
-//    public function destroy($id)
-//    {
-//        $model = $this->getModel()->find($id);
-//        $model->status = -1;
-//        $model->save();
-//        return responseZK(0);
-//    }
+    public function destroy($id)
+    {
+        $model = $this->getModel()->find($id);
+        $model->status = -1;
+        $model->save();
+        return responseZK(0);
+    }
 }

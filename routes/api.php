@@ -343,8 +343,13 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     $router->put('/recruit/resumes/{id}', 'API\Admin\RecruitResumesController@update');
     $router->put('/recruit/resumes/log/{id}', 'API\Admin\RecruitResumesController@updateLog');
     //招聘下的-简历修改
-    $router->get('/company/{id}/users', 'API\Admin\CompaniesController@getUsers');
     $router->get('/recruitResumes/{id}/users', 'API\Admin\RecruitResumesController@getUsers');
+
+    //公司下的员工列表
+    $router->get('/company/{id}/users', 'API\Admin\CompaniesController@getUsers');
+    $router->get('/company/{id}/users/{user_id}', 'API\Admin\CompaniesController@userShow');
+    $router->post('/company/{id}/users', 'API\Admin\CompaniesController@storeUser');
+    $router->post('/company/{id}/users/{user_id}', 'API\Admin\CompaniesController@updateUser');
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表

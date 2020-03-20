@@ -4,13 +4,18 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Models\Area;
 use App\Models\Company;
+use App\Models\CompanyAddress;
 use App\Models\CompanyRole;
 use App\Models\CompanyUser;
+use App\Models\CompanyUserRole;
 use App\Models\Conglomerate;
 use App\Models\UserBasicInfo;
 use App\Repositories\CompaniesRepository;
+use App\Repositories\CompanyLogRepository;
+use App\Repositories\UserRepository;
 use App\User;
 use App\ZL\Controllers\ApiBaseCommonController;
+use Illuminate\Http\Request;
 
 class CompaniesController extends ApiBaseCommonController
 {
@@ -214,4 +219,119 @@ class CompaniesController extends ApiBaseCommonController
         return $this->apiReturnJson(0,$data);
     }
 
+    public function userShow($id,$user_id)
+    {
+        $user = \App\Models\User::find($user_id);
+        $company = Company::find($id);
+        $info = UserBasicInfo::where('user_id', $user_id)->first();
+        $companyUser = CompanyUser::where('company_id', $company->id)->where('user_id', $user_id)->first();
+
+        if($companyUser->department && $companyUser->department->level==1){
+            $department_ids = [$companyUser->department_id];
+            $department_name = $companyUser->department->name;
+        }elseif($companyUser->department && $companyUser->department->level==2){
+            $department_ids = [$companyUser->department->parent->id,$companyUser->department_id];
+            $department_name = $companyUser->department->parent->name.'-'.$companyUser->department->name;
+        }else{
+            $department_ids = [];
+            $department_name = null;
+        }
+        $_info = app()->build(UserRepository::class)->getInfo($user);
+        $info->department_name = $department_name;
+        $info->department_ids = $department_ids;
+        $info->start_work_at = $_info['start_work_at'];
+        $info->entry_at = $companyUser->entry_at;
+
+        $_roles = getCompanyRoles($company, $user);
+
+        $info->address_id = $companyUser->address_id;
+        if($info->address_id)
+            $info->address = CompanyAddress::find($info->address_id);
+
+        $role_ids = [];
+        $role_names = [];
+        $is_manager = 0;
+        foreach ($_roles as $role) {
+            if($role['id']==1)
+                $is_manager = 1;
+            $role_names[] = $role['name'];
+            $role_ids[] = $role['id'];
+        }
+        $info->role_ids = $role_ids;
+        $info->role_names = $role_names;
+        $info->is_manager = $is_manager;
+        $info->avatar_url = getPicFullUrl($info->avatar);
+        $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
+        $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
+
+//        CompanyLogRepository::addLog('company_user_manage','show_user',"查看详情 $info->realname");
+
+        return $this->apiReturnJson(0,$info);
+    }
+
+    public function storeUser($id, Request $request)
+    {
+        $department_id = $request->get('department_id');
+        $email = $request->get('email');
+        $roles =  $request->get('roles');
+        $company = Company::find($id);
+
+        $user = \App\Models\User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
+        if(!$user)
+            $user = User::where('email', $email)->where('deleted', 0)->first();
+        if($user && CompanyUser::where('company_id', $company->id)->where('user_id',$user->id)->first()){
+            return $this->apiReturnJson(9999, null, '该用户已在企业中, 请直接修改');
+        }
+        $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
+//        CompanyLogRepository::addLog('company_user_manage','add_user',"新增企业人员 $email");
+        return $this->apiReturnJson(0);
+    }
+
+    public function updateUser($id, $user_id, Request $request)
+    {
+        $department_id = $request->get('department_id');
+        if(is_array($department_id) && count($department_id)>0)
+            $department_id = $department_id[count($department_id)-1];
+        $email = $request->get('email');
+        $roles =  $request->get('roles');
+        $entry_at =  $request->get('entry_at');
+        $address_id =  $request->get('address_id');
+
+        $company = Company::find($id);
+        $user = \App\Models\User::find($user_id);
+
+        app()->build(UserRepository::class)->setInfo($user, $request->all());
+
+        if($user && $email &&$email!=$user->email){
+            if(User::where('id','!=',$user->id)->where('confirmed',1)->where('email', $user->email)->where('deleted',0)->first()){
+                return $this->apiReturnJson(9999, null, '该邮箱已经存在');
+            }
+            $user->email = $email;
+            $user->save();
+        }
+        if(!$email){
+            $email = $user->email;
+        }
+        $requestData = $request->all();
+        unset($requestData['department_id']);
+        $companyUser = CompanyUser::where('company_id', $company->id)->where('user_id', $user_id)->first();
+        $companyUser->fill($requestData);
+        $companyUser->save();
+        $user = app()->build(CompaniesRepository::class)->handleUser($company, $email, $roles, $department_id);
+
+//        CompanyLogRepository::addLog('company_user_manage','edit_user',"编辑企业人员 $email");
+        return $this->apiReturnJson(0);
+    }
+
+    public function deleteUser($id, $user_id, Request $request)
+    {
+        $user = User::find($user_id);
+//        CompanyLogRepository::addLog('company_user_manage','delete_user',"删除企业人员 $user->email");
+
+        $company = Company::find($id);
+        CompanyUser::where('user_id', $user_id)->where('company_id', $company->id)->delete();
+        CompanyUserRole::where('user_id', $user_id)->where('company_id', $company->id)->delete();
+
+        return $this->apiReturnJson(0);
+    }
 }
