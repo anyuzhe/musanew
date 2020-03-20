@@ -350,6 +350,7 @@ $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use
     $router->get('/company/{id}/users/{user_id}', 'API\Admin\CompaniesController@userShow');
     $router->post('/company/{id}/users', 'API\Admin\CompaniesController@storeUser');
     $router->post('/company/{id}/users/{user_id}', 'API\Admin\CompaniesController@updateUser');
+    $router->post('/company/users/delete/{user_id}', 'API\Admin\CompaniesController@deleteUser');
 });
 $router->get('/job/test', 'API\JobsController@getTest');//获取测试
 //获取地区列表
