@@ -1325,7 +1325,9 @@ class core_renderer extends renderer_base {
         $PAGE = $this->page;
         $COURSE = $this->page->course;
 
-        ob_start();
+//        ob_start();
+//        var_dump($layoutfile);die(1);
+        ## 需求 进入点1
         include($layoutfile);
         $rendered = ob_get_contents();
         ob_end_clean();

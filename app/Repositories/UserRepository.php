@@ -23,6 +23,11 @@ class UserRepository
         if(!$info)
             $info = UserBasicInfo::create(['user_id'=>$user->id, 'email'=>$user->email]);
 
+        if(!$info->email && $user->email){
+            $info->email = $user->email;
+            $info->save();
+        }
+
         if(!$user->firstname && $info->realname){
             $realname = $info->realname;
             User::where('id', $user->id)->update([

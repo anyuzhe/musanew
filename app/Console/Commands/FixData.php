@@ -6,6 +6,7 @@ use App\Models\CompanyPermission;
 use App\Models\Recruit;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
+use App\Models\UserBasicInfo;
 use Illuminate\Console\Command;
 
 class FixData extends Command
@@ -547,7 +548,8 @@ class FixData extends Command
                 $v->save();
             }
 
-        }elseif ($type==4){
+        }
+        elseif ($type==4){
 
             $t = CompanyPermission::where('level', 1)->get();
             foreach ($t as $v) {
@@ -565,6 +567,15 @@ class FixData extends Command
             foreach ($t as $v) {
                 $v->full_key = $v->parent->full_key.'.'.$v->key;
                 $v->save();
+            }
+        }
+        elseif ($type==5){
+            $infos = UserBasicInfo::all();
+            foreach ($infos as $info) {
+                if(!$info->email && $info->user->email){
+                    $info->email = $info->user->email;
+                    $info->save();
+                }
             }
         }
     }
