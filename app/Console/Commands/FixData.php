@@ -572,7 +572,7 @@ class FixData extends Command
         elseif ($type==5){
             $infos = UserBasicInfo::all();
             foreach ($infos as $info) {
-                if(!$info->email && $info->user->email){
+                if(!$info->email && $info->user && $info->user->email){
                     $info->email = $info->user->email;
                     $info->save();
                 }
