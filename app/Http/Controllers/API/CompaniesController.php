@@ -726,9 +726,7 @@ class CompaniesController extends ApiBaseCommonController
         $roles =  $request->get('roles');
         $company = $this->getCurrentCompany();
 
-        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
-        if(!$user)
-            $user = User::where('email', $email)->where('deleted', 0)->first();
+        $user = UserRepository::getUserByEmail($email);
         if($user && CompanyUser::where('company_id', $company->id)->where('user_id',$user->id)->first()){
             return $this->apiReturnJson(9999, null, '该用户已在企业中, 请直接修改');
         }
@@ -1261,9 +1259,7 @@ class CompaniesController extends ApiBaseCommonController
             return $this->apiReturnJson(9999,null,'正在申请变更中');
         }
 
-        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
-        if(!$user)
-            $user = User::where('email', $email)->where('deleted', 0)->first();
+        $user = UserRepository::getUserByEmail($email);
         if($user){
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company, true));
         }else{

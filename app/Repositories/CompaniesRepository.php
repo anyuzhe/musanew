@@ -163,9 +163,8 @@ class CompaniesRepository
 
     public function handleManger($company, $email)
     {
-        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
-        if(!$user)
-            $user = User::where('email', $email)->where('deleted', 0)->first();
+
+        $user = UserRepository::getUserByEmail($email);
         if($user){
             $has = $user->companies()->where('company_id', $company->id)->first();
             if($has){
@@ -185,9 +184,8 @@ class CompaniesRepository
 
     public function handleUser($company, $email, $roleIds=[], $department_id=null)
     {
-        $user = User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
-        if(!$user)
-            $user = User::where('email', $email)->where('deleted', 0)->first();
+
+        $user = UserRepository::getUserByEmail($email);
         if($user){
             $has = $user->companies()->where('company_id', $company->id)->first();
             if($has){

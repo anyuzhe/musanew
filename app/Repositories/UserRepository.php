@@ -296,4 +296,12 @@ class UserRepository
             }
         }
     }
+
+    public static function getUserByEmail($email)
+    {
+        $user = \App\Models\User::where('email', $email)->where('confirmed', 1)->where('deleted', 0)->first();
+        if(!$user)
+            $user = \App\Models\User::where('email', $email)->where('deleted', 0)->first();
+        return $user;
+    }
 }
