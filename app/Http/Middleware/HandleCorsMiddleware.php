@@ -16,8 +16,8 @@ class HandleCorsMiddleware
      */
     public function handle($request, Closure $next)
     {
-        dump($request->getMethod());
-        dd($request);
+//        dump($request->getMethod());
+//        dd($request);
         if($request->getMethod() === 'OPTIONS'){
 
             $response = new Response();
