@@ -297,7 +297,6 @@ $router->any('/user/activate', 'API\LoginController@activate');
 $router->post('/admin/new/login', 'API\Admin\LoginController@login');
 $router->post('/admin/new/logout', 'API\Admin\LoginController@logout');
 
-$router->resource('/admins', 'API\Admin\AdminsController');
 $router->group(['middleware' => 'admin.api', 'prefix'=>'admin'], function () use ($router) {
     $router->get('/info', 'API\Admin\AdminsController@info');
     $router->get('/auth/list', 'API\Admin\AdminsController@authList');
