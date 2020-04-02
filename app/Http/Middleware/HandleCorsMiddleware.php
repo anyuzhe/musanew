@@ -30,7 +30,8 @@ class HandleCorsMiddleware
             }else{
                 $response->headers->set('Access-Control-Allow-Origin', '*');
             }
-
+            dump($request->getMethod());
+            dd($request);
             $response->headers->set('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE, PATCH, OPTIONS");
             $response->headers->set('Access-Control-Allow-Headers', 'X-Token,Token,token,x-requested-with,content-type,session-id,remember-token,x-csrf-token');
 

@@ -238,7 +238,10 @@ class EntrustsController extends ApiBaseCommonController
     public function subcontract(Request $request)
     {
         $data = $request->all();
-        $job = new Job();
+        ## 判断是否已有job 不需要重复新建 只需要更新一下
+        $job = Job::where('code',$data['code'])->first();
+        if(!$job)
+            $job = new Job();
         $job->fill($data);
         $job->creator_id = $this->getUser()->id;
 
