@@ -43,38 +43,38 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
 ?>
 
 <?php if($PAGE->theme->settings->socials_position==1) { ?>
-    	<div class="container-fluid socials-header"> 
+    	<div class="container-fluid socials-header">
     	<?php require_once(dirname(__FILE__).'/socials.php');?>
         </div>
 <?php
 } ?>
 
-<header id="page-header" class="clearfix">              	
-		<?php 
+<header id="page-header" class="clearfix">
+		<?php
 			if ($PAGE->theme->settings->page_centered_logo==0) {require_once(dirname(__FILE__).'/header_var1.php');}
 			else {require_once(dirname(__FILE__).'/header_var2.php');}
-		?>               
+		?>
 </header>
 <header class="navbar" <?php if (($PAGE->theme->settings->headercolor != "#ffffff") || (!empty($PAGE->theme->settings->header_background))) { ?> style="padding: 0;" <?php } ?>>
     <nav class="navbar-inner">
         <div class="container-fluid">
             <?php
-                if ($home_button == 'shortname') { 
-                    $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.$SITE->shortname.'</a>'; 
+                if ($home_button == 'shortname') {
+                    $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.$SITE->shortname.'</a>';
                 }
-                else if ($home_button == 'home') { 
-                    $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.get_string('home').'</a>'; 
+                else if ($home_button == 'home') {
+                    $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.get_string('home').'</a>';
                 }
-                else if ($home_button == 'frontpagedashboard') { 
+                else if ($home_button == 'frontpagedashboard') {
                     if (isloggedin()) {
-                        $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.get_string('mymoodle', 'admin').'</a>'; 
+                        $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.get_string('mymoodle', 'admin').'</a>';
                     }
                     else {
-                        $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.get_string('frontpage', 'admin').'</a>'; 
+                        $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.get_string('frontpage', 'admin').'</a>';
                     }
                 }
                 else { // Fallback, should not happen
-                    $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.$SITE->shortname.'</a>'; 
+                    $home_button_string = '<a class="brand" href="'.$CFG->wwwroot.'">'.$SITE->shortname.'</a>';
                 }
                 echo $home_button_string;
             ?>
@@ -88,7 +88,7 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
                 <ul class="nav pull-right">
                     <li><?php echo $OUTPUT->page_heading_menu(); ?></li>
                 </ul>
-                
+
                 <?php
 				$moodle_release = $CFG->version;
 				if ($moodle_release > 2015111610) {
@@ -96,15 +96,20 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
 						$moodle_global_search = 1;
 					}
 				}?>
-                
+
                 <?php if (($searchbox==0) OR ($searchbox==1 AND (isloggedin() AND !isguestuser()))) { ?>
                 <form id="search" action="<?php if ($moodle_global_search) {echo $CFG->wwwroot.'/search/index.php';} else {echo $CFG->wwwroot.'/course/search.php';} ?>" >
-                	<label for="coursesearchbox" class="lambda-sr-only"><?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?></label>						
-					<input id="coursesearchbox" type="text" onFocus="if(this.value =='<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>' ) this.value=''" onBlur="if(this.value=='') this.value='<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>'" value="<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>" <?php if ($moodle_global_search) {echo 'name="q"';} else {echo 'name="search"';} ?> >
-					<button type="submit"><span class="lambda-sr-only"><?php echo get_string('submit'); ?></span></button>						
+                	<label for="coursesearchbox" class="lambda-sr-only"><?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?></label>
+<!--                    <select name="tag">-->
+<!--                        <option value="1">标签1</option>-->
+<!--                        <option value="3">标签1</option>-->
+<!--                        <option value="2">标签1</option>-->
+<!--                    </select>-->
+                    <input id="coursesearchbox" type="text" onFocus="if(this.value =='<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>' ) this.value=''" onBlur="if(this.value=='') this.value='<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>'" value="<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>" <?php if ($moodle_global_search) {echo 'name="q"';} else {echo 'name="search"';} ?> >
+					<button type="submit"><span class="lambda-sr-only"><?php echo get_string('submit'); ?></span></button>
 				</form>
                 <?php } ?>
-                
+
             </div>
         </div>
     </nav>

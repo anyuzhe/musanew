@@ -523,4 +523,5 @@ Route::get('/company/data/statistics/detail/excel/{type}', 'API\CompaniesControl
 Route::get('/company/thirdParty/statistics/excel', 'API\CompaniesController@thirdPartyStatisticsExcel');
 
 Route::get('/company/logs/excel', 'API\CompanyLogsController@exportExcel');
+Route::get('/company/recruit/excel', 'API\CompaniesController@DumpRecruitData');
 
