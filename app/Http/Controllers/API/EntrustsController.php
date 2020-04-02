@@ -239,7 +239,7 @@ class EntrustsController extends ApiBaseCommonController
     {
         $data = $request->all();
         ## 判断是否已有job 不需要重复新建 只需要更新一下
-        $job = Job::where('code',$data['code'])->first();
+        $job = Job::where('company_id', $this->getCurrentCompany()->id)->where('code',$data['code'])->first();
         if(!$job)
             $job = new Job();
         $job->fill($data);
