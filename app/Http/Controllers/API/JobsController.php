@@ -326,14 +326,17 @@ class JobsController extends ApiBaseCommonController
     {
         $id = $this->request->get('id');
         $code = $this->request->get('code');
+        $company_id = $this->request->get('company_id', null);
+        if(!$company_id)
+            $company_id = $this->getCurrentCompany()->id;
         if(!$code)
             return $this->apiReturnJson(9999, ['check'=>0]);
         if($id){
-            $has = Job::where('code', $code)->where('company_id',$this->getCurrentCompany()->id)->where('id', '!=', $id)->first();
+            $has = Job::where('code', $code)->where('company_id',$company_id)->where('id', '!=', $id)->first();
         }else{
-            $has = Job::where('code', $code)->where('company_id',$this->getCurrentCompany()->id)->first();
+            $has = Job::where('code', $code)->where('company_id',$company_id)->first();
         }
-        return $this->apiReturnJson($has?9999:1, ['check'=>$has?0:1]);
+        return $this->apiReturnJson(0, ['check'=>$has?0:1]);
     }
 
     public function destroy($id)

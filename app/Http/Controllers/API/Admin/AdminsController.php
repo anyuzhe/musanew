@@ -7,15 +7,16 @@ use App\Models\CompanyUser;
 use App\Models\Course;
 use App\Models\Resume;
 use App\Models\ResumeEducation;
-use App\Models\User;
 use App\Models\UserBasicInfo;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
 use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
+use App\User;
 use App\ZL\Controllers\ApiBaseCommonController;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class AdminsController extends ApiBaseCommonController
@@ -73,6 +74,10 @@ class AdminsController extends ApiBaseCommonController
     public function afterStore($obj, $data)
     {
         $role_ids = $this->request->get('role_ids');
+        if($data['password']){
+            $obj->password = Hash::make($data['password']);
+            $obj->save();
+        }
         $obj->roles()->sync($role_ids);
         return $this->apiReturnJson(0);
     }
@@ -80,6 +85,11 @@ class AdminsController extends ApiBaseCommonController
     public function afterUpdate($id, $data, $obj)
     {
         $role_ids = $this->request->get('role_ids');
+        if($data['password']){
+            $obj = User::find($id);
+            $obj->password = Hash::make($data['password']);
+            $obj->save();
+        }
         $obj->roles()->sync($role_ids);
         return $this->apiReturnJson(0);
     }
