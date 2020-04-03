@@ -53,9 +53,9 @@ class ClearRecruitData extends Command
      */
     public function handle()
     {
-//        Job::truncate();
-//        DB::connection('moodle')->table('job_test')->truncate();
-//        DB::connection('musa')->table('job_skill')->truncate();
+        Job::truncate();
+        DB::connection('moodle')->table('job_test')->truncate();
+        DB::connection('musa')->table('job_skill')->truncate();
 
         Entrust::truncate();
         Recruit::truncate();
