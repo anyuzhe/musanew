@@ -1229,7 +1229,7 @@ class CompaniesController extends ApiBaseCommonController
             $job_ids[] = $recruit['job']['id'];
         }
         $leads = UserBasicInfo::whereIn('user_id', $leadIds)->get()->keyBy('user_id')->toArray();
-//        $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
+        $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
         foreach ($recruits as &$recruit) {
             foreach ($recruit['entrusts'] as &$entrust) {
                 if(isset($leads[$entrust['leading_id']])){
@@ -1238,78 +1238,115 @@ class CompaniesController extends ApiBaseCommonController
                     $entrust['leading'] = null;
                 }
             }
-//            $recruit['job'] = $jobs[$recruit['job']['id']];
+            $recruit['job'] = $jobs[$recruit['job']['id']];
             $recruit['residue_num'] = $recruit['need_num'] - $recruit['done_num'] - $recruit['wait_entry_num'];
             $recruit['residue_num'] = $recruit['residue_num']>0?$recruit['residue_num']:0;
             $recruit['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($recruit);
         }
 
         $data =[];
+//        foreach ($recruits as $recruit) {
+//            $_data = [];
+//            $_data[] = $recruit['job']['name'];
+//            $_data[] = $recruit['company']['company_alias'];
+//            $_third_party = '';
+//            foreach ($recruit['entrusts'] as $entrust) {
+//                $_third_party.=$entrust['third_party']['company_alias'].',';
+//            }
+//            $_data[] = $_third_party;
+//            $_data[] = $recruit['leading']['realname'];
+//            $_data[] = $recruit['need_num'];
+//            $_data[] = $recruit['resume_num'];
+//            $_data[] = $recruit['done_num'];
+//            $_data[] = $recruit['wait_entry_num'];
+//            $_data[] = $recruit['residue_num'];
+//            $_data[] = $recruit['status_text'];
+//            $_data[] = $recruit['created_at'];
+//            $_data[] = '';
+//            $_data[] = '';
+//            $_resumes = RecruitResume::where('company_job_recruit_id', $recruit['id'])->get();
+//
+//            $_resumes->load('resume');
+//            $_resumes->load('thirdParty');
+//            $_resumes->load('company');
+//            $is_next = false;
+//            foreach ($_resumes as $_resume) {
+//                if($is_next){
+//                    $_data = ['','','','','','','','','','','','',''];
+//                }
+//
+//                $this->recruitResumesRepository->addFieldText($_resume);
+//                $_data[] = $_resume['resume']['name'];
+//                $_data[] = $_resume['status_str'];
+//                $_data[] = $_resume['resume_source_str'];
+//                $_data[] = $_resume['created_at'];
+//                $is_next = true;
+//                $data[] = $_data;
+//            }
+//            if(!$is_next)
+//                $data[] = $_data;
+//        }
+
+        $data =[];
         foreach ($recruits as $recruit) {
-            $_data = [];
-            $_data[] = $recruit['job']['name'];
-            $_data[] = $recruit['company']['company_alias'];
             $_third_party = '';
             foreach ($recruit['entrusts'] as $entrust) {
                 $_third_party.=$entrust['third_party']['company_alias'].',';
             }
-            $_data[] = $_third_party;
-            $_data[] = $recruit['leading']['realname'];
-            $_data[] = $recruit['need_num'];
-            $_data[] = $recruit['resume_num'];
-            $_data[] = $recruit['done_num'];
-            $_data[] = $recruit['wait_entry_num'];
-            $_data[] = $recruit['residue_num'];
-            $_data[] = $recruit['status_text'];
-            $_data[] = $recruit['created_at'];
-            $_data[] = '';
-            $_data[] = '';
             $_resumes = RecruitResume::where('company_job_recruit_id', $recruit['id'])->get();
 
             $_resumes->load('resume');
             $_resumes->load('thirdParty');
             $_resumes->load('company');
-            $is_next = false;
             foreach ($_resumes as $_resume) {
-                if($is_next){
-                    $_data = ['','','','','','','','','','','','',''];
-                }
-
                 $this->recruitResumesRepository->addFieldText($_resume);
+                $_data = [];
                 $_data[] = $_resume['resume']['name'];
+                $_data[] = $_resume['resume']['created_at'];
+                $_data[] = $recruit['job']['name'];
+                $_data[] = $recruit['job']['department']['full_name'];
+//                if(isset($_resume['third_party']) || isset($_resume['thirdParty']))
+//                    dd($_resume['thirdParty']);
+                $_data[] = $recruit['company']['company_alias']."/".(isset($_resume['thirdParty']['company_alias'])?$_resume['thirdParty']['company_alias']:'');
                 $_data[] = $_resume['status_str'];
-                $_data[] = $_resume['resume_source_str'];
                 $_data[] = $_resume['created_at'];
-                $is_next = true;
                 $data[] = $_data;
             }
-            if(!$is_next)
-                $data[] = $_data;
         }
 
         $title = [
-            '职位名称',
-            '企业',
-            '第三方企业',
-            '负责人',
-            '职位需求量',
-            '简历数量',
-            '已入职数量',
-            '待入职人数',
-            '剩余空缺',
-            '状态',
-            '发布时间',
-            '',
-            '简历：',
-            '名称',
-            '来源企业',
-            '状态',
-            '推送时间',
+            '姓名',
+            '简历上传时间',
+            '推荐岗位',
+            '推荐部门',
+            '来源',
+            '简历状态',
+            '简历推送时间',
         ];
+//        $title = [
+//            '职位名称',
+//            '企业',
+//            '第三方企业',
+//            '负责人',
+//            '职位需求量',
+//            '简历数量',
+//            '已入职数量',
+//            '待入职人数',
+//            '剩余空缺',
+//            '状态',
+//            '发布时间',
+//            '',
+//            '简历：',
+//            '名称',
+//            '来源企业',
+//            '状态',
+//            '推送时间',
+//        ];
 
         $excelHelper = new ExcelHelper();
 
-        $excelHelper->dumpExcel($title,$data,'招聘数据', "招聘数据");
+        $excelHelper->dumpExcel($title,$data,'简历数据备份', "简历数据备份");
+//        $excelHelper->dumpExcel($title,$data,'招聘数据', "招聘数据");
     }
 
     public function checkHasDateSearch($timeStr)
