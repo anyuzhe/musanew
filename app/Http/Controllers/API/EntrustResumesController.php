@@ -509,9 +509,11 @@ class EntrustResumesController extends ApiBaseCommonController
                 $obj->resume_file_name = $filename.'.'.$file->getClientOriginalExtension();
 
                 $obj->save();
-                DB::startTrans(); //行级锁必须在事务中才能生效
+
+                app('db')->beginTransaction();
                 $this->resumeRepository->companyAddHandle($obj, $request->all());
-                DB::commit();
+                app('db')->commit();
+
                 CompanyLogRepository::addLog('resume_manage','add_resume',"导入简历 ".$obj->name);
 
                 $this->_after_find($obj);
