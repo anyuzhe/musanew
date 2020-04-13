@@ -4,10 +4,12 @@ namespace App\Console\Commands;
 
 use App\Models\CompanyPermission;
 use App\Models\Recruit;
+use App\Models\RecruitResume;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
 use App\Models\UserBasicInfo;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class FixData extends Command
 {
@@ -16,7 +18,7 @@ class FixData extends Command
      *
      * @var string
      */
-    protected $signature = 'fix:data {type}';
+    protected $signature = 'fix:data {type} {--check}';
 
     /**
      * The console command description.
@@ -575,6 +577,31 @@ class FixData extends Command
                 if(!$info->email && $info->user && $info->user->email){
                     $info->email = $info->user->email;
                     $info->save();
+                }
+            }
+        }
+        elseif ($type==6){
+
+            $isCheck = $this->option('check');
+            if($isCheck)
+                $this->info('检查模式');
+            $recruits = Recruit::all();
+            foreach ($recruits as $recruit) {
+                $resume_num = RecruitResume::where('company_job_recruit_id', $recruit->id)->count();
+                if($resume_num!=$recruit->resume_num){
+                    if($isCheck){
+                        dump($resume_num);
+                        dump($recruit->resume_num);
+                        dd($recruit->id);
+                    }
+                    DB::connection('musa')->table('company_job_recruit')->where('id', $recruit->id)->update(['resume_num'=>$resume_num]);
+                    $entrusts = $recruit->entrusts;
+                    foreach ($entrusts as $entrust) {
+                        $resume_num = RecruitResume::where('company_job_recruit_id', $recruit->id)->where('company_job_recruit_entrust_id', $entrust->id)->count();
+                        if ($resume_num != $entrust->resume_num) {
+                            DB::connection('musa')->table('company_job_recruit_entrust')->where('id', $entrust->id)->update(['resume_num'=>$resume_num]);
+                        }
+                    }
                 }
             }
         }

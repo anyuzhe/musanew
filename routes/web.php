@@ -50,6 +50,8 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    $t = Recruit::lock('for update')->find(1);
+    dd($t);
     dd(TCG\Voyager\Models\Role::all());
     $job = Job::find(1);
     $job->name=22;

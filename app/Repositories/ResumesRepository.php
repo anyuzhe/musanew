@@ -15,6 +15,7 @@ use App\Models\ResumeProject;
 use App\Models\ResumeTrain;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
+use Illuminate\Support\Facades\DB;
 use mod_questionnaire\question\date;
 
 class ResumesRepository
@@ -530,11 +531,11 @@ class ResumesRepository
         $entrust = null;
         if(isset($data['recruit_id'])){
             $recruit_id = $data['recruit_id'];
-            $recruit = Recruit::find($recruit_id);
+            $recruit = Recruit::lock('for update')->find($recruit_id);
         }
         if(isset($data['entrust_id'])){
             $entrust_id = $data['entrust_id'];
-            $entrust = Entrust::find($entrust_id);
+            $entrust = Entrust::lock('for update')->find($entrust_id);
             if($entrust)
                 $recruit = $entrust->recruit;
         }

@@ -212,6 +212,7 @@ class EntrustResumesController extends ApiBaseCommonController
             $text.= ' '. $resume->name;
 
             if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $id)->where('type',3)->first()){
+                app('db')->rollBack();
                 return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
             }
             if($entrust_id){
@@ -284,6 +285,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 $recruit = Recruit::find($recruit_id);
 
                 if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $resume_id)->where('type',3)->first()){
+                    app('db')->rollBack();
                     return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
                 }
 
@@ -324,6 +326,7 @@ class EntrustResumesController extends ApiBaseCommonController
                 $entrust = Entrust::find($entrust_id);
                 $recruit = $entrust->recruit;
                 if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $resume_id)->where('type',3)->first()){
+                    app('db')->rollBack();
                     return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
                 }
 
@@ -506,9 +509,9 @@ class EntrustResumesController extends ApiBaseCommonController
                 $obj->resume_file_name = $filename.'.'.$file->getClientOriginalExtension();
 
                 $obj->save();
-
+                DB::startTrans(); //行级锁必须在事务中才能生效
                 $this->resumeRepository->companyAddHandle($obj, $request->all());
-
+                DB::commit();
                 CompanyLogRepository::addLog('resume_manage','add_resume',"导入简历 ".$obj->name);
 
                 $this->_after_find($obj);
