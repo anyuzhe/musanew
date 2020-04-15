@@ -290,6 +290,7 @@ class JobsController extends ApiBaseCommonController
                     $_id = app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
                     $skill_ids[] = $_id;
                 }
+                $_s = Skill::find($skill['skill_id']);
                 $editText.= $_s->name." {$skillLevelArr->get($skill['skill_level'])->text}, ";
             }
             if($hasF)
