@@ -238,8 +238,10 @@ class StatisticsRepository
                 $_department = $has_data_departments[$job->department_id];
             elseif($job->department_id && isset($departments[$job->department_id]))
                 $_department = $departments[$job->department_id];
-            else
+            else{
                 $_department = CompanyDepartment::find($job->department_id);
+                $_department = $_department?$_department->toArray():null;
+            }
 
             if($_department && !in_array($entrust->id, $has_entrust_ids)){
                 $recruit = $entrust->recruit;
@@ -330,6 +332,7 @@ class StatisticsRepository
 
                 if(!isset($other_data[$has_data_department['id']])){
                     $parent = CompanyDepartment::find($has_data_department['pid']);
+                    $parent = $parent?$parent->toArray():null;
                     $parent['value'] = 0;
                     $parent['child'] = [];
                 }else{
