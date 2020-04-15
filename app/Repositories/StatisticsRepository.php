@@ -230,9 +230,18 @@ class StatisticsRepository
         $entrusts->load('recruit');
         $has_entrust_ids = [];
         $all_resume_num = 0;
+        $has_data_departments = [];
         foreach ($entrusts as $entrust) {
             $job = $entrust->job;
-            if($job->department_id && isset($departments[$job->department_id]) && !in_array($entrust->id, $has_entrust_ids)){
+
+            if(isset($has_data_departments[$job->department_id]))
+                $_department = $has_data_departments[$job->department_id];
+            elseif($job->department_id && isset($departments[$job->department_id]))
+                $_department = $departments[$job->department_id];
+            else
+                $_department = CompanyDepartment::find($job->department_id);
+
+            if($_department && !in_array($entrust->id, $has_entrust_ids)){
                 $recruit = $entrust->recruit;
                 $company_job_recruit_resume_ids = RecruitResume::where('company_job_recruit_entrust_id', $entrust->id)->pluck('id')->toArray();
                 $_data = [
@@ -258,28 +267,38 @@ class StatisticsRepository
 
                 $all_resume_num += $_data['recommend_resume_num'];
 
-                if(!isset($departments[$job->department_id]['data'])){
-                    $departments[$job->department_id]['data'] = [];
+                if(!isset($_department['data'])){
+                    $_department['data'] = [];
                 }
-                if($departments[$job->department_id]['level']==1){
-                    $_data['department1_name'] = $departments[$job->department_id]['name'];
-                    $_data['department2_name'] = $departments[$job->department_id]['name'];
-                }elseif ($departments[$job->department_id]['level']==2){
-                    $_data['department2_name'] = $departments[$job->department_id]['name'];
+                if($_department['level']==1){
+                    $_data['department1_name'] = $_department['name'];
+                    $_data['department2_name'] = $_department['name'];
+                }elseif ($_department['level']==2){
+                    $_data['department2_name'] = $_department['name'];
                 }
-                $departments[$job->department_id]['data'][] = $_data;
+                $_department['data'][] = $_data;
                 $has_entrust_ids[] = $entrust->id;
+                $has_data_departments[$_department['id']] = $_department;
             }
         }
         $data = [];
         foreach ($departments as $department) {
             if($department['level']==1){
+                if(isset($has_data_departments[$department['id']])){
+                    $department = $has_data_departments[$department['id']];
+                    unset($has_data_departments[$department['id']]);
+                }
+
                 $department['child'] = [];
                 $department['value'] = 0;
                 if(isset($department['data']))
                     $department['value'] += count($department['data']);
                 foreach ($departments as $v) {
                     if($v['pid']==$department['id']){
+                        if(isset($has_data_departments[$v['id']])){
+                            $v = $has_data_departments[$v['id']];
+                            unset($has_data_departments[$v['id']]);
+                        }
                         if(isset($v['data'])){
                             foreach ($v['data'] as &$vv) {
                                 $vv['department1_name'] = $department['name'];
@@ -302,7 +321,31 @@ class StatisticsRepository
                 }
             }
         }
-        return ['departments'=>$data,'all_resume_num'=>$all_resume_num];
+        //不在本企业的部门
+        $other_data = [];
+        foreach ($has_data_departments as $has_data_department) {
+            if($has_data_department['level']==1){
+                $other_data[$has_data_department['id']] = $has_data_department;
+            }elseif ($has_data_department['level']==2){
+
+                if(!isset($other_data[$has_data_department['id']])){
+                    $parent = CompanyDepartment::find($has_data_department['pid']);
+                    $parent['value'] = 0;
+                    $parent['child'] = [];
+                }else{
+                    $parent = $other_data[$has_data_department['id']];
+                }
+
+                foreach ($has_data_department['data'] as &$vv) {
+                    $vv['department1_name'] = $parent['name'];
+                }
+                $has_data_department['value'] = count($has_data_department['data']);
+                $parent['value']+= count($has_data_department['data']);
+                $parent['child'][] = $has_data_department;
+                $other_data[$has_data_department['id']] = $parent;
+            }
+        }
+        return ['departments'=>array_merge($data,$other_data),'all_resume_num'=>$all_resume_num];
     }
 
     public function getCompanyThirdPartyDataStatisticsDetail(Company $company, $demand_side_id, $start_date, $end_date)
