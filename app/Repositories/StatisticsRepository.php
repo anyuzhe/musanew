@@ -345,7 +345,7 @@ class StatisticsRepository
                 $has_data_department['value'] = count($has_data_department['data']);
                 $parent['value']+= count($has_data_department['data']);
                 $parent['child'][] = $has_data_department;
-                $other_data[$has_data_department['id']] = $parent;
+                $other_data[$parent['id']] = $parent;
             }
         }
         return ['departments'=>array_merge($data,$other_data),'all_resume_num'=>$all_resume_num];
