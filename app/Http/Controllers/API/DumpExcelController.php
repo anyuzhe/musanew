@@ -974,7 +974,7 @@ class DumpExcelController extends ApiBaseCommonController
 
         Recruit::where('wait_entry_num', '<' ,0)->update(['wait_entry_num'=>0]);
 
-        $depIds = Job::pluck('department_id');
+        $depIds = Job::pluck('department_id')->unique();
 
         $departments = CompanyDepartment::all()->keyBy('id')->toArray();
         $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
