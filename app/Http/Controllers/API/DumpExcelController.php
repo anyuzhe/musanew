@@ -676,8 +676,8 @@ class DumpExcelController extends ApiBaseCommonController
 
             $_data = [];
             $_data[] = $recruit['job']['department']['full_name'];
-            $_data[] = $recruit['leading']['realname'];
             $_data[] = $recruit['company']['company_alias'];
+            $_data[] = $recruit['leading']['realname'];
             $_data[] = $recruit['job']['code'];
             $_data[] = $recruit['job']['name'];
             $_data[] = $recruit['job']['address']['name'];
