@@ -640,6 +640,10 @@ function getDays($start_time, $end_time=null)
 {
     if(!$end_time)
         $end_time = time();
+    if(!is_int($start_time))
+        $start_time = strtotime($start_time);
+    if(!is_int($end_time))
+        $end_time = strtotime($end_time);
     return (int)ceil(($end_time - $start_time)/(3600*24));
 }
 

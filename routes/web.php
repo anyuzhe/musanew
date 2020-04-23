@@ -526,4 +526,10 @@ Route::get('/company/thirdParty/statistics/excel', 'API\CompaniesController@thir
 
 Route::get('/company/logs/excel', 'API\CompanyLogsController@exportExcel');
 Route::get('/company/recruit/excel', 'API\CompaniesController@DumpRecruitData');
+Route::get('/company/recruit/excel/1', 'API\DumpExcelController@DumpData1');
+Route::get('/company/recruit/excel/2', 'API\DumpExcelController@DumpData2');
+Route::get('/company/recruit/excel/3', 'API\DumpExcelController@DumpData3');
+Route::get('/company/recruit/excel/4', 'API\DumpExcelController@DumpData4');
+Route::get('/company/recruit/excel/5', 'API\DumpExcelController@DumpData5');
+Route::get('/company/recruit/excel/6', 'API\DumpExcelController@DumpData6');
 
