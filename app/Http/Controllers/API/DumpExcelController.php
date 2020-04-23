@@ -677,6 +677,7 @@ class DumpExcelController extends ApiBaseCommonController
             $_data = [];
             $_data[] = $recruit['job']['department']['full_name'];
             $_data[] = $recruit['leading']['realname'];
+            $_data[] = $recruit['company']['company_alias'];
             $_data[] = $recruit['job']['code'];
             $_data[] = $recruit['job']['name'];
             $_data[] = $recruit['job']['address']['name'];
@@ -700,6 +701,7 @@ class DumpExcelController extends ApiBaseCommonController
 
         $title = [
             '部门',
+            '需求方',
             '需求方负责人',
             '职位编号',
             '职位名称',
@@ -776,6 +778,7 @@ class DumpExcelController extends ApiBaseCommonController
 
             $_data = [];
             $_data[] = $recruit['job']['department']['full_name'];
+            $_data[] = $recruit['company']['company_alias'];
             $_data[] = $recruit['leading']['realname'];
             $_data[] = $recruit['job']['code'];
             $_data[] = $recruit['job']['name'];
@@ -807,6 +810,7 @@ class DumpExcelController extends ApiBaseCommonController
 
         $title = [
             '部门',
+            '需求方',
             '需求方负责人',
             '职位编号',
             '职位名称',
