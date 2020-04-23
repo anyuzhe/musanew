@@ -37,6 +37,7 @@ class Job extends Model
         'source_job_id',
         'source_company_id',
         'source_recruit_id',
+        'source_entrust_id',
         'resume_grade_setting_id',
     ];
 

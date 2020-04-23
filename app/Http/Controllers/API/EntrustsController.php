@@ -248,7 +248,14 @@ class EntrustsController extends ApiBaseCommonController
         if(!$job->company_id){
             $job->company_id = $this->getCurrentCompany()->id;
         }
-        if($job->source_recruit_id){
+        if($job->source_entrust_id){
+            $_entrust = Entrust::find($job->source_entrust_id);
+            if($_entrust) {
+                $job->source_job_id = $_entrust->job_id;
+                $job->source_company_id = $_entrust->company_id;
+                $job->source_recruit_id = $_entrust->company_job_recruit_id;
+            }
+        }elseif($job->source_recruit_id){
             $_recruit = Recruit::find($job->source_recruit_id);
             if($_recruit) {
                 $job->source_job_id = $_recruit->job->id;
