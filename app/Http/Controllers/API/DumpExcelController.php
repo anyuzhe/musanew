@@ -798,13 +798,13 @@ class DumpExcelController extends ApiBaseCommonController
             $company_job_recruit_resume_ids = RecruitResume::where('company_job_recruit_id', $recruit['id'])->pluck('id')->toArray();
             $_data[] = $this->getRecruitCountByStatus([1], $company_job_recruit_resume_ids);//推荐简历8
             $_data[] = $this->getRecruitCountByStatus([2,3,5], $company_job_recruit_resume_ids);//邀请面试9
-            $_data[] = !$_data[8]?0:round($_data[9]/$_data[8]*100, 1);
+            $_data[] = !$_data[9]?0:round($_data[10]/$_data[9]*100, 1);
             $_data[] = $this->getRecruitCountByStatus([4,-3], $company_job_recruit_resume_ids,2);//参加面试11
             $_data[] = $this->getRecruitCountByStatus([6], $company_job_recruit_resume_ids);//面试通过12
 
-            $_data[] = !$_data[11]?0:round($_data[12]/$_data[11]*100, 1);//13
+            $_data[] = !$_data[12]?0:round($_data[13]/$_data[12]*100, 1);//13
             $_data[] = $this->getRecruitCountByStatus([7], $company_job_recruit_resume_ids);//录用数14
-            $_data[] = !$_data[8]?0:round($_data[14]/$_data[8]*100, 1);//15
+            $_data[] = !$_data[9]?0:round($_data[15]/$_data[9]*100, 1);//15
             $data[] = $_data;
         }
 
