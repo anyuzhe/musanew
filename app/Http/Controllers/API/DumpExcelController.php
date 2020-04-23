@@ -1010,8 +1010,6 @@ class DumpExcelController extends ApiBaseCommonController
             $_data[] = $_dg_num;
             $_data[] = $_dg_num;
 
-            $_data[] = 0;
-
             $_j = $need_count - $_dg_num;
             $_data[] = 0;
             $_data[] = $_j<0?0:$_j;
