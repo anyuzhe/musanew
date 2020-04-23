@@ -664,6 +664,9 @@ class DumpExcelController extends ApiBaseCommonController
             $recruit['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($recruit);
         }
 
+        unset($recruit);
+        unset($entrust);
+
         $data =[];
         foreach ($recruits as $recruit) {
             $_third_party = '';
@@ -761,6 +764,8 @@ class DumpExcelController extends ApiBaseCommonController
             $recruit['residue_num'] = $recruit['residue_num']>0?$recruit['residue_num']:0;
             $recruit['status_text'] = $entrustRes->getStatusTextByRecruitAndEntrust($recruit);
         }
+        unset($recruit);
+        unset($entrust);
 
         $data =[];
         foreach ($recruits as $recruit) {
@@ -847,7 +852,7 @@ class DumpExcelController extends ApiBaseCommonController
             $recruitResume->status_text = $entrustRes->getStatusTextByRecruitAndEntrust($recruitResume->recruit);
 
         }
-
+        unset($recruitResume);
         $data =[];
         $i = 0;
         $skills = Skill::all()->keyBy('id')->toArray();
