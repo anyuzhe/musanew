@@ -156,7 +156,8 @@ class CompaniesRepository
                     $departments_ids[] = $obj->id;
                 }
             }
-            CompanyDepartment::where('company_id', $company_id)->whereNotIn('id', $departments_ids)->delete();
+//            CompanyDepartment::where('company_id', $company_id)->whereNotIn('id', $departments_ids)->delete();
+            CompanyDepartment::where('company_id', $company_id)->whereNotIn('id', $departments_ids)->update(['company_id'=>null]);//假删除
             CompanyLogRepository::addLog('basics_manage','edit_basics', '修改部门信息');
         }
     }
