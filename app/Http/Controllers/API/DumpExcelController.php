@@ -625,7 +625,7 @@ class DumpExcelController extends ApiBaseCommonController
         $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
         $model = new Recruit();
         if($company_id){
-            $model = $model->where('company_id');
+            $model = $model->where('company_id',$company_id);
         }
         $recruits = $model->whereIn('status', [2,3,4,5,7])->whereIn('id', $has_entrust_ids)->get();
 
@@ -731,7 +731,7 @@ class DumpExcelController extends ApiBaseCommonController
         $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
         $model = new Recruit();
         if($company_id){
-            $model = $model->where('company_id');
+            $model = $model->where('company_id',$company_id);
         }
 
         $recruits = $model->whereIn('status', [2,3,4,5,7])->whereIn('id', $has_entrust_ids)->get();
@@ -846,7 +846,7 @@ class DumpExcelController extends ApiBaseCommonController
         $company_id = $request->get('company_id');
         $model = new RecruitResume();
         if($company_id){
-            $model = $model->where('company_id');
+            $model = $model->where('company_id',$company_id);
         }
 
         $recruitResumes = $model->whereNotNull('company_job_recruit_entrust_id')->get();
@@ -994,7 +994,7 @@ class DumpExcelController extends ApiBaseCommonController
         $company_id = $request->get('company_id');
         $model = new Job();
         if($company_id){
-            $model = $model->where('company_id');
+            $model = $model->where('company_id',$company_id);
         }
 
         Recruit::where('wait_entry_num', '<' ,0)->update(['wait_entry_num'=>0]);
@@ -1074,7 +1074,7 @@ class DumpExcelController extends ApiBaseCommonController
         $company_id = $request->get('company_id');
         $model = new Recruit();
         if($company_id){
-            $model = $model->where('company_id');
+            $model = $model->where('company_id',$company_id);
         }
 
         Recruit::where('wait_entry_num', '<' ,0)->update(['wait_entry_num'=>0]);
@@ -1150,7 +1150,7 @@ class DumpExcelController extends ApiBaseCommonController
         $company_id = $request->get('company_id');
         $model = new Company();
         if($company_id){
-            $model = $model->where('company_id');
+            $model = $model->where('company_id',$company_id);
         }
 
         $companies = $model->get();
