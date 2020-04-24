@@ -247,18 +247,23 @@ class EntrustsController extends ApiBaseCommonController
         if(!$job->company_id){
             $job->company_id = $this->getCurrentCompany()->id;
         }
+        $source_recruit_id = null;
+        $source_entrust_id = null;
         if($job->source_entrust_id){
             $_entrust = Entrust::find($job->source_entrust_id);
             if($_entrust) {
                 $job->source_job_id = $_entrust->job_id;
                 $job->source_company_id = $_entrust->company_id;
                 $job->source_recruit_id = $_entrust->company_job_recruit_id;
+                $source_recruit_id = $_entrust->company_job_recruit_id;
+                $source_entrust_id = $job->source_entrust_id;
             }
         }elseif($job->source_recruit_id){
             $_recruit = Recruit::find($job->source_recruit_id);
             if($_recruit) {
                 $job->source_job_id = $_recruit->job->id;
                 $job->source_company_id = $_recruit->company->id;
+                $source_recruit_id = $job->source_recruit_id;
             }
         }
         if($job->source_job_id){
@@ -367,6 +372,8 @@ class EntrustsController extends ApiBaseCommonController
         $new->done_num = 0;
         $new->resume_num = 0;
         $new->new_resume_num = 0;
+        $new->source_recruit_id = $source_recruit_id;
+        $new->source_entrust_id = $source_entrust_id;
         $new->save();
         $recruit = $new;
 
@@ -388,6 +395,8 @@ class EntrustsController extends ApiBaseCommonController
                         'resume_num'=>0,
                         'new_resume_num'=>0,
                         'status'=>0,
+                        'source_recruit_id'=>$source_recruit_id,
+                        'source_entrust_id'=>$source_entrust_id,
                         'creator_id'=>$this->getUser()->id,
                     ]);
                 }
@@ -507,7 +516,7 @@ class EntrustsController extends ApiBaseCommonController
     {
         $company = $this->getCurrentCompany();
         $jobIds = Entrust::where('third_party_id', $company->id)->pluck('job_id')->toArray();
-        $data = Job::whereIn('id',$jobIds)->get();
+        $data = Job::whereIn('id',$jobIds)->orderBy('code','asc')->get();
         $arr = [];
         foreach ($data as $key=>$item) {
             $_arr = [];

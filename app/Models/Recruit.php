@@ -18,6 +18,8 @@ class Recruit extends Model
         'creator_id',
         'created_at',
         'end_at',
+        'source_recruit_id',
+        'source_entrust_id',
     ];
 
     public function job()

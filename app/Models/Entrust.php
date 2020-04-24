@@ -24,6 +24,8 @@ class Entrust extends Model
         'is_public',
         'created_at',
         'end_at',
+        'source_recruit_id',
+        'source_entrust_id',
     ];
 
     public function job()
