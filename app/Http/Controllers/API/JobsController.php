@@ -75,7 +75,7 @@ class JobsController extends ApiBaseCommonController
     public function recruitJobListIdName()
     {
         $company = $this->getCurrentCompany();
-        $jobIds = Recruit::where('company', $company->id)->pluck('job_id')->toArray();
+        $jobIds = Recruit::where('company_id', $company->id)->pluck('job_id')->toArray();
         $data = Job::whereIn('id',$jobIds)->orderBy('code','asc')->get();
         $arr = [];
         foreach ($data as $key=>$item) {
