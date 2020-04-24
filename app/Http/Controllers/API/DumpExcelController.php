@@ -1150,7 +1150,7 @@ class DumpExcelController extends ApiBaseCommonController
         $company_id = $request->get('company_id');
         $model = new Company();
         if($company_id){
-            $model = $model->where('company_id',$company_id);
+            $model = $model->where('id',$company_id);
         }
 
         $companies = $model->get();
