@@ -60,7 +60,7 @@ class JobsController extends ApiBaseCommonController
     {
         $model = $this->getModel();
         $this->authLimit($model);
-        $data = $model->get();
+        $data = $model->orderBy('code','asc')->get();
         $arr = [];
         foreach ($data as $key=>$item) {
             $_arr = [];
