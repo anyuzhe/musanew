@@ -102,6 +102,7 @@ $router->post('/company/change/manager/affirm', 'API\CompaniesController@changeM
 
 $router->group(['middleware' => 'auth.api'], function () use ($router) {
     $router->get('/company/jobs/idName', 'API\JobsController@allListIdName');
+    $router->get('/company/recruit/jobs/idName', 'API\JobsController@recruitJobListIdName');
 
     $router->get('/company/thirdParty/jobs/idName', 'API\EntrustsController@thirdPartyJobListIdName');
 

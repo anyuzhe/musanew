@@ -72,6 +72,22 @@ class JobsController extends ApiBaseCommonController
         return $this->apiReturnJson(0, $arr);
     }
 
+    public function recruitJobListIdName()
+    {
+        $company = $this->getCurrentCompany();
+        $jobIds = Recruit::where('company', $company->id)->pluck('job_id')->toArray();
+        $data = Job::whereIn('id',$jobIds)->orderBy('code','asc')->get();
+        $arr = [];
+        foreach ($data as $key=>$item) {
+            $_arr = [];
+            $_arr['id'] = $item->id;
+            $_arr['name'] = $item->name;
+            $_arr['code'] = $item->code;
+            $arr[] = $_arr;
+        }
+        return $this->apiReturnJson(0, $arr);
+    }
+
     public function authLimit(&$model)
     {
         $department_id = $this->request->get('department_id');
