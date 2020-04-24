@@ -29,7 +29,6 @@ class EntrustsController extends ApiBaseCommonController
 
     public function authLimit(&$model)
     {
-
         //筛选
         $request = $this->request;
         $job_id = $request->get('job_id');

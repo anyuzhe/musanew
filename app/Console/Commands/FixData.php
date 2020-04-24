@@ -605,5 +605,22 @@ class FixData extends Command
                 }
             }
         }
+        elseif ($type==7){
+
+            //这里导致了关闭招聘后在列表中小时 因为取消状态与第三方的取消状态一致   恢复此代码并修复数据
+            $recruits = Recruit::where('status',4)->get();
+            foreach ($recruits as $recruit) {
+                foreach ($recruit->entrusts as $entrust) {
+                    if($entrust->status <1)
+                        continue;
+                    if($entrust->status==1)
+                        $entrust->status = -1;
+                    elseif($entrust->status==0)
+                        $entrust->status = -3;
+                    $entrust->end_at = $recruit->end_at;
+                    $entrust->save();
+                }
+            }
+        }
     }
 }

@@ -321,13 +321,16 @@ class RecruitsController extends ApiBaseCommonController
 
             checkAuthByCompany($obj,true);
 
-            //这里导致了关闭招聘后在列表中小时 因为取消状态与第三方的取消状态一致
-//            foreach ($obj->entrusts as $entrust) {
-//                $entrust->status = -1;
-//                $entrust->end_at = date('Y-m-d H:i:s');
-//                $entrust->save();
-//                app()->build(RecruitRepository::class)->generateEndLog($obj, $entrust);
-//            }
+            //这里导致了关闭招聘后在列表中小时 因为取消状态与第三方的取消状态一致 恢复此代码
+            foreach ($obj->entrusts as $entrust) {
+                if($entrust->status==1)
+                    $entrust->status = -1;
+                elseif($entrust->status==0)
+                    $entrust->status = -3;
+                $entrust->end_at = date('Y-m-d H:i:s');
+                $entrust->save();
+                app()->build(RecruitRepository::class)->generateEndLog($obj, $entrust);
+            }
             $obj->status = 4;
             $obj->end_at = date('Y-m-d H:i:s');
             $obj->save();
