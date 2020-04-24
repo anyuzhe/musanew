@@ -617,14 +617,17 @@ class DumpExcelController extends ApiBaseCommonController
 //        $excelHelper->dumpExcel($title,$data,'招聘数据', "招聘数据");
     }
 
-    public function DumpData1()
+    public function DumpData1(Request $request)
     {
-
         set_time_limit(0);
-
+        $company_id = $request->get('company_id');
         //委托了的招聘
         $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-        $recruits = Recruit::whereIn('status', [2,3,4,5,7])->whereIn('id', $has_entrust_ids)->get();
+        $model = new Recruit();
+        if($company_id){
+            $model = $model->where('company_id');
+        }
+        $recruits = $model->whereIn('status', [2,3,4,5,7])->whereIn('id', $has_entrust_ids)->get();
 
         $recruits->load('job');
         $recruits->load('leading');
@@ -720,14 +723,18 @@ class DumpExcelController extends ApiBaseCommonController
         $excelHelper->dumpExcel($title,$data,'需求表', "需求表");
     }
 
-    public function DumpData2()
+    public function DumpData2(Request $request)
     {
-
         set_time_limit(0);
-
+        $company_id = $request->get('company_id');
         //委托了的招聘
         $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
-        $recruits = Recruit::whereIn('status', [2,3,4,5,7])->whereIn('id', $has_entrust_ids)->get();
+        $model = new Recruit();
+        if($company_id){
+            $model = $model->where('company_id');
+        }
+
+        $recruits = $model->whereIn('status', [2,3,4,5,7])->whereIn('id', $has_entrust_ids)->get();
 
         $recruits->load('job');
         $recruits->load('leading');
@@ -833,12 +840,16 @@ class DumpExcelController extends ApiBaseCommonController
         $excelHelper->dumpExcel($title,$data,'数据分析', "数据分析");
     }
 
-    public function DumpData3()
+    public function DumpData3(Request $request)
     {
-
         set_time_limit(0);
+        $company_id = $request->get('company_id');
+        $model = new RecruitResume();
+        if($company_id){
+            $model = $model->where('company_id');
+        }
 
-        $recruitResumes = RecruitResume::whereNotNull('company_job_recruit_entrust_id')->get();
+        $recruitResumes = $model->whereNotNull('company_job_recruit_entrust_id')->get();
 
         $recruitResumes->load('job');
         $recruitResumes->load('recruit');
@@ -977,13 +988,18 @@ class DumpExcelController extends ApiBaseCommonController
         $excelHelper->dumpExcel($title,$data,'应聘列表', "应聘列表");
     }
 
-    public function DumpData4()
+    public function DumpData4(Request $request)
     {
         set_time_limit(0);
+        $company_id = $request->get('company_id');
+        $model = new Job();
+        if($company_id){
+            $model = $model->where('company_id');
+        }
 
         Recruit::where('wait_entry_num', '<' ,0)->update(['wait_entry_num'=>0]);
 
-        $depIds = Job::pluck('department_id')->unique();
+        $depIds = $model->pluck('department_id')->unique();
 
         $departments = CompanyDepartment::all()->keyBy('id')->toArray();
         $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
@@ -1052,16 +1068,21 @@ class DumpExcelController extends ApiBaseCommonController
         $excelHelper->dumpExcel($title,$data,'需求汇总', "需求汇总");
     }
 
-    public function DumpData5()
+    public function DumpData5(Request $request)
     {
         set_time_limit(0);
+        $company_id = $request->get('company_id');
+        $model = new Recruit();
+        if($company_id){
+            $model = $model->where('company_id');
+        }
 
         Recruit::where('wait_entry_num', '<' ,0)->update(['wait_entry_num'=>0]);
 
         $departments = CompanyDepartment::all()->keyBy('id')->toArray();
         $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
 
-        $recruits = Recruit::whereIn('id', $company_job_recruit_ids)->get();
+        $recruits = $model->whereIn('id', $company_job_recruit_ids)->get();
         $data =[];
         $recruits->load('job');
         $recruits->load('leading');
@@ -1123,11 +1144,16 @@ class DumpExcelController extends ApiBaseCommonController
         $excelHelper->dumpExcel($title,$data,'数据仪表', "数据仪表");
     }
 
-    public function DumpData6()
+    public function DumpData6(Request $request)
     {
         set_time_limit(0);
+        $company_id = $request->get('company_id');
+        $model = new Company();
+        if($company_id){
+            $model = $model->where('company_id');
+        }
 
-        $companies = Company::all();
+        $companies = $model->get();
 
         $data =[];
         foreach ($companies as $company) {
