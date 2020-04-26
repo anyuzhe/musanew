@@ -242,7 +242,7 @@ class EntrustsController extends ApiBaseCommonController
         $company_id = $this->getCurrentCompany()->id;
         $hasRecruit = Recruit::where('source_entrust_id', $source_entrust_id)->where('company_id', $company_id)->first();
         if($hasRecruit){
-            $company_ids = Entrust::where('source_entrust_id', $source_entrust_id)->where('company_id', $company_id)->whereIn('status',[0,1])->pluck()->toArray();
+            $company_ids = Entrust::where('source_entrust_id', $source_entrust_id)->where('company_id', $company_id)->whereIn('status',[0,1])->pluck('third_party_id')->toArray();
             return $this->apiReturnJson(0,['has'=>1,'company_ids'=>$company_ids]);
         }else{
             return $this->apiReturnJson(0,['has'=>0]);
@@ -256,7 +256,7 @@ class EntrustsController extends ApiBaseCommonController
         $company_id = $this->getCurrentCompany()->id;
         $recruit = Recruit::where('source_entrust_id', $source_entrust_id)->where('company_id', $company_id)->first();
         if($source_entrust_id)
-            $has_company_ids = Entrust::where('source_entrust_id', $source_entrust_id)->where('company_id', $company_id)->whereIn('status',[0,1])->pluck()->toArray();
+            $has_company_ids = Entrust::where('source_entrust_id', $source_entrust_id)->where('company_id', $company_id)->whereIn('status',[0,1])->pluck('third_party_id')->toArray();
         else{
             $has_company_ids = [];
         }
