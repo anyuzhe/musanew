@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\CompanyLog;
+use App\Models\RecruitLog;
 
-class CompanyLogRepository
+class RecruitLogRepository
 {
-    public static function addLog($module, $operation, $content)
+    public static function addLog($content)
     {
         $company = TokenRepository::getCurrentCompany();
         $user = TokenRepository::getUser();
@@ -14,12 +14,10 @@ class CompanyLogRepository
             return null;
         if(!$user)
             return null;
-        CompanyLog::create([
+        RecruitLog::create([
             'company_id'=>$company->id,
             'user_id'=>$user->id,
-            'operation'=>$operation,
             'content'=>$content,
-            'module'=>$module,
         ]);
     }
 
@@ -41,13 +39,19 @@ class CompanyLogRepository
     {
         $text = '';
         $diff = array_diff_assoc($obj->getAttributes(), $obj->getOriginal());
-
+//        dd($obj->getOriginal()['status']);
         foreach ($diff as $key=>$value) {
-            $_v1 = self::getOptionsText($key, $obj->getOriginal()[$key]);
-            $_v2 = self::getOptionsText($key, $obj->{$key});
-            if($classMap){
-                $_v1 = $classMap::changeValue($key, $_v1);
-                $_v2 = $classMap::changeValue($key, $_v2);
+            if($key=='status'){
+                dump($obj->status);
+                dd($diff);
+                    //status 1招聘中 2等待外包公司审核 3外包中 4结束 5已完成 6自己招暂停 7外包招暂停
+                $_text = '';
+                if($value==1){
+                    $_text = '继续招聘';
+                }elseif ($_text==2){
+
+                }
+                $text.= self::translation($key).": {$_v1} 修改成 {$_v2}, ";
             }
             $text.= self::translation($key).": {$_v1} 修改成 {$_v2}, ";
         }

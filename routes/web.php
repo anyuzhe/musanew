@@ -30,6 +30,7 @@ use App\Models\ResumeEducation;
 use App\Models\UserBasicInfo;
 use App\Repositories\CompanyLogRepository;
 use App\Repositories\EntrustsRepository;
+use App\Repositories\RecruitLogRepository;
 use App\Repositories\RecruitRepository;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
@@ -50,7 +51,10 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
-    $t = Recruit::lock('for update')->find(1);
+    $t = Recruit::find(1);
+    $t->status=3;
+
+    dd(RecruitLogRepository::getDiffText($t));
     dd($t);
     dd(TCG\Voyager\Models\Role::all());
     $job = Job::find(1);

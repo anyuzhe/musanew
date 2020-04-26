@@ -59,4 +59,9 @@ class Recruit extends Model
             'creator_id'
         );
     }
+
+    public function logs()
+    {
+        return $this->hasMany(RecruitLog::class, 'company_job_recruit_id');
+    }
 }

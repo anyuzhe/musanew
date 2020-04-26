@@ -12,6 +12,7 @@ use App\Models\UserBasicInfo;
 use App\Repositories\CompanyLogRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
+use App\Repositories\RecruitLogRepository;
 use App\Repositories\RecruitRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use App\ZL\ORG\Musa\Log\RecruitLogHelper;
@@ -246,6 +247,7 @@ class RecruitsController extends ApiBaseCommonController
         $text .= ", 负责人:".$obj->leading->realname;
         $text .= ", 人数:".$obj->need_num;
         CompanyLogRepository::addLog('recruit_user_manage','add_recruit',$text);
+        RecruitLogRepository::addLog('添加招聘');
 
         return $this->apiReturnJson(0);
     }
