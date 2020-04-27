@@ -10,6 +10,7 @@ use App\Models\Recruit;
 use App\Repositories\CompanyLogRepository;
 use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
+use App\Repositories\RecruitLogRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use Illuminate\Http\Request;
 
@@ -191,6 +192,7 @@ class EntrustsController extends ApiBaseCommonController
         $recruit = Recruit::find($company_job_recruit_id);
 
         if($is_new_create){
+            RecruitLogRepository::addLog($recruit->id, '复制新建此招聘并委托');
             $new = Recruit::create($recruit->toArray());
 
             $new->company_id = $recruit->company_id;
@@ -202,6 +204,7 @@ class EntrustsController extends ApiBaseCommonController
             $new->new_resume_num = 0;
             $new->save();
             $recruit = $new;
+            RecruitLogRepository::addLog($recruit->id, '新建招聘信息');
         }
 
         $recruit->status = 2;
@@ -229,6 +232,8 @@ class EntrustsController extends ApiBaseCommonController
                 }
             }
         }
+
+        RecruitLogRepository::addLog($recruit->id, $text);
         CompanyLogRepository::addLog('recruit_user_manage','add_entrust', $text);
 
         return $this->apiReturnJson(0);
