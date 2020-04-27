@@ -257,6 +257,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //操作日志
     $router->get('/company/logs', 'API\CompanyLogsController@index');
+    //操作日志
+    $router->get('/company/recruit/logs', 'API\CompanyLogsController@index');
 
     //----------------个人中心-------------------------
     //简历列表

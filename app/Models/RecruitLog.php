@@ -20,4 +20,15 @@ class RecruitLog extends Model
     {
         return $this->belongsTo(Recruit::class, 'company_job_recruit_id');
     }
+
+    public function user()
+    {
+        return $this->hasOneThrough(
+            'App\Models\UserBasicInfo',
+            'App\Models\User',
+            'id',
+            'user_id',
+            'leading_id'
+        );
+    }
 }
