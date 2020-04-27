@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\RecruitLog;
+use App\Models\UserBasicInfo;
 
 class RecruitLogRepository
 {
@@ -39,21 +40,18 @@ class RecruitLogRepository
     {
         $text = '';
         $diff = array_diff_assoc($obj->getAttributes(), $obj->getOriginal());
-//        dd($obj->getOriginal()['status']);
         foreach ($diff as $key=>$value) {
-            if($key=='status'){
-                dump($obj->status);
-                dd($diff);
-                    //status 1招聘中 2等待外包公司审核 3外包中 4结束 5已完成 6自己招暂停 7外包招暂停
-                $_text = '';
-                if($value==1){
-                    $_text = '继续招聘';
-                }elseif ($_text==2){
-
-                }
-                $text.= self::translation($key).": {$_v1} 修改成 {$_v2}, ";
+            if($key=='need_num'){
+                $text.= '需求人数'.": {$obj->getOriginal()['need_num']} 修改成 {$value}, ";
             }
-            $text.= self::translation($key).": {$_v1} 修改成 {$_v2}, ";
+            elseif($key=='is_public'){
+                $text.= "是否公开招聘修改成 ".$value?'是':'否'.", ";
+            }
+            elseif($key=='leading_id'){
+                $old = UserBasicInfo::where('user_id', $obj->getOriginal()['leading_id'])->first();
+                $new = UserBasicInfo::where('user_id', $value)->first();
+                $text.= '负责人'.": {$old->realname} 修改成 {$new->realname}, ";
+            }
         }
         return substr($text,0,strlen($text)-2);
     }

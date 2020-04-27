@@ -270,6 +270,9 @@ class RecruitsController extends ApiBaseCommonController
         if(isset($data['leading_id'])){
             Entrust::where('company_job_recruit_id', $id)->update(['leading_id'=>$data['leading_id']]);
         }
+
+        RecruitLogRepository::addLog(RecruitLogRepository::getDiffText($obj));
+
         return $this->apiReturnJson(0);
     }
 
@@ -315,6 +318,7 @@ class RecruitsController extends ApiBaseCommonController
             app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
 
             $text = "结束委托 ".$entrust->job->name;
+            RecruitLogRepository::addLog('结束委托:'.$entrust->thirdParty->company_alias);
             CompanyLogRepository::addLog('recruit_user_manage','end_recruit', $text);
         }else{
             $obj = Recruit::find($id);
@@ -339,6 +343,7 @@ class RecruitsController extends ApiBaseCommonController
             app()->build(RecruitRepository::class)->generateEndLog($obj);
 
             $text = "结束招聘 ".$obj->job->name;
+            RecruitLogRepository::addLog('结束招聘');
             CompanyLogRepository::addLog('recruit_user_manage','end_recruit', $text);
         }
         return $this->apiReturnJson(0);
@@ -360,6 +365,7 @@ class RecruitsController extends ApiBaseCommonController
             $entrust->pause_at = date('Y-m-d H:i:s');
             $entrust->save();
             $text = "暂停委托 ".$entrust->job->name;
+            RecruitLogRepository::addLog('暂停委托:'.$entrust->thirdParty->company_alias);
             CompanyLogRepository::addLog('recruit_user_manage','pause_recruit', $text);
 //            app()->build(RecruitRepository::class)->generateEndLog($entrust->recruit, $entrust);
         }else{
@@ -384,6 +390,7 @@ class RecruitsController extends ApiBaseCommonController
             $obj->pause_at = date('Y-m-d H:i:s');
             $obj->save();
             $text = "暂停招聘 ".$obj->job->name;
+            RecruitLogRepository::addLog('暂停招聘');
             CompanyLogRepository::addLog('recruit_user_manage','pause_recruit', $text);
 //            app()->build(RecruitRepository::class)->generateEndLog($obj);
         }
@@ -398,7 +405,8 @@ class RecruitsController extends ApiBaseCommonController
         }
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
-            checkAuthByCompany(Entrust::find($id),false);
+            $entrust = Entrust::find($id);
+            checkAuthByCompany($entrust,false);
             Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1,'created_at'=>date('Y-m-d H:i:s')]);
         }else{
             checkAuthByCompany(Recruit::find($id));
@@ -415,7 +423,9 @@ class RecruitsController extends ApiBaseCommonController
         }
         $entrust_id = $this->request->get('entrust_id');
         if($entrust_id){
-            checkAuthByCompany(Entrust::find($id),false);
+            $entrust = Entrust::find($id);
+            checkAuthByCompany($entrust,false);
+            RecruitLogRepository::addLog('开启委托:'.$entrust->thirdParty->company_alias);
             Entrust::where('id', $id)->where('id', $entrust_id)->update(['status'=>1]);
         }else{
             if(!is_array($id))
@@ -425,6 +435,7 @@ class RecruitsController extends ApiBaseCommonController
             foreach ($ids as $id) {
                 $recruit = Recruit::find($id);
                 checkAuthByCompany($recruit);
+                RecruitLogRepository::addLog('开启招聘');
                 if($recruit->status==6){
                     $this->getModel()->where('id', $id)->update(['status'=>1]);
                 }elseif($recruit->status==7){
