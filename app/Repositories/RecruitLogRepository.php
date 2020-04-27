@@ -7,7 +7,7 @@ use App\Models\UserBasicInfo;
 
 class RecruitLogRepository
 {
-    public static function addLog($content)
+    public static function addLog($id, $content)
     {
         $company = TokenRepository::getCurrentCompany();
         $user = TokenRepository::getUser();
@@ -17,6 +17,7 @@ class RecruitLogRepository
             return null;
         RecruitLog::create([
             'company_id'=>$company->id,
+            'company_job_recruit_id'=>$id,
             'user_id'=>$user->id,
             'content'=>$content,
         ]);

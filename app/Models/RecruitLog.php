@@ -11,7 +11,7 @@ class RecruitLog extends Model
     public $fillable = [
         'company_id',
         'company_job_recruit_id',
-        'company_job_recruit_entrust_id',
+//        'company_job_recruit_entrust_id',
         'user_id',
         'content',
     ];
