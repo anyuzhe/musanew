@@ -26,6 +26,7 @@ class Entrust extends Model
         'end_at',
         'source_recruit_id',
         'source_entrust_id',
+        'affirmed_at',
     ];
 
     public function job()

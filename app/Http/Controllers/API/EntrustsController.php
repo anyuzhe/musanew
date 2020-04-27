@@ -488,6 +488,7 @@ class EntrustsController extends ApiBaseCommonController
                     $entrust->is_public  = $is_public;
                 }
                 $entrust->status = 1;
+                $entrust->affirmed_at = date('Y-m-d H:i:s');
                 $entrust->save();
             }
             CompanyLogRepository::addLog('entrust_manage','agree_entrust', '同意 '.$recruit->company->company_alias.' '.$entrust->job->name);
