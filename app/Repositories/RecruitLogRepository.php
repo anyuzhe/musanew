@@ -46,7 +46,8 @@ class RecruitLogRepository
                 $text.= '需求人数'.": {$obj->getOriginal()['need_num']} 修改成 {$value}, ";
             }
             elseif($key=='is_public'){
-                $text.= "是否公开招聘修改成 ".$value?'是':'否'.", ";
+                $_s = $value?'是':'否';
+                $text.= "是否公开招聘修改成 ".$_s.", ";
             }
             elseif($key=='leading_id'){
                 $old = UserBasicInfo::where('user_id', $obj->getOriginal()['leading_id'])->first();

@@ -54,7 +54,8 @@ Route::get('/test', function () {
 
 
     $t = Recruit::find(1);
-    $t->need_num=33;
+//    $t->need_num=33;
+    $t->is_public=1;
 
     dd(RecruitLogRepository::getDiffText($t));
     dd($t);
