@@ -188,6 +188,8 @@ class RecruitResumesRepository
             //如果是委托 就不改成结束状态 --后台取消了
 //            if(!$entrust)
             $recruit->status = 5;
+
+            RecruitLogRepository::addLog($recruit->id, '完成招聘');
             foreach ($recruit->entrusts as $_entrust) {
                 $_entrust->status = 2;
                 $_entrust->end_at = date('Y-m-d H:i:s');
