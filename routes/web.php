@@ -51,8 +51,10 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+
+
     $t = Recruit::find(1);
-    $t->status=3;
+    $t->need_num=33;
 
     dd(RecruitLogRepository::getDiffText($t));
     dd($t);
