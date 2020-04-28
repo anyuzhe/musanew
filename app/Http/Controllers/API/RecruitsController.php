@@ -14,6 +14,7 @@ use App\Repositories\EntrustsRepository;
 use App\Repositories\JobsRepository;
 use App\Repositories\RecruitLogRepository;
 use App\Repositories\RecruitRepository;
+use App\Repositories\RecruitResumesRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use App\ZL\ORG\Musa\Log\RecruitLogHelper;
 use DB;
@@ -296,6 +297,8 @@ class RecruitsController extends ApiBaseCommonController
 
             $obj->end_at = date('Y-m-d H:i:s');
             $obj->save();
+
+            app()->build(RecruitResumesRepository::class)->autoAllClose($obj);
         }
     }
 

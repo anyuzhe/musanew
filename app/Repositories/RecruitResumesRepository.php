@@ -199,6 +199,7 @@ class RecruitResumesRepository
 
             $recruit->end_at = date('Y-m-d H:i:s');
             $recruitRepository->generateEndLog($recruit);
+            $this->autoAllClose($recruit);
         }
         $recruit->save();
         if($entrust){
@@ -218,6 +219,29 @@ class RecruitResumesRepository
         $resume->company_id = $recruit->company_id;
         $resume->in_job = 1;
         $resume->save();
+    }
+
+    public function autoAllClose(Recruit $recruit)
+    {
+        global $LOGIN_USER;
+        $recruitResumes = RecruitResume::where('company_job_recruit_id', $recruit->id)->whereIn('status',[1,2,3,4,5,6,7])->get();
+        foreach ($recruitResumes as $recruitResume) {
+            $log = new RecruitResumeLog();
+            $log->user_id = null;
+            $log->company_id = null;
+            $log->status = -9;
+            $log->resume_id = $recruitResume->resume_id;
+            $log->company_job_recruit_id = $recruitResume->company_job_recruit_id;
+            $log->company_job_recruit_entrust_id = $recruitResume->company_job_recruit_entrust_id;
+            $log->job_id = $recruitResume->job_id;
+
+            $log->text =  '关闭需求';
+            $previous_id = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->value('id');
+            $log->previous_id = $previous_id;
+            $logObj = $recruitResume->logs()->save($log);
+            $recruitResume->status = -9;
+            $recruitResume->save();
+        }
     }
 
     public function companyRelevanceResume($resume_id, $company_id, Recruit $recruit=null, Entrust $entrust=null)
