@@ -257,6 +257,8 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
 
     //操作日志
     $router->get('/company/logs', 'API\CompanyLogsController@index');
+    //企业 信息 通知
+    $router->get('/company/notifications', 'API\CompanyNotificationsController@index');
     //操作日志
     $router->get('/company/recruit/logs', 'API\CompanyRecruitLogsController@index');
 

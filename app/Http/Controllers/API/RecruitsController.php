@@ -279,11 +279,11 @@ class RecruitsController extends ApiBaseCommonController
                 CompanyNotification::create([
                     'company_id'=>$entrust->third_party_id,
                     'type'=>'demand_side_recruit_update',
-                    'content'=>"{$obj->company->company_alias}:{$obj->job->name}:".RecruitLogRepository::getDiffText($obj),
+                    'content'=>"{$obj->company->company_alias}:{$obj->job->code}-{$obj->job->name}:".RecruitLogRepository::getDiffText($obj),
                     'other_data'=>json_encode([
                         'recruit'=>$obj,
                         'entrust'=>$entrust,
-                    ],true),
+                    ],256),
                 ]);
             }
         }
