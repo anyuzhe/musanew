@@ -28,7 +28,7 @@ class RecruitLog extends Model
             'App\Models\User',
             'id',
             'user_id',
-            'leading_id'
+            'user_id'
         );
     }
 }
