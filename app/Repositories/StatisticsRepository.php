@@ -497,7 +497,7 @@ class StatisticsRepository
         $interviewing = ['面试中'];
         getRowData($data['interviewing']['data'],$companyArray,$interviewing);
         $interview_pass = ['面试通过'];
-        getRowData($data['interviewing']['data'],$companyArray,$interview_pass);
+        getRowData($data['interview_pass']['data'],$companyArray,$interview_pass);
         $hire = ['录用'];
         getRowData($data['hire']['data'],$companyArray,$hire);
         $entry = ['入职'];
