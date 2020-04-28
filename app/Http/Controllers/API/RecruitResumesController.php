@@ -125,10 +125,12 @@ class RecruitResumesController extends ApiBaseCommonController
         $data->resume = app()->build(ResumesRepository::class)->getData($data->resume);
         $data->logs->load('creatorInfo');
         foreach ($data->logs as &$log) {
-            if($log->creatorInfo->avatar){
-                $log->creatorInfo->avatar_url = getPicFullUrl($log->creatorInfo->avatar);
-            }else{
-                $log->creatorInfo->avatar_url = "";
+            if($log->creatorInfo){
+                if($log->creatorInfo->avatar){
+                    $log->creatorInfo->avatar_url = getPicFullUrl($log->creatorInfo->avatar);
+                }else{
+                    $log->creatorInfo->avatar_url = "";
+                }
             }
         }
         if($this->getCurrentCompany())
