@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Company;
 use App\Models\CompanyDepartment;
+use App\Models\CompanyNotification;
 use App\Models\Course;
 use App\Models\Entrust;
 use App\Models\Recruit;
@@ -273,6 +274,19 @@ class RecruitsController extends ApiBaseCommonController
         }
 
         RecruitLogRepository::addLog($id, RecruitLogRepository::getDiffText($obj));
+        foreach ($obj->entrusts as $entrust) {
+            if(in_array($entrust->status,[1,6])){
+                CompanyNotification::create([
+                    'company_id'=>$entrust->third_party_id,
+                    'type'=>'demand_side_recruit_update',
+                    'content'=>"{$obj->company->company_alias}:{$obj->job->name}:".RecruitLogRepository::getDiffText($obj),
+                    'other_data'=>json_encode([
+                        'recruit'=>$obj,
+                        'entrust'=>$entrust,
+                    ],true),
+                ]);
+            }
+        }
 
         return $this->apiReturnJson(0);
     }
