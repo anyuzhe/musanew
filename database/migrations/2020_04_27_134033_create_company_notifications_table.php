@@ -13,9 +13,20 @@ class CreateCompanyNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_notifications', function (Blueprint $table) {
+        Schema::connection('musa')->dropIfExists('company_notifications');
+        Schema::connection('musa')->create('company_notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('company_id')->nullable();
+
+            $table->string('type',191)->nullable();
+            $table->longText('content')->nullable();
+            $table->longText('other_data')->nullable();
+            $table->integer('is_read')->default(0);
             $table->timestamps();
+
+            $table->index('company_id');
+            $table->index('type');
+            $table->index('is_read');
         });
     }
 
@@ -26,6 +37,6 @@ class CreateCompanyNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_notifications');
+        Schema::connection('musa')->dropIfExists('company_notifications');
     }
 }
