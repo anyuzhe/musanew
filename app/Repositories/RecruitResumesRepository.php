@@ -235,7 +235,7 @@ class RecruitResumesRepository
             $log->company_job_recruit_entrust_id = $recruitResume->company_job_recruit_entrust_id;
             $log->job_id = $recruitResume->job_id;
 
-            $log->text =  '关闭需求';
+            $log->text =  '自动关闭需求';
             $previous_id = RecruitResumeLog::where('company_job_recruit_resume_id', $recruitResume->id)->orderBy('id','desc')->value('id');
             $log->previous_id = $previous_id;
             $logObj = $recruitResume->logs()->save($log);
