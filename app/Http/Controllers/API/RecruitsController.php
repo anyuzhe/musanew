@@ -188,6 +188,7 @@ class RecruitsController extends ApiBaseCommonController
                     unset($recruit['entrusts'][$k]);
                 }
             }
+            $recruit['entrusts'] = array_values($recruit['entrusts']);
             $recruit['job'] = $jobs[$recruit['job']['id']];
             $recruit['residue_num'] = $recruit['need_num'] - $recruit['done_num'] - $recruit['wait_entry_num'];
             $recruit['residue_num'] = $recruit['residue_num']>0?$recruit['residue_num']:0;
