@@ -178,21 +178,22 @@ class EntrustResumesController extends ApiBaseCommonController
 
     public function entrustSendResumes()
     {
+        app('db')->beginTransaction();
         $data = $this->request->all();
         $ids = $data['resume_ids'];
         $recruit_id = null;
         $recruit = null;
         if(isset($data['recruit_id'])){
             $recruit_id = $data['recruit_id'];
-            $recruit = Recruit::find($recruit_id);
+            $recruit = Recruit::lock('for update')->find($recruit_id);
         }
         $entrust_id = null;
         $entrust = null;
         if(isset($data['entrust_id'])){
             $entrust_id = $data['entrust_id'];
-            $entrust = Entrust::find($entrust_id);
+            $entrust = Entrust::lock('for update')->find($entrust_id);
             if($entrust)
-                $recruit = $entrust->recruit;
+                $recruit = Recruit::lock('for update')->find($entrust->company_job_recruit_id);
         }
 
         if(!$recruit){
@@ -202,7 +203,6 @@ class EntrustResumesController extends ApiBaseCommonController
 //            return $this->apiReturnJson(9999, null, '缺少委托信息');
 //        }
 
-        app('db')->beginTransaction();
         $logs = [];
 
         $text = $recruit->job->name." 推送简历:";
@@ -282,7 +282,7 @@ class EntrustResumesController extends ApiBaseCommonController
         if($recruit_ids && is_array($recruit_ids)){
             $logs = [];
             foreach ($recruit_ids as $recruit_id) {
-                $recruit = Recruit::find($recruit_id);
+                $recruit = Recruit::lock('for update')->find($recruit_id);
 
                 if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $resume_id)->where('type',3)->first()){
                     app('db')->rollBack();
@@ -323,8 +323,9 @@ class EntrustResumesController extends ApiBaseCommonController
         if($entrust_ids && is_array($entrust_ids)){
             $logs=[];
             foreach ($entrust_ids as $entrust_id) {
-                $entrust = Entrust::find($entrust_id);
-                $recruit = $entrust->recruit;
+
+                $entrust = Entrust::lock('for update')->find($entrust_id);
+                $recruit = Recruit::lock('for update')->find($entrust->company_job_recruit_id);
                 if(CompanyResume::where('company_id', $recruit->company_id)->where('resume_id', $resume_id)->where('type',3)->first()){
                     app('db')->rollBack();
                     return $this->apiReturnJson(9999, null, $resume->name.'在黑名单中，无法添加');
