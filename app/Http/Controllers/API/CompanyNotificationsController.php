@@ -41,4 +41,12 @@ class CompanyNotificationsController extends ApiBaseCommonController
         }
         return $data;
     }
+
+    public function _after_find(&$data)
+    {
+        if($data->status==0){
+            $data->is_read=1;
+            $data->save();
+        }
+    }
 }
