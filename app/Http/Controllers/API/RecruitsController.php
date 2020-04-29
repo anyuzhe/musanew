@@ -166,17 +166,26 @@ class RecruitsController extends ApiBaseCommonController
 
         $job_ids = [];
         $recruits = $recruits->toArray();
+        $lastEntrustIds = [];
         foreach ($recruits as $recruit) {
             $job_ids[] = $recruit['job']['id'];
+            foreach ($recruit['entrusts'] as $entrust) {
+                if(!isset($lastEntrustIds[$recruit['id']]) || $lastEntrustIds[$recruit['id']]< $entrust['id']){
+                    $lastEntrustIds[$recruit['id']] = $entrust['id'];
+                }
+            }
         }
         $leads = UserBasicInfo::whereIn('user_id', $leadIds)->get()->keyBy('user_id')->toArray();
         $jobs = app()->build(JobsRepository::class)->getListData(Job::whereIn('id', $job_ids)->get())->keyBy('id')->toArray();
         foreach ($recruits as &$recruit) {
-            foreach ($recruit['entrusts'] as &$entrust) {
+            foreach ($recruit['entrusts'] as $k=>&$entrust) {
                 if(isset($leads[$entrust['leading_id']])){
                     $entrust['leading'] = $leads[$entrust['leading_id']];
                 }else{
                     $entrust['leading'] = null;
+                }
+                if(isset($lastEntrustIds[$recruit['id']]) && $lastEntrustIds[$recruit['id']]!=$entrust['id']){
+                    unset($recruit['entrusts'][$k]);
                 }
             }
             $recruit['job'] = $jobs[$recruit['job']['id']];
