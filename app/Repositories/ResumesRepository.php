@@ -537,7 +537,7 @@ class ResumesRepository
             $entrust_id = $data['entrust_id'];
             $entrust = Entrust::lock('for update')->find($entrust_id);
             if($entrust)
-                $recruit = $entrust->recruit;
+                $recruit = Recruit::lock('for update')->find($entrust->company_job_recruit_id);
         }
         if($recruit){
             $recruitResume = RecruitResume::create([
