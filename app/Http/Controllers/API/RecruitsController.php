@@ -170,8 +170,8 @@ class RecruitsController extends ApiBaseCommonController
         foreach ($recruits as $recruit) {
             $job_ids[] = $recruit['job']['id'];
             foreach ($recruit['entrusts'] as $entrust) {
-                if(!isset($lastEntrustIds[$recruit['id']]) || $lastEntrustIds[$recruit['id']]< $entrust['id']){
-                    $lastEntrustIds[$recruit['id']] = $entrust['id'];
+                if(!isset($lastEntrustIds[$recruit['id']][$entrust['third_party_id']]) || $lastEntrustIds[$recruit['id']][$entrust['third_party_id']]< $entrust['id']){
+                    $lastEntrustIds[$recruit['id']][$entrust['third_party_id']] = $entrust['id'];
                 }
             }
         }
@@ -184,7 +184,7 @@ class RecruitsController extends ApiBaseCommonController
                 }else{
                     $entrust['leading'] = null;
                 }
-                if(isset($lastEntrustIds[$recruit['id']]) && $lastEntrustIds[$recruit['id']]!=$entrust['id']){
+                if(isset($lastEntrustIds[$recruit['id']][$entrust['third_party_id']]) && $lastEntrustIds[$recruit['id']][$entrust['third_party_id']]!=$entrust['id']){
                     unset($recruit['entrusts'][$k]);
                 }
             }
