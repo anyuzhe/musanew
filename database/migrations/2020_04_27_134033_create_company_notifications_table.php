@@ -23,6 +23,7 @@ class CreateCompanyNotificationsTable extends Migration
             $table->longText('other_data')->nullable();
             $table->integer('is_read')->default(0);
             $table->timestamps();
+            $table->timestamp('read_at', 0)->nullable();
 
             $table->index('company_id');
             $table->index('type');

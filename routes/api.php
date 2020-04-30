@@ -260,6 +260,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //企业 信息 通知
     $router->get('/company/notifications', 'API\CompanyNotificationsController@index');
     $router->get('/company/notifications/{id}', 'API\CompanyNotificationsController@show');
+    $router->post('/company/notifications/read', 'API\CompanyNotificationsController@setRead');
     //操作日志
     $router->get('/company/recruit/logs', 'API\CompanyRecruitLogsController@index');
 

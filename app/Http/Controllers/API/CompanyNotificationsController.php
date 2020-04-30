@@ -46,7 +46,18 @@ class CompanyNotificationsController extends ApiBaseCommonController
     {
         if($data->status==0){
             $data->is_read=1;
+            $data->read_at=date('Y-m-d H:i:s');
             $data->save();
         }
+    }
+
+    public function setRead(Request $request)
+    {
+        $ids = $request->get('ids');
+        CompanyNotification::whereIn('id', $ids)->update([
+            'is_read'=>1,
+            'read_at'=>date('Y-m-d H:i:s'),
+        ]);
+        return $this->apiReturnJson(0);
     }
 }

@@ -14,5 +14,6 @@ class CompanyNotification extends Model
         'content',
         'other_data',
         'is_read',
+        'read_at',
     ];
 }
