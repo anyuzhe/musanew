@@ -635,9 +635,9 @@ class DumpExcelController extends ApiBaseCommonController
                 })->orWhere(function ($query2)use($start_date,$end_date){
                     $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
                 });
-            })->pluck('company_job_recruit_id')->toArray();
+            })->whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }else{
-            $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+            $has_entrust_ids = Entrust::whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }
         $model = new Recruit();
         if($company_id){
@@ -757,9 +757,9 @@ class DumpExcelController extends ApiBaseCommonController
                 })->orWhere(function ($query2)use($start_date,$end_date){
                     $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
                 });
-            })->pluck('company_job_recruit_id')->toArray();
+            })->whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }else{
-            $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+            $has_entrust_ids = Entrust::whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }
 
         $model = new Recruit();
@@ -898,7 +898,7 @@ class DumpExcelController extends ApiBaseCommonController
                 });
             });
         }
-        $recruitResumes = $model->whereNotNull('company_job_recruit_entrust_id')->get();
+        $recruitResumes = $model->whereNotNull('company_job_recruit_entrust_id')->whereNotIn('company_job_recruit_entrust_id',Entrust::whereNotNull('source_entrust_id')->pluck('id'))->get();
 
         $recruitResumes->load('job');
         $recruitResumes->load('recruit');
@@ -1065,9 +1065,9 @@ class DumpExcelController extends ApiBaseCommonController
                 })->orWhere(function ($query2)use($start_date,$end_date){
                     $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
                 });
-            })->pluck('company_job_recruit_id')->toArray();
+            })->whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }else{
-            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
+            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }
 
         $data =[];
@@ -1160,9 +1160,9 @@ class DumpExcelController extends ApiBaseCommonController
                 })->orWhere(function ($query2)use($start_date,$end_date){
                     $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
                 });
-            })->pluck('company_job_recruit_id')->toArray();
+            })->whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }else{
-            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
+            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->whereNull('source_entrust_id')->pluck('company_job_recruit_id')->toArray();
         }
 
         $recruits = $model->whereIn('id', $company_job_recruit_ids)->get();
@@ -1249,7 +1249,7 @@ class DumpExcelController extends ApiBaseCommonController
         foreach ($companies as $company) {
             $thirdParty = $company->thirdParty;
             foreach ($thirdParty as $v) {
-                $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $v->id)->where('company_id', $company->id)->pluck('id')->toArray();
+                $company_job_recruit_resume_ids = RecruitResume::where('third_party_id', $v->id)->where('company_id', $company->id)->whereNotIn('company_job_recruit_entrust_id',Entrust::whereNotNull('source_entrust_id')->pluck('id'))->pluck('id')->toArray();
                 $_data = [];
                 $_data[] = $v->company_alias;
                 $_data[] = $company->company_alias;
