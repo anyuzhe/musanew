@@ -52,6 +52,14 @@ Route::get('/', function () {
 Route::get('/test', function () {
     set_time_limit(0);
 
+    $date = '2020-04-1';
+    $firstday = date('Y-m-01', strtotime($date));
+    $lastday = date('Y-m-d', strtotime("$firstday +1 month -1 day"));
+    dump($firstday);
+    dd($lastday);
+    dump(strtotime('2020-04-30'));
+    dump(strtotime('2020-04-31'));
+    dd(strtotime('2020-05-01'));
 
     $t = Recruit::find(1);
 //    $t->need_num=33;

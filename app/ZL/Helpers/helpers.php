@@ -1115,3 +1115,10 @@ function getPermissionScope($company_id, $user_id, $permission_id)
         return $Department_data2;
     }
 }
+
+function getMonthDate($date){
+    $firstday = date('Y-m-01 00:00:00', strtotime($date));
+    $lastday = date('Y-m-d 23:59:59', strtotime("$firstday +1 month -1 day"));
+
+    return [$firstday,$lastday];
+}

@@ -621,8 +621,24 @@ class DumpExcelController extends ApiBaseCommonController
     {
         set_time_limit(0);
         $company_id = $request->get('company_id');
+        $start_date = $request->get('start_at');
+        $end_date = $request->get('end_at');
+        if($md = $request->get('md')){
+            $start_date = getMonthDate($md)[0];
+            $end_date = getMonthDate($md)[1];
+        }
         //委托了的招聘
-        $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+        if($start_date && $end_date){
+            $has_entrust_ids = Entrust::where(function ($query)use($start_date,$end_date){
+                $query->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->pluck('company_job_recruit_id')->toArray();
+        }else{
+            $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+        }
         $model = new Recruit();
         if($company_id){
             $model = $model->where('company_id',$company_id);
@@ -727,8 +743,25 @@ class DumpExcelController extends ApiBaseCommonController
     {
         set_time_limit(0);
         $company_id = $request->get('company_id');
+        $start_date = $request->get('start_at');
+        $end_date = $request->get('end_at');
+        if($md = $request->get('md')){
+            $start_date = getMonthDate($md)[0];
+            $end_date = getMonthDate($md)[1];
+        }
         //委托了的招聘
-        $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+        if($start_date && $end_date){
+            $has_entrust_ids = Entrust::where(function ($query)use($start_date,$end_date){
+                $query->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->pluck('company_job_recruit_id')->toArray();
+        }else{
+            $has_entrust_ids = Entrust::pluck('company_job_recruit_id')->toArray();
+        }
+
         $model = new Recruit();
         if($company_id){
             $model = $model->where('company_id',$company_id);
@@ -844,11 +877,27 @@ class DumpExcelController extends ApiBaseCommonController
     {
         set_time_limit(0);
         $company_id = $request->get('company_id');
+        $start_date = $request->get('start_at');
+        $end_date = $request->get('end_at');
+        if($md = $request->get('md')){
+            $start_date = getMonthDate($md)[0];
+            $end_date = getMonthDate($md)[1];
+        }
         $model = new RecruitResume();
         if($company_id){
             $model = $model->where('company_id',$company_id);
         }
 
+        //委托了的招聘
+        if($start_date && $end_date){
+            $model = $model->where(function ($query)use($start_date,$end_date){
+                $query->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('updated_at','>=',$start_date)->where('updated_at','<=',$end_date);
+                });
+            });
+        }
         $recruitResumes = $model->whereNotNull('company_job_recruit_entrust_id')->get();
 
         $recruitResumes->load('job');
@@ -992,6 +1041,12 @@ class DumpExcelController extends ApiBaseCommonController
     {
         set_time_limit(0);
         $company_id = $request->get('company_id');
+        $start_date = $request->get('start_at');
+        $end_date = $request->get('end_at');
+        if($md = $request->get('md')){
+            $start_date = getMonthDate($md)[0];
+            $end_date = getMonthDate($md)[1];
+        }
         $model = new Job();
         if($company_id){
             $model = $model->where('company_id',$company_id);
@@ -1002,7 +1057,18 @@ class DumpExcelController extends ApiBaseCommonController
         $depIds = $model->pluck('department_id')->unique();
 
         $departments = CompanyDepartment::all()->keyBy('id')->toArray();
-        $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
+
+        if($start_date && $end_date){
+            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->where(function ($query)use($start_date,$end_date){
+                $query->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->pluck('company_job_recruit_id')->toArray();
+        }else{
+            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
+        }
 
         $data =[];
         foreach ($depIds as $depId) {
@@ -1072,6 +1138,12 @@ class DumpExcelController extends ApiBaseCommonController
     {
         set_time_limit(0);
         $company_id = $request->get('company_id');
+        $start_date = $request->get('start_at');
+        $end_date = $request->get('end_at');
+        if($md = $request->get('md')){
+            $start_date = getMonthDate($md)[0];
+            $end_date = getMonthDate($md)[1];
+        }
         $model = new Recruit();
         if($company_id){
             $model = $model->where('company_id',$company_id);
@@ -1080,7 +1152,18 @@ class DumpExcelController extends ApiBaseCommonController
         Recruit::where('wait_entry_num', '<' ,0)->update(['wait_entry_num'=>0]);
 
         $departments = CompanyDepartment::all()->keyBy('id')->toArray();
-        $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
+
+        if($start_date && $end_date){
+            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->where(function ($query)use($start_date,$end_date){
+                $query->where(function ($query1)use($start_date,$end_date){
+                    $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                })->orWhere(function ($query2)use($start_date,$end_date){
+                    $query2->where('end_at','>=',$start_date)->where('end_at','<=',$end_date);
+                });
+            })->pluck('company_job_recruit_id')->toArray();
+        }else{
+            $company_job_recruit_ids = Entrust::whereNotIn('status', [-2,-3,0])->pluck('company_job_recruit_id')->toArray();
+        }
 
         $recruits = $model->whereIn('id', $company_job_recruit_ids)->get();
         $data =[];
@@ -1148,6 +1231,13 @@ class DumpExcelController extends ApiBaseCommonController
     {
         set_time_limit(0);
         $company_id = $request->get('company_id');
+
+        $start_date = $request->get('start_at');
+        $end_date = $request->get('end_at');
+        if($md = $request->get('md')){
+            $start_date = getMonthDate($md)[0];
+            $end_date = getMonthDate($md)[1];
+        }
         $model = new Company();
         if($company_id){
             $model = $model->where('id',$company_id);
@@ -1163,11 +1253,11 @@ class DumpExcelController extends ApiBaseCommonController
                 $_data = [];
                 $_data[] = $v->company_alias;
                 $_data[] = $company->company_alias;
-                $_data[] = $this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids);//推荐简历;
-                $_data[] = $this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids);//邀请面试
-                $_data[] = $this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids);//放弃面试
-                $_data[] = $this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids);//面试通过
-                $_data[] = $this->getEntrustCountByStatus([8], $company_job_recruit_resume_ids);//
+                $_data[] = $this->getEntrustCountByStatus([1], $company_job_recruit_resume_ids, $start_date, $end_date);//推荐简历;
+                $_data[] = $this->getEntrustCountByStatus([2,3,5], $company_job_recruit_resume_ids, $start_date, $end_date);//邀请面试
+                $_data[] = $this->getEntrustCountByStatus([-2], $company_job_recruit_resume_ids, $start_date, $end_date);//放弃面试
+                $_data[] = $this->getEntrustCountByStatus([6], $company_job_recruit_resume_ids, $start_date, $end_date);//面试通过
+                $_data[] = $this->getEntrustCountByStatus([8], $company_job_recruit_resume_ids, $start_date, $end_date);//
                 $data[] = $_data;
             }
         }
@@ -1239,13 +1329,24 @@ class DumpExcelController extends ApiBaseCommonController
      * 1: 正常状态统计
      * 2: 判断最后状态是不是已经变了
      */
-    protected function getEntrustCountByStatus($status, $company_job_recruit_resume_ids, $type=1)
+    protected function getEntrustCountByStatus($status, $company_job_recruit_resume_ids, $start_date=null, $end_date=null, $type=1)
     {
         if($type==1){
-            $data = RecruitResumeLog::whereIn('status',$status)
-                ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
-                ->groupBy('company_job_recruit_resume_id')->orderBy('id','desc')->get();
-            $count = $data->count();
+            if($start_date && $end_date){
+                $data = RecruitResumeLog::whereIn('status',$status)->where(function ($query)use($start_date,$end_date){
+                    $query->where(function ($query1)use($start_date,$end_date){
+                        $query1->where('created_at','>=',$start_date)->where('created_at','<=',$end_date);
+                    });
+                })
+                    ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
+                    ->groupBy('company_job_recruit_resume_id')->orderBy('id','desc')->get();
+                $count = $data->count();
+            }else{
+                $data = RecruitResumeLog::whereIn('status',$status)
+                    ->whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)
+                    ->groupBy('company_job_recruit_resume_id')->orderBy('id','desc')->get();
+                $count = $data->count();
+            }
         }else{
             $count = 0;
             $all = RecruitResumeLog::whereIn('company_job_recruit_resume_id', $company_job_recruit_resume_ids)->orderBy('id','asc')->get();
