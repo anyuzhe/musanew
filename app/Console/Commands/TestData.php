@@ -170,16 +170,16 @@ class TestData extends Command
         ]);
         foreach ($recruitResumes as $recruitResume) {
             //往需求方添加人才库关联
-            $_has = CompanyResume::where('company_id', $job->company_id)->where('resume_id', $recruitResume->resume_id)->where('type', 1)->first();
+            $_has = CompanyResume::where('company_id', $newJob->company_id)->where('resume_id', $recruitResume->resume_id)->where('type', 1)->first();
             if(!$_has){
                 CompanyResume::create([
-                    'company_id'=>$job->company_id,
+                    'company_id'=>$newJob->company_id,
                     'resume_id'=>$recruitResume->resume_id,
                     'type'=>1,
                     'source_type'=>1,
                     'source_recruit_id'=>$recruitResume->company_job_recruit_id,
                     'source_entrust_id'=>$recruitResume->company_job_recruit_entrust_id?$recruitResume->company_job_recruit_entrust_id:null,
-                    'source_job_id'=>$job->id,
+                    'source_job_id'=>$newJob->id,
                     'source_company_id'=>$recruitResume->third_party_id?$recruitResume->third_party_id:null,
                     'creator_id'=>$recruitResume->creator_id,
                 ]);
