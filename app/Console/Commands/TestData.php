@@ -77,8 +77,8 @@ class TestData extends Command
             }
         }elseif ($type=2){
             ## 复制职位 到别的公司
-            $jobs = Job::where('company_id', 15)->get();
-            $companyResumeGradeSettings = CompanyResumeGradeSetting::where('company_id', 15)->get()->toArray();
+            $jobs = Job::where('company_id', 14)->get();
+            $companyResumeGradeSettings = CompanyResumeGradeSetting::where('company_id', 14)->get()->toArray();
             $companies = Company::whereIn('id',[20200001,20200002])->get();
 
             $gradeIdsChange = [];
@@ -91,8 +91,10 @@ class TestData extends Command
             }
             foreach ($jobs as $job) {
                 foreach ($companies as $company) {
+                    $newData = $job->toArray();
+                    unset($newData['id']);
                     $newJob = new Job();
-                    $newJob->fill($job->toArray());
+                    $newJob->fill($newData);
                     $newJob->company_id = $company->id;
                     if(isset($gradeIdsChange[$job->resume_grade_setting_id][$company->id])){
                         $newJob->resume_grade_setting_id = $gradeIdsChange[$job->resume_grade_setting_id][$company->id];
@@ -114,32 +116,32 @@ class TestData extends Command
                     if($company->id==20200001){
                         if($newJob->department_id==98){
                             $newJob->department_id = 131;
-                            $this->changeRecruit($job, $newJob->id);
+                            $this->changeRecruit($job, $newJob);
                         }
                         elseif($newJob->department_id==121){
                             $newJob->department_id = 133;
-                            $this->changeRecruit($job, $newJob->id);
+                            $this->changeRecruit($job, $newJob);
                         }
                         elseif($newJob->department_id==122){
                             $newJob->department_id = 134;
-                            $this->changeRecruit($job, $newJob->id);
+                            $this->changeRecruit($job, $newJob);
                         }
                         elseif($newJob->department_id==123){
                             $newJob->department_id = 135;
-                            $this->changeRecruit($job, $newJob->id);
+                            $this->changeRecruit($job, $newJob);
                         }
                         elseif($newJob->department_id==128){
                             $newJob->department_id = 136;
-                            $this->changeRecruit($job, $newJob->id);
+                            $this->changeRecruit($job, $newJob);
                         }
                     }elseif ($company->id==20200002){
                         if($newJob->department_id==105){
                             $newJob->department_id = 138;
-                            $this->changeRecruit($job, $newJob->id);
+                            $this->changeRecruit($job, $newJob);
                         }
                         elseif($newJob->department_id==106){
                             $newJob->department_id = 139;
-                            $this->changeRecruit($job, $newJob->id);
+                            $this->changeRecruit($job, $newJob);
                         }
                     }
                     $newJob->save();
@@ -149,22 +151,22 @@ class TestData extends Command
         }
     }
 
-    protected function changeRecruit($job, $newJobId)
+    protected function changeRecruit($job, $newJob)
     {
         $oldRecruitIds = Recruit::where('job_id', $job->id)->pluck('id');
         $recruitResumes = RecruitResume::where('job_id', $job->id)->get();
 
         Recruit::where('job_id', $job->id)->update([
-            'company_id'=>$job->company_id,
-            'job_id'=>$newJobId,
+            'company_id'=>$newJob->company_id,
+            'job_id'=>$newJob->id,
         ]);
         RecruitEndLog::where('job_id', $job->id)->update([
-            'company_id'=>$job->company_id,
-            'job_id'=>$newJobId,
+            'company_id'=>$newJob->company_id,
+            'job_id'=>$newJob->id,
         ]);
         Entrust::where('job_id', $job->id)->update([
-            'company_id'=>$job->company_id,
-            'job_id'=>$newJobId,
+            'company_id'=>$newJob->company_id,
+            'job_id'=>$newJob->id,
         ]);
         foreach ($recruitResumes as $recruitResume) {
             //往需求方添加人才库关联
@@ -184,15 +186,15 @@ class TestData extends Command
             }
         }
         RecruitResume::where('job_id', $job->id)->update([
-            'company_id'=>$job->company_id,
-            'job_id'=>$newJobId,
+            'company_id'=>$newJob->company_id,
+            'job_id'=>$newJob->id,
         ]);
         RecruitResumeLog::where('job_id', $job->id)->update([
-            'company_id'=>$job->company_id,
-            'job_id'=>$newJobId,
+            'company_id'=>$newJob->company_id,
+            'job_id'=>$newJob->id,
         ]);
         RecruitLog::whereIn('company_job_recruit_id', $oldRecruitIds)->update([
-            'company_id'=>$job->company_id
+            'company_id'=>$newJob->id,
         ]);
     }
 }
