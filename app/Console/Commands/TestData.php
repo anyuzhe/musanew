@@ -91,60 +91,57 @@ class TestData extends Command
             }
             foreach ($jobs as $job) {
                 foreach ($companies as $company) {
-                    $newData = $job->toArray();
-                    unset($newData['id']);
-                    $newJob = new Job();
-                    $newJob->fill($newData);
-                    $newJob->company_id = $company->id;
-                    if(isset($gradeIdsChange[$job->resume_grade_setting_id][$company->id])){
-                        $newJob->resume_grade_setting_id = $gradeIdsChange[$job->resume_grade_setting_id][$company->id];
-                    }
-                    $newJob->save();
-                    $id = $newJob->id;
-
-                    $skills = app('db')->connection('musa')->table('job_skill')->where('job_id', $job->id)->get()->toArray();
-
-                    if($skills){
-                        foreach ($skills as $skill) {
-                            $skill = json_decode(json_encode($skill,256),true);
-                            $skill['job_id'] = $id;
-                            unset($skill['id']);
-                            app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
-                        }
-                    }
-
+                    $new_department_id = null;
                     if($company->id==20200001){
-                        if($newJob->department_id==98){
-                            $newJob->department_id = 131;
-                            $this->changeRecruit($job, $newJob);
+                        if($job->department_id==99){
+                            $new_department_id = 131;
                         }
-                        elseif($newJob->department_id==121){
-                            $newJob->department_id = 133;
-                            $this->changeRecruit($job, $newJob);
+                        elseif($job->department_id==121){
+                            $new_department_id = 133;
                         }
-                        elseif($newJob->department_id==122){
-                            $newJob->department_id = 134;
-                            $this->changeRecruit($job, $newJob);
+                        elseif($job->department_id==122){
+                            $new_department_id = 134;
                         }
-                        elseif($newJob->department_id==123){
-                            $newJob->department_id = 135;
-                            $this->changeRecruit($job, $newJob);
+                        elseif($job->department_id==123){
+                            $new_department_id = 135;
                         }
-                        elseif($newJob->department_id==128){
-                            $newJob->department_id = 136;
-                            $this->changeRecruit($job, $newJob);
+                        elseif($job->department_id==128){
+                            $new_department_id = 136;
                         }
                     }elseif ($company->id==20200002){
-                        if($newJob->department_id==105){
-                            $newJob->department_id = 138;
-                            $this->changeRecruit($job, $newJob);
+                        if($job->department_id==105){
+                            $new_department_id = 138;
                         }
-                        elseif($newJob->department_id==106){
-                            $newJob->department_id = 139;
-                            $this->changeRecruit($job, $newJob);
+                        elseif($job->department_id==106){
+                            $new_department_id = 139;
                         }
                     }
-                    $newJob->save();
+                    if($new_department_id){
+                        $newData = $job->toArray();
+                        unset($newData['id']);
+                        $newJob = new Job();
+                        $newJob->fill($newData);
+                        $newJob->company_id = $company->id;
+                        if(isset($gradeIdsChange[$job->resume_grade_setting_id][$company->id])){
+                            $newJob->resume_grade_setting_id = $gradeIdsChange[$job->resume_grade_setting_id][$company->id];
+                        }
+                        $newJob->save();
+                        $id = $newJob->id;
+
+                        $skills = app('db')->connection('musa')->table('job_skill')->where('job_id', $job->id)->get()->toArray();
+
+                        if($skills){
+                            foreach ($skills as $skill) {
+                                $skill = json_decode(json_encode($skill,256),true);
+                                $skill['job_id'] = $id;
+                                unset($skill['id']);
+                                app('db')->connection('musa')->table('job_skill')->insertGetId($skill);
+                            }
+                        }
+                        $newJob->department_id = $new_department_id;
+                        $newJob->save();
+                        $this->changeRecruit($job, $newJob);
+                    }
                 }
             }
             ## 迁移公司的招聘
