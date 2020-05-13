@@ -663,21 +663,20 @@ function sendLogsEmail($logs)
         $recruit = $logObj->recruit;
         $entrust = $logObj->entrust;
         if($entrust){
-            if($entrust->leading_id && $entrust->leading_id!=$LOGIN_USER->id && $leading = \App\Models\User::find($entrust->leading_id)){
-                if($leading->email){
+            if($entrust->leading_id && $entrust->leading_id!=$LOGIN_USER->id && $entrust_leading = \App\Models\User::find($entrust->leading_id)){
+                if($entrust_leading->email){
                     try {
-                        \Illuminate\Support\Facades\Mail::to($leading->email)->send(new \App\Mail\RecruitResumeLogEmail($logs));
+                        \Illuminate\Support\Facades\Mail::to($entrust_leading->email)->send(new \App\Mail\RecruitResumeLogEmail($logs));
                     } catch (Exception $e) {
                     }
                 }
             }
-        }else{
-            if($recruit->leading_id && $recruit->leading_id!=$LOGIN_USER->id && $leading = \App\Models\User::find($recruit->leading_id)){
-                if($leading->email){
-                    try {
-                        \Illuminate\Support\Facades\Mail::to($leading->email)->send(new \App\Mail\RecruitResumeLogEmail($logs));
-                    } catch (Exception $e) {
-                    }
+        }
+        if($recruit->leading_id && $recruit->leading_id!=$LOGIN_USER->id && $leading = \App\Models\User::find($recruit->leading_id)){
+            if($leading->email && (!isset($entrust_leading->email) || $entrust_leading->email!=$leading->email)){
+                try {
+                    \Illuminate\Support\Facades\Mail::to($leading->email)->send(new \App\Mail\RecruitResumeLogEmail($logs));
+                } catch (Exception $e) {
                 }
             }
         }
