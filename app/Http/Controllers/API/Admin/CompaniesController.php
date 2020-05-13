@@ -267,7 +267,7 @@ class CompaniesController extends ApiBaseCommonController
         $info->role_ids = $role_ids;
         $info->role_names = $role_names;
         $info->is_manager = $is_manager;
-        $info->avatar_url = getPicFullUrl($info->avatar);
+        $info->avatar_url = getAvatarFullUrl($info->avatar);
         $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
         $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
 

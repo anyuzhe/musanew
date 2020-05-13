@@ -114,7 +114,7 @@ class ResumesRepository
                 $attachment->file_full_path = getPicFullUrl($v->file_path);
             }
             if($v->avatar){
-                $v->avatar_url = getPicFullUrl($v->avatar);
+                $v->avatar_url = getAvatarFullUrl($v->avatar, false);
             }else{
                 $v->avatar_url = "";
             }
@@ -179,7 +179,7 @@ class ResumesRepository
 
         $data->resume_file_path = config('app.url').$data->resume_file_path;
         if($data->avatar){
-            $data->avatar_url = getPicFullUrl($data->avatar);
+            $data->avatar_url = getAvatarFullUrl($data->avatar);
         }else{
             $data->avatar_url = "";
         }

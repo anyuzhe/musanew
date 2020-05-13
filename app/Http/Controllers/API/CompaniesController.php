@@ -514,6 +514,7 @@ class CompaniesController extends ApiBaseCommonController
             $info = $user['info'];
             $data[] = [
               'id'=>$user['id'],
+              'gender'=>$info['gender'],
               'name'=>$info?$info['realname']:'无姓名',
               'role_name'=>$role?$role['name']:'无角色',
             ];
@@ -589,7 +590,7 @@ class CompaniesController extends ApiBaseCommonController
               'department_id'=>$companyUser->department_id,
               'department_ids'=>$department_ids,
               'is_manager'=>$is_manager,
-              'avatar_url'=>getPicFullUrl($info['avatar']),
+              'avatar_url'=>getAvatarFullUrl($info['avatar']),
             ];
         }
         CompanyLogRepository::addLog('company_user_manage','show_user',"查看企业人员列表 第".request('pagination', 1)."页");
@@ -637,7 +638,7 @@ class CompaniesController extends ApiBaseCommonController
         $info->role_ids = $role_ids;
         $info->role_names = $role_names;
         $info->is_manager = $is_manager;
-        $info->avatar_url = getPicFullUrl($info->avatar);
+        $info->avatar_url = getAvatarFullUrl($info->avatar);
         $info->work_years = getYearsText($info->start_work_at, date('Y-m-d'));
         $info->entry_years = getYearsText($info->entry_at, date('Y-m-d'));
 

@@ -51,6 +51,8 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    $d = getPermissionScope(14, 55, 6);
+    dd($d);
 
     $date = '2020-04-1';
     $firstday = date('Y-m-01', strtotime($date));

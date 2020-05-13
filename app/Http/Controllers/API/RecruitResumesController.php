@@ -127,7 +127,7 @@ class RecruitResumesController extends ApiBaseCommonController
         foreach ($data->logs as &$log) {
             if($log->creatorInfo){
                 if($log->creatorInfo->avatar){
-                    $log->creatorInfo->avatar_url = getPicFullUrl($log->creatorInfo->avatar);
+                    $log->creatorInfo->avatar_url = getAvatarFullUrl($log->creatorInfo->avatar);
                 }else{
                     $log->creatorInfo->avatar_url = "";
                 }

@@ -524,14 +524,20 @@ function getMoodlePICURL($logo){
     return $url->get_scheme().'://'."$host:$port/draftfile.php$slashargument";
 }
 
-function getPicFullUrl($url){
-    if(!$url)
-        return null;
-//        return config('app.url').'/static/pic/musa_logo.png';
-    if(is_numeric($url)){
-        return getMoodlePICURL($url);
+function getAvatarFullUrl($url){
+    return getPicFullUrl($url, false);
+}
+function getPicFullUrl($url, $hasDefault=true){
+    if($url){
+        if(is_numeric($url)){
+            return getMoodlePICURL($url);
+        }else{
+            return config('app.url').'/storage/'.$url;
+        }
+    }elseif($hasDefault){
+        return config('app.url').'/static/pic/musa_logo.png';
     }else{
-        return config('app.url').'/storage/'.$url;
+        return null;
     }
 }
 
@@ -1085,7 +1091,7 @@ function getPermissionScope($company_id, $user_id, $permission_id)
     $obj = \App\Models\CompanyUserPermissionScope::where('key', "{$permission_id}_{$company_id}_{$user_id}")->first();
     if(!$obj || $obj->type==1){
         return null;
-    }elseif ($obj->type=2){
+    }elseif ($obj->type==2){
         if(!$Department_data1){
             if($CurrentDepartment && $CurrentDepartment->level==1){
                 $Department_data1 = array_merge([$CurrentDepartment->id], $CurrentDepartment->children->pluck('id')->toArray());
@@ -1100,7 +1106,7 @@ function getPermissionScope($company_id, $user_id, $permission_id)
             return array_merge($Department_data1, explode(',', $obj->department_ids));
         }
         return $Department_data1;
-    }elseif ($obj->type=3){
+    }elseif ($obj->type==3){
         if(!$Department_data2){
             if($CurrentDepartment && $CurrentDepartment->level==1){
                 $Department_data2 = array_merge([$CurrentDepartment->id], $CurrentDepartment->children->pluck('id')->toArray());
