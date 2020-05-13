@@ -494,6 +494,22 @@ class ResumesRepository
                 $_s = null;
                 if(isset($oldSkillsData[strtolower($skill['skill_name'])]))
                     $_s = $oldSkillsData[strtolower($skill['skill_name'])];
+
+                if(!$_s){
+
+                    $s1 = str_replace(' ','',strtolower($skill['skill_name']));
+                    if(strstr($s1,'/')){
+                        $ss = explode('/', $s1);
+                    }else{
+                        $ss = [$s1];
+                    }
+                    foreach ($oldSkillsData as $name=>$oldSkill) {
+                        foreach ($ss as $s) {
+                            if(strstr($s, $name) || strstr($name, $s))
+                                $_s = $oldSkill;
+                        }
+                    }
+                }
                 if(!$_s){
                     $_s = Skill::create([
                         'name'=>$skill['skill_name'],

@@ -51,6 +51,22 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    $s = 'Jineng/  1 2';
+    $s1 = str_replace(' ','',strtolower($s));
+    if(strstr($s,'/')){
+        $ss = explode('/', $s1);
+    }else{
+        $ss = [$s1];
+    }
+    $skill = '12';
+    foreach ($ss as $s) {
+        if(strstr($skill, $s))
+            dd(42);
+    }
+    dd(strstr($s,','));
+    dd($s1);
+
+
     $d = getPermissionScope(14, 55, 6);
     dd($d);
 
