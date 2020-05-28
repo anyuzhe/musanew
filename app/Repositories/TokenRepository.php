@@ -13,9 +13,9 @@ class TokenRepository
 
     public static function getToken()
     {
-        global $LOGIN_TOKEN;
-        if($LOGIN_TOKEN){
-            return $LOGIN_TOKEN;
+        global $LOGIN_TOKEN_STR;
+        if($LOGIN_TOKEN_STR){
+            return $LOGIN_TOKEN_STR;
         }
         $request = app('request');
         $token = $request->get('token');
@@ -23,7 +23,7 @@ class TokenRepository
             $token = $request->header('token');
         if(!$token)
             $token = $request->header('Token');
-        $LOGIN_TOKEN = $token;
+        $LOGIN_TOKEN_STR = $token;
         return $token;
     }
 
@@ -44,7 +44,7 @@ class TokenRepository
     public static function setCurrentCompany($company_id, $token=false)
     {
         if(!$token)
-            $token = self::getToken();
+            $token = TokenRepository::getTokenModel();
         $token->current_company_id = $company_id;
         $token->save();
     }
