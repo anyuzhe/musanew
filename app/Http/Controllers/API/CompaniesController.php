@@ -235,6 +235,7 @@ class CompaniesController extends ApiBaseCommonController
 
     public function getCurrentInfo()
     {
+        $user = $this->getUser();
         $company = $this->getCurrentCompany();
         if(!$company)
             return $this->apiReturnJson(9999,null,'没有当前公司');
@@ -270,9 +271,11 @@ class CompaniesController extends ApiBaseCommonController
         $company->manager = app()->build(CompaniesRepository::class)->getManager($company->id);
         getOptionsText($company);
 //        $company->is_demand_side = count($company->thirdParty)>0?1:0;
-        $role = CompanyRole::find($company->pivot->company_role_id);
+        $company_role_id = CompanyUser::where('user_id', $user->id)->where('company_id', $company->id)->value('company_role_id');
+
+        $role = CompanyRole::find($company_role_id);
         if($role){
-            $company->role_name = CompanyRole::find($company->pivot->company_role_id)->name;
+            $company->role_name =$role->name;
         }else{
             $company->role_name = '未设置角色';
         }
