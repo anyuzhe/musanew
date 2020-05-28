@@ -13,12 +13,17 @@ class TokenRepository
 
     public static function getToken()
     {
+        global $LOGIN_TOKEN;
+        if($LOGIN_TOKEN){
+            return $LOGIN_TOKEN;
+        }
         $request = app('request');
         $token = $request->get('token');
         if(!$token)
             $token = $request->header('token');
         if(!$token)
             $token = $request->header('Token');
+        $LOGIN_TOKEN = $token;
         return $token;
     }
 
@@ -36,21 +41,32 @@ class TokenRepository
         }
     }
 
+    public static function setCurrentCompany($company_id, $token=false)
+    {
+        if(!$token)
+            $token = self::getToken();
+        $token->current_company_id = $company_id;
+        $token->save();
+    }
+
     public static function getCurrentCompany()
     {
         global $LOGIN_USER_CURRENT_COMPANY;
+        global $LOGIN_TOKEN;
         if($LOGIN_USER_CURRENT_COMPANY)
             return $LOGIN_USER_CURRENT_COMPANY;
 
         $user = self::getUser();
         if($user){
+            if($LOGIN_TOKEN && $LOGIN_TOKEN->company){
+                $LOGIN_USER_CURRENT_COMPANY = $LOGIN_TOKEN->company;
+                return $LOGIN_USER_CURRENT_COMPANY;
+            }
             $LOGIN_USER_CURRENT_COMPANY = $user->company->first();
             if(!$LOGIN_USER_CURRENT_COMPANY){
                 $current_company = $user->companies->first();
                 if($current_company){
-                    $r = CompanyUser::where('company_id',$current_company->id)->first();
-                    $r->is_current = 1;
-                    $r->save();
+                    self::setCurrentCompany($current_company->id);
                     $LOGIN_USER_CURRENT_COMPANY = $current_company;
                 }
             }

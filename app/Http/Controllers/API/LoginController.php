@@ -37,6 +37,7 @@ class LoginController extends CommonController
     {
         $email = $this->request->get('email');
         $password = $this->request->get('password');
+        $service_id = $this->request->get('type','service_id');
         $user1 = User::where([
             ['deleted',0],
             ['confirmed',0],
@@ -55,13 +56,13 @@ class LoginController extends CommonController
             if($user->suspended){
                 return $this->apiReturnJson('9999',null,'您的账号已被禁用');
             }
-            $token = TokenHelper::generateNewTokenForUser($user);
+            $token = TokenHelper::generateNewTokenForUser($user, $service_id);
             ExternalToken::where('id', $token->id)->update(['lastaccess'=>time()]);
             User::where('id', $user->id)->update([
                 'lastaccess'=>time(),
             ]);
             ##自动切换到 企业信息没有填写完毕的企业;
-            app()->build(UserRepository::class)->checkCurrentCompany($user);
+            app()->build(UserRepository::class)->checkCurrentCompany($user,$token);
             return $this->apiReturnJson(0, ['token'=>$token->token]);
         }else{
             return $this->apiReturnJson('2001');

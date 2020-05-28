@@ -78,23 +78,34 @@ class TokenHelper
         return $token;
     }
 
-    static function generateNewTokenForUser(User $user) {
+    static function generateNewTokenForUser(User $user, $service_id=2) {
 
         ExternalToken::where([
             ['userid', $user->id],
-            ['externalserviceid', 2],
+            ['externalserviceid', $service_id],
             ['tokentype', EXTERNAL_TOKEN_PERMANENT],
         ])->delete();
 
+        $numtries = 0;
+        do {
+            $numtries ++;
+            $generatedtoken = md5(uniqid(rand(),1));
+            if ($numtries > 5){
+                throw new \moodle_exception('tokengenerationfailed');
+            }
+        } while (
+            ExternalToken::where('token',$generatedtoken)->first()
+        );
+
         $token = new \stdClass;
-        $token->token = md5(uniqid(rand(), 1));
+        $token->token = $generatedtoken;
         $token->userid = $user->id;
         $token->tokentype = EXTERNAL_TOKEN_PERMANENT;
         $token->contextid = 1;
 //            $token->contextid = 0;
         $token->creatorid = $user->id;
         $token->timecreated = time();
-        $token->externalserviceid = 2;
+        $token->externalserviceid = $service_id;
         // By default tokens are valid for 12 weeks.
         $token->validuntil = $token->timecreated + self::$tokenduration;
         $token->iprestriction = null;

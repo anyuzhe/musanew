@@ -21,6 +21,7 @@ class ExternalToken extends Model
         'validuntil',
         'timecreated',
         'lastaccess',
+        'current_company_id',
     ];
 
     public $timestamps = false;
@@ -33,5 +34,10 @@ class ExternalToken extends Model
     public function userBasicInfo()
     {
         return $this->belongsTo('App\Models\UserBasicInfo','userid');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company','current_company_id');
     }
 }

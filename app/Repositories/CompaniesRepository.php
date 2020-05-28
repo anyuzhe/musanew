@@ -178,7 +178,7 @@ class CompaniesRepository
         }else{
             $userRe = app()->build(UserRepository::class);
             $user = $userRe->generateInviteUser($email);
-            $user->companies()->attach($company->id, ['company_role_id' => 1, 'is_current'=>1]);
+            $user->companies()->attach($company->id, ['company_role_id' => 1]);
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyManagerChangeEmail($user, $company));
         }
     }
@@ -198,7 +198,7 @@ class CompaniesRepository
         }else{
             $userRe = app()->build(UserRepository::class);
             $user = $userRe->generateInviteUser($email);
-            $user->companies()->attach($company->id, ['department_id' => $department_id, 'is_current'=>1]);
+            $user->companies()->attach($company->id, ['department_id' => $department_id]);
             \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\CompanyUserChangeEmail($user, $company));
         }
         CompanyUserRole::where('company_id', $company->id)->where('user_id', $user->id)->delete();

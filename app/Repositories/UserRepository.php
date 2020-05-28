@@ -254,16 +254,7 @@ class UserRepository
     public function getCurrentCompany($user, $current_company=null)
     {
         if(!$current_company)
-            $current_company = $user->companies()->where('is_current', 1)->first();
-        if(!$current_company){
-            $current_company = $user->companies->first();
-            if($current_company){
-                $current_company->is_current = 1;
-                $r = CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->first();
-                $r->is_current = 1;
-                $r->save();
-            }
-        }
+            $current_company = TokenRepository::getCurrentCompany();
 
         if($current_company){
 //            $info->current_company->is_demand_side = count($info->current_company->thirdParty)>0?1:0;
@@ -275,13 +266,11 @@ class UserRepository
                 $permissions = array_merge($permissions, $role->getPermissions()->toArray());
             }
             $current_company->permissions =array_values(array_unique($permissions));
-                CompanyUser::where('user_id',$user->id)->update(['is_current'=>0]);
-            CompanyUser::where('company_id', $current_company->id)->where('user_id',$user->id)->update(['is_current'=>1]);
         }
         return $current_company;
     }
 
-    public function checkCurrentCompany($user)
+    public function checkCurrentCompany($user,$token)
     {
         $hasLack = false;
         foreach ($user->companies as $company) {
@@ -291,6 +280,7 @@ class UserRepository
             if($company->addresses->count()==0)
                 $hasLack = true;
             if($hasLack){
+                TokenRepository::setCurrentCompany($company->id,$token);
                 $this->getCurrentCompany($user, $company);
                 return $company;
             }
