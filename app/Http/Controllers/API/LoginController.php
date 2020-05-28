@@ -37,7 +37,7 @@ class LoginController extends CommonController
     {
         $email = $this->request->get('email');
         $password = $this->request->get('password');
-        $service_id = $this->request->get('type','service_id');
+        $service_id = $this->request->get('type','2');
         $user1 = User::where([
             ['deleted',0],
             ['confirmed',0],
