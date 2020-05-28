@@ -62,7 +62,7 @@ class LoginController extends CommonController
                 'lastaccess'=>time(),
             ]);
             ##自动切换到 企业信息没有填写完毕的企业;
-            app()->build(UserRepository::class)->checkCurrentCompany($user,$token);
+            app()->build(UserRepository::class)->checkCurrentCompany($user,ExternalToken::find($token->id));
             return $this->apiReturnJson(0, ['token'=>$token->token]);
         }else{
             return $this->apiReturnJson('2001');
