@@ -119,7 +119,7 @@ class RecruitsController extends ApiBaseCommonController
             if ($company) {
 //                $model = $model->where('company_id', $company->id)->whereIn('status', [1,4]);
                 //委托了的招聘
-                $has_entrust_ids = Entrust::where('status','!=',-3)->pluck('company_job_recruit_id')->toArray();
+                $has_entrust_ids = Entrust::where('status','!=',-3)->where('company_id', $company->id)->pluck('company_job_recruit_id')->toArray();
                 $model = $model->where('company_id', $company->id)->where(function ($query)use($has_entrust_ids){
                     $query->whereNotIn('id', $has_entrust_ids)->orWhereIn('status', [1]);
                 });

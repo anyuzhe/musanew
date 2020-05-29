@@ -363,6 +363,7 @@ class CompaniesController extends ApiBaseCommonController
               'created_at'=>$v->created_at->toDateTimeString(),
             ];
         }
+
         //审核委托
         $depIds = getPermissionScope($company->id, $user->id, 24);
         if($depIds && is_array($depIds)){
@@ -386,15 +387,51 @@ class CompaniesController extends ApiBaseCommonController
             ];
         }
 
+        if(!checkPermission(24)){
+            $entrustApply = [];
+            $checkEntrust = [];
+        }
+
         //正在招聘的相关 招聘id
-        $recruitIds = Entrust::where('third_party_id', $company->id)->whereIn('status',[1])->pluck('company_job_recruit_id')->toArray();
-        $depIds = getPermissionScope($company->id, $user->id, 22);
+        if(!checkPermission(21)) {
+            $recruitIds = [];
+        }else{
+            $recruitIds = Entrust::where('third_party_id', $company->id)->whereIn('status',[1])->pluck('company_job_recruit_id')->toArray();
+        }
+
+        if(!checkPermission(19)) {
+        ##查看/筛查企业正式员工
+            //委托了的招聘
+            $has_entrust_ids = Entrust::where('status','!=',-3)->where('company_id', $company->id)->pluck('company_job_recruit_id')->toArray();
+            $notIds1 = Recruit::where('company_id', $company->id)->where(function ($query)use($has_entrust_ids){
+                $query->whereNotIn('id', $has_entrust_ids)->orWhereIn('status', [1]);
+            })->pluck('id');
+        }
+        if(!checkPermission(20)) {
+        ##查看/筛查外包员工职位
+            $notIds2 = Entrust::where('status','!=',-3)->where('company_id', $company->id)->pluck('company_job_recruit_id')->toArray();
+        }
+
+        ##自己的企业招聘
+        if(!checkPermission(22)){
+            $depIds = [];
+        }else{
+            $depIds = getPermissionScope($company->id, $user->id, 22);
+        }
+        $recruitM = Recruit::where('company_id', $company->id)->whereIn('status', [1,3]);
         if($depIds && is_array($depIds)){
             $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
-            $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->whereIn('job_id', $jobIds)->whereIn('status', [1,3])->pluck('id')->toArray());
-        }else{
-            $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->whereIn('status', [1,3])->pluck('id')->toArray());
+            $recruitM = $recruitM->whereIn('job_id', $jobIds);
         }
+        if(isset($notIds1)){
+            $recruitM = $recruitM->whereNotIn('id', $notIds1);
+        }
+        if(isset($notIds2)){
+            $recruitM = $recruitM->whereNotIn('id', $notIds2);
+        }
+        $_recruitIds = $recruitM->pluck('id')->toArray();
+
+        $recruitIds = array_merge($recruitIds,$_recruitIds);
 
         $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
 

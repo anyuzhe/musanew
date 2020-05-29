@@ -31,6 +31,10 @@ class CompanyNotificationsController extends ApiBaseCommonController
         if($is_read!==null && $is_read!==''){
             $model = $model->where('is_read', $is_read);
         }
+
+        if(!checkPermission(20)){
+            $model = $model->where('type', '<>', 'demand_side_recruit_update');
+        }
         return null;
     }
 

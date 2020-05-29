@@ -2,6 +2,7 @@
 
 use App\Models\CompanyDepartment;
 use App\Models\CompanyRole;
+use App\Models\CompanyRolePermission;
 use App\Models\CompanyUser;
 use App\Models\CompanyUserRole;
 use App\Models\DataMapOption;
@@ -1075,6 +1076,43 @@ function handleRepeatEmailRegister($email){
     }
 }
 
+function checkPermission($permission_id,$company_id=false, $user_id=false)
+{
+    if(!$company_id)
+        $company_id = TokenRepository::getCurrentCompany()->id;
+    if(!$user_id)
+        $user_id = TokenRepository::getUser()->id;
+    global $CompanyUser;
+    global $CompanyUserRoles;
+    if(!$CompanyUser){
+        $CompanyUser = CompanyUser::where('company_id', $company_id)->where('user_id', $user_id)->first();
+    }
+    if(!$CompanyUser)
+        return false;
+
+    if(!$CompanyUserRoles){
+        //company_role_id
+        $company_role_id = null;
+        if($CompanyUser->company_role_id){
+            $company_role_id = $CompanyUser->company_role_id;
+        }
+
+        $role_ids = CompanyUserRole::where('company_id', $company_id)->where('user_id', $user_id)->pluck('role_id')->toArray();
+        if($company_role_id)
+            array_push($role_ids, $company_role_id);
+
+        $role_ids = array_unique($role_ids);
+
+        $CompanyUserRoles = $role_ids;
+    }
+    if(!$CompanyUserRoles || !is_array($CompanyUserRoles) || count($CompanyUserRoles)==0){
+        return false;
+    }
+    if(in_array(1, $CompanyUserRoles))
+        return true;
+
+    return CompanyRolePermission::whereIn('company_role_id',$CompanyUserRoles)->where('company_permission_id', $permission_id)->exists();
+}
 function getPermissionScope($company_id, $user_id, $permission_id)
 {
     global $CompanyUser;
