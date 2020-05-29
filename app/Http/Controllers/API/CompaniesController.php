@@ -339,10 +339,16 @@ class CompaniesController extends ApiBaseCommonController
 
     public function getBacklog()
     {
-        //委托申请
         $company = $this->getCurrentCompany();
         $user = $this->getUser();
-        $entrustApplyData = Entrust::where('company_id',$company->id)->where('status',0)->get();
+        //委托申请
+        $depIds = getPermissionScope($company->id, $user->id, 24);
+        if($depIds && is_array($depIds)){
+            $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
+            $entrustApplyData = Entrust::whereIn('job_id', $jobIds)->where('company_id',$company->id)->where('status',0)->get();
+        }else{
+            $entrustApplyData = Entrust::where('company_id',$company->id)->where('status',0)->get();
+        }
         $entrustApplyData->load('job');
         $entrustApplyData->load('recruit');
         $entrustApplyData->load('thirdParty');
@@ -358,7 +364,13 @@ class CompaniesController extends ApiBaseCommonController
             ];
         }
         //审核委托
-        $checkEntrustData = Entrust::where('third_party_id',$company->id)->where('status',0)->get();
+        $depIds = getPermissionScope($company->id, $user->id, 24);
+        if($depIds && is_array($depIds)){
+            $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
+            $checkEntrustData = Entrust::whereIn('job_id', $jobIds)->where('third_party_id',$company->id)->where('status',0)->get();
+        }else{
+            $checkEntrustData = Entrust::where('third_party_id',$company->id)->where('status',0)->get();
+        }
         $checkEntrustData->load('job');
         $checkEntrustData->load('recruit');
         $checkEntrustData->load('company');
@@ -374,10 +386,17 @@ class CompaniesController extends ApiBaseCommonController
             ];
         }
 
-        $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
         //正在招聘的相关 招聘id
         $recruitIds = Entrust::where('third_party_id', $company->id)->whereIn('status',[1])->pluck('company_job_recruit_id')->toArray();
-        $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->whereIn('status', [1,3])->pluck('id')->toArray());
+        $depIds = getPermissionScope($company->id, $user->id, 22);
+        if($depIds && is_array($depIds)){
+            $jobIds = Job::whereIn('department_id', $depIds)->pluck('id')->toArray();
+            $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->whereIn('job_id', $jobIds)->whereIn('status', [1,3])->pluck('id')->toArray());
+        }else{
+            $recruitIds = array_merge($recruitIds, Recruit::where('company_id', $company->id)->whereIn('status', [1,3])->pluck('id')->toArray());
+        }
+
+        $recruitResumesRepository = app()->build(RecruitResumesRepository::class);
 
         //待处理
         $waitHandleData = RecruitResume::where(function ($query)use ($company){
