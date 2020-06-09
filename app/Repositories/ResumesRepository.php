@@ -693,6 +693,37 @@ class ResumesRepository
             'self_evaluation'=>$resumeNew->self_evaluation,
             'hope_job_text'=>$resumeNew->hope_job_text,
         ];
+        if($resumeNew->name){
+            $newData['name'] = $resumeNew['name'];
+        }
+        if($resumeNew->phone){
+            $newData['phone'] = $resumeNew['phone'];
+        }
+        if($resumeNew->gender){
+            $newData['gender'] = $resumeNew['gender'];
+        }
+        if($resumeNew->birthdate){
+            $newData['birthdate'] = $resumeNew['birthdate'];
+        }
+        if($resumeNew->is_married){
+            $newData['is_married'] = $resumeNew['is_married'];
+        }
+        if($resumeNew->start_work_at){
+            $newData['start_work_at'] = $resumeNew['start_work_at'];
+        }
+        if($resumeNew->on_the_job){
+            $newData['on_the_job'] = $resumeNew['on_the_job'];
+        }
+        if($resumeNew->permanent_province_id && $resumeNew->permanent_city_id && $resumeNew->permanent_district_id){
+            $newData['permanent_province_id'] = $resumeNew['permanent_province_id'];
+            $newData['permanent_city_id'] = $resumeNew['permanent_city_id'];
+            $newData['permanent_district_id'] = $resumeNew['permanent_district_id'];
+        }
+        if($resumeNew->residence_province_id && $resumeNew->residence_city_id && $resumeNew->residence_district_id){
+            $newData['residence_province_id'] = $resumeNew['residence_province_id'];
+            $newData['residence_city_id'] = $resumeNew['residence_city_id'];
+            $newData['residence_district_id'] = $resumeNew['residence_district_id'];
+        }
         $resumeNew->fill(array_merge($old, $newData));
         $resumeNew->save();
         ResumeEducation::where('resume_id', $resumeNew->id)->delete();
