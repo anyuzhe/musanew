@@ -408,6 +408,24 @@ if(!function_exists('getOrderTracesByJson')){
     }
 }
 
+/**
+ * 根据key删除数组中指定元素
+ * @param  array  $arr  数组
+ * @param  string/int  $key  键（key）
+ */
+if (! function_exists('array_remove_by_key')) {
+    function array_remove_by_key($arr, $key){
+        if(!array_key_exists($key, $arr)){
+            return $arr;
+        }
+        $keys = array_keys($arr);
+        $index = array_search($key, $keys);
+        if($index !== FALSE){
+            array_splice($arr, $index, 1);
+        }
+        return $arr;
+    }
+}
 if (! function_exists('postCurl')) {
     function postCurl($url,$post,$cookie=null){//get https的内容
         $post_str = '';
