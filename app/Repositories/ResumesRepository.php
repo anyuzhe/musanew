@@ -228,6 +228,7 @@ class ResumesRepository
             $educations_ids = [];
             foreach ($educations as $education) {
                 $education['resume_id'] = $id;
+                $education = array_remove_by_key($education, 'education_name');
                 if(isset($education['id']) && $education['id']){
                     $educations_ids[] = $education['id'];
                     ResumeEducation::where('id', $education['id'])->update($education);
