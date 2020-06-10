@@ -15,6 +15,7 @@ use App\Models\ResumeProject;
 use App\Models\ResumeTrain;
 use App\Models\ResumeSkill;
 use App\Models\Skill;
+use App\Models\SkillCategory;
 use Illuminate\Support\Facades\DB;
 use mod_questionnaire\question\date;
 
@@ -69,6 +70,7 @@ class ResumesRepository
         $data->load('skills');
         $data->load('attachments');
         $skills = Skill::all()->keyBy('id')->toArray();
+        $skillCategories = SkillCategory::all()->keyBy('id')->toArray();
         $area_ids = $data->pluck('permanent_province_id','permanent_city_id','permanent_district_id','residence_province_id','residence_city_id','residence_district_id');
         foreach ($data as $v) {
             $area_ids[] = $v->permanent_province_id;
@@ -95,6 +97,7 @@ class ResumesRepository
                     continue;
                 }
                 $skill->skill_name = $skills[$skill->skill_id]['name'];
+                $skill->skill_full_name = self::getSkillFullName($skill->skill_id, $skills, $skillCategories);
             }
             foreach ($v->companies as &$company) {
                 getOptionsText($company);
@@ -120,6 +123,13 @@ class ResumesRepository
             }
         }
         return $data;
+    }
+
+    public static function getSkillFullName($id, $skills, $killCategories)
+    {
+        $level1 = $skills[$id];
+        $fullName = $killCategories[$level1['category_l1_id']]['name'].'/'.$killCategories[$level1['category_l2_id']]['name'].'/'.$level1['name'];
+        return $fullName;
     }
 
     public function getData($data)
