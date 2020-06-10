@@ -243,6 +243,7 @@ class ResumesRepository
         if($companies && is_array($companies)){
             $companies_ids = [];
             foreach ($companies as $company) {
+                $company = array_remove_by_key($company, 'industry_text');
                 $company['resume_id'] = $id;
                 if(isset($company['id']) && $company['id']){
                     $companies_ids[] = $company['id'];
