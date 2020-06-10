@@ -130,7 +130,7 @@ class UserResumesController extends ApiBaseCommonController
         $skills = isset($data['skills'])?$data['skills']:[];
 
         $this->resumeRepository->handleNewSkill(Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->first(), $skills);
-        if($this->request->get('not_mix')){
+        if(!$this->request->get('not_mix')){
             $this->resumeRepository->mixResumes($obj, $this->resumeRepository->getBaseResume());
         }
         return $this->apiReturnJson(0);
