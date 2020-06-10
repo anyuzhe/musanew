@@ -285,6 +285,8 @@ class ResumesRepository
             foreach ($skills as $skill) {
                 $skill['resume_id'] = $id;
                 $skill = array_remove_by_key($skill, 'skill_level_text');
+                $skill = array_remove_by_key($skill, 'skill_name');
+                $skill = array_remove_by_key($skill, 'skill_full_name');
                 if(isset($skill['id']) && $skill['id']){
                     $skill_ids[] = $skill['id'];
                     ResumeSkill::where('id', $skill['id'])->update($skill);
