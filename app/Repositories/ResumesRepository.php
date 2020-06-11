@@ -128,7 +128,14 @@ class ResumesRepository
     public static function getSkillFullName($id, $skills, $skillCategories)
     {
         $level1 = $skills[$id];
-        $fullName = $skillCategories[$level1['category_l1_id']]['category_name'].'/'.$skillCategories[$level1['category_l2_id']]['category_name'].'/'.$level1['name'];
+        $qz = '';
+        if(isset($skillCategories[$level1['category_l1_id']])){
+            $qz .= $skillCategories[$level1['category_l1_id']]['category_name'].'/';
+        }
+        if(isset($skillCategories[$level1['category_l2_id']])){
+            $qz .= $skillCategories[$level1['category_l2_id']]['category_name'].'/';
+        }
+        $fullName = $qz.$level1['name'];
         return $fullName;
     }
 
