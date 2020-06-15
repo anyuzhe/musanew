@@ -39,6 +39,7 @@ use App\Repositories\SkillsRepository;
 use App\Repositories\TestsRepository;
 use App\Repositories\UserRepository;
 use App\User;
+use App\ZL\Moodle\EmailHelper;
 use App\ZL\ORG\Excel\ExcelHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -51,6 +52,17 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     set_time_limit(0);
+    requireMoodleConfig();
+    $user = \App\Models\User::find(113);
+    $res = app()->build(ResumesRepository::class)->getListData(Resume::where('user_id',113)->get());
+    dd($res);
+    $res = \Illuminate\Support\Facades\Mail::to('68067348@qq.com')->send(new \App\Mail\SendCodeEmail('11'));
+    dd($res);
+
+    $user = \App\Models\User::find(55);
+    $code = rand(100000, 999999);
+    $mailSendRes = EmailHelper::emailToUserCode($user, $code);
+    dd($mailSendRes);
     $s = 'Jineng/  1 2';
     $s1 = str_replace(' ','',strtolower($s));
     if(strstr($s,'/')){
@@ -161,7 +173,6 @@ Route::get('/test', function () {
 //    $password = '1234A!';
 //    $res = preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/])[A-Za-z\d@$!！%*#?&^*()_+=-·?？.<>《》,，.。￥|{}\\\\\/]{6,16}$/', $password);
 //    dd($res);
-    requireMoodleConfig();
 
     global $CFG;
     require_once($CFG->dirroot . '/user/editlib.php');

@@ -128,8 +128,9 @@ class UserResumesController extends ApiBaseCommonController
         $obj = $this->resumeRepository->saveDataForForm($obj, $data);
 
         $skills = isset($data['skills'])?$data['skills']:[];
-
-        $this->resumeRepository->handleNewSkill(Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->first(), $skills);
+        $base = Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->first();
+        if($base)
+            $this->resumeRepository->handleNewSkill($base, $skills);
         if(!$this->request->get('not_mix')){
             $this->resumeRepository->mixResumes($obj, $this->resumeRepository->getBaseResume());
         }
@@ -141,7 +142,9 @@ class UserResumesController extends ApiBaseCommonController
         $obj = Resume::find($id);
         $skills = isset($data['skills'])?$data['skills']:[];
 
-        $this->resumeRepository->handleNewSkill(Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->first(), $skills);
+        $base = Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->first();
+        if($base)
+            $this->resumeRepository->handleNewSkill($base, $skills);
 
         $this->resumeRepository->saveDataForForm($obj, $data);
         return $this->apiReturnJson(0);
