@@ -78,6 +78,35 @@ class UserRepository
         return $info;
     }
 
+    public function setUserBasicInfo($user, $request)
+    {
+        if(isset($request['name']) && $request['name']){
+            $name = $request['name'];
+        }elseif(isset($request['realname']) && $request['realname']){
+            $name = $request['realname'];
+        }else{
+            $name = '';
+        }
+        if($name){
+            $request['name'] = $name;
+            $request['realname'] = $name;
+        }
+        $info = $user->info;
+        if($name)
+            $info->realname = $name;
+
+        $info->fill($request);
+        $info->save();
+
+        if(!$user->firstname && $info->realname){
+            $realname = $info->realname;
+            User::where('id', $user->id)->update([
+                'firstname'=>$realname?substr_text($realname,0,1):'',
+                'lastname'=>$realname?substr_text($realname,1, strlen($realname)):'',
+            ]);
+        }
+    }
+
     public function setInfo($user, $request)
     {
         if(isset($request['name']) && $request['name']){
@@ -128,7 +157,7 @@ class UserRepository
         $obj->is_personal = 1;
         $obj->type = 2;
         if(!$obj->education){
-            $obj->education = $resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+            $obj->education = $resumeRepository->getTopEducation($user_id);
         }
         $obj = $resumeRepository->saveDataForForm($obj, $data);
 
@@ -144,7 +173,7 @@ class UserRepository
     {
         $resumeRepository = app()->build(ResumesRepository::class);
         $obj = Resume::find($id);
-        $educationValue = $resumeRepository->getEducation(ResumeEducation::where('resume_id', $obj->id)->get());
+        $educationValue = $resumeRepository->getTopEducation($obj->user_id);
         if($educationValue){
             $obj->education = $educationValue;
         }

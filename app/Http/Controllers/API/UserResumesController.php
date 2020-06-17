@@ -13,6 +13,7 @@ use App\Models\ResumeEducation;
 use App\Models\ResumeSkill;
 use App\Repositories\RecruitResumesRepository;
 use App\Repositories\ResumesRepository;
+use App\Repositories\UserRepository;
 use App\ZL\Controllers\ApiBaseCommonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -26,6 +27,7 @@ class UserResumesController extends ApiBaseCommonController
 {
     public $model_name = Resume::class;
     public $resumeRepository;
+    public $userRepository;
     public $recruitResumesRepository;
     public $search_field_array = [
       ['name','like'],
@@ -55,11 +57,13 @@ class UserResumesController extends ApiBaseCommonController
         'txt',
         'text',
     ];
-    public function __construct(Request $request, ResumesRepository $resumesRepository,RecruitResumesRepository $recruitResumesRepository)
+    public function __construct(Request $request, ResumesRepository $resumesRepository, UserRepository $userRepository,
+                                RecruitResumesRepository $recruitResumesRepository)
     {
         parent::__construct($request);
         $this->resumeRepository = $resumesRepository;
         $this->recruitResumesRepository = $recruitResumesRepository;
+        $this->userRepository = $userRepository;
     }
 
 
@@ -142,6 +146,7 @@ class UserResumesController extends ApiBaseCommonController
         if(!$this->request->get('not_mix')){
             $this->resumeRepository->mixResumes($obj, $this->resumeRepository->getBaseResume());
         }else{
+            $this->userRepository->setUserBasicInfo($this->getUser(), $data);
             //手机端个人简历 需要更新到基本信息中 更新思路-新建-or-更新
             $base = Resume::where('user_id', $user_id)->where('is_base', 1)->first();
             if($base){
@@ -195,6 +200,7 @@ class UserResumesController extends ApiBaseCommonController
 
         $this->resumeRepository->saveDataForForm($obj, $data);
         if($this->request->get('not_mix')) {
+            $this->userRepository->setUserBasicInfo($this->getUser(), $data);
             //手机端个人简历 需要更新到基本信息中 更新思路-新建-or-更新
             $base = Resume::where('user_id', $user_id)->where('is_base', 1)->first();
             if ($base) {
