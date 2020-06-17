@@ -120,11 +120,11 @@ class UserResumesController extends ApiBaseCommonController
 
     public function afterStore($obj, $data)
     {
-        if(isset($data['usable_range'])){
+        if(!isset($data['usable_range'])){
             $data['usable_range'] = '默认范围';
             $obj->usable_range = '默认范围';
         }
-        if(isset($data['resume_name'])){
+        if(!isset($data['resume_name'])){
             $data['resume_name'] = '默认简历';
             $obj->resume_name = '默认简历';
         }
@@ -179,12 +179,44 @@ class UserResumesController extends ApiBaseCommonController
     {
         $obj = Resume::find($id);
         $skills = isset($data['skills'])?$data['skills']:[];
+        $user_id = $this->getUser()->id;
 
         $base = Resume::where('user_id', $this->getUser()->id)->where('is_base', 1)->first();
         if($base)
             $this->resumeRepository->handleNewSkill($base, $skills);
 
         $this->resumeRepository->saveDataForForm($obj, $data);
+        if($this->request->get('not_mix')) {
+            //手机端个人简历 需要更新到基本信息中 更新思路-新建-or-更新
+            $base = Resume::where('user_id', $user_id)->where('is_base', 1)->first();
+            if ($base) {
+                $base->fill($data);
+                $base->save();
+                $educationValue = $this->resumeRepository->getTopEducation($user_id);
+                if ($educationValue) {
+                    $base->education = $educationValue;
+                }
+                $this->resumeRepository->saveDataForForm($base, $data);
+            } else {
+                $base = Resume::create($data);
+                $base->is_base = 1;
+                $base->is_personal = 1;
+                $base->creator_id = $user_id;
+                $base->user_id = $user_id;
+                $base->type = 2;
+                if (!$base->education) {
+                    $base->education = $this->resumeRepository->getTopEducation($user_id);
+                }
+                $base = $this->resumeRepository->saveDataForForm($obj, $data);
+
+                $otherResumes = Resume::where('user_id', $user_id)->where('is_base', 0)->where('type', 2)->get();
+                $skills = isset($data['skills']) ? $data['skills'] : [];
+                foreach ($otherResumes as $otherResume) {
+                    $this->resumeRepository->mixResumes($otherResume, $base);
+                    $this->resumeRepository->handleNewSkill($otherResume, $skills);
+                }
+            }
+        }
         return $this->apiReturnJson(0);
     }
 

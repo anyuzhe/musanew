@@ -271,7 +271,7 @@ $router->group(['middleware' => 'auth.api'], function () use ($router) {
     //删除
     $router->post('/user/resumes/delete/{id}', 'API\UserResumesController@destroy');
 
-    //第三方添加简历
+    //个人添加简历
     $router->post('/user/resumes', 'API\UserResumesController@store');
     $router->post('/user/resumes/upload', 'API\UserResumesController@upload');
 
