@@ -706,7 +706,7 @@ class ResumesRepository
 
     public function getTopEducation($user_id)
     {
-        return ResumeEducation::whereIn('resume_id', Resume::where('user_id',$user_id)->where('status','!=',-1)->pluck('id')->max('education'));
+        return ResumeEducation::whereIn('resume_id', Resume::where('user_id',$user_id)->where('status','!=',-1)->pluck('id'))->max('education');
     }
 
     public function mixResumes($resumeNew, $resumeOld)
