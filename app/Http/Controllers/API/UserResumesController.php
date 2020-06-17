@@ -162,7 +162,7 @@ class UserResumesController extends ApiBaseCommonController
                 if(!$base->education){
                     $base->education = $this->resumeRepository->getTopEducation($user_id);
                 }
-                $base = $this->resumeRepository->saveDataForForm($obj, $data);
+                $base = $this->resumeRepository->saveDataForForm($base, $data);
 
                 $otherResumes = Resume::where('user_id', $user_id)->where('is_base', 0)->where('type', 2)->get();
                 $skills = isset($data['skills'])?$data['skills']:[];
@@ -178,6 +178,14 @@ class UserResumesController extends ApiBaseCommonController
     public function afterUpdate($id, $data)
     {
         $obj = Resume::find($id);
+        if(!isset($data['usable_range'])){
+            $data['usable_range'] = '默认范围';
+            $obj->usable_range = '默认范围';
+        }
+        if(!isset($data['resume_name'])){
+            $data['resume_name'] = '默认简历';
+            $obj->resume_name = '默认简历';
+        }
         $skills = isset($data['skills'])?$data['skills']:[];
         $user_id = $this->getUser()->id;
 
@@ -207,7 +215,7 @@ class UserResumesController extends ApiBaseCommonController
                 if (!$base->education) {
                     $base->education = $this->resumeRepository->getTopEducation($user_id);
                 }
-                $base = $this->resumeRepository->saveDataForForm($obj, $data);
+                $base = $this->resumeRepository->saveDataForForm($base, $data);
 
                 $otherResumes = Resume::where('user_id', $user_id)->where('is_base', 0)->where('type', 2)->get();
                 $skills = isset($data['skills']) ? $data['skills'] : [];
