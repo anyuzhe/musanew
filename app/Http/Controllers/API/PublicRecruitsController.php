@@ -53,7 +53,6 @@ class PublicRecruitsController extends ApiBaseCommonController
         }
         if($salary_search_type==-1){
             $job_model = $job_model->where(function ($query){
-                $query->where('salary_min', '<=' , 3000)->where('salary_max', '<=' ,3000);
                 $query->where(function ($query1){
                     $query1->where('salary_min', 0)->orWhereNull('salary_min');
                 })->where(function ($query1){
